@@ -10,9 +10,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Trigger Zenodo Deposit
+        env:
+          ORCID_ID: "0009-0004-9132-2925"
         run: |
           curl -X POST \
             -H "Authorization: Bearer ${{ secrets.ZENODO_TOKEN }}" \
             -H "Content-Type: application/json" \
-            -d '{"metadata": {"title": "${{ github.event.release.name }}", "description": "${{ github.event.release.body }}", "creators": [{"name": "Associação MILK", "orcid": "0000-0000-0000-0000"}, {"name": "Eduardo Maurício Vieira Cabral e Araujo", "orcid": "0000-0000-0000-0000"}], "license": "EUPL-1.2", "keywords": ["Atlas Vivo MILK", "cultura", "património", "soberania digital"], "version": "${{ github.event.release.tag_name }}", "datePublished": "${{ github.event.release.published_at }}"}}' \
+            -d '{"metadata": {"title": "${{ github.event.release.name }}", "description": "${{ github.event.release.body }}", "creators": [{"name": "Associação MILK", "orcid": "0000-0000-0000-0000"}, {"name": "Eduardo Maurício Vieira Cabral e Araujo", "orcid": "'$ORCID_ID'"}], "license": "EUPL-1.2", "keywords": ["Atlas Vivo MILK", "cultura", "património", "soberania digital", "folclore", "Portugal"], "version": "${{ github.event.release.tag_name }}", "datePublished": "${{ github.event.release.published_at }}", "related_identifiers": [{"identifier": "${{ github.event.repository.html_url }}", "scheme": "url", "relation": "isSupplementTo"}]}}' \
             https://zenodo.org/api/deposit/depositions

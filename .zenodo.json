@@ -1,0 +1,45 @@
+{
+  "metadata": {
+    "title": "Atlas Vivo MILK",
+    "upload_type": "software",
+    "description": "Plataforma Web para preservação e mapeamento do patrimônio imaterial português. Inclui coleta de lendas, travas-línguas, adivinhas e rituais, com mapeamento geográfico do folclore.",
+    "creators": [
+      {
+        "name": "Associação MILK",
+        "affiliation": "Associação MILK - Movimento de Intervenções e Linguagens Kulturais e Arte"
+      },
+      {
+        "name": "Eduardo Maurício Vieira Cabral e Araujo",
+        "orcid": "0009-0004-9132-2925",
+        "affiliation": "Associação MILK"
+      }
+    ],
+    "license": "EUPL-1.2",
+    "version": "1.0.0",
+    "keywords": [
+      "folclore",
+      "patrimônio imaterial",
+      "lendas",
+      "Portugal",
+      "Web App",
+      "cultura",
+      "soberania digital",
+      "mapas interativos",
+      "Leaflet.js",
+      "WebXR"
+    ],
+    "notes": "Projeto alinhado com os princípios CARE (Benefício Coletivo, Autoridade para Controlar, Responsabilidade, Ética) e em conformidade com RGPD e AI Act.",
+    "related_identifiers": [
+      {
+        "identifier": "https://github.com/milkivc/atlas-vivo-milk",
+        "scheme": "url",
+        "relation": "isSupplementTo"
+      }
+    ],
+    "communities": [
+      {
+        "identifier": "milkivc"
+      }
+    ]
+  }
+}

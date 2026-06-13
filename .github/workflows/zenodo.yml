@@ -10,18 +10,27 @@ jobs:
   upload:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Upload to Zenodo
         env:
           ZENODO_TOKEN: ${{ secrets.ZENODO_TOKEN }}
           DEPOSIT_ID: ${{ secrets.ZENODO_DEPOSIT_ID }}
+          ORCID_ID: "0009-0004-9132-2925"
         run: |
           sudo apt-get update && sudo apt-get install -y curl jq
           
+          # Upload files
           for FILE in $(find data/processed -type f); do
             curl -X POST \
               -H "Authorization: Bearer $ZENODO_TOKEN" \
               -F "file=@$FILE" \
               "https://zenodo.org/api/deposit/depositions/$DEPOSIT_ID/files"
           done
+          
+          # Update metadata with ORCID
+          curl -X PUT \
+            -H "Authorization: Bearer $ZENODO_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{"metadata": {"creators": [{"name": "Eduardo Maurício Vieira Cabral e Araujo", "orcid": "'$ORCID_ID'"}]}}' \
+            "https://zenodo.org/api/deposit/depositions/$DEPOSIT_ID"

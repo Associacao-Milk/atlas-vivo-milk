@@ -6,7 +6,11 @@ authors:
   - given-names: "Associação"
     family-names: "MILK"
     affiliation: "Associação MILK"
+  - given-names: "Eduardo Maurício Vieira Cabral e"
+    family-names: "Araujo"
+    orcid: "https://orcid.org/0009-0004-9132-2925"
+    affiliation: "Associação MILK"
 version: 1.0.0
-license: MIT
+license: EUPL-1.2
 repository-code: "https://github.com/milkivc/atlas-vivo-milk"
-keywords: ["folclore", "património imaterial", "lendas", "Portugal", "Web App"]
+keywords: ["folclore", "património imaterial", "lendas", "Portugal", "Web App", "cultura", "soberania digital"]

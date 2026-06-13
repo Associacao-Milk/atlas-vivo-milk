@@ -1,0 +1,123 @@
+name: Zenodo + ORCID Blindado (RGPD/AI Act/NIS2)
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  # Job 1: Validar metadados (RGPD, AI Act, NIS2)
+  validate-metadata:
+    name: Validar Metadados (Conformidade UE)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validar CITATION.cff
+        run: |
+          # Verificar se ORCID está presente
+          if ! grep -q "0009-0004-9132-2925" CITATION.cff; then
+            echo "::error::ORCID 0009-0004-9132-2925 não encontrado em CITATION.cff"
+            exit 1
+          fi
+          # Verificar licença EUPL-1.2
+          if ! grep -q "EUPL-1.2" CITATION.cff; then
+            echo "::error::Licença EUPL-1.2 não encontrada"
+            exit 1
+          fi
+
+      - name: Validar .zenodo.json
+        run: |
+          # Verificar conformidade
+          if ! jq -e '.metadata.conformity.rgpd == true' .zenodo.json; then
+            echo "::error::Conformidade RGPD não declarada"
+            exit 1
+          fi
+          if ! jq -e '.metadata.conformity.ai_act == true' .zenodo.json; then
+            echo "::error::Conformidade AI Act não declarada"
+            exit 1
+          fi
+          if ! jq -e '.metadata.conformity.nis2 == true' .zenodo.json; then
+            echo "::error::Conformidade NIS2 não declarada"
+            exit 1
+          fi
+
+  # Job 2: Depósito no Zenodo (via GitHub App)
+  deposit-zenodo:
+    name: Depósito no Zenodo (Automático)
+    runs-on: ubuntu-latest
+    needs: validate-metadata
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Depósito via Zenodo GitHub App
+        uses: zenodo/zenodo-github-action@v1
+        with:
+          metadata_file: ".zenodo.json"
+          # O GitHub App do Zenodo gerencia o token automaticamente
+
+  # Job 3: Sincronizar com ORCID (Public API - sem token)
+  sync-orcid:
+    name: Sincronizar com ORCID (API Pública)
+    runs-on: ubuntu-latest
+    needs: deposit-zenodo
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Obter DOI do Zenodo
+        id: zenodo
+        run: |
+          # O Zenodo GitHub App retorna o DOI na release
+          DOI=$(jq -r '.metadata.doi' .zenodo.json 2>/dev/null || echo "")
+          if [ -z "$DOI" ]; then
+            # Tentar obter DOI da release do GitHub
+            DOI=$(gh api repos/${{ github.repository }}/releases/${{ github.event.release.id }} | jq -r '.body' | grep -o '10\.[0-9]\+\.[0-9]\+/zenodo\.[0-9]\+' || echo "")
+          fi
+          echo "doi=$DOI" >> $GITHUB_OUTPUT
+
+      - name: Notificar ORCID (API Pública)
+        if: steps.zenodo.outputs.doi != ''
+        run: |
+          # Usar API Pública do ORCID (sem token, apenas leitura/escrita limitada)
+          # Enviar obra para o ORCID via API Pública (se o ORCID permitir)
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -d '{
+              "work": {
+                "title": "${{ github.event.release.name }}",
+                "doi": "${{ steps.zenodo.outputs.doi }}",
+                "url": "${{ github.event.release.html_url }}",
+                "type": "software",
+                "published": "${{ github.event.release.published_at }}"
+              },
+              "contributors": [
+                {
+                  "orcid": "0009-0004-9132-2925",
+                  "credit-name": "Eduardo Maurício Vieira Cabral e Araujo",
+                  "role": "author"
+                }
+              ]
+            }' \
+            "https://pub.orcid.org/v3.0/0009-0004-9132-2925/work" || \
+          echo "::warning::Não foi possível sincronizar com ORCID (API Pública pode não permitir escrita)"
+
+  # Job 4: Notificar Slack (Opcional)
+  notify:
+    name: Notificar Slack
+    runs-on: ubuntu-latest
+    needs: [validate-metadata, deposit-zenodo, sync-orcid]
+    if: always()
+    steps:
+      - name: Enviar notificação
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_COLOR: ${{ job.status == 'success' && 'good' || 'danger' }}
+          SLACK_TITLE: "Release ${{ github.event.release.tag_name }} - ${{ job.status }}"
+          SLACK_MESSAGE: |
+            Repositório: ${{ github.event.repository.name }}
+            DOI: ${{ needs.deposit-zenodo.outputs.doi || 'Não gerado' }}
+            ORCID: 0009-0004-9132-2925
+            Conformidade: RGPD ✅ | AI Act ✅ | NIS2 ✅

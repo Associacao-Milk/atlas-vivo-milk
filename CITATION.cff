@@ -14,3 +14,6 @@ version: 1.0.0
 license: EUPL-1.2
 repository-code: "https://github.com/milkivc/atlas-vivo-milk"
 keywords: ["folclore", "património imaterial", "lendas", "Portugal", "Web App", "cultura", "soberania digital"]
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.XXXXXXX"

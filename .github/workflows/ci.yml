@@ -1,0 +1,93 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  validate:
+    name: Validate Metadata & Schema
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install AJV CLI
+        run: npm install -g ajv-cli
+
+      - name: Validate metadata.json against schema
+        run: |
+          ajv validate -s .github/schemas/metadata-schema.json -d metadata.json --spec=draft7
+
+      - name: Check JSON syntax
+        run: |
+          jq empty metadata.json
+          for file in $(find . -type f -name "*.json" ! -path "./.git/*" ! -path "./.github/*"); do
+            jq empty "$file" || { echo "Invalid JSON: $file"; exit 1; }
+          done
+
+  test-frontend:
+    name: Test Frontend
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check HTML files
+        run: |
+          for file in $(find . -type f -name "*.html" ! -path "./.git/*"); do
+            # Basic HTML validation
+            if ! grep -q "<!DOCTYPE html>" "$file"; then
+              echo "Missing DOCTYPE in $file"
+              exit 1
+            fi
+          done
+
+      - name: Check JavaScript files
+        run: |
+          for file in $(find . -type f -name "*.js" ! -path "./.git/*" ! -path "./node_modules/*"); do
+            # Basic syntax check
+            node --check "$file" 2>&1 || { echo "Syntax error in $file"; exit 1; }
+          done
+
+  test-backend:
+    name: Test Backend (Apps Script)
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check Apps Script files
+        run: |
+          for file in $(find . -type f -name "*.gs" ! -path "./.git/*"); do
+            # Basic syntax check - Apps Script is JavaScript
+            node --check "$file" 2>&1 || { echo "Syntax error in $file"; exit 1; }
+          done
+
+  lint:
+    name: Lint Markdown & YAML
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Lint Markdown files
+        uses: avturlyak/markdown-lint@v1
+        with:
+          config: '.github/markdownlint-config.json'
+          args: '**/*.md'
+
+      - name: Lint YAML files
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          config_file: '.github/yamllint-config.yml'

@@ -1,0 +1,88 @@
+name: Sync with Zenodo
+
+on:
+  push:
+    branches: [ master, main ]
+    paths:
+      - 'src/**'
+      - 'assets/**'
+      - 'manifests/**'
+      - 'CITATION.cff'
+
+jobs:
+  sync:
+    name: Upload to Zenodo
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y curl jq
+
+      - name: Get existing deposit ID
+        id: deposit
+        env:
+          ZENODO_TOKEN: ${{ secrets.ZENODO_TOKEN }}
+        run: |
+          # Try to find existing deposit for this repository
+          DEPOSITS=$(curl -s -X GET \
+            -H "Authorization: Bearer $ZENODO_TOKEN" \
+            "https://zenodo.org/api/deposit/depositions?q=title:${{ github.event.repository.name }}")
+          
+          EXISTING_ID=$(echo "$DEPOSITS" | jq -r '.[0].id // empty')
+          
+          if [ -z "$EXISTING_ID" ]; then
+            # Create new deposit
+            NEW_DEPOSIT=$(curl -s -X POST \
+              -H "Authorization: Bearer $ZENODO_TOKEN" \
+              -H "Content-Type: application/json" \
+              -d '{
+                "metadata": {
+                  "title": "${{ github.event.repository.name }}",
+                  "description": "${{ github.event.repository.description || '' }} - Development version",
+                  "upload_type": "software",
+                  "license": "EUPL-1.2"
+                }
+              }' \
+              https://zenodo.org/api/deposit/depositions)
+            EXISTING_ID=$(echo "$NEW_DEPOSIT" | jq -r '.id')
+          fi
+          
+          echo "deposit_id=$EXISTING_ID" >> $GITHUB_OUTPUT
+
+      - name: Upload new/changed files
+        env:
+          ZENODO_TOKEN: ${{ secrets.ZENODO_TOKEN }}
+          DEPOSIT_ID: ${{ steps.deposit.outputs.deposit_id }}
+        run: |
+          # Get list of files already in Zenodo
+          EXISTING_FILES=$(curl -s -X GET \
+            -H "Authorization: Bearer $ZENODO_TOKEN" \
+            "https://zenodo.org/api/deposit/depositions/$DEPOSIT_ID/files" | jq -r '.[].key')
+          
+          # Upload new files from src, assets, manifests
+          for FILE in $(find src assets manifests -type f ! -path "./.git/*" ! -name "*.tmp" ! -name "*.log"); do
+            FILENAME=$(basename "$FILE")
+            # Check if file already exists in Zenodo
+            if echo "$EXISTING_FILES" | grep -q "$FILENAME"; then
+              echo "File $FILENAME already exists in Zenodo, skipping..."
+            else
+              echo "Uploading $FILE..."
+              curl -s -X POST \
+                -H "Authorization: Bearer $ZENODO_TOKEN" \
+                -F "file=@$FILE" \
+                "https://zenodo.org/api/deposit/depositions/$DEPOSIT_ID/files"
+            fi
+          done
+          
+          # Upload CITATION.cff if exists
+          if [ -f "CITATION.cff" ]; then
+            FILENAME="CITATION.cff"
+            if ! echo "$EXISTING_FILES" | grep -q "$FILENAME"; then
+              curl -s -X POST \
+                -H "Authorization: Bearer $ZENODO_TOKEN" \
+                -F "file=@CITATION.cff" \
+                "https://zenodo.org/api/deposit/depositions/$DEPOSIT_ID/files"
+            fi
+          fi

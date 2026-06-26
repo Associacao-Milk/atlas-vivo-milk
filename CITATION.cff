@@ -1,19 +1,77 @@
 cff-version: 1.2.0
-message: "If you use this software, please cite it as below."
-title: "Atlas Vivo MILK"
+message: "If you use this software, please cite it using the following metadata."
 type: software
-authors:
-  - given-names: "Associação"
-    family-names: "MILK"
-    affiliation: "Associação MILK"
-  - given-names: "Eduardo Maurício Vieira Cabral e"
-    family-names: "Araujo"
-    orcid: "https://orcid.org/0009-0004-9132-2925"
-    affiliation: "Associação MILK"
+
+# Citation information for Atlas Vivo MILK
+title: Atlas Vivo MILK
 version: 1.0.0
+
+# Authors
+authors:
+  - given-names: Nuno Filipe Fernandes Vieira Cabral e
+    family-names: Araujo
+    orcid: https://orcid.org/0009-0009-1781-4020
+    email: nuno@associacaomilk.pt
+    affiliation: Associacao MILK - Movimento de Intervencoes e Linguagens Kulturais e Arte
+
+  - given-names: Eduardo Mauricio Vieira Cabral e
+    family-names: Araujo
+    orcid: https://orcid.org/0009-0007-6892-6570
+    email: eduardo@associacaomilk.pt
+    affiliation: Associacao MILK - Movimento de Intervencoes e Linguagens Kulturais e Arte
+
+# Description
+abstract: Plataforma Web para preservacao e mapeamento do patrimonio imaterial portugues. Coleta lendas, travas-linguas, adivinhas e rituais de Portugal, mapeando geograficamente o folclore.
+
+# Keywords
+keywords:
+  - cultura
+  - patrimonio
+  - soberania digital
+  - interoperabilidade
+  - Portugal
+  - Atlas Vivo MILK
+  - Associacao MILK
+  - RGPD
+  - AI Act
+  - NIS2
+
+# License
 license: EUPL-1.2
-repository-code: "https://github.com/milkivc/atlas-vivo-milk"
-keywords: ["folclore", "património imaterial", "lendas", "Portugal", "Web App", "cultura", "soberania digital"]
+license-url: https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+# Repository information
+repository: https://github.com/milkivc/atlas-vivo-milk
+repository-code: https://github.com/milkivc/atlas-vivo-milk
+
+# Issue tracker
+issue-tracker: https://github.com/milkivc/atlas-vivo-milk/issues
+
+# URLs
+url: https://github.com/milkivc/atlas-vivo-milk
+
+# Identifiers
 identifiers:
-  - type: doi
-    value: "10.5281/zenodo.XXXXXXX"
+  - type: url
+    value: https://github.com/milkivc/atlas-vivo-milk
+  - type: url
+    value: https://codeberg.org/milkivc/associacao-milk-marco-zero
+
+# Related resources
+related-resources:
+  - type: dataset
+    title: Atlas Vivo MILK - Datasets
+    identifier: https://github.com/milkivc/atlas-datasets
+    relation: hasPart
+
+  - type: software
+    title: Atlas Vivo MILK - Documentation
+    identifier: https://github.com/milkivc/atlas-docs
+    relation: hasPart
+
+# Contact
+contact:
+  - email: milk@associacaomilk.pt
+    name: Associacao MILK
+  - email: dpo@associacaomilk.pt
+    name: Data Protection Officer

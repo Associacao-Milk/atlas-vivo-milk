@@ -5,16 +5,29 @@
   "keywords": ["Atlas Vivo MILK", "cultura", "património", "soberania digital", "interoperabilidade", "Portugal"],
   "creators": [
     {
-      "name": "Associação MILK - Movimentos de Intervenções e Linguagens Kulturais e Arte",
-      "orcid": "0000-0000-0000-0000"
+      "name": "Nuno Filipe Fernandes Vieira Cabral e Araujo",
+      "orcid": "0009-0009-1781-4020"
     },
     {
       "name": "Eduardo Maurício Vieira Cabral e Araujo",
-      "orcid": "0000-0000-0000-0000"
+      "orcid": "0009-0007-6892-6570"
     }
   ],
   "version": "1.0.0",
-  "datePublished": "2026-06-06",
+  "datePublished": "2026-06-25",
   "doi": "",
-  "relatedIdentifiers": []
+  "relatedIdentifiers": [
+    {
+      "relation": "isPartOf",
+      "identifier": "https://github.com/milkivc/atlas-datasets"
+    },
+    {
+      "relation": "isPartOf",
+      "identifier": "https://github.com/milkivc/atlas-docs"
+    },
+    {
+      "relation": "isPartOf",
+      "identifier": "https://codeberg.org/milkivc/associacao-milk-marco-zero"
+    }
+  ]
 }

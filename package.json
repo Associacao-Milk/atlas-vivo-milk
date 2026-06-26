@@ -1,0 +1,44 @@
+{
+  "name": "atlas-vivo-integration-apis",
+  "version": "2.0.0",
+  "description": "ATLAS VIVO - Integration APIs for complete automation",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js",
+    "test:zenodo": "node -e \"const {ZenodoAPI} = require('./zenodo_api_integration.js'); console.log('Zenodo API:', new ZenodoAPI(process.env.ZENODO_TOKEN).getStats());\"",
+    "test:orcid": "node -e \"const {ORCIDAPI} = require('./orcid_api_integration.js'); console.log('ORCID API:', new ORCIDAPI({clientId: process.env.ORCID_CLIENT_ID, clientSecret: process.env.ORCID_CLIENT_SECRET}).getStats());\"",
+    "test:github": "node -e \"const {GitHubAPI} = require('./github_api_integration.js'); console.log('GitHub API:', new GitHubAPI({token: process.env.GITHUB_TOKEN}).getStats());\""
+  },
+  "keywords": [
+    "atlas-vivo",
+    "integration",
+    "api",
+    "zenodo",
+    "orcid",
+    "github",
+    "codeberg",
+    "automation",
+    "research",
+    "open-science"
+  ],
+  "author": "Eduardo Mauricio / Associação MILK",
+  "license": "MIT",
+  "dependencies": {
+    "node-fetch": "^3.3.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.36.0",
+    "jest": "^29.5.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/milkivc/atlas-datasets.git"
+  },
+  "bugs": {
+    "url": "https://github.com/milkivc/atlas-datasets/issues"
+  },
+  "homepage": "https://github.com/milkivc/atlas-datasets#readme"
+}

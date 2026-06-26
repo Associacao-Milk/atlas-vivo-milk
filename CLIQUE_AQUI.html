@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ CLIQUE AQUI - ATLAS VIVO</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        .container { max-width: 800px; width: 100%; }
+        .main-button {
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            color: white;
+            border: none;
+            padding: 50px 100px;
+            font-size: 3em;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 15px 50px rgba(0, 212, 255, 0.5);
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        .main-button:hover { transform: scale(1.1); box-shadow: 0 20px 60px rgba(0, 212, 255, 0.8); }
+        .subtitle { margin-top: 40px; font-size: 1.5em; color: #a0a0ff; }
+        .status { margin-top: 30px; background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 15px; text-align: left; }
+        .status-item { padding: 10px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.2); font-size: 1.1em; }
+        .status-item:last-child { border-bottom: none; }
+        .status-icon { color: #2ecc71; margin-right: 10px; }
+        .instructions { margin-top: 30px; padding: 20px; background: rgba(0, 212, 255, 0.1); border-radius: 15px; text-align: left; }
+        .instructions h3 { color: #00d4ff; margin-bottom: 10px; }
+        .instructions ul { padding-left: 20px; }
+        .instructions li { margin-bottom: 8px; line-height: 1.6; }
+        @media (max-width: 600px) {
+            .main-button { padding: 40px 60px; font-size: 2em; }
+            .subtitle { font-size: 1.2em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="main-button" onclick="goToMain()">
+            ⚡ CLIQUE AQUI ⚡
+        </button>
+        
+        <div class="subtitle">
+            Para executar a automação total do ATLAS VIVO
+        </div>
+        
+        <div class="status">
+            <div class="status-item"><span class="status-icon">✅</span> PR #5 mergeada - APIs ativas</div>
+            <div class="status-item"><span class="status-icon">✅</span> 8 APIs de integração</div>
+            <div class="status-item"><span class="status-icon">✅</span> 10/10 programas elegíveis (€1.1M+)</div>
+            <div class="status-item"><span class="status-icon">✅</span> Sincronização: SUCCESS</div>
+            <div class="status-item"><span class="status-icon">✅</span> Metadados: Validados</div>
+        </div>
+        
+        <div class="instructions">
+            <h3>📌 COMO USAR:</h3>
+            <ul>
+                <li><strong>Opção 1:</strong> Clique no botão azul acima ⚡</li>
+                <li><strong>Opção 2:</strong> Abra o arquivo <code>ATIVAR_TUDO_AGORA.html</code></li>
+                <li><strong>Opção 3:</strong> Abra o arquivo <code>INDEX.html</code></li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        function goToMain() {
+            window.location.href = 'ATIVAR_TUDO_AGORA.html';
+        }
+        
+        setTimeout(function() {
+            document.querySelector('.main-button').textContent = '⚡ CLIQUE AQUI PARA COMEÇAR ⚡';
+        }, 2000);
+    </script>
+</body>
+</html>

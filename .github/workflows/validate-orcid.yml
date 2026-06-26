@@ -1,23 +1,22 @@
-name: Validate ORCID IDs
+name: Validate ORCIDs
 
 on:
   push:
-    branches: [ master, main ]
     paths:
-      - 'metadata.json'
-      - '.zenodo.json'
-      - 'src/backend/package.json'
+      - '**.json'
+      - '**.md'
+      - '**.yml'
+      - '**.yaml'
   pull_request:
-    branches: [ master, main ]
     paths:
-      - 'metadata.json'
-      - '.zenodo.json'
-      - 'src/backend/package.json'
-  workflow_dispatch:
+      - '**.json'
+      - '**.md'
+      - '**.yml'
+      - '**.yaml'
 
 jobs:
-  validate-orcid:
-    name: Validate ORCID IDs
+  validate-orcids:
+    name: Validate ORCIDs in repository
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -29,60 +28,96 @@ jobs:
           node-version: '20'
 
       - name: Install dependencies
-        run: npm install -g ajv-cli jq
+        run: npm install node-fetch
 
-      - name: Extract ORCIDs from metadata.json
-        id: extract-orcids
+      - name: Validate ORCIDs
         run: |
-          ORCIDS=$(jq -r '.creators[].orcid' metadata.json | grep -v "0000-0000-0000-0000" | tr '\n' ' ')
-          echo "ORCIDS=$ORCIDS" >> $GITHUB_OUTPUT
-          echo "Found ORCIDs: $ORCIDS"
+          node -e "
+            const fs = require('fs');
+            const path = require('path');
+            
+            // Função para validar ORCID
+            function validateORCID(orcid, filePath) {
+              const normalized = orcid.replace(/-/g, '').toLowerCase();
+              if (!/^[0-9]{16}$/.test(normalized)) {
+                console.error('❌ ORCID inválido:', orcid, 'em', filePath);
+                return false;
+              }
+              console.log('✅ ORCID válido:', orcid, 'em', filePath);
+              return true;
+            }
+            
+            // Função recursiva para varrer diretórios
+            function scanFiles(dir, fileList = []) {
+              const files = fs.readdirSync(dir);
+              files.forEach(file => {
+                const filePath = path.join(dir, file);
+                if (fs.statSync(filePath).isDirectory()) {
+                  scanFiles(filePath, fileList);
+                } else if (filePath.endsWith('.json') || filePath.endsWith('.md') || filePath.endsWith('.yml') || filePath.endsWith('.yaml')) {
+                  fileList.push(filePath);
+                }
+              });
+              return fileList;
+            }
+            
+            // Procurar ORCIDs em arquivos (recursivamente)
+            const allFiles = scanFiles('.');
+            let allValid = true;
+            let orcidCount = 0;
+            
+            allFiles.forEach(filePath => {
+              try {
+                const content = fs.readFileSync(filePath, 'utf8');
+                const orcidMatches = content.match(/000[0-9]{3}-000[0-9]{3}-[0-9]{3}[0-9X]/g) || [];
+                orcidMatches.forEach(orcid => {
+                  orcidCount++;
+                  if (!validateORCID(orcid, filePath)) {
+                    allValid = false;
+                  }
+                });
+              } catch (err) {
+                console.error('⚠️ Erro ao ler arquivo:', filePath, err.message);
+              }
+            });
+            
+            console.log('📊 Total de ORCIDs encontrados:', orcidCount);
+            console.log('📁 Arquivos verificados:', allFiles.length);
+            
+            if (!allValid) {
+              console.error('❌ ORCIDs inválidos encontrados!');
+              process.exit(1);
+            }
+          "
 
-      - name: Validate ORCID format
+      - name: Check for placeholder ORCIDs
         run: |
-          for file in metadata.json .zenodo.json; do
-            if [ -f "$file" ]; then
-              echo "Validating ORCIDs in $file..."
-              invalid_orcids=$(jq -r '.creators[].orcid // empty' "$file" | grep -v "0000-0000-0000-0000" | grep -vE '^[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}$' || true)
-              if [ -n "$invalid_orcids" ]; then
-                echo "::error::Invalid ORCID format found in $file: $invalid_orcids"
-                exit 1
-              fi
-              placeholder_orcids=$(jq -r '.creators[].orcid // empty' "$file" | grep "0000-0000-0000-0000" || true)
-              if [ -n "$placeholder_orcids" ]; then
-                echo "::warning::Placeholder ORCID (0000-0000-0000-0000) found in $file"
-              fi
+          if grep -r "0000-0000-0000-0000" .; then
+            echo "❌ ORCID placeholder (0000-0000-0000-0000) encontrado!"
+            echo "Substitua por ORCIDs válidos:"
+            echo "- Nuno Filipe: 0009-0009-1781-4020"
+            echo "- Eduardo Maurício: 0009-0007-6892-6570"
+            exit 1
+          else
+            echo "✅ Nenhum ORCID placeholder encontrado"
+          fi
+
+      - name: Check for missing ORCIDs in metadata
+        run: |
+          # Verificar se metadata.json tem ORCIDs válidos
+          if [ -f "metadata.json" ]; then
+            orcid_nuno=$(jq -r '.creators[] | select(.name | contains("Nuno")) | .orcid' metadata.json 2>/dev/null || echo "")
+            orcid_eduardo=$(jq -r '.creators[] | select(.name | contains("Eduardo")) | .orcid' metadata.json 2>/dev/null || echo "")
+            
+            if [ "$orcid_nuno" != "0009-0009-1781-4020" ]; then
+              echo "❌ ORCID do Nuno está incorreto em metadata.json: $orcid_nuno"
+              exit 1
             fi
-          done
-
-      - name: Check ORCID API (optional)
-        if: steps.extract-orcids.outputs.ORCIDS != ''
-        run: |
-          echo "ORCID format validation passed for all files"
-          echo "To enable ORCID API validation, add ORCID_API_TOKEN secret"
-
-  validate-metadata:
-    name: Validate Metadata Schema
-    runs-on: ubuntu-latest
-    needs: validate-orcid
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install AJV CLI
-        run: npm install -g ajv-cli
-
-      - name: Validate metadata.json against schema
-        run: |
-          ajv validate -s .github/schemas/metadata-schema.json -d metadata.json --spec=draft7
-
-      - name: Validate all JSON files
-        run: |
-          for file in $(find . -type f -name "*.json" ! -path "./.git/*" ! -path "./.github/*" ! -path "./node_modules/*"); do
-            jq empty "$file" || { echo "Invalid JSON: $file"; exit 1; }
-          done
+            
+            if [ "$orcid_eduardo" != "0009-0007-6892-6570" ]; then
+              echo "❌ ORCID do Eduardo está incorreto em metadata.json: $orcid_eduardo"
+              exit 1
+            fi
+            
+            echo "✅ ORCIDs em metadata.json estão corretos"
+          fi

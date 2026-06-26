@@ -1,0 +1,55 @@
+name: Sync with Codeberg
+
+on:
+  push:
+    branches:
+      - master
+      - main
+
+jobs:
+  sync-codeberg:
+    name: Mirror repository to Codeberg
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create Codeberg repository if not exists
+        env:
+          CODEBERG_TOKEN: ${{ secrets.CODEBERG_TOKEN }}
+          CODEBERG_USER: ${{ secrets.CODEBERG_USER }}
+          CODEBERG_REPO: ${{ secrets.CODEBERG_REPO }}
+        run: |
+          # Verificar se o repositório existe no Codeberg
+          REPO_EXISTS=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "Authorization: token ${{ secrets.CODEBERG_TOKEN }}" \
+            "https://codeberg.org/api/v1/repos/${{ secrets.CODEBERG_USER }}/${{ secrets.CODEBERG_REPO }}")
+          
+          if [ "$REPO_EXISTS" != "200" ]; then
+            echo "🆕 Criando repositório no Codeberg: ${{ secrets.CODEBERG_REPO }}"
+            curl -X POST \
+              -H "Authorization: token ${{ secrets.CODEBERG_TOKEN }}" \
+              -H "Content-Type: application/json" \
+              -d '{"name": "${{ secrets.CODEBERG_REPO }}", "description": "Mirror de ${{ github.repository }}", "private": false}' \
+              "https://codeberg.org/api/v1/user/repos"
+            echo "✅ Repositório criado no Codeberg"
+          else
+            echo "✅ Repositório já existe no Codeberg"
+          fi
+
+      - name: Sync to Codeberg
+        env:
+          CODEBERG_TOKEN: ${{ secrets.CODEBERG_TOKEN }}
+          CODEBERG_USER: ${{ secrets.CODEBERG_USER }}
+          CODEBERG_REPO: ${{ secrets.CODEBERG_REPO }}
+        run: |
+          # Configurar remote do Codeberg
+          git remote add codeberg https://${{ secrets.CODEBERG_USER }}:${{ secrets.CODEBERG_TOKEN }}@codeberg.org/${{ secrets.CODEBERG_USER }}/${{ secrets.CODEBERG_REPO }}.git
+          
+          # Fazer push para o Codeberg (mirror)
+          git push --mirror codeberg --force
+          
+          echo "✅ Sincronização com Codeberg concluída!"
+          echo "🔗 Repositório no Codeberg: https://codeberg.org/${{ secrets.CODEBERG_USER }}/${{ secrets.CODEBERG_REPO }}"

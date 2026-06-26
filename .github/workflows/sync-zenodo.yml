@@ -2,87 +2,190 @@ name: Sync with Zenodo
 
 on:
   push:
-    branches: [ master, main ]
-    paths:
-      - 'src/**'
-      - 'assets/**'
-      - 'manifests/**'
-      - 'CITATION.cff'
+    tags:
+      - 'v*'
 
 jobs:
-  sync:
-    name: Upload to Zenodo
+  sync-zenodo:
+    name: Deposit to Zenodo and get DOI
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
       - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y curl jq
+        run: npm install node-fetch dotenv
 
-      - name: Get existing deposit ID
-        id: deposit
+      - name: Deposit to Zenodo
         env:
           ZENODO_TOKEN: ${{ secrets.ZENODO_TOKEN }}
         run: |
-          # Try to find existing deposit for this repository
-          DEPOSITS=$(curl -s -X GET \
-            -H "Authorization: Bearer $ZENODO_TOKEN" \
-            "https://zenodo.org/api/deposit/depositions?q=title:${{ github.event.repository.name }}")
+          # Criar um script temporário para depositar no Zenodo (otimizado)
+          cat > deposit_zenodo.js << 'EOF'
+          const fetch = require('node-fetch');
+          const fs = require('fs');
+          const path = require('path');
           
-          EXISTING_ID=$(echo "$DEPOSITS" | jq -r '.[0].id // empty')
+          const ZENODO_API_URL = 'https://zenodo.org/api';
+          const ZENODO_TOKEN = process.env.ZENODO_TOKEN;
+          const MAX_RETRIES = 3;
+          const RETRY_DELAY = 5000; // 5 segundos
           
-          if [ -z "$EXISTING_ID" ]; then
-            # Create new deposit
-            NEW_DEPOSIT=$(curl -s -X POST \
-              -H "Authorization: Bearer $ZENODO_TOKEN" \
-              -H "Content-Type: application/json" \
-              -d '{
-                "metadata": {
-                  "title": "${{ github.event.repository.name }}",
-                  "description": "${{ github.event.repository.description || '' }} - Development version",
-                  "upload_type": "software",
-                  "license": "EUPL-1.2"
+          // Função para retry com delay
+          async function fetchWithRetry(url, options, retries = MAX_RETRIES) {
+            try {
+              const response = await fetch(url, options);
+              if (!response.ok) {
+                throw new Error(`${response.status} - ${response.statusText}`);
+              }
+              return response;
+            } catch (error) {
+              if (retries <= 0) throw error;
+              console.log(`⚠️ Tentativa falhou, aguardando ${RETRY_DELAY/1000}s... (${retries} tentativas restantes)`);
+              await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
+              return fetchWithRetry(url, options, retries - 1);
+            }
+          }
+          
+          async function createDeposition(metadata) {
+            const response = await fetchWithRetry(`${ZENODO_API_URL}/deposit/depositions`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${ZENODO_TOKEN}`
+              },
+              body: JSON.stringify(metadata)
+            });
+            return await response.json();
+          }
+          
+          async function uploadFile(depositionId, filePath, fileName = null) {
+            const fileNameToUse = fileName || path.basename(filePath);
+            const fileData = fs.readFileSync(filePath);
+            const fileSize = fileData.length;
+            
+            console.log(`📤 Enviando ${fileNameToUse} (${(fileSize / 1024 / 1024).toFixed(2)} MB)...`);
+            
+            const response = await fetchWithRetry(
+              `${ZENODO_API_URL}/deposit/depositions/${depositionId}/files/${fileNameToUse}`,
+              {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/octet-stream',
+                  'Authorization': `Bearer ${ZENODO_TOKEN}`
+                },
+                body: fileData
+              }
+            );
+            return await response.json();
+          }
+          
+          async function publishDeposition(depositionId) {
+            const response = await fetchWithRetry(
+              `${ZENODO_API_URL}/deposit/depositions/${depositionId}/actions/publish`,
+              {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${ZENODO_TOKEN}`
                 }
-              }' \
-              https://zenodo.org/api/deposit/depositions)
-            EXISTING_ID=$(echo "$NEW_DEPOSIT" | jq -r '.id')
-          fi
+              }
+            );
+            return await response.json();
+          }
           
-          echo "deposit_id=$EXISTING_ID" >> $GITHUB_OUTPUT
-
-      - name: Upload new/changed files
-        env:
-          ZENODO_TOKEN: ${{ secrets.ZENODO_TOKEN }}
-          DEPOSIT_ID: ${{ steps.deposit.outputs.deposit_id }}
-        run: |
-          # Get list of files already in Zenodo
-          EXISTING_FILES=$(curl -s -X GET \
-            -H "Authorization: Bearer $ZENODO_TOKEN" \
-            "https://zenodo.org/api/deposit/depositions/$DEPOSIT_ID/files" | jq -r '.[].key')
+          // Função para varrer arquivos recursivamente (ignorando .git/, node_modules/, etc.)
+          function getAllFiles(dir, fileList = []) {
+            const files = fs.readdirSync(dir);
+            files.forEach(file => {
+              const filePath = path.join(dir, file);
+              const stat = fs.statSync(filePath);
+              
+              if (stat.isDirectory()) {
+                // Ignorar diretórios desnecessários
+                if (!['.git', 'node_modules', '.github', '.vscode'].includes(file)) {
+                  getAllFiles(filePath, fileList);
+                }
+              } else if (stat.isFile()) {
+                // Ignorar arquivos temporários e logs
+                if (!filePath.includes('.git/') && !filePath.endsWith('.log')) {
+                  fileList.push(filePath);
+                }
+              }
+            });
+            return fileList;
+          }
           
-          # Upload new files from src, assets, manifests
-          for FILE in $(find src assets manifests -type f ! -path "./.git/*" ! -name "*.tmp" ! -name "*.log"); do
-            FILENAME=$(basename "$FILE")
-            # Check if file already exists in Zenodo
-            if echo "$EXISTING_FILES" | grep -q "$FILENAME"; then
-              echo "File $FILENAME already exists in Zenodo, skipping..."
-            else
-              echo "Uploading $FILE..."
-              curl -s -X POST \
-                -H "Authorization: Bearer $ZENODO_TOKEN" \
-                -F "file=@$FILE" \
-                "https://zenodo.org/api/deposit/depositions/$DEPOSIT_ID/files"
-            fi
-          done
+          async function main() {
+            try {
+              // Ler metadata.json
+              const metadataPath = path.join(process.cwd(), 'metadata.json');
+              let metadata = JSON.parse(fs.readFileSync(metadataPath, 'utf8'));
+              
+              // Adicionar metadados padrão
+              metadata.upload_type = 'dataset';
+              metadata.license = metadata.license || 'CC-BY-SA-4.0';
+              metadata.version = process.env.GITHUB_REF_NAME || '1.0.0';
+              
+              // Criar depósito
+              console.log('🚀 Criando depósito no Zenodo...');
+              const deposition = await createDeposition(metadata);
+              const depositionId = deposition.id;
+              console.log(`✅ Depósito criado: ${depositionId}`);
+              
+              // Obter todos os arquivos (recursivamente)
+              const allFiles = getAllFiles(process.cwd());
+              console.log(`📁 Total de arquivos a enviar: ${allFiles.length}`);
+              
+              // Fazer upload de todos os arquivos
+              let uploadedCount = 0;
+              for (const filePath of allFiles) {
+                try {
+                  await uploadFile(depositionId, filePath);
+                  uploadedCount++;
+                } catch (error) {
+                  console.error(`❌ Falha ao enviar ${filePath}:`, error.message);
+                }
+              }
+              
+              console.log(`✅ ${uploadedCount}/${allFiles.length} arquivos enviados`);
+              
+              // Publicar depósito
+              console.log('🚀 Publicando depósito...');
+              const publishedDeposition = await publishDeposition(depositionId);
+              const doi = publishedDeposition.doi;
+              console.log(`✅ DOI obtido: ${doi}`);
+              
+              // Atualizar metadata.json com DOI
+              metadata.doi = doi;
+              fs.writeFileSync(metadataPath, JSON.stringify(metadata, null, 2));
+              
+              // Fazer commit com DOI
+              const execSync = require('child_process').execSync;
+              execSync('git config --global user.name "github-actions"');
+              execSync('git config --global user.email "actions@github.com"');
+              execSync('git add metadata.json');
+              execSync(`git commit -m "feat: adicionar DOI do Zenodo (${doi}) [${{ github.sha }}]"`);
+              execSync('git push');
+              
+              console.log(`🎉 Depósito concluído! DOI: ${doi}`);
+              console.log(`🔗 URL: ${publishedDeposition.links.html}`);
+              
+            } catch (error) {
+              console.error('❌ Erro:', error.message);
+              console.error('Stack:', error.stack);
+              process.exit(1);
+            }
+          }
           
-          # Upload CITATION.cff if exists
-          if [ -f "CITATION.cff" ]; then
-            FILENAME="CITATION.cff"
-            if ! echo "$EXISTING_FILES" | grep -q "$FILENAME"; then
-              curl -s -X POST \
-                -H "Authorization: Bearer $ZENODO_TOKEN" \
-                -F "file=@CITATION.cff" \
-                "https://zenodo.org/api/deposit/depositions/$DEPOSIT_ID/files"
-            fi
-          fi
+          main();
+          EOF
+          
+          node deposit_zenodo.js

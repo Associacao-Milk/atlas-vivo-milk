@@ -110,4 +110,5 @@ jobs:
           grep -Fq "data-action=\"brincar\"" /tmp/atlas-live.html
           grep -Fq "data-action=\"convite\"" /tmp/atlas-live.html
           grep -Fq "data-action=\"sorte\"" /tmp/atlas-live.html
-\n# Deployment trigger authorized by human validation on 2026-08-13.\n
+
+# Deployment trigger authorized by human validation on 2026-08-13.

@@ -1,0 +1,112 @@
+name: Deploy Atlas to PTServidor
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - ".github/workflows/deploy-ptservidor.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: atlas-ptservidor-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy validated public Atlas
+    runs-on: ubuntu-latest
+    env:
+      DEPLOY_HOST: troi.ptservidor.net
+      DEPLOY_USER: associ16
+      DEPLOY_PORT: ${{ secrets.PTSERVIDOR_SSH_PORT || secrets.SSH_PORT }}
+      DEPLOY_KEY: ${{ secrets.PTSERVIDOR_SSH_PRIVATE_KEY || secrets.SSH_PRIVATE_KEY || secrets.CPANEL_SSH_KEY }}
+      DEPLOY_KNOWN_HOSTS: ${{ secrets.PTSERVIDOR_KNOWN_HOSTS || secrets.SSH_KNOWN_HOSTS }}
+      WEBROOT: /home/associ16/atlas.associacaomilk.pt
+      PRIVATE_RELEASES: /home/associ16/.atlas-releases
+      PRIVATE_STAGING: /home/associ16/.atlas-staging
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate release package
+        working-directory: deploy/atlas-public
+        run: |
+          set -euo pipefail
+          sha256sum -c manifest.sha256
+          node --check app.js
+          test "$(find assets -maxdepth 1 -type f -name '*.png' | wc -l)" -eq 7
+
+      - name: Validate deployment credentials
+        run: |
+          set -euo pipefail
+          test -n "$DEPLOY_PORT" || { echo "::error::Missing PTSERVIDOR_SSH_PORT or SSH_PORT secret"; exit 2; }
+          test -n "$DEPLOY_KEY" || { echo "::error::Missing PTSERVIDOR_SSH_PRIVATE_KEY, SSH_PRIVATE_KEY or CPANEL_SSH_KEY secret"; exit 2; }
+          test -n "$DEPLOY_KNOWN_HOSTS" || { echo "::error::Missing PTSERVIDOR_KNOWN_HOSTS or SSH_KNOWN_HOSTS secret"; exit 2; }
+          case "$DEPLOY_PORT" in (*[!0-9]*|'') echo "::error::SSH port must be numeric"; exit 2;; esac
+
+      - name: Configure strict SSH
+        run: |
+          set -euo pipefail
+          install -d -m 0700 "$HOME/.ssh"
+          printf '%s\n' "$DEPLOY_KEY" > "$HOME/.ssh/id_atlas"
+          chmod 0600 "$HOME/.ssh/id_atlas"
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          chmod 0600 "$HOME/.ssh/known_hosts"
+
+      - name: Preflight isolated paths
+        run: |
+          set -euo pipefail
+          ssh -i "$HOME/.ssh/id_atlas" -p "$DEPLOY_PORT" -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes "$DEPLOY_USER@$DEPLOY_HOST"             "set -eu; test -d '$WEBROOT'; test ! '$WEBROOT' = '/home/associ16/public_html'; mkdir -p '$PRIVATE_RELEASES' '$PRIVATE_STAGING/$GITHUB_SHA'; df -Pk /home/associ16"
+
+      - name: Transfer release to private staging
+        run: |
+          set -euo pipefail
+          tar -C deploy/atlas-public -cf - . |             ssh -i "$HOME/.ssh/id_atlas" -p "$DEPLOY_PORT" -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes "$DEPLOY_USER@$DEPLOY_HOST"               "tar -xf - -C '$PRIVATE_STAGING/$GITHUB_SHA'"
+          ssh -i "$HOME/.ssh/id_atlas" -p "$DEPLOY_PORT" -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes "$DEPLOY_USER@$DEPLOY_HOST"             "cd '$PRIVATE_STAGING/$GITHUB_SHA' && sha256sum -c manifest.sha256"
+
+      - name: Backup and promote Atlas only
+        run: |
+          set -euo pipefail
+          ssh -i "$HOME/.ssh/id_atlas" -p "$DEPLOY_PORT" -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes "$DEPLOY_USER@$DEPLOY_HOST"             bash -s -- "$GITHUB_SHA" <<'REMOTE'
+          set -euo pipefail
+          sha="$1"
+          webroot="/home/associ16/atlas.associacaomilk.pt"
+          releases="/home/associ16/.atlas-releases"
+          staging="/home/associ16/.atlas-staging/$sha"
+          test -d "$webroot"
+          test -d "$staging"
+          test ! "$webroot" = "/home/associ16/public_html"
+          stamp="$(date -u +%Y%m%dT%H%M%SZ)"
+          set --
+          for item in index.html styles.css app.js assets; do
+            if [ -e "$webroot/$item" ]; then set -- "$@" "$item"; fi
+          done
+          if [ "$#" -gt 0 ]; then
+            tar -czf "$releases/atlas-public-$stamp.tar.gz" -C "$webroot" "$@"
+          fi
+          if [ -f "$webroot/index.html" ] && [ ! -f "$webroot/index.placeholder-2026-06-30.html" ]; then
+            cp -p "$webroot/index.html" "$webroot/index.placeholder-2026-06-30.html"
+          fi
+          mkdir -p "$webroot/assets"
+          install -m 0644 "$staging/index.html" "$webroot/index.html"
+          install -m 0644 "$staging/styles.css" "$webroot/styles.css"
+          install -m 0644 "$staging/app.js" "$webroot/app.js"
+          cp -p "$staging"/assets/*.png "$webroot/assets/"
+          cd "$webroot"
+          sha256sum -c "$staging/manifest.sha256"
+          REMOTE
+
+      - name: Public smoke test
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3 4 5; do
+            if curl --fail --silent --show-error --location --max-time 20 https://atlas.associacaomilk.pt/ -o /tmp/atlas-live.html; then break; fi
+            sleep 5
+          done
+          grep -Fq "Atlas Vivo MILK" /tmp/atlas-live.html
+          grep -Fq "data-action=\"brincar\"" /tmp/atlas-live.html
+          grep -Fq "data-action=\"convite\"" /tmp/atlas-live.html
+          grep -Fq "data-action=\"sorte\"" /tmp/atlas-live.html

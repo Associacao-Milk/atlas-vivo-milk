@@ -21,7 +21,7 @@ jobs:
     env:
       DEPLOY_HOST: troi.ptservidor.net
       DEPLOY_USER: associ16
-      DEPLOY_PORT: ${{ secrets.PTSERVIDOR_SSH_PORT || secrets.SSH_PORT }}
+      DEPLOY_PORT: ${{ secrets.PTSERVIDOR_SSH_PORT || secrets.SSH_PORT || '22' }}
       DEPLOY_KEY: ${{ secrets.PTSERVIDOR_SSH_PRIVATE_KEY || secrets.SSH_PRIVATE_KEY || secrets.CPANEL_SSH_KEY }}
       DEPLOY_KNOWN_HOSTS: ${{ secrets.PTSERVIDOR_KNOWN_HOSTS || secrets.SSH_KNOWN_HOSTS }}
       WEBROOT: /home/associ16/atlas.associacaomilk.pt
@@ -42,7 +42,6 @@ jobs:
       - name: Validate deployment credentials
         run: |
           set -euo pipefail
-          test -n "$DEPLOY_PORT" || { echo "::error::Missing PTSERVIDOR_SSH_PORT or SSH_PORT secret"; exit 2; }
           test -n "$DEPLOY_KEY" || { echo "::error::Missing PTSERVIDOR_SSH_PRIVATE_KEY, SSH_PRIVATE_KEY or CPANEL_SSH_KEY secret"; exit 2; }
           test -n "$DEPLOY_KNOWN_HOSTS" || { echo "::error::Missing PTSERVIDOR_KNOWN_HOSTS or SSH_KNOWN_HOSTS secret"; exit 2; }
           case "$DEPLOY_PORT" in (*[!0-9]*|'') echo "::error::SSH port must be numeric"; exit 2;; esac

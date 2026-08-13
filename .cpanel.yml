@@ -1,0 +1,14 @@
+---
+deployment:
+  tasks:
+    - /bin/test -d /home/associ16/atlas.associacaomilk.pt
+    - /bin/mkdir -p /home/associ16/.atlas-releases
+    - /bin/sh -c 'if [ -f /home/associ16/atlas.associacaomilk.pt/index.html ] && [ ! -f /home/associ16/atlas.associacaomilk.pt/index.placeholder-2026-06-30.html ]; then /bin/cp -p /home/associ16/atlas.associacaomilk.pt/index.html /home/associ16/atlas.associacaomilk.pt/index.placeholder-2026-06-30.html; fi'
+    - /bin/sh -c 'set -eu; stamp=$(/bin/date -u +%Y%m%dT%H%M%SZ); set --; for item in index.html styles.css app.js assets; do if [ -e "/home/associ16/atlas.associacaomilk.pt/$item" ]; then set -- "$@" "$item"; fi; done; if [ "$#" -gt 0 ]; then /bin/tar -czf "/home/associ16/.atlas-releases/atlas-public-$stamp.tar.gz" -C /home/associ16/atlas.associacaomilk.pt "$@"; fi'
+    - /bin/sh -c 'cd deploy/atlas-public && /usr/bin/sha256sum -c manifest.sha256'
+    - /bin/mkdir -p /home/associ16/atlas.associacaomilk.pt/assets
+    - /usr/bin/install -m 0644 deploy/atlas-public/index.html /home/associ16/atlas.associacaomilk.pt/index.html
+    - /usr/bin/install -m 0644 deploy/atlas-public/styles.css /home/associ16/atlas.associacaomilk.pt/styles.css
+    - /usr/bin/install -m 0644 deploy/atlas-public/app.js /home/associ16/atlas.associacaomilk.pt/app.js
+    - /bin/cp -p deploy/atlas-public/assets/*.png /home/associ16/atlas.associacaomilk.pt/assets/
+    - /bin/sh -c 'repo=$(pwd); cd /home/associ16/atlas.associacaomilk.pt && /usr/bin/sha256sum -c "$repo/deploy/atlas-public/manifest.sha256"'

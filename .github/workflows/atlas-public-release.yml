@@ -1,0 +1,40 @@
+name: Atlas public release
+
+on:
+  pull_request:
+    paths:
+      - "deploy/atlas-public/**"
+      - ".cpanel.yml"
+      - ".github/workflows/atlas-public-release.yml"
+  push:
+    branches: [master]
+    paths:
+      - "deploy/atlas-public/**"
+      - ".cpanel.yml"
+      - ".github/workflows/atlas-public-release.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate package
+        working-directory: deploy/atlas-public
+        run: |
+          set -euo pipefail
+          sha256sum -c manifest.sha256
+          node --check app.js
+          test -s index.html
+          test -s styles.css
+          test "$(find assets -maxdepth 1 -type f -name '*.png' | wc -l)" -eq 7
+          ! grep -RIE '(api[_-]?key|client[_-]?secret|private[_-]?key|authorization:[[:space:]]*(bearer|token)|BEGIN (RSA|OPENSSH|EC) PRIVATE KEY)' .
+      - name: Validate deployment scope
+        run: |
+          set -euo pipefail
+          grep -Fq '/home/associ16/atlas.associacaomilk.pt' .cpanel.yml
+          ! grep -Fq '/home/associ16/public_html' .cpanel.yml
+          ! grep -Eq '(^|[[:space:]])rm([[:space:]]|$)' .cpanel.yml

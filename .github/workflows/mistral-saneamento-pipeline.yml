@@ -1,16 +1,19 @@
-name: MILK Mistral Saneamento Pipeline
+name: MILK Saneamento — C1 / PTServidor / GitLab
 
 on:
   workflow_dispatch:
     inputs:
       batch_path:
-        description: 'Diretório do lote saneado/decodificado a processar'
+        description: 'Diretório transitório do lote; nunca conter segredos'
         required: true
         default: 'migration-inbox/current'
+      batch_kind:
+        description: 'research ou code'
+        required: true
+        default: 'research'
   push:
     branches: [master]
     paths:
-      - 'migration-inbox/**'
       - '.github/workflows/mistral-saneamento-pipeline.yml'
 
 permissions:
@@ -20,136 +23,134 @@ concurrency:
   group: milk-saneamento-${{ github.ref }}
   cancel-in-progress: false
 
+env:
+  DEPLOY_HOST: troi.ptservidor.net
+  DEPLOY_USER: associ16
+  DEPLOY_PORT: ${{ secrets.PTSERVIDOR_SSH_PORT || secrets.SSH_PORT || '22' }}
+  DEPLOY_KEY: ${{ secrets.PTSERVIDOR_SSH_PRIVATE_KEY || secrets.SSH_PRIVATE_KEY || secrets.CPANEL_SSH_KEY }}
+  DEPLOY_KNOWN_HOSTS: ${{ secrets.PTSERVIDOR_KNOWN_HOSTS || secrets.SSH_KNOWN_HOSTS }}
+  PRIVATE_RESEARCH_ROOT: /home/associ16/.atlas-research
+
 jobs:
-  rewrite_c1:
-    name: Agente 1 — Hermenêutica C1
+  contract:
+    name: Contrato da esteira
     runs-on: ubuntu-latest
     outputs:
-      batch: ${{ steps.resolve.outputs.batch }}
+      kind: ${{ steps.kind.outputs.kind }}
+      batch: ${{ steps.batch.outputs.batch }}
     steps:
       - uses: actions/checkout@v4
-      - id: resolve
+      - id: kind
         shell: bash
         run: |
-          set -euo pipefail
+          kind='${{ github.event.inputs.batch_kind }}'
+          if [ -z "$kind" ]; then kind='research'; fi
+          case "$kind" in research|code) ;; *) echo '::error::batch_kind must be research or code'; exit 2;; esac
+          echo "kind=$kind" >> "$GITHUB_OUTPUT"
+      - id: batch
+        shell: bash
+        run: |
           batch='${{ github.event.inputs.batch_path }}'
           if [ -z "$batch" ]; then batch='migration-inbox/current'; fi
-          test -d "$batch" || { echo "::error::Lote inexistente: $batch"; exit 2; }
           echo "batch=$batch" >> "$GITHUB_OUTPUT"
-      - name: Validate source/provenance contract
+      - name: Enforce routing rule
+        run: |
+          echo 'RESEARCH: Drive -> Mistral C1 -> scientific enrichment/citations -> provenance/hash/tags -> PTServidor private area.'
+          echo 'CODE: authorial source -> skill/code -> GitLab correction/tests -> PTServidor only after GitLab receipt.'
+          echo 'No research corpus is committed to this repository.'
+
+  rewrite_c1:
+    name: Agente 1 — Hermenêutica C1 + enriquecimento científico
+    needs: contract
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate transient batch
         shell: bash
         run: |
           set -euo pipefail
-          batch='${{ steps.resolve.outputs.batch }}'
+          batch='${{ needs.contract.outputs.batch }}'
+          test -d "$batch" || { echo "::error::Transient batch not mounted: $batch"; exit 3; }
           test -f "$batch/manifest.json"
           python - <<'PY'
           import json, pathlib
-          p=pathlib.Path('${{ steps.resolve.outputs.batch }}')/'manifest.json'
+          p=pathlib.Path('${{ needs.contract.outputs.batch }}')/'manifest.json'
           d=json.loads(p.read_text(encoding='utf-8'))
-          for k in ['batch_id','objects']:
-              if k not in d: raise SystemExit('manifest missing: '+k)
+          for k in ('batch_id','objects'): assert k in d, k
           for o in d['objects']:
-              for k in ['atlas_id','source_id','source_revision','source_hash','origin','tags']:
-                  if k not in o: raise SystemExit(f"object missing {k}: {o.get('atlas_id','?')}")
+              for k in ('atlas_id','source_id','source_revision','source_hash','origin','tags'):
+                  assert k in o, (o.get('atlas_id'),k)
           PY
       - name: Require Mistral runtime
         env:
           MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
         run: |
-          set -euo pipefail
           test -n "$MISTRAL_API_KEY" || { echo '::error::MISTRAL_API_KEY missing'; exit 2; }
-      - name: Mark C1 contract
+      - name: C1 contract
+        shell: bash
         run: |
-          set -euo pipefail
-          batch='${{ steps.resolve.outputs.batch }}'
-          printf '%s\n' \
-            'HERMENEUTICA_C1=required' \
-            'PT_PT=required' \
-            'APA7=when_applicable' \
-            'AUTHORIAL_VOICE=preserve' \
-            'NON_EU_AI_TRACES=remove_only_when_proven' > "$batch/.stage-c1"
-      - uses: actions/upload-artifact@v4
-        with:
-          name: c1-${{ github.run_id }}
-          path: ${{ steps.resolve.outputs.batch }}
-          retention-days: 7
+          batch='${{ needs.contract.outputs.batch }}'
+          cat > "$batch/.c1-contract" <<'EOF'
+          HERMENEUTICA_C1=required
+          PT_PT=required
+          APA7=when_applicable
+          AUTHORIAL_VOICE=preserve
+          SCIENTIFIC_ENRICHMENT=source_distinguished
+          CITATIONS=verifiable_only
+          PROVENANCE=required
+          IMMUTABLE_TAGS=required
+          NON_EU_AI_TRACES=remove_only_when_proven
+          HUMAN_VALIDATION=required
+          EOF
+          find "$batch" -type f -print0 | sort -z | xargs -0 sha256sum > "$batch/checksums.pre-route.sha256"
 
-  decode_skill_memory:
-    name: Agente 2 — Decodificar código/skill + memória IA MILK
-    needs: rewrite_c1
+  research_to_ptservidor:
+    name: Agente 3A — Pesquisa enriquecida -> PTServidor
+    needs: [contract, rewrite_c1]
+    if: ${{ needs.contract.outputs.kind == 'research' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: c1-${{ github.run_id }}
-          path: batch
-      - name: Validate infrastructure + memory contract
+      - uses: actions/checkout@v4
+      - name: Require PTServidor credentials
+        run: |
+          test -n "$DEPLOY_KEY" || { echo '::error::PTServidor SSH key missing'; exit 2; }
+          test -n "$DEPLOY_KNOWN_HOSTS" || { echo '::error::PTServidor known_hosts missing'; exit 2; }
+      - name: Configure strict SSH
+        run: |
+          install -d -m 0700 "$HOME/.ssh"
+          printf '%s\n' "$DEPLOY_KEY" > "$HOME/.ssh/id_atlas"
+          chmod 0600 "$HOME/.ssh/id_atlas"
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          chmod 0600 "$HOME/.ssh/known_hosts"
+      - name: Transfer verified research batch to private PTServidor area
+        shell: bash
         run: |
           set -euo pipefail
-          test -f batch/manifest.json
-          printf '%s\n' \
-            'SKILL_OUTPUT=required' \
-            'INFRASTRUCTURE_OUTPUT=required' \
-            'MEMORY_RELATIONAL_OUTPUT=required' \
-            'PUBLIC_INVISIBLE_BOUNDARY=hard' \
-            'HUMAN_GATE=required' > batch/.stage-decode
-          find batch -type f ! -name checksums.sha256 -print0 | sort -z | xargs -0 sha256sum > batch/checksums.sha256
-      - uses: actions/upload-artifact@v4
-        with:
-          name: decoded-${{ github.run_id }}
-          path: batch
-          retention-days: 7
+          batch='${{ needs.contract.outputs.batch }}'
+          test -d "$batch"
+          batch_id=$(python -c "import json; print(json.load(open('$batch/manifest.json'))['batch_id'])")
+          remote="$PRIVATE_RESEARCH_ROOT/$batch_id"
+          ssh -i "$HOME/.ssh/id_atlas" -p "$DEPLOY_PORT" -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes "$DEPLOY_USER@$DEPLOY_HOST" "mkdir -p '$remote'"
+          tar -C "$batch" -cf - . | ssh -i "$HOME/.ssh/id_atlas" -p "$DEPLOY_PORT" -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes "$DEPLOY_USER@$DEPLOY_HOST" "tar -xf - -C '$remote'"
+          ssh -i "$HOME/.ssh/id_atlas" -p "$DEPLOY_PORT" -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes "$DEPLOY_USER@$DEPLOY_HOST" "cd '$remote' && sha256sum -c checksums.pre-route.sha256"
+          echo "PTSERVIDOR_RESEARCH_VERIFIED_BATCH=$batch_id"
 
-  handoff_gitlab:
-    name: Agente 3 — Inserir no GitLab para correcção
-    needs: decode_skill_memory
+  code_to_gitlab_gate:
+    name: Agente 3B — Código -> GitLab para correcção/testes
+    needs: [contract, rewrite_c1]
+    if: ${{ needs.contract.outputs.kind == 'code' }}
     runs-on: ubuntu-latest
     env:
       GITLAB_REPO_URL: ${{ secrets.GITLAB_REPO_URL }}
       GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
     steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: decoded-${{ github.run_id }}
-          path: batch
-      - name: Enforce GitLab-before-PTServidor rule
+      - name: Require GitLab integration
         run: |
-          set -euo pipefail
-          test -n "$GITLAB_REPO_URL" || { echo '::error::GITLAB_REPO_URL missing'; exit 2; }
-          test -n "$GITLAB_TOKEN" || { echo '::error::GITLAB_TOKEN missing'; exit 2; }
-          batch_id=$(python -c "import json; print(json.load(open('batch/manifest.json'))['batch_id'])")
-          printf '%s\n' \
-            "batch_id=$batch_id" \
-            "source_github_sha=$GITHUB_SHA" \
-            'required_next_stage=GITLAB_CORRECTION_AND_TESTS' \
-            'ptservidor_allowed=false' > batch/GITLAB_HANDOFF.txt
-      - name: Push isolated correction branch to GitLab
-        shell: bash
+          test -n "$GITLAB_REPO_URL" || { echo '::error::GITLAB_REPO_URL missing'; exit 20; }
+          test -n "$GITLAB_TOKEN" || { echo '::error::GITLAB_TOKEN missing'; exit 21; }
+      - name: Hard gate before PTServidor
         run: |
-          set -euo pipefail
-          batch_id=$(python -c "import json; print(json.load(open('batch/manifest.json'))['batch_id'])")
-          work=$(mktemp -d)
-          cp -a batch/. "$work/"
-          cd "$work"
-          git init -q
-          git config user.name 'Associação MILK - Atlas Pipeline'
-          git config user.email 'milk@associacaomilk.pt'
-          git add .
-          git commit -qm "MILK batch $batch_id — awaiting GitLab correction"
-          auth_url=$(python - <<'PY'
-          import os, urllib.parse
-          u=os.environ['GITLAB_REPO_URL']
-          t=urllib.parse.quote(os.environ['GITLAB_TOKEN'], safe='')
-          if not u.startswith('https://'): raise SystemExit('GITLAB_REPO_URL must use https')
-          print('https://oauth2:'+t+'@'+u[len('https://'):])
-          PY
-          )
-          git remote add gitlab "$auth_url"
-          git push --force gitlab HEAD:"refs/heads/milk-correction/$batch_id"
-          echo "GITLAB_BRANCH=milk-correction/$batch_id"
-      - name: Stop before PTServidor
-        run: |
-          echo 'GitLab handoff complete. PTServidor is intentionally blocked until a corrected GitLab artifact and successful GitLab tests are verified.'
-
-# HARD GATE: there is deliberately no PTServidor deployment job in this workflow.
-# Correct order: Drive -> Mistral C1 -> Mistral decode -> GitLab correction/tests -> verified corrected artifact -> PTServidor.
+          echo 'CODE_ROUTING=GITLAB_REQUIRED'
+          echo 'PTSERVIDOR_CODE_DEPLOY=BLOCKED_UNTIL_GITLAB_VALIDATED_RECEIPT'
+          echo 'No code is sent to PTServidor by this workflow.'

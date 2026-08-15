@@ -1,0 +1,144 @@
+name: MILK Mistral Saneamento Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      batch_path:
+        description: 'Diretório do lote saneado/decodificado a processar'
+        required: true
+        default: 'migration-inbox/current'
+  push:
+    branches: [master]
+    paths:
+      - 'migration-inbox/**'
+      - '.github/workflows/mistral-saneamento-pipeline.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: milk-saneamento-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  DEPLOY_HOST: troi.ptservidor.net
+  DEPLOY_USER: associ16
+  DEPLOY_PORT: ${{ secrets.PTSERVIDOR_SSH_PORT || secrets.SSH_PORT || '22' }}
+  DEPLOY_KEY: ${{ secrets.PTSERVIDOR_SSH_PRIVATE_KEY || secrets.SSH_PRIVATE_KEY || secrets.CPANEL_SSH_KEY }}
+  DEPLOY_KNOWN_HOSTS: ${{ secrets.PTSERVIDOR_KNOWN_HOSTS || secrets.SSH_KNOWN_HOSTS }}
+  PRIVATE_MIGRATION_ROOT: /home/associ16/.atlas-drive-migration
+
+jobs:
+  rewrite_c1:
+    name: Agente 1 — Hermenêutica C1
+    runs-on: ubuntu-latest
+    outputs:
+      batch: ${{ steps.resolve.outputs.batch }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: resolve
+        shell: bash
+        run: |
+          set -euo pipefail
+          batch='${{ github.event.inputs.batch_path }}'
+          if [ -z "$batch" ]; then batch='migration-inbox/current'; fi
+          test -d "$batch"
+          echo "batch=$batch" >> "$GITHUB_OUTPUT"
+      - name: Validate source/provenance contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          batch='${{ steps.resolve.outputs.batch }}'
+          test -f "$batch/manifest.json"
+          python - <<'PY'
+          import json, pathlib
+          p=pathlib.Path('${{ steps.resolve.outputs.batch }}')/'manifest.json'
+          d=json.loads(p.read_text(encoding='utf-8'))
+          required=['batch_id','objects']
+          missing=[k for k in required if k not in d]
+          if missing: raise SystemExit('manifest missing: '+','.join(missing))
+          for o in d['objects']:
+              for k in ['atlas_id','source_id','source_revision','source_hash','origin','tags']:
+                  if k not in o: raise SystemExit(f"object missing {k}: {o.get('atlas_id','?')}")
+          PY
+      - name: Require Mistral runtime
+        shell: bash
+        env:
+          MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "$MISTRAL_API_KEY" || { echo '::error::MISTRAL_API_KEY missing'; exit 2; }
+      - name: Mark C1 stage contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          batch='${{ steps.resolve.outputs.batch }}'
+          printf '%s\n' 'HERMENEUTICA_C1=required' 'PT_PT=required' 'APA7=when_applicable' 'AUTHORIAL_VOICE=preserve' 'NON_EU_AI_TRACES=remove_only_when_proven' > "$batch/.stage-c1"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: c1-${{ github.run_id }}
+          path: ${{ steps.resolve.outputs.batch }}
+          retention-days: 7
+
+  decode_skill_memory:
+    name: Agente 2 — Decodificar skill + memória IA MILK
+    needs: rewrite_c1
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: c1-${{ github.run_id }}
+          path: batch
+      - name: Validate dual-output contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f batch/manifest.json
+          printf '%s\n' 'SKILL_OUTPUT=required' 'MEMORY_RELATIONAL_OUTPUT=required' 'PUBLIC_INVISIBLE_BOUNDARY=hard' 'HUMAN_GATE=required' > batch/.stage-decode
+          find batch -type f -print0 | sort -z | xargs -0 sha256sum > batch/checksums.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: decoded-${{ github.run_id }}
+          path: batch
+          retention-days: 7
+
+  ship_ptservidor:
+    name: Agente 3 — Enviar + verificar PTServidor
+    needs: decode_skill_memory
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: decoded-${{ github.run_id }}
+          path: batch
+      - name: Validate PTServidor credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$DEPLOY_KEY" || { echo '::error::PTServidor SSH key missing'; exit 2; }
+          test -n "$DEPLOY_KNOWN_HOSTS" || { echo '::error::PTServidor known_hosts missing'; exit 2; }
+      - name: Configure strict SSH
+        shell: bash
+        run: |
+          set -euo pipefail
+          install -d -m 0700 "$HOME/.ssh"
+          printf '%s\n' "$DEPLOY_KEY" > "$HOME/.ssh/id_atlas"
+          chmod 0600 "$HOME/.ssh/id_atlas"
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          chmod 0600 "$HOME/.ssh/known_hosts"
+      - name: Transfer to private migration staging
+        shell: bash
+        run: |
+          set -euo pipefail
+          batch_id=$(python -c "import json; print(json.load(open('batch/manifest.json'))['batch_id'])")
+          remote="$PRIVATE_MIGRATION_ROOT/$batch_id"
+          ssh -i "$HOME/.ssh/id_atlas" -p "$DEPLOY_PORT" -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes "$DEPLOY_USER@$DEPLOY_HOST" "mkdir -p '$remote'"
+          tar -C batch -cf - . | ssh -i "$HOME/.ssh/id_atlas" -p "$DEPLOY_PORT" -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes "$DEPLOY_USER@$DEPLOY_HOST" "tar -xf - -C '$remote'"
+          ssh -i "$HOME/.ssh/id_atlas" -p "$DEPLOY_PORT" -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes "$DEPLOY_USER@$DEPLOY_HOST" "cd '$remote' && sha256sum -c checksums.sha256"
+      - name: Receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          batch_id=$(python -c "import json; print(json.load(open('batch/manifest.json'))['batch_id'])")
+          echo "PTSERVIDOR_VERIFIED_BATCH=$batch_id"
+          echo "GITHUB_RUN_ID=$GITHUB_RUN_ID"

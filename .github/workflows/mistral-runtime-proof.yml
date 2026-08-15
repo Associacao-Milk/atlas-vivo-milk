@@ -1,0 +1,47 @@
+name: Mistral Runtime Proof
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - '.github/workflows/mistral-runtime-proof.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-mistral:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Verify secret is present
+        env:
+          MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$MISTRAL_API_KEY" || { echo 'MISTRAL_SECRET_PRESENT=false'; exit 2; }
+          echo 'MISTRAL_SECRET_PRESENT=true'
+
+      - name: Verify Mistral API accepts the existing secret
+        env:
+          MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          code=$(curl -sS -o /tmp/mistral-models.json -w '%{http_code}' \
+            --connect-timeout 10 --max-time 30 \
+            -H "Authorization: Bearer $MISTRAL_API_KEY" \
+            -H 'Accept: application/json' \
+            https://api.mistral.ai/v1/models)
+          echo "MISTRAL_HTTP_STATUS=$code"
+          test "$code" = '200'
+          python - <<'PY'
+          import json
+          p=json.load(open('/tmp/mistral-models.json',encoding='utf-8'))
+          models=p.get('data') or []
+          assert models, 'no_models_returned'
+          print('MISTRAL_RUNTIME_OK=true')
+          print('MISTRAL_MODELS_VISIBLE=%d' % len(models))
+          PY

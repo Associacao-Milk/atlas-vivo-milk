@@ -135,7 +135,7 @@ jobs:
           set -euo pipefail
           ssh -i "$HOME/.ssh/id_atlas" -p "$DEPLOY_PORT" -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes "$DEPLOY_USER@$DEPLOY_HOST" \
             "python3 - <<'PY'
-          import os, json, hashlib, time
+          import os, json, time
           root='$PRIVATE_MIGRATION_ROOT'
           files=0; folders=0; total=0
           for base, ds, fs in os.walk(root):
@@ -161,3 +161,5 @@ jobs:
             --fast-list --transfers 8 --checkers 16 --retries 5 --checksum --create-empty-src-dirs
           rclone check "$RUNNER_TEMP/milk-migration-stage" nextcloud:Atlas/IA-MILK --one-way
           echo 'NEXTCLOUD_WEBDAV_FIXITY_OK'
+
+# trigger: 2026-08-17 immediate migration execution

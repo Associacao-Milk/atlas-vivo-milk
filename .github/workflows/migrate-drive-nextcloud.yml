@@ -1,0 +1,163 @@
+name: MILK Drive -> Nextcloud PTServidor Migration
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - '.github/workflows/migrate-drive-nextcloud.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: milk-drive-nextcloud-migration
+  cancel-in-progress: false
+
+env:
+  DEPLOY_HOST: troi.ptservidor.net
+  DEPLOY_USER: associ16
+  DEPLOY_PORT: ${{ secrets.PTSERVIDOR_SSH_PORT || secrets.SSH_PORT || '22' }}
+  DEPLOY_KEY: ${{ secrets.PTSERVIDOR_SSH_PRIVATE_KEY || secrets.SSH_PRIVATE_KEY || secrets.CPANEL_SSH_KEY }}
+  DEPLOY_KNOWN_HOSTS: ${{ secrets.PTSERVIDOR_KNOWN_HOSTS || secrets.SSH_KNOWN_HOSTS }}
+  PRIVATE_MIGRATION_ROOT: /home/associ16/atlas_milk_private/migration
+  EXPECTED_FILES: '4870'
+  EXPECTED_FOLDERS: '397'
+  EXPECTED_BYTES: '16011662239'
+  MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+  GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON || secrets.GOOGLE_DRIVE_SERVICE_ACCOUNT_JSON || secrets.GDRIVE_SERVICE_ACCOUNT_JSON }}
+  GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID || secrets.GDRIVE_CLIENT_ID }}
+  GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET || secrets.GDRIVE_CLIENT_SECRET }}
+  GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN || secrets.GDRIVE_REFRESH_TOKEN }}
+  RCLONE_CONFIG_SECRET: ${{ secrets.RCLONE_CONFIG }}
+  NEXTCLOUD_URL: ${{ secrets.NEXTCLOUD_URL || secrets.PTSERVIDOR_NEXTCLOUD_URL }}
+  NEXTCLOUD_USER: ${{ secrets.NEXTCLOUD_USER || secrets.PTSERVIDOR_NEXTCLOUD_USER }}
+  NEXTCLOUD_PASSWORD: ${{ secrets.NEXTCLOUD_PASSWORD || secrets.PTSERVIDOR_NEXTCLOUD_PASSWORD }}
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - name: Validate PTServidor SSH secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$DEPLOY_KEY" || { echo '::error::PTServidor SSH private key missing'; exit 2; }
+          test -n "$DEPLOY_KNOWN_HOSTS" || { echo '::error::PTServidor known_hosts missing'; exit 2; }
+          case "$DEPLOY_PORT" in (*[!0-9]*|'') echo '::error::SSH port invalid'; exit 2;; esac
+
+      - name: Configure strict SSH
+        shell: bash
+        run: |
+          set -euo pipefail
+          install -d -m 0700 "$HOME/.ssh"
+          printf '%s\n' "$DEPLOY_KEY" > "$HOME/.ssh/id_atlas"
+          chmod 0600 "$HOME/.ssh/id_atlas"
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          chmod 0600 "$HOME/.ssh/known_hosts"
+
+      - name: PTServidor preflight and private destination
+        shell: bash
+        run: |
+          set -euo pipefail
+          ssh -i "$HOME/.ssh/id_atlas" -p "$DEPLOY_PORT" -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes "$DEPLOY_USER@$DEPLOY_HOST" \
+            "set -eu; mkdir -p '$PRIVATE_MIGRATION_ROOT'; test ! '$PRIVATE_MIGRATION_ROOT' = '/home/associ16/public_html'; df -Pk /home/associ16; printf 'PTSERVIDOR_AUTH_OK\n'"
+
+      - name: Install rclone
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL https://rclone.org/install.sh | sudo bash
+          rclone version
+
+      - name: Configure Google Drive source from existing secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$HOME/.config/rclone"
+          if [ -n "$RCLONE_CONFIG_SECRET" ]; then
+            printf '%s' "$RCLONE_CONFIG_SECRET" > "$HOME/.config/rclone/rclone.conf"
+          elif [ -n "$GOOGLE_SERVICE_ACCOUNT_JSON" ]; then
+            printf '%s' "$GOOGLE_SERVICE_ACCOUNT_JSON" > "$RUNNER_TEMP/gdrive-sa.json"
+            chmod 600 "$RUNNER_TEMP/gdrive-sa.json"
+            rclone config create gdrive drive service_account_file "$RUNNER_TEMP/gdrive-sa.json" scope drive --non-interactive
+          elif [ -n "$GOOGLE_CLIENT_ID" ] && [ -n "$GOOGLE_CLIENT_SECRET" ] && [ -n "$GOOGLE_REFRESH_TOKEN" ]; then
+            python - <<'PY'
+          import json, os, pathlib
+          cfg=pathlib.Path.home()/'.config/rclone/rclone.conf'
+          tok=json.dumps({'access_token':'','token_type':'Bearer','refresh_token':os.environ['GOOGLE_REFRESH_TOKEN'],'expiry':'2000-01-01T00:00:00Z'})
+          cfg.write_text('[gdrive]\ntype = drive\nclient_id = '+os.environ['GOOGLE_CLIENT_ID']+'\nclient_secret = '+os.environ['GOOGLE_CLIENT_SECRET']+'\nscope = drive\ntoken = '+tok+'\n', encoding='utf-8')
+          PY
+          else
+            echo '::error::No usable Google Drive credential secret found'; exit 10
+          fi
+          remote=$(rclone listremotes | grep -E '^(gdrive|drive|google-drive|google):$' | head -n1 || true)
+          test -n "$remote" || { echo '::error::No Google Drive rclone remote found'; rclone listremotes; exit 11; }
+          echo "SOURCE_REMOTE=$remote" >> "$GITHUB_ENV"
+          rclone lsd "$remote" --max-depth 1 >/tmp/gdrive-lsd.txt
+          echo 'GDRIVE_AUTH_OK'
+
+      - name: Canary Drive -> PTServidor -> download-back SHA256
+        shell: bash
+        run: |
+          set -euo pipefail
+          head -c 4096 /dev/urandom > "$RUNNER_TEMP/canary.bin"
+          local_sha=$(sha256sum "$RUNNER_TEMP/canary.bin" | awk '{print $1}')
+          cat "$RUNNER_TEMP/canary.bin" | ssh -i "$HOME/.ssh/id_atlas" -p "$DEPLOY_PORT" -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes "$DEPLOY_USER@$DEPLOY_HOST" "cat > '$PRIVATE_MIGRATION_ROOT/.canary.bin'"
+          ssh -i "$HOME/.ssh/id_atlas" -p "$DEPLOY_PORT" -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes "$DEPLOY_USER@$DEPLOY_HOST" "cat '$PRIVATE_MIGRATION_ROOT/.canary.bin'" > "$RUNNER_TEMP/canary.back.bin"
+          back_sha=$(sha256sum "$RUNNER_TEMP/canary.back.bin" | awk '{print $1}')
+          test "$local_sha" = "$back_sha"
+          ssh -i "$HOME/.ssh/id_atlas" -p "$DEPLOY_PORT" -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes "$DEPLOY_USER@$DEPLOY_HOST" "rm -f '$PRIVATE_MIGRATION_ROOT/.canary.bin'"
+          echo "CANARY_VERIFIED_SHA256=$local_sha"
+
+      - name: Preservative full Drive migration to PTServidor private area
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/milk-migration-stage"
+          rclone copy "$SOURCE_REMOTE" "$RUNNER_TEMP/milk-migration-stage" \
+            --fast-list --transfers 8 --checkers 16 --retries 5 --low-level-retries 20 \
+            --create-empty-src-dirs --metadata --metadata-set "milk_source=google_drive_readonly" \
+            --log-file "$RUNNER_TEMP/rclone-drive.log" --log-level INFO
+          tar -C "$RUNNER_TEMP/milk-migration-stage" -cf - . | \
+            ssh -i "$HOME/.ssh/id_atlas" -p "$DEPLOY_PORT" -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes "$DEPLOY_USER@$DEPLOY_HOST" \
+              "tar -xf - -C '$PRIVATE_MIGRATION_ROOT'"
+          find "$RUNNER_TEMP/milk-migration-stage" -type f -print0 | sort -z | xargs -0 sha256sum > "$RUNNER_TEMP/source.sha256"
+          scp -i "$HOME/.ssh/id_atlas" -P "$DEPLOY_PORT" -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes "$RUNNER_TEMP/source.sha256" "$DEPLOY_USER@$DEPLOY_HOST:$PRIVATE_MIGRATION_ROOT/.source.sha256"
+          remote_fail=$(ssh -i "$HOME/.ssh/id_atlas" -p "$DEPLOY_PORT" -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes "$DEPLOY_USER@$DEPLOY_HOST" "cd '$PRIVATE_MIGRATION_ROOT' && sed 's#  .*/milk-migration-stage/#  #' .source.sha256 | sha256sum -c - 2>&1 | grep -c ': FAILED' || true")
+          test "$remote_fail" = "0"
+          echo 'FULL_TRANSFER_FIXITY_OK'
+
+      - name: Count and receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          ssh -i "$HOME/.ssh/id_atlas" -p "$DEPLOY_PORT" -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes "$DEPLOY_USER@$DEPLOY_HOST" \
+            "python3 - <<'PY'
+          import os, json, hashlib, time
+          root='$PRIVATE_MIGRATION_ROOT'
+          files=0; folders=0; total=0
+          for base, ds, fs in os.walk(root):
+              if base!=root: folders += 1
+              for n in fs:
+                  if n.startswith('.source.sha256'): continue
+                  p=os.path.join(base,n)
+                  try:
+                      total += os.path.getsize(p); files += 1
+                  except OSError: pass
+          receipt={'verified_at':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),'files':files,'folders':folders,'bytes':total,'failed':0,'source':'Google Drive read-only','destination':root}
+          print(json.dumps(receipt,sort_keys=True))
+          open(os.path.join(root,'.migration-receipt.json'),'w').write(json.dumps(receipt,indent=2,sort_keys=True))
+          PY"
+
+      - name: Nextcloud handoff when configured
+        if: ${{ env.NEXTCLOUD_URL != '' && env.NEXTCLOUD_USER != '' && env.NEXTCLOUD_PASSWORD != '' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          rclone config create nextcloud webdav url "$NEXTCLOUD_URL" vendor nextcloud user "$NEXTCLOUD_USER" pass "$(rclone obscure "$NEXTCLOUD_PASSWORD")" --non-interactive
+          rclone copy "$RUNNER_TEMP/milk-migration-stage" nextcloud:Atlas/IA-MILK \
+            --fast-list --transfers 8 --checkers 16 --retries 5 --checksum --create-empty-src-dirs
+          rclone check "$RUNNER_TEMP/milk-migration-stage" nextcloud:Atlas/IA-MILK --one-way
+          echo 'NEXTCLOUD_WEBDAV_FIXITY_OK'

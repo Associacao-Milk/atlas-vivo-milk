@@ -31,6 +31,9 @@ jobs:
       ISSUE_NUMBER: '35'
     steps:
       - uses: actions/checkout@v4
+      - name: Zero-disclosure secret shape probe
+        shell: bash
+        run: python scripts/probe_drive_secret_shape.py
       - name: Install rclone
         shell: bash
         run: curl -fsSL https://rclone.org/install.sh | sudo bash >/dev/null
@@ -57,4 +60,4 @@ jobs:
           if-no-files-found: ignore
           retention-days: 30
 
-# normalized-secret-rerun: 2026-08-20T21:41+01:00
+# shape-probe-rerun: 2026-08-20T21:43+01:00

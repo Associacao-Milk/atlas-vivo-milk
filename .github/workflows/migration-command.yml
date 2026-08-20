@@ -1,0 +1,127 @@
+name: MILK Migration Command
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  migrate:
+    if: ${{ startsWith(github.event.issue.title, '[MILK-MIGRATE-NOW]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    env:
+      FTPS_HOST: associacaomilk.pt
+      FTPS_PORT: '21'
+      FTPS_USER: migration@associacaomilk.pt
+      FTPS_PASSWORD: ${{ secrets.PTSERVIDOR_FTPS_PASSWORD }}
+      GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON || secrets.GOOGLE_DRIVE_SERVICE_ACCOUNT_JSON || secrets.GDRIVE_SERVICE_ACCOUNT_JSON }}
+      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID || secrets.GDRIVE_CLIENT_ID }}
+      GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET || secrets.GDRIVE_CLIENT_SECRET }}
+      GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN || secrets.GDRIVE_REFRESH_TOKEN }}
+      RCLONE_CONFIG_SECRET: ${{ secrets.RCLONE_CONFIG }}
+      GH_TOKEN: ${{ github.token }}
+      ISSUE_NUMBER: ${{ github.event.issue.number }}
+      REPO: ${{ github.repository }}
+    steps:
+      - name: Helper
+        shell: bash
+        run: |
+          cat > "$RUNNER_TEMP/comment.sh" <<'SH'
+          #!/usr/bin/env bash
+          set -euo pipefail
+          msg="$1"
+          python - "$msg" > "$RUNNER_TEMP/comment.json" <<'PY'
+          import json,sys
+          print(json.dumps({'body':sys.argv[1]}))
+          PY
+          curl -fsS -X POST -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" "https://api.github.com/repos/$REPO/issues/$ISSUE_NUMBER/comments" -d @"$RUNNER_TEMP/comment.json" >/dev/null
+          SH
+          chmod +x "$RUNNER_TEMP/comment.sh"
+          "$RUNNER_TEMP/comment.sh" "MIGRATION_EXECUTOR_STARTED"
+      - name: Require FTPS secret
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$FTPS_PASSWORD" || { "$RUNNER_TEMP/comment.sh" "BLOCKED: PTSERVIDOR_FTPS_PASSWORD missing"; exit 2; }
+          "$RUNNER_TEMP/comment.sh" "FTPS_SECRET_PRESENT"
+      - name: FTPS canary
+        shell: bash
+        run: |
+          set -euo pipefail
+          canary=".milk-canary-${GITHUB_RUN_ID}.bin"
+          head -c 4096 /dev/urandom > "$RUNNER_TEMP/canary.bin"
+          local_sha="$(sha256sum "$RUNNER_TEMP/canary.bin" | awk '{print $1}')"
+          url="ftp://${FTPS_HOST}:${FTPS_PORT}/${canary}"
+          curl --fail --silent --show-error --ssl-reqd --ftp-pasv --connect-timeout 20 --max-time 120 --user "$FTPS_USER:$FTPS_PASSWORD" -T "$RUNNER_TEMP/canary.bin" "$url"
+          curl --fail --silent --show-error --ssl-reqd --ftp-pasv --connect-timeout 20 --max-time 120 --user "$FTPS_USER:$FTPS_PASSWORD" "$url" -o "$RUNNER_TEMP/canary.back.bin"
+          back_sha="$(sha256sum "$RUNNER_TEMP/canary.back.bin" | awk '{print $1}')"
+          test "$local_sha" = "$back_sha"
+          curl --fail --silent --show-error --ssl-reqd --ftp-pasv --user "$FTPS_USER:$FTPS_PASSWORD" -Q "DELE /${canary}" "ftp://${FTPS_HOST}:${FTPS_PORT}/" >/dev/null
+          "$RUNNER_TEMP/comment.sh" "FTPS_CANARY_VERIFIED sha256=$local_sha bytes=4096"
+      - name: Install rclone
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL https://rclone.org/install.sh | sudo bash >/dev/null
+      - name: Configure Drive read-only
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$HOME/.config/rclone"
+          if [ -n "$RCLONE_CONFIG_SECRET" ]; then
+            printf '%s' "$RCLONE_CONFIG_SECRET" > "$HOME/.config/rclone/rclone.conf"
+          elif [ -n "$GOOGLE_SERVICE_ACCOUNT_JSON" ]; then
+            printf '%s' "$GOOGLE_SERVICE_ACCOUNT_JSON" > "$RUNNER_TEMP/gdrive-sa.json"
+            chmod 600 "$RUNNER_TEMP/gdrive-sa.json"
+            rclone config create gdrive drive service_account_file "$RUNNER_TEMP/gdrive-sa.json" scope drive.readonly --non-interactive >/dev/null
+          elif [ -n "$GOOGLE_CLIENT_ID" ] && [ -n "$GOOGLE_CLIENT_SECRET" ] && [ -n "$GOOGLE_REFRESH_TOKEN" ]; then
+            python - <<'PY'
+          import json, os, pathlib
+          cfg=pathlib.Path.home()/'.config/rclone/rclone.conf'
+          tok=json.dumps({'access_token':'','token_type':'Bearer','refresh_token':os.environ['GOOGLE_REFRESH_TOKEN'],'expiry':'2000-01-01T00:00:00Z'})
+          cfg.write_text('[gdrive]\ntype = drive\nclient_id = '+os.environ['GOOGLE_CLIENT_ID']+'\nclient_secret = '+os.environ['GOOGLE_CLIENT_SECRET']+'\nscope = drive.readonly\ntoken = '+tok+'\n', encoding='utf-8')
+          PY
+          else
+            "$RUNNER_TEMP/comment.sh" "BLOCKED: no usable Google Drive credential secret"; exit 10
+          fi
+          remote="$(rclone listremotes | grep -E '^(gdrive|drive|google-drive|google):$' | head -n1 || true)"
+          test -n "$remote" || { "$RUNNER_TEMP/comment.sh" "BLOCKED: no Google Drive remote"; exit 11; }
+          echo "SOURCE_REMOTE=$remote" >> "$GITHUB_ENV"
+          rclone lsd "$remote" --max-depth 1 >/dev/null
+          "$RUNNER_TEMP/comment.sh" "GDRIVE_READONLY_AUTH_OK"
+      - name: Configure FTPS remote
+        shell: bash
+        run: |
+          set -euo pipefail
+          obscured="$(rclone obscure "$FTPS_PASSWORD")"
+          rclone config create ptftps ftp host "$FTPS_HOST" port "$FTPS_PORT" user "$FTPS_USER" pass "$obscured" explicit_tls true --non-interactive >/dev/null
+          rclone lsd ptftps: >/dev/null
+          "$RUNNER_TEMP/comment.sh" "PTSERVIDOR_FTPS_AUTH_OK"
+      - name: Copy Drive to PTServidor
+        shell: bash
+        run: |
+          set -euo pipefail
+          rclone copy "$SOURCE_REMOTE" ptftps: --fast-list --transfers 8 --checkers 16 --retries 5 --low-level-retries 20 --create-empty-src-dirs --log-file "$RUNNER_TEMP/rclone-migration.log" --log-level INFO
+          "$RUNNER_TEMP/comment.sh" "TRANSFER_COMPLETE_PENDING_VERIFICATION"
+      - name: Verify destination
+        shell: bash
+        run: |
+          set -euo pipefail
+          rclone check "$SOURCE_REMOTE" ptftps: --one-way --download --checkers 8 --retries 3 --log-file "$RUNNER_TEMP/rclone-check.log" --log-level INFO
+          src="$(rclone size "$SOURCE_REMOTE" --json)"
+          dst="$(rclone size ptftps: --json)"
+          python - "$src" "$dst" > "$RUNNER_TEMP/receipt.txt" <<'PY'
+          import json,sys
+          s=json.loads(sys.argv[1]); d=json.loads(sys.argv[2])
+          print(f"MIGRATION_VERIFIED source_objects={s.get('count')} source_bytes={s.get('bytes')} destination_objects={d.get('count')} destination_bytes={d.get('bytes')} failed=0 drive_writes=0")
+          PY
+          "$RUNNER_TEMP/comment.sh" "$(cat "$RUNNER_TEMP/receipt.txt")"
+      - name: Failure receipt
+        if: failure()
+        shell: bash
+        run: |
+          "$RUNNER_TEMP/comment.sh" "MIGRATION_FAILED see GitHub Actions job logs; Drive writes=0" || true

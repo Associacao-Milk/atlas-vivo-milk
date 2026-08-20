@@ -1,8 +1,13 @@
 name: MILK Mistral Agents — Drive to PTServidor NOW
 
 on:
+  push:
+    branches: [master]
+    paths:
+      - '.github/workflows/mistral-drive-ptservidor-now.yml'
   issues:
     types: [opened]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -14,7 +19,7 @@ concurrency:
 
 jobs:
   migrate:
-    if: ${{ startsWith(github.event.issue.title, '[MISTRAL-MIGRATE-NOW]') }}
+    if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' || startsWith(github.event.issue.title, '[MISTRAL-MIGRATE-NOW]') }}
     runs-on: ubuntu-latest
     timeout-minutes: 360
     env:
@@ -23,7 +28,7 @@ jobs:
       PTSERVIDOR_FTPS_PASSWORD: ${{ secrets.PTSERVIDOR_FTPS_PASSWORD }}
       NEXTCLOUD_KEY: ${{ secrets.NEXTCLOUD_KEY }}
       GH_TOKEN: ${{ github.token }}
-      ISSUE_NUMBER: ${{ github.event.issue.number }}
+      ISSUE_NUMBER: '35'
     steps:
       - uses: actions/checkout@v4
       - name: Install rclone

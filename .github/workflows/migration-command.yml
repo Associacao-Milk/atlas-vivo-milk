@@ -14,7 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 360
     env:
-      FTPS_HOST: associacaomilk.pt
+      FTPS_HOST_PRIMARY: associacaomilk.pt
+      FTPS_HOST_FALLBACK: troi.ptservidor.net
       FTPS_PORT: '21'
       FTPS_USER: migration@associacaomilk.pt
       FTPS_PASSWORD: ${{ secrets.PTSERVIDOR_FTPS_PASSWORD }}
@@ -41,33 +42,47 @@ jobs:
           curl -fsS -X POST -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" "https://api.github.com/repos/$REPO/issues/$ISSUE_NUMBER/comments" -d @"$RUNNER_TEMP/comment.json" >/dev/null
           SH
           chmod +x "$RUNNER_TEMP/comment.sh"
-          "$RUNNER_TEMP/comment.sh" "MIGRATION_EXECUTOR_STARTED"
+          "$RUNNER_TEMP/comment.sh" "MIGRATION_EXECUTOR_STARTED run=$GITHUB_RUN_ID"
       - name: Require FTPS secret
         shell: bash
         run: |
           set -euo pipefail
           test -n "$FTPS_PASSWORD" || { "$RUNNER_TEMP/comment.sh" "BLOCKED: PTSERVIDOR_FTPS_PASSWORD missing"; exit 2; }
           "$RUNNER_TEMP/comment.sh" "FTPS_SECRET_PRESENT"
-      - name: FTPS canary
+      - name: FTPS canary with host fallback
         shell: bash
         run: |
           set -euo pipefail
           canary=".milk-canary-${GITHUB_RUN_ID}.bin"
           head -c 4096 /dev/urandom > "$RUNNER_TEMP/canary.bin"
           local_sha="$(sha256sum "$RUNNER_TEMP/canary.bin" | awk '{print $1}')"
-          url="ftp://${FTPS_HOST}:${FTPS_PORT}/${canary}"
-          curl --fail --silent --show-error --ssl-reqd --ftp-pasv --connect-timeout 20 --max-time 120 --user "$FTPS_USER:$FTPS_PASSWORD" -T "$RUNNER_TEMP/canary.bin" "$url"
-          curl --fail --silent --show-error --ssl-reqd --ftp-pasv --connect-timeout 20 --max-time 120 --user "$FTPS_USER:$FTPS_PASSWORD" "$url" -o "$RUNNER_TEMP/canary.back.bin"
-          back_sha="$(sha256sum "$RUNNER_TEMP/canary.back.bin" | awk '{print $1}')"
-          test "$local_sha" = "$back_sha"
-          curl --fail --silent --show-error --ssl-reqd --ftp-pasv --user "$FTPS_USER:$FTPS_PASSWORD" -Q "DELE /${canary}" "ftp://${FTPS_HOST}:${FTPS_PORT}/" >/dev/null
-          "$RUNNER_TEMP/comment.sh" "FTPS_CANARY_VERIFIED sha256=$local_sha bytes=4096"
+          attempt_host() {
+            host="$1"; err="$RUNNER_TEMP/ftps-${host//./_}.err"; : > "$err"
+            url="ftp://${host}:${FTPS_PORT}/${canary}"
+            if ! curl --fail --silent --show-error --ssl-reqd --ftp-pasv --connect-timeout 20 --max-time 120 --user "$FTPS_USER:$FTPS_PASSWORD" -T "$RUNNER_TEMP/canary.bin" "$url" 2>"$err"; then
+              msg="$(tr '\n' ' ' < "$err" | head -c 500)"
+              "$RUNNER_TEMP/comment.sh" "FTPS_UPLOAD_FAILED host=$host detail=$msg"
+              return 1
+            fi
+            if ! curl --fail --silent --show-error --ssl-reqd --ftp-pasv --connect-timeout 20 --max-time 120 --user "$FTPS_USER:$FTPS_PASSWORD" "$url" -o "$RUNNER_TEMP/canary.back.bin" 2>"$err"; then
+              msg="$(tr '\n' ' ' < "$err" | head -c 500)"
+              "$RUNNER_TEMP/comment.sh" "FTPS_DOWNLOAD_FAILED host=$host detail=$msg"
+              return 1
+            fi
+            back_sha="$(sha256sum "$RUNNER_TEMP/canary.back.bin" | awk '{print $1}')"
+            if [ "$local_sha" != "$back_sha" ]; then "$RUNNER_TEMP/comment.sh" "FTPS_SHA_MISMATCH host=$host"; return 1; fi
+            curl --fail --silent --show-error --ssl-reqd --ftp-pasv --user "$FTPS_USER:$FTPS_PASSWORD" -Q "DELE /${canary}" "ftp://${host}:${FTPS_PORT}/" >/dev/null 2>&1 || true
+            echo "FTPS_HOST=$host" >> "$GITHUB_ENV"
+            "$RUNNER_TEMP/comment.sh" "FTPS_CANARY_VERIFIED host=$host sha256=$local_sha bytes=4096"
+            return 0
+          }
+          attempt_host "$FTPS_HOST_PRIMARY" || attempt_host "$FTPS_HOST_FALLBACK" || { "$RUNNER_TEMP/comment.sh" "BLOCKED: FTPS canary failed on both approved hosts"; exit 12; }
       - name: Install rclone
         shell: bash
         run: |
           set -euo pipefail
           curl -fsSL https://rclone.org/install.sh | sudo bash >/dev/null
-      - name: Configure Drive read-only
+      - name: Configure Google Drive read-only
         shell: bash
         run: |
           set -euo pipefail
@@ -93,21 +108,21 @@ jobs:
           echo "SOURCE_REMOTE=$remote" >> "$GITHUB_ENV"
           rclone lsd "$remote" --max-depth 1 >/dev/null
           "$RUNNER_TEMP/comment.sh" "GDRIVE_READONLY_AUTH_OK"
-      - name: Configure FTPS remote
+      - name: Configure PTServidor FTPS destination
         shell: bash
         run: |
           set -euo pipefail
           obscured="$(rclone obscure "$FTPS_PASSWORD")"
           rclone config create ptftps ftp host "$FTPS_HOST" port "$FTPS_PORT" user "$FTPS_USER" pass "$obscured" explicit_tls true --non-interactive >/dev/null
           rclone lsd ptftps: >/dev/null
-          "$RUNNER_TEMP/comment.sh" "PTSERVIDOR_FTPS_AUTH_OK"
-      - name: Copy Drive to PTServidor
+          "$RUNNER_TEMP/comment.sh" "PTSERVIDOR_FTPS_AUTH_OK host=$FTPS_HOST"
+      - name: Preservative full Drive migration
         shell: bash
         run: |
           set -euo pipefail
           rclone copy "$SOURCE_REMOTE" ptftps: --fast-list --transfers 8 --checkers 16 --retries 5 --low-level-retries 20 --create-empty-src-dirs --log-file "$RUNNER_TEMP/rclone-migration.log" --log-level INFO
           "$RUNNER_TEMP/comment.sh" "TRANSFER_COMPLETE_PENDING_VERIFICATION"
-      - name: Verify destination
+      - name: Verify destination by download comparison
         shell: bash
         run: |
           set -euo pipefail
@@ -124,4 +139,4 @@ jobs:
         if: failure()
         shell: bash
         run: |
-          "$RUNNER_TEMP/comment.sh" "MIGRATION_FAILED see GitHub Actions job logs; Drive writes=0" || true
+          "$RUNNER_TEMP/comment.sh" "MIGRATION_FAILED run=$GITHUB_RUN_ID Drive writes=0" || true

@@ -36,7 +36,12 @@ jobs:
         run: curl -fsSL https://rclone.org/install.sh | sudo bash >/dev/null
       - name: Execute Mistral migration runtime
         shell: bash
-        run: python scripts/mistral_drive_ptservidor_now.py
+        run: |
+          set -euo pipefail
+          normalized="$(python scripts/normalize_drive_secret.py)"
+          echo "::add-mask::$normalized"
+          export DRIVE_SOMOSTODOSPOSSIVEIS="$normalized"
+          python scripts/mistral_drive_ptservidor_now.py
       - name: Preserve receipts
         if: always()
         uses: actions/upload-artifact@v4
@@ -52,4 +57,4 @@ jobs:
           if-no-files-found: ignore
           retention-days: 30
 
-# hardened-classifier-rerun: 2026-08-20T21:39+01:00
+# normalized-secret-rerun: 2026-08-20T21:41+01:00

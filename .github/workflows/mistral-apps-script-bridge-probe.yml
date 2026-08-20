@@ -23,3 +23,5 @@ jobs:
       - uses: actions/checkout@v4
       - name: Mistral agent probes existing Google export Web App read-only
         run: python scripts/mistral_apps_script_bridge_probe.py
+
+# forced-probe: 2026-08-20T21:31+01:00

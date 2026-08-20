@@ -1,0 +1,120 @@
+name: MILK Mistral Encrypted Relay — Real Drive File
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  relay:
+    if: ${{ startsWith(github.event.issue.title, '[MISTRAL-RELAY-NOW]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+      FTPS_PASSWORD: ${{ secrets.PTSERVIDOR_FTPS_PASSWORD }}
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      ISSUE: ${{ github.event.issue.number }}
+      FTPS_HOST: troi.ptservidor.net
+      FTPS_USER: migration@associacaomilk.pt
+    steps:
+      - name: Require runtime secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$MISTRAL_API_KEY"
+          test -n "$FTPS_PASSWORD"
+      - name: Mistral agent authorises opaque transfer contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os,json,re,urllib.request,time
+          key=os.environ['MISTRAL_API_KEY']
+          def req(url,method='GET',payload=None):
+              data=None if payload is None else json.dumps(payload).encode()
+              r=urllib.request.Request(url,data=data,method=method,headers={'Authorization':'Bearer '+key,'Content-Type':'application/json'})
+              return json.loads(urllib.request.urlopen(r,timeout=60).read())
+          page=req('https://api.mistral.ai/v1/agents/pages')
+          agents=page.get('data',[])
+          cand=[a for a in agents if any(x in ((a.get('name','')+' '+a.get('description','')).lower()) for x in ('migra','preserv','soberan'))]
+          if not cand: raise SystemExit('No canonical Mistral migration agent')
+          a=cand[0]
+          prompt='Execute one opaque preservative transport batch. Source bytes are supplied to the local runner through an encrypted relay from an authenticated Drive read-only connector. You may see only: object_count=1, size_bucket=10-20MB, source=Drive-readonly-relay, target=PTServidor-FTPS-private, verification=SHA256-download-back. Never request URL, filename, content, token, credential or personal data. Reply exactly ACTION=TRANSFER if contract is valid.'
+          c=req('https://api.mistral.ai/v1/conversations','POST',{'agent_id':a['id'],'inputs':prompt})
+          text=' '.join(str(x.get('content','')) for x in c.get('outputs',[]) if isinstance(x,dict))
+          if 'ACTION=TRANSFER' not in text: raise SystemExit('Mistral agent did not authorize transport')
+          print('MISTRAL_AGENT_AUTHORISED_OPAQUE_TRANSFER agent='+a.get('name','unknown'))
+          PY
+      - name: Generate ephemeral relay key and publish public half
+        shell: bash
+        run: |
+          set -euo pipefail
+          openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:3072 -out "$RUNNER_TEMP/relay-private.pem" >/dev/null 2>&1
+          openssl pkey -in "$RUNNER_TEMP/relay-private.pem" -pubout -out "$RUNNER_TEMP/relay-public.pem" >/dev/null 2>&1
+          PUB=$(base64 -w0 "$RUNNER_TEMP/relay-public.pem")
+          gh api "repos/$REPO/issues/$ISSUE/comments" -f body="MISTRAL_RELAY_READY run=$GITHUB_RUN_ID PUBLIC_KEY_B64=$PUB" >/dev/null
+      - name: Wait for sealed transport payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          found=''
+          for i in $(seq 1 120); do
+            body=$(gh api "repos/$REPO/issues/$ISSUE/comments?per_page=100" --jq '[.[].body | select(startswith("SEALED_RELAY_V1 "))][-1] // empty')
+            if [ -n "$body" ]; then found="$body"; break; fi
+            sleep 5
+          done
+          test -n "$found" || { echo 'sealed relay payload timeout'; exit 20; }
+          key_b64=$(printf '%s' "$found" | sed -n 's/.* KEY_B64=\([^ ]*\).*/\1/p')
+          data_b64=$(printf '%s' "$found" | sed -n 's/.* DATA_B64=\([^ ]*\).*/\1/p')
+          test -n "$key_b64"; test -n "$data_b64"
+          printf '%s' "$key_b64" | base64 -d > "$RUNNER_TEMP/key.enc"
+          printf '%s' "$data_b64" | base64 -d > "$RUNNER_TEMP/payload.enc"
+          openssl pkeyutl -decrypt -inkey "$RUNNER_TEMP/relay-private.pem" -pkeyopt rsa_padding_mode:oaep -in "$RUNNER_TEMP/key.enc" -out "$RUNNER_TEMP/pass.txt"
+          openssl enc -d -aes-256-cbc -pbkdf2 -in "$RUNNER_TEMP/payload.enc" -out "$RUNNER_TEMP/payload.json" -pass file:"$RUNNER_TEMP/pass.txt"
+          chmod 600 "$RUNNER_TEMP/payload.json"
+      - name: Download authenticated relay object and validate source hash
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY' > "$RUNNER_TEMP/payload.env"
+          import json,os,base64
+          d=json.load(open(os.environ['RUNNER_TEMP']+'/payload.json'))
+          for k in ('url','filename','sha256','size','opaque_id'): assert k in d
+          print('URL_B64='+base64.b64encode(d['url'].encode()).decode())
+          print('NAME_B64='+base64.b64encode(d['filename'].encode()).decode())
+          print('EXPECTED_SHA='+d['sha256'])
+          print('EXPECTED_SIZE='+str(d['size']))
+          print('OPAQUE_ID='+d['opaque_id'])
+          PY
+          source "$RUNNER_TEMP/payload.env"
+          URL=$(printf '%s' "$URL_B64" | base64 -d)
+          NAME=$(printf '%s' "$NAME_B64" | base64 -d)
+          echo "::add-mask::$URL"
+          curl -fL --retry 4 --connect-timeout 20 --max-time 600 "$URL" -o "$RUNNER_TEMP/source.bin"
+          ACTUAL_SIZE=$(stat -c %s "$RUNNER_TEMP/source.bin")
+          ACTUAL_SHA=$(sha256sum "$RUNNER_TEMP/source.bin" | awk '{print $1}')
+          test "$ACTUAL_SIZE" = "$EXPECTED_SIZE"
+          test "$ACTUAL_SHA" = "$EXPECTED_SHA"
+          printf '%s' "$NAME" > "$RUNNER_TEMP/name.txt"
+          echo 'SOURCE_RELAY_HASH_VERIFIED drive_writes=0'
+      - name: Upload real Drive object to PTServidor and download-back verify
+        shell: bash
+        run: |
+          set -euo pipefail
+          source "$RUNNER_TEMP/payload.env"
+          NAME=$(cat "$RUNNER_TEMP/name.txt")
+          URL="ftp://${FTPS_HOST}:21/${NAME}"
+          base=(curl --fail --silent --show-error --ssl-reqd --ftp-pasv --connect-timeout 20 --max-time 900 --user "$FTPS_USER:$FTPS_PASSWORD")
+          "${base[@]}" -T "$RUNNER_TEMP/source.bin" "$URL"
+          "${base[@]}" "$URL" -o "$RUNNER_TEMP/back.bin"
+          BACK_SIZE=$(stat -c %s "$RUNNER_TEMP/back.bin")
+          BACK_SHA=$(sha256sum "$RUNNER_TEMP/back.bin" | awk '{print $1}')
+          test "$BACK_SIZE" = "$EXPECTED_SIZE"
+          test "$BACK_SHA" = "$EXPECTED_SHA"
+          gh api "repos/$REPO/issues/$ISSUE/comments" -f body="REAL_DRIVE_FILE_MIGRATED_VERIFIED run=$GITHUB_RUN_ID opaque_id=$OPAQUE_ID bytes=$BACK_SIZE sha256=$BACK_SHA drive_writes=0" >/dev/null
+          echo "REAL_DRIVE_FILE_MIGRATED_VERIFIED bytes=$BACK_SIZE sha256=$BACK_SHA drive_writes=0"

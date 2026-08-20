@@ -93,7 +93,7 @@ jobs:
           set -euo pipefail
           obscured="$(rclone obscure "$FTPS_PASSWORD")"
           rclone config create ptftps ftp host "$FTPS_HOST" port "$FTPS_PORT" user "$FTPS_USER" pass "$obscured" explicit_tls true --non-interactive
-          rclone lsd ptftps: >/dev/null || true
+          rclone lsd ptftps: >/dev/null
           echo 'PTSERVIDOR_FTPS_AUTH_OK'
 
       - name: Preservative full Drive migration
@@ -117,8 +117,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          source_json="$(rclone size "$SOURCE_REMOTE" --json)"
-          dest_json="$(rclone size ptftps: --json)"
+          export SOURCE_JSON="$(rclone size "$SOURCE_REMOTE" --json)"
+          export DEST_JSON="$(rclone size ptftps: --json)"
           python - <<'PY'
           import json, os, time
           src=json.loads(os.environ['SOURCE_JSON']); dst=json.loads(os.environ['DEST_JSON'])
@@ -134,9 +134,6 @@ jobs:
           open(os.environ['RUNNER_TEMP']+'/migration-receipt.json','w').write(json.dumps(receipt,indent=2,sort_keys=True))
           print(json.dumps(receipt,sort_keys=True))
           PY
-        env:
-          SOURCE_JSON: ${{ env.SOURCE_JSON }}
-          DEST_JSON: ${{ env.DEST_JSON }}
 
       - name: Preserve receipts
         if: always()
@@ -150,3 +147,5 @@ jobs:
             ${{ runner.temp }}/rclone-check.log
           if-no-files-found: ignore
           retention-days: 30
+
+# forced-execution: 2026-08-20T19:59+01:00

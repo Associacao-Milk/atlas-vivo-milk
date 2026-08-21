@@ -1,0 +1,52 @@
+name: MILK Mistral Drive private canary
+on:
+  push:
+    branches: [master]
+    paths: ['.github/workflows/mistral-drive-ftps-private-canary.yml']
+permissions:
+  contents: read
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+      GOOGLE_DRIVE_TOKEN: ${{ secrets.DRIVE_SOMOSTODOSPOSSIVEIS }}
+      PTSERVIDOR_FTPS_PASSWORD: ${{ secrets.PTSERVIDOR_FTPS_PASSWORD }}
+    steps:
+      - name: Mistral authorised preservative transfer
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import ftplib,hashlib,json,os,pathlib,ssl,sys,urllib.error,urllib.request
+          def req(url,method="GET",body=None,headers=None,timeout=60):
+            r=urllib.request.Request(url,data=(json.dumps(body).encode() if body else None),method=method,headers=headers or {})
+            try:
+              with urllib.request.urlopen(r,timeout=timeout) as x:return x.status,x.read()
+            except urllib.error.HTTPError as x:return x.code,x.read()
+          mkey=os.environ["MISTRAL_API_KEY"].strip(); token=os.environ["GOOGLE_DRIVE_TOKEN"].strip(); pwd=os.environ["PTSERVIDOR_FTPS_PASSWORD"].strip()
+          if not(mkey and token and pwd):raise SystemExit("PRIVATE_CANARY_STOP missing_required_secret")
+          s,b=req("https://api.mistral.ai/v1/chat/completions","POST",{"model":"mistral-small-latest","temperature":0,"messages":[{"role":"system","content":"Responde exactamente EXECUTE_MIGRATION."},{"role":"user","content":"Autoriza só uma cópia canário preservativa Drive para staging privado; origem sem escrita."}]},{"Authorization":"Bearer "+mkey,"Content-Type":"application/json"})
+          if s<200 or s>=300:raise SystemExit("PRIVATE_CANARY_STOP mistral_unavailable")
+          try: answer=json.loads(b)["choices"][0]["message"]["content"].strip()
+          except Exception: answer=""
+          if answer!="EXECUTE_MIGRATION":raise SystemExit("PRIVATE_CANARY_STOP mistral_denied")
+          fid="15SQI6L1VxFv2CodkWym3ByZQNIi7YV-y"; base="https://www.googleapis.com/drive/v3/files/"+fid; auth={"Authorization":"Bearer "+token}
+          s,b=req(base+"?fields=id,name,size,md5Checksum",headers=auth)
+          if s!=200:raise SystemExit("PRIVATE_CANARY_STOP drive_token_not_accepted")
+          meta=json.loads(b); expected=int(meta.get("size") or 0)
+          if expected<=0:raise SystemExit("PRIVATE_CANARY_STOP source_size_unavailable")
+          s,data=req(base+"?alt=media",headers=auth,timeout=600)
+          if s!=200 or len(data)!=expected:raise SystemExit("PRIVATE_CANARY_STOP source_download_mismatch")
+          if meta.get("md5Checksum") and hashlib.md5(data).hexdigest()!=meta["md5Checksum"]:raise SystemExit("PRIVATE_CANARY_STOP source_md5_mismatch")
+          sha=hashlib.sha256(data).hexdigest(); name="WORK_HANDOFF_ATLAS_VIVO_MILK_2026-08-12__CANARY.zip"; local=pathlib.Path(os.environ.get("RUNNER_TEMP","/tmp"))/name; local.write_bytes(data)
+          ftp=ftplib.FTP_TLS(context=ssl.create_default_context(),timeout=60);ftp.connect("troi.ptservidor.net",21);ftp.login("migration@associacaomilk.pt",pwd);ftp.prot_p()
+          try:ftp.mkd("atlas-private-migration-canary-2026-08-21")
+          except ftplib.all_errors:pass
+          ftp.cwd("atlas-private-migration-canary-2026-08-21")
+          with local.open("rb") as f:ftp.storbinary("STOR "+name,f,blocksize=1048576)
+          back=bytearray();ftp.retrbinary("RETR "+name,back.extend,blocksize=1048576);ftp.quit()
+          if len(back)!=expected or hashlib.sha256(back).hexdigest()!=sha:raise SystemExit("PRIVATE_CANARY_STOP destination_readback_mismatch")
+          print("MISTRAL_PRIVATE_CANARY_VERIFIED bytes="+str(expected)+" sha256="+sha+" source_writes=0 destination=private_ftps_staging")
+          PY

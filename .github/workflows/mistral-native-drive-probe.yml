@@ -17,17 +17,18 @@ jobs:
     timeout-minutes: 30
     env:
       MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+      DRIVE_SOMOSTODOSPOSSIVEIS: ${{ secrets.DRIVE_SOMOSTODOSPOSSIVEIS }}
       GH_TOKEN: ${{ github.token }}
       REPO: ${{ github.repository }}
       ISSUE_NUMBER: '35'
     steps:
-      - name: Probe exact Mistral Google Drive connector
+      - name: Probe Mistral Google Drive auth state without disclosure
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
-          import os,json,urllib.request,urllib.parse
-          key=os.environ['MISTRAL_API_KEY']; gh=os.environ['GH_TOKEN']; repo=os.environ['REPO']; issue=os.environ['ISSUE_NUMBER']
+          import os,json,urllib.request,urllib.parse,hashlib
+          key=os.environ['MISTRAL_API_KEY']; gh=os.environ['GH_TOKEN']; repo=os.environ['REPO']; issue=os.environ['ISSUE_NUMBER']; opaque=os.environ.get('DRIVE_SOMOSTODOSPOSSIVEIS','')
           def comment(msg):
               data=json.dumps({'body':msg}).encode()
               req=urllib.request.Request(f'https://api.github.com/repos/{repo}/issues/{issue}/comments',data=data,method='POST',headers={'Authorization':'Bearer '+gh,'Content-Type':'application/json','Accept':'application/vnd.github+json'})
@@ -35,30 +36,25 @@ jobs:
           def get(url):
               req=urllib.request.Request(url,headers={'Authorization':'Bearer '+key,'Accept':'application/json'})
               with urllib.request.urlopen(req,timeout=60) as r:return json.loads(r.read().decode())
-          def post(url,payload):
-              req=urllib.request.Request(url,data=json.dumps(payload).encode(),method='POST',headers={'Authorization':'Bearer '+key,'Content-Type':'application/json','Accept':'application/json'})
-              with urllib.request.urlopen(req,timeout=120) as r:return json.loads(r.read().decode())
-          comment('MISTRAL_NATIVE_CONNECTOR_PROBE_STARTED drive_writes=0 selector=exact_google_drive')
-          page=get('https://api.mistral.ai/v1/connectors?page_size=200')
-          items=page.get('items') or page.get('data') or []
-          def nm(c): return str(c.get('name') or c.get('title') or '').strip().lower()
-          candidates=[c for c in items if nm(c) in ('google_drive','google drive')]
-          if not candidates:
-              candidates=[c for c in items if 'drive' in nm(c) and 'google' in nm(c)]
-          if not candidates:
-              comment('MISTRAL_NATIVE_DRIVE_BLOCKED exact_google_drive_connector_not_found')
-              raise SystemExit(2)
-          c=candidates[0]; cid=c.get('id') or c.get('connector_id') or c.get('name') or c.get('title')
-          q=urllib.parse.quote(str(cid),safe='')
-          tools=get(f'https://api.mistral.ai/v1/connectors/{q}/tools')
-          tool_list=tools if isinstance(tools,list) else (tools.get('items') or tools.get('data') or tools.get('tools') or [])
-          names=[str(t.get('name')) for t in tool_list if isinstance(t,dict)]
-          comment('MISTRAL_NATIVE_DRIVE_CONNECTOR_FOUND connector='+str(c.get('name') or c.get('title') or cid)[:80]+' tools='+','.join(names[:80]))
-          payload={'model':'mistral-small-latest','inputs':[{'role':'user','content':'Use ONLY the connected Google Drive connector in read-only mode. Search for ATLAS_CONTROLO_VIVO. Do not modify, create, move or delete anything. If you can access the Drive and find or search for that object, return exactly DRIVE_READ_OK followed by its name only. Otherwise return DRIVE_READ_FAIL plus a short reason.'}],'tools':[{'type':'connector','connector_id':cid}]}
-          conv=post('https://api.mistral.ai/v1/conversations',payload)
-          text=' '.join(str(o.get('content','')) for o in conv.get('outputs',[]) if isinstance(o,dict))
-          ok='DRIVE_READ_OK' in text
-          comment('MISTRAL_NATIVE_DRIVE_READ_'+('OK' if ok else 'FAIL')+' agent_runtime=yes drive_writes=0 response='+text[:300].replace('\n',' '))
-          if not ok: raise SystemExit(3)
-          print(json.dumps({'connector_name':c.get('name') or c.get('title'),'tools':names,'drive_read_ok':ok},indent=2))
+          comment('MISTRAL_NATIVE_DRIVE_AUTH_PROBE_STARTED drive_writes=0 secret_value_disclosed=no')
+          c=get('https://api.mistral.ai/v1/connectors/google_drive?fetch_user_data=true&fetch_customer_data=false')
+          methods=get('https://api.mistral.ai/v1/connectors/google_drive/authentication_methods')
+          creds=get('https://api.mistral.ai/v1/connectors/google_drive/user/credentials?fetch_default=true')
+          tools=get('https://api.mistral.ai/v1/connectors/google_drive/tools')
+          tl=tools if isinstance(tools,list) else (tools.get('items') or tools.get('data') or tools.get('tools') or [])
+          names=[str(t.get('name')) for t in tl if isinstance(t,dict)]
+          method_names=[]
+          for m in (methods or []):
+              if isinstance(m,dict): method_names.append(str(m.get('type') or m.get('auth_type') or m.get('name') or 'unknown'))
+              else: method_names.append(str(m))
+          cred_list=(creds or {}).get('credentials') if isinstance(creds,dict) else None
+          comment('MISTRAL_NATIVE_DRIVE_AUTH_STATE active='+str(c.get('active'))+' methods='+','.join(method_names)+' user_credentials_count='+str(len(cred_list or []))+' tools='+','.join(names))
+          # Secret is never sent to Mistral or printed. Only non-reversible structural facts.
+          comment('DRIVE_SECRET_OPAQUE_STATE present='+('yes' if bool(opaque) else 'no')+' length_bucket='+('<100' if len(opaque)<100 else '100plus')+' fingerprint12='+hashlib.sha256(opaque.encode()).hexdigest()[:12]+' value_disclosed=no')
+          try:
+              au=get('https://api.mistral.ai/v1/connectors/google_drive/auth_url')
+              has_url=bool(au.get('auth_url')) if isinstance(au,dict) else False
+              comment('MISTRAL_NATIVE_DRIVE_OAUTH_AVAILABLE auth_url_available='+('yes' if has_url else 'no')+' ttl='+str(au.get('ttl') if isinstance(au,dict) else None))
+          except Exception as e:
+              comment('MISTRAL_NATIVE_DRIVE_OAUTH_PROBE_FAILED cause='+type(e).__name__)
           PY

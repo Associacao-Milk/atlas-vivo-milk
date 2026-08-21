@@ -21,7 +21,7 @@ jobs:
       REPO: ${{ github.repository }}
       ISSUE_NUMBER: '35'
     steps:
-      - name: Probe Mistral connectors and Drive access
+      - name: Probe exact Mistral Google Drive connector
         shell: bash
         run: |
           set -euo pipefail
@@ -38,28 +38,27 @@ jobs:
           def post(url,payload):
               req=urllib.request.Request(url,data=json.dumps(payload).encode(),method='POST',headers={'Authorization':'Bearer '+key,'Content-Type':'application/json','Accept':'application/json'})
               with urllib.request.urlopen(req,timeout=120) as r:return json.loads(r.read().decode())
-          comment('MISTRAL_NATIVE_CONNECTOR_PROBE_STARTED drive_writes=0')
+          comment('MISTRAL_NATIVE_CONNECTOR_PROBE_STARTED drive_writes=0 selector=exact_google_drive')
           page=get('https://api.mistral.ai/v1/connectors?page_size=200')
           items=page.get('items') or page.get('data') or []
-          safe=[]
-          for c in items:
-              safe.append({'id':c.get('id') or c.get('connector_id'),'name':c.get('name') or c.get('title'),'title':c.get('title'),'active':c.get('active'),'visibility':c.get('visibility')})
-          comment('MISTRAL_CONNECTORS_DISCOVERED count='+str(len(safe))+' names='+','.join(str(x.get('name') or x.get('title') or x.get('id'))[:40] for x in safe[:30]))
-          candidates=[c for c in safe if 'drive' in (str(c.get('name'))+' '+str(c.get('title'))).lower() or 'google' in (str(c.get('name'))+' '+str(c.get('title'))).lower()]
+          def nm(c): return str(c.get('name') or c.get('title') or '').strip().lower()
+          candidates=[c for c in items if nm(c) in ('google_drive','google drive')]
           if not candidates:
-              comment('MISTRAL_NATIVE_DRIVE_BLOCKED no_google_drive_connector_found')
+              candidates=[c for c in items if 'drive' in nm(c) and 'google' in nm(c)]
+          if not candidates:
+              comment('MISTRAL_NATIVE_DRIVE_BLOCKED exact_google_drive_connector_not_found')
               raise SystemExit(2)
-          c=candidates[0]; cid=c.get('id') or c.get('name')
+          c=candidates[0]; cid=c.get('id') or c.get('connector_id') or c.get('name') or c.get('title')
           q=urllib.parse.quote(str(cid),safe='')
           tools=get(f'https://api.mistral.ai/v1/connectors/{q}/tools')
           tool_list=tools if isinstance(tools,list) else (tools.get('items') or tools.get('data') or tools.get('tools') or [])
           names=[str(t.get('name')) for t in tool_list if isinstance(t,dict)]
-          comment('MISTRAL_NATIVE_DRIVE_CONNECTOR_FOUND connector='+str(c.get('name') or c.get('title') or cid)[:80]+' tools='+','.join(names[:50]))
-          payload={'model':'mistral-small-latest','inputs':[{'role':'user','content':'Use ONLY the connected Google Drive tool in read-only mode. Search for ATLAS_CONTROLO_VIVO. Do not modify, create, move or delete anything. Return exactly DRIVE_READ_OK if accessible, otherwise DRIVE_READ_FAIL plus a short reason.'}],'tools':[{'type':'connector','connector_id':cid}]}
+          comment('MISTRAL_NATIVE_DRIVE_CONNECTOR_FOUND connector='+str(c.get('name') or c.get('title') or cid)[:80]+' tools='+','.join(names[:80]))
+          payload={'model':'mistral-small-latest','inputs':[{'role':'user','content':'Use ONLY the connected Google Drive connector in read-only mode. Search for ATLAS_CONTROLO_VIVO. Do not modify, create, move or delete anything. If you can access the Drive and find or search for that object, return exactly DRIVE_READ_OK followed by its name only. Otherwise return DRIVE_READ_FAIL plus a short reason.'}],'tools':[{'type':'connector','connector_id':cid}]}
           conv=post('https://api.mistral.ai/v1/conversations',payload)
           text=' '.join(str(o.get('content','')) for o in conv.get('outputs',[]) if isinstance(o,dict))
           ok='DRIVE_READ_OK' in text
           comment('MISTRAL_NATIVE_DRIVE_READ_'+('OK' if ok else 'FAIL')+' agent_runtime=yes drive_writes=0 response='+text[:300].replace('\n',' '))
           if not ok: raise SystemExit(3)
-          print(json.dumps({'connector':c,'tools':names,'drive_read_ok':ok},indent=2))
+          print(json.dumps({'connector_name':c.get('name') or c.get('title'),'tools':names,'drive_read_ok':ok},indent=2))
           PY

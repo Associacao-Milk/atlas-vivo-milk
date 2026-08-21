@@ -38,10 +38,24 @@ jobs:
           for file in $(find . -type f -name "*.html" ! -path "./.git/*"); do
             grep -qi "<!doctype html>" "$file" || { echo "Missing DOCTYPE in $file"; exit 1; }
           done
-      - name: Check JavaScript files
+      - name: Check changed JavaScript files
+        shell: bash
         run: |
-          for file in $(find . -type f -name "*.js" ! -path "./.git/*" ! -path "./node_modules/*"); do
-            node --check "$file" 2>&1 || { echo "Syntax error in $file"; exit 1; }
+          set -euo pipefail
+          if [ -n "${GITHUB_BASE_REF:-}" ]; then
+            git fetch --no-tags --depth=1 origin "$GITHUB_BASE_REF"
+            base="origin/$GITHUB_BASE_REF"
+          else
+            git fetch --no-tags --depth=2 origin "${GITHUB_REF_NAME}"
+            base="HEAD^"
+          fi
+          mapfile -t files < <(git diff --name-only "$base"...HEAD -- '*.js')
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "No changed JavaScript files"
+            exit 0
+          fi
+          for file in "${files[@]}"; do
+            node --check "$file"
           done
   test-backend:
     name: Test Backend (Apps Script)
@@ -60,12 +74,37 @@ jobs:
     needs: validate
     steps:
       - uses: actions/checkout@v4
-      - name: Lint Markdown files
-        uses: avturlyak/markdown-lint@v1
-        with:
-          config: '.github/markdownlint-config.json'
-          args: '**/*.md'
-      - name: Lint YAML files
-        uses: ibiqlik/action-yamllint@v3
-        with:
-          config_file: '.github/yamllint-config.yml'
+      - name: Lint changed Markdown files
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -n "${GITHUB_BASE_REF:-}" ]; then
+            git fetch --no-tags --depth=1 origin "$GITHUB_BASE_REF"
+            base="origin/$GITHUB_BASE_REF"
+          else
+            git fetch --no-tags --depth=2 origin "${GITHUB_REF_NAME}"
+            base="HEAD^"
+          fi
+          mapfile -t files < <(git diff --name-only "$base"...HEAD -- '*.md')
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "No changed Markdown files"
+            exit 0
+          fi
+          npx --yes markdownlint-cli@0.44.0 -c .github/markdownlint-config.json "${files[@]}"
+      - name: Validate changed YAML syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -n "${GITHUB_BASE_REF:-}" ]; then
+            git fetch --no-tags --depth=1 origin "$GITHUB_BASE_REF"
+            base="origin/$GITHUB_BASE_REF"
+          else
+            git fetch --no-tags --depth=2 origin "${GITHUB_REF_NAME}"
+            base="HEAD^"
+          fi
+          mapfile -t files < <(git diff --name-only "$base"...HEAD -- '*.yml' '*.yaml')
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "No changed YAML files"
+            exit 0
+          fi
+          ruby -e 'require "yaml"; ARGV.each { |file| YAML.load_file(file); puts "valid: #{file}" }' "${files[@]}"

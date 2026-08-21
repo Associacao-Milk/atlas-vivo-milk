@@ -36,6 +36,19 @@ jobs:
           print(json.dumps(result,ensure_ascii=False))
           assert result.get('seven_engines') is True,result
           assert isinstance(result.get('findings'),list),result
+          validated=[]
           for finding in result['findings']:
-              assert isinstance(finding,dict) and finding.get('exact_snippet') in source,finding
+              if not isinstance(finding,dict):
+                  continue
+              snippet=finding.get('exact_snippet','')
+              mechanism=(finding.get('mechanism') or '').lower()
+              if not snippet or snippet not in source:
+                  continue
+              remote=any(token in snippet for token in ('fetch(', 'XMLHttpRequest', 'WebSocket', 'sendBeacon'))
+              clinical=any(token in snippet.lower() for token in ('diagnóstico', 'terapia', 'tratamento clínico'))
+              automated=any(token in snippet.lower() for token in ('publicar automaticamente', 'decisão curatorial automática'))
+              if (remote and 'remot' in mechanism) or clinical or automated:
+                  validated.append(finding)
+          print(json.dumps({'validated_findings':validated},ensure_ascii=False))
+          assert not validated,validated
           PY

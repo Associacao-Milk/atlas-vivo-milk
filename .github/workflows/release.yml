@@ -80,8 +80,8 @@ jobs:
                 "version": "${{ steps.release.outputs.version }}",
                 "publication_date": "$(date +%Y-%m-%d)",
                 "creators": [
-                  {"name": "Associação MILK - Movimentos de Intervenções e Linguagens Kulturais e Arte", "orcid": "0000-0000-0000-0000"},
-                  {"name": "Eduardo Maurício Vieira Cabral e Araujo", "orcid": "0000-0000-0000-0000"}
+                  {"name": "Associação MILK - Movimentos de Intervenções e Linguagens Kulturais e Arte"},
+                  {"name": "Eduardo Maurício Vieira Cabral e Araujo", "orcid": "0009-0007-6892-6570"}
                 ],
                 "keywords": ["Atlas Vivo MILK", "cultura", "património", "soberania digital", "interoperabilidade", "Portugal"],
                 "notes": "Automatic release from GitHub: ${{ github.event.repository.html_url }}/releases/tag/${{ steps.release.outputs.tag }}"
@@ -207,7 +207,7 @@ jobs:
                   "published": "$(date +%Y-%m-%d)"
                 }
               }' \
-              https://api.orcid.org/v3.0/0000-0000-0000-0000/work
+              https://api.orcid.org/v3.0/0009-0007-6892-6570/work
           else
             echo "Skipping ORCID sync: missing token or DOI"
           fi

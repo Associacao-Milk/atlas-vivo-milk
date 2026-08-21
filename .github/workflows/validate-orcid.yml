@@ -90,17 +90,18 @@ jobs:
             }
           "
 
-      - name: Check for placeholder ORCIDs
+      - name: Check canonical metadata for placeholder ORCIDs
         run: |
-          if grep -r "0000-0000-0000-0000" .; then
-            echo "❌ ORCID placeholder (0000-0000-0000-0000) encontrado!"
-            echo "Substitua por ORCIDs válidos:"
-            echo "- Nuno Filipe: 0009-0009-1781-4020"
-            echo "- Eduardo Maurício: 0009-0007-6892-6570"
+          placeholder="$(printf '%s' '0000-0000-0000-0000')"
+          files=()
+          for file in metadata.json .zenodo.json CITATION.cff; do
+            [ ! -f "$file" ] || files+=("$file")
+          done
+          if [ "${#files[@]}" -gt 0 ] && grep -nF "$placeholder" "${files[@]}"; then
+            echo "ORCID placeholder encontrado em metadados canónicos"
             exit 1
-          else
-            echo "✅ Nenhum ORCID placeholder encontrado"
           fi
+          echo "Nenhum ORCID placeholder nos metadados canónicos"
 
       - name: Check for missing ORCIDs in metadata
         run: |

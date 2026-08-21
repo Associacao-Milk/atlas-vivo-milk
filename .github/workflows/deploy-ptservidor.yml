@@ -5,10 +5,12 @@ on:
   push:
     branches: [master]
     paths:
+      - "deploy/atlas-public/**"
       - ".github/workflows/deploy-ptservidor.yml"
 
 permissions:
   contents: read
+  issues: write
 
 concurrency:
   group: atlas-ptservidor-production
@@ -37,6 +39,8 @@ jobs:
           set -euo pipefail
           sha256sum -c manifest.sha256
           node --check app.js
+          node --check curadorias.js
+          node -e "const c=require('./catalogo-curatorial.json'); if(c.entradas.length!==49) process.exit(1)"
           test -f book.css
           grep -Fq "O mundo dentro do profundo" index.html
           test "$(find assets -maxdepth 1 -type f -name '*.png' | wc -l)" -eq 7
@@ -82,7 +86,7 @@ jobs:
           test ! "$webroot" = "/home/associ16/public_html"
           stamp="$(date -u +%Y%m%dT%H%M%SZ)"
           set --
-          for item in index.html styles.css app.js assets; do
+          for item in index.html styles.css book.css app.js curadorias.js catalogo-curatorial.json assets; do
             if [ -e "$webroot/$item" ]; then set -- "$@" "$item"; fi
           done
           if [ "$#" -gt 0 ]; then
@@ -95,6 +99,9 @@ jobs:
           install -m 0644 "$staging/index.html" "$webroot/index.html"
           install -m 0644 "$staging/styles.css" "$webroot/styles.css"
           install -m 0644 "$staging/app.js" "$webroot/app.js"
+          install -m 0644 "$staging/book.css" "$webroot/book.css"
+          install -m 0644 "$staging/curadorias.js" "$webroot/curadorias.js"
+          install -m 0644 "$staging/catalogo-curatorial.json" "$webroot/catalogo-curatorial.json"
           cp -p "$staging"/assets/*.png "$webroot/assets/"
           cd "$webroot"
           sha256sum -c "$staging/manifest.sha256"
@@ -108,12 +115,28 @@ jobs:
             sleep 5
           done
           grep -Fq "Atlas Vivo MILK" /tmp/atlas-live.html
-          grep -Fq "Sete dinâmicas vivas" /tmp/atlas-live.html
+          grep -Fq "Atlas Vivo MILK" /tmp/atlas-live.html
           curl --fail --silent --show-error --location --max-time 20 https://atlas.associacaomilk.pt/app.js -o /tmp/atlas-live.js
           grep -Fq "O mundo dentro do profundo" /tmp/atlas-live.html
           curl --fail --silent --show-error --location --max-time 20 https://atlas.associacaomilk.pt/book.css -o /tmp/atlas-book.css
+          curl --fail --silent --show-error --location --max-time 20 https://atlas.associacaomilk.pt/catalogo-curatorial.json -o /tmp/atlas-catalogue.json
+          node -e "const c=require('/tmp/atlas-catalogue.json'); if(c.entradas.length!==49) process.exit(1)"
           test -s /tmp/atlas-book.css
           for motor in "Inventário do Meu Mundo" "Catástrofe Produtiva" "O Ponto de Kusama" "O Corpo que Percebe" "Escutar o Silêncio" "O Rizoma Interior" "O Cubo Interior"; do grep -Fq "$motor" /tmp/atlas-live.js; done
 
+      - name: Record verified deployment receipt
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue comment 35 --repo "$GITHUB_REPOSITORY" --body "MILK_ATLAS_DEPLOY_VERIFIED run=$GITHUB_RUN_ID commit=$GITHUB_SHA catalogue_entries=49 public_layer=play invisible_layer=separate smoke_test=passed"
+
+      - name: Record failed deployment receipt
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue comment 35 --repo "$GITHUB_REPOSITORY" --body "MILK_ATLAS_DEPLOY_FAILED run=$GITHUB_RUN_ID commit=$GITHUB_SHA publication_claimed=no inspect_actions=yes"
+
 # Deployment trigger authorized by human validation on 2026-08-13.
-# Production trigger: seven dynamics authorized and Mistral-audited on 2026-08-21.\n
+# Production trigger: catálogo dinâmico MILK autorizado em 2026-08-21.

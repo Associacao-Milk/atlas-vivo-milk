@@ -92,8 +92,7 @@ const commands = {
   },
   
   'all': async () => {
-    console.log('=== Fetching ALL available public APIs ===
-');
+    console.log('=== Fetching ALL available public APIs ===\\n');
     await commands['dgt:boundaries']();
     console.log('');
     await commands['ipma:forecast']();
@@ -105,13 +104,11 @@ const commands = {
     await commands['assembleia:deputados']();
     console.log('');
     await commands['assembleia:iniciativas']();
-    console.log('
-=== All API integrations tested successfully! ===');
+    console.log('\n=== All API integrations tested successfully! ===');
   },
   
   'help': function() {
-    console.log('Atlas Vivo MILK - Backend Integration Hub
-');
+    console.log('Atlas Vivo MILK - Backend Integration Hub\\n');
     console.log('Available commands:');
     console.log('  dgt:boundaries      - Fetch DGT administrative boundaries');
     console.log('  ipma:forecast       - Fetch IPMA weather forecast');
@@ -121,8 +118,7 @@ const commands = {
     console.log('  assembleia:deputados - List all deputados');
     console.log('  assembleia:iniciativas - List legislative iniciativas');
     console.log('  all                 - Test all integrations');
-    console.log('  help                - Show this help
-');
+    console.log('  help                - Show this help\\n');
     console.log('Example: node index.js dgt:boundaries');
     console.log('Example: node index.js dados-gov:search "patrimonio cultural"');
   }

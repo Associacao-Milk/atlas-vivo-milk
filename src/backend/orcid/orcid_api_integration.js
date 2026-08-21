@@ -84,7 +84,7 @@ async function validateORCID(orcid) {
     
     // Verificar formato (deve ter 16 dígitos)
     if (!/^[0-9]{16}$/.test(normalizedOrcid)) {
-      throw new Error(`ORCID inválido: ${orcid}. Deve ter 16 dígitos (ex: 0000-0000-0000-0000).`);
+      throw new Error(`ORCID inválido: ${orcid}. Deve ter 16 caracteres no formato ORCID.`);
     }
 
     // Consultar API pública do ORCID

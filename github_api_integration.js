@@ -113,15 +113,15 @@ class GitHubAPI {
      * Create a new repository
      * @param {string} name - Repository name
      * @param {string} [description=''] - Repository description
-     * @param {boolean} [private=false] - Private repository
+     * @param {boolean} [isPrivate=false] - Private repository
      * @param {boolean} [autoInit=true] - Initialize with README
      * @returns {Promise<Object>} Created repository information
      */
-    async createRepo(name, description = '', private = false, autoInit = true) {
+    async createRepo(name, description = '', isPrivate = false, autoInit = true) {
         const data = {
             name: name,
             description: description,
-            private: private,
+            private: isPrivate,
             auto_init: autoInit
         };
         return this._request('POST', `/orgs/${this.org}/repos`, data);

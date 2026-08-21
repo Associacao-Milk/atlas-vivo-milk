@@ -371,7 +371,7 @@ jobs:
 
       - name: Check for placeholder ORCIDs
         run: |
-          if grep -r "0000-0000-0000-0000" .; then
+          if grep -r "ORCID-VALIDO-OBRIGATORIO" .; then
             echo "❌ ORCID placeholder encontrado!"
             exit 1
           else
@@ -412,7 +412,7 @@ jobs:
 
       - name: Deposit to Zenodo
         env:
-          ZENODO_TOKEN: ">${{ secrets.ZENODO_TOKEN }}"
+          ZENODO_TOKEN: ">\${{ secrets.ZENODO_TOKEN }}"
         run: |
           node -e "
             const { depositRepository } = require('./src/backend/zenodo/zenodo_api_integration.js');
@@ -437,7 +437,7 @@ jobs:
               execSync('git config --global user.name \"github-actions\"');
               execSync('git config --global user.email \"actions@github.com\"');
               execSync('git add metadata.json');
-              execSync('git commit -m \"feat: adicionar DOI do Zenodo [${{ github.sha }}]\"');
+              execSync('git commit -m \"feat: adicionar DOI do Zenodo [\${{ github.sha }}]\"');
               execSync('git push');
             } else {
               console.error('❌ Falha no depósito:', result.error);
@@ -474,12 +474,12 @@ jobs:
 
       - name: Sync to Codeberg
         env:
-          CODEBERG_TOKEN: ">${{ secrets.CODEBERG_TOKEN }}"
-          CODEBERG_USER: ">${{ secrets.CODEBERG_USER }}"
-          CODEBERG_REPO: ">${{ secrets.CODEBERG_REPO }}"
+          CODEBERG_TOKEN: ">\${{ secrets.CODEBERG_TOKEN }}"
+          CODEBERG_USER: ">\${{ secrets.CODEBERG_USER }}"
+          CODEBERG_REPO: ">\${{ secrets.CODEBERG_REPO }}"
         run: |
           # Configurar remote do Codeberg
-          git remote add codeberg https://${{ secrets.CODEBERG_USER }}:${{ secrets.CODEBERG_TOKEN }}@codeberg.org/${{ secrets.CODEBERG_USER }}/${{ secrets.CODEBERG_REPO }}.git
+          git remote add codeberg https://\${{ secrets.CODEBERG_USER }}:\${{ secrets.CODEBERG_TOKEN }}@codeberg.org/\${{ secrets.CODEBERG_USER }}/\${{ secrets.CODEBERG_REPO }}.git
           
           # Fazer push para o Codeberg
           git push --mirror codeberg

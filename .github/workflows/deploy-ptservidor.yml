@@ -106,8 +106,9 @@ jobs:
             sleep 5
           done
           grep -Fq "Atlas Vivo MILK" /tmp/atlas-live.html
-          grep -Fq "data-action=\"brincar\"" /tmp/atlas-live.html
-          grep -Fq "data-action=\"convite\"" /tmp/atlas-live.html
-          grep -Fq "data-action=\"sorte\"" /tmp/atlas-live.html
+          grep -Fq "Sete dinâmicas vivas" /tmp/atlas-live.html
+          curl --fail --silent --show-error --location --max-time 20 https://atlas.associacaomilk.pt/app.js -o /tmp/atlas-live.js
+          for motor in "Inventário do Meu Mundo" "Catástrofe Produtiva" "O Ponto de Kusama" "O Corpo que Percebe" "Escutar o Silêncio" "O Rizoma Interior" "O Cubo Interior"; do grep -Fq "$motor" /tmp/atlas-live.js; done
 
 # Deployment trigger authorized by human validation on 2026-08-13.
+# Production trigger: seven dynamics authorized and Mistral-audited on 2026-08-21.\n

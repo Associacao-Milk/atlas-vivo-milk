@@ -1,0 +1,87 @@
+name: MILK Mistral Drive OAuth Private Artifact
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - '.github/workflows/mistral-drive-oauth-private-artifact.yml'
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: milk-mistral-drive-oauth
+  cancel-in-progress: true
+
+jobs:
+  authorize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+    steps:
+      - name: Require Mistral runtime
+        run: test -n "$MISTRAL_API_KEY"
+
+      - name: Generate private Google Drive connector authorization
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --quiet mistralai==2.9.3
+          python - <<'PY'
+          import json, os, pathlib, urllib.request
+          from mistralai.client import Mistral
+
+          key=os.environ["MISTRAL_API_KEY"]
+          out=pathlib.Path(os.environ["RUNNER_TEMP"])/"mistral-drive-oauth-url.txt"
+          receipt=pathlib.Path(os.environ["RUNNER_TEMP"])/"mistral-drive-oauth-receipt.json"
+          with Mistral(api_key=key) as client:
+              auth=client.beta.connectors.get_auth_url(
+                  connector_id_or_name="google_drive_mcp",
+                  app_return_url="https://console.mistral.ai/"
+              )
+          url=str(getattr(auth,"auth_url",""))
+          ttl=int(getattr(auth,"ttl",0) or 0)
+          if not url.startswith("https://"):
+              raise RuntimeError("Mistral Google Drive authorization URL unavailable")
+          print("::add-mask::"+url)
+          out.write_text(url+"\n",encoding="utf-8")
+          os.chmod(out,0o600)
+          receipt.write_text(json.dumps({
+              "state":"MISTRAL_DRIVE_OAUTH_READY",
+              "connector":"google_drive_mcp",
+              "ttl_seconds":ttl,
+              "url_disclosed_in_logs":False,
+              "drive_writes":0
+          },indent=2),encoding="utf-8")
+          PY
+
+      - name: Preserve private authorization artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: milk-mistral-drive-oauth-private
+          path: |
+            ${{ runner.temp }}/mistral-drive-oauth-url.txt
+            ${{ runner.temp }}/mistral-drive-oauth-receipt.json
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Register readiness without disclosing URL
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, urllib.request
+          body=f"MISTRAL_DRIVE_OAUTH_PRIVATE_ARTIFACT_READY run={os.environ['GITHUB_RUN_ID']} artifact=milk-mistral-drive-oauth-private url_disclosed=no drive_writes=0"
+          req=urllib.request.Request(
+              f"https://api.github.com/repos/{os.environ['REPO']}/issues/35/comments",
+              data=json.dumps({"body":body}).encode(),
+              method="POST",
+              headers={"Authorization":"Bearer "+os.environ["GH_TOKEN"],"Content-Type":"application/json","Accept":"application/vnd.github+json"}
+          )
+          urllib.request.urlopen(req,timeout=30).read()
+          PY

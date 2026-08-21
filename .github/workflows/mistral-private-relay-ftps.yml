@@ -15,7 +15,7 @@ jobs:
       PTSERVIDOR_FTPS_PASSWORD: ${{ secrets.PTSERVIDOR_FTPS_PASSWORD }}
       GH_TOKEN: ${{ github.token }}
       REPO: ${{ github.repository }}
-      RELAY_ID: MILK-BOX-RELAY-20260821-0216
+      RELAY_ID: MILK-BOX-RELAY-20260821-ATLAS-01
       FILE_NAME: takeout-20260702T114704Z-001.zip
     steps:
       - name: Mistral agent receives private Gmail relay and transfers real ZIP

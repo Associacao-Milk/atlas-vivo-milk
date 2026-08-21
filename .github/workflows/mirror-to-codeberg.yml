@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      CODEBERG_TOKEN: ${{ secrets.CODEBERG_TOKEN }}
+      CODEBERG_TOKEN: ${{ secrets.CODEBERG_TOKEN || secrets.EDUARDO_CODEBERG_TOKEN }}
       CODEBERG_USER: milkivc
       CODEBERG_REPO: atlas-vivo-milk
       MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}

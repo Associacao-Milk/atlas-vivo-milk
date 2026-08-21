@@ -71,3 +71,4 @@ jobs:
           if bsha!=sha or bsize!=size:raise RuntimeError('FTPS download-back SHA256 verification mismatch')
           comment(f'MISTRAL_REAL_DRIVE_FILE_TRANSFER_VERIFIED file={fname} bytes={size} sha256={sha} remote={rdir}/{fname} source=Google_Drive_readonly_private_Gmail_signed_relay failed=0 drive_writes=0')
           PY
+# trigger: 2026-08-21T02:20+01:00

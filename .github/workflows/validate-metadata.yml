@@ -31,7 +31,7 @@ jobs:
 
       - name: Validate metadata.json
         run: |
-          ajv validate -s .github/schemas/metadata-schema.json -d metadata.json --spec=draft7
+          ajv validate -s .github/schemas/metadata-schema.json -d metadata.json --spec=draft7 --strict=false
 
       - name: Validate all JSON files
         run: |

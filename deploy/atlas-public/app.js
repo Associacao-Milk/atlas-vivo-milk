@@ -1,6 +1,24 @@
 const D=[
 ['Inventário do Meu Mundo','Três objectos tornam-se constelação e manto digital.'],['Catástrofe Produtiva','Criar, romper e trabalhar com aquilo que sobrevive.'],['O Ponto de Kusama','O gesto mínimo repete-se até produzir um campo comum.'],['O Corpo que Percebe','Camadas sonoras orientam a atenção sem transformar o corpo em dado.'],['Escutar o Silêncio','Som ambiente torna-se desenho apenas com autorização local.'],['O Rizoma Interior','Nada se apaga: cada fragmento pode mover-se e transformar-se.'],['O Cubo Interior','Seis vestígios da sessão habitam um cubo tridimensional.']];
 const deck=document.querySelector('#dinamicas');D.forEach((d,i)=>deck.insertAdjacentHTML('beforeend',`<article class="card" data-n="${i+1}"><span class="tag">motor D${i+1}</span><h2>${d[0]}</h2><p>${d[1]}</p><button class="open" data-engine="${i}">activar dinâmica</button></article>`));
+const BOOK_FACES=[
+  {name:'a porta',prompt:'onde entras',layers:['fundo do túnel','o primeiro vestígio que chama','uma entrada escolhida pelo corpo']},
+  {name:'a jaula',prompt:'o que pensavas que era o caminho',layers:['o aviso que não avisa','a regra herdada','a possibilidade de a deslocar']},
+  {name:'o chão',prompt:'onde o joelho esfola',layers:['a experiência concreta','o erro que deixou marca','o apoio que ainda existe']},
+  {name:'o céu',prompt:'de onde se vê tudo',layers:['teoria da mente em brincadeira','uma distância fértil','o mundo visto por outra face']},
+  {name:'o espelho',prompt:'onde te encontras',layers:['mimetismo performático','o gesto que imita e transforma','aquilo que só tu reconheces']},
+  {name:'o buraco',prompt:'que não tem fundo e por isso é livre',layers:['a neurofractura','a ausência de protocolo','o próximo possível']}
+];
+const bookState={face:0,opened:new Set(),note:''};
+const faceNav=document.querySelector('.face-nav'),facePanel=document.querySelector('#face-panel');
+BOOK_FACES.forEach((f,i)=>faceNav.insertAdjacentHTML('beforeend',`<button type="button" role="tab" id="face-tab-${i}" aria-controls="face-panel" aria-selected="${i===0}" tabindex="${i===0?0:-1}" data-face="${i}"><span>face ${i+1}</span>${f.name}</button>`));
+function renderFace(i){bookState.face=i;bookState.opened.add(i);faceNav.querySelectorAll('[data-face]').forEach((b,n)=>{b.setAttribute('aria-selected',n===i);b.tabIndex=n===i?0:-1});const f=BOOK_FACES[i];facePanel.setAttribute('aria-labelledby',`face-tab-${i}`);facePanel.innerHTML=`<div class="face-number" aria-hidden="true">0${i+1}</div><div><span class="tag">face ${i+1} · ${f.prompt}</span><h3>${f.name}</h3><div class="accordion">${f.layers.map((l,n)=>`<details${n===0?' open':''}><summary>camada ${n+1}</summary><p>${l}</p></details>`).join('')}</div><p class="book-progress">${bookState.opened.size} de 6 faces atravessadas · não há ordem correcta</p></div>`}
+faceNav.addEventListener('click',e=>{const b=e.target.closest('[data-face]');if(b)renderFace(+b.dataset.face)});
+faceNav.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();let i=bookState.face;if(e.key==='ArrowLeft')i=(i+5)%6;if(e.key==='ArrowRight')i=(i+1)%6;if(e.key==='Home')i=0;if(e.key==='End')i=5;renderFace(i);faceNav.querySelector(`[data-face="${i}"]`).focus()});
+renderFace(0);
+const bookNote=document.querySelector('#book-note'),registerStatus=document.querySelector('#register-status');
+document.querySelector('#save-note').onclick=()=>{bookState.note=bookNote.value.trim();registerStatus.textContent=bookState.note?'vestígio guardado apenas nesta sessão':'nenhum vestígio guardado'};
+document.querySelector('#export-note').onclick=()=>{bookState.note=bookNote.value.trim();const record=[`LIVRO CUBO — registo local`,new Date().toLocaleString('pt-PT'),`faces atravessadas: ${[...bookState.opened].map(i=>BOOK_FACES[i].name).join(', ')}`,`face actual: ${BOOK_FACES[bookState.face].name}`,'',bookState.note||'(sem vestígio escrito)'].join('\n');const url=URL.createObjectURL(new Blob([record],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='livro-cubo-registo.txt';a.click();URL.revokeObjectURL(url);registerStatus.textContent='registo descarregado por decisão humana'};
 const dlg=document.querySelector('#engine'),body=document.querySelector('#engineBody');dlg.querySelector('.close').onclick=()=>{stopMedia();dlg.close()};dlg.onclick=e=>{if(e.target===dlg){stopMedia();dlg.close()}};
 let audio,stream,raf;const state={inventory:[],catastrophe:'',points:0,body:'',silence:'',rizoma:[]};
 function stopMedia(){if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;if(raf)cancelAnimationFrame(raf);raf=0}

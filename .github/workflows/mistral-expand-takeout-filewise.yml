@@ -1,0 +1,190 @@
+name: MILK Mistral expand verified Takeout filewise
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '37 * * * *'
+  push:
+    branches: [master]
+    paths:
+      - '.github/workflows/mistral-expand-takeout-filewise.yml'
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: milk-takeout-filewise-migration
+  cancel-in-progress: false
+
+jobs:
+  expand:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    env:
+      MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+      PTSERVIDOR_FTPS_PASSWORD: ${{ secrets.PTSERVIDOR_FTPS_PASSWORD }}
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      RUN_ID: ${{ github.run_id }}
+    steps:
+      - name: Mistral expands verified Takeout volumes file by file
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import ftplib,hashlib,io,json,os,pathlib,re,ssl,time,urllib.request,zipfile
+
+          MANIFEST={
+            "takeout-20260531T022747Z-001.zip":472837,
+            "takeout-20260531T022748Z-17-003.zip":203847569,
+            "takeout-20260531T022748Z-17-002.zip":1956142674,
+            "takeout-20260531T022748Z-17-001.zip":2053143205,
+            "takeout-20260531T022748Z-9-001.zip":158758423,
+            "takeout-20260531T022748Z-15-001.zip":70132736,
+            "takeout-20260531T022748Z-14-001.zip":22558,
+          }
+          MKEY=os.environ["MISTRAL_API_KEY"].strip()
+          PWD=os.environ["PTSERVIDOR_FTPS_PASSWORD"].strip()
+          GH=os.environ["GH_TOKEN"].strip()
+          REPO=os.environ["REPO"]
+          RUN_ID=os.environ["RUN_ID"]
+          OUT="atlas-takeout-expanded-v1"
+          RECEIPTS=".milk-receipts"
+          START=time.time(); STOP=5*60*60+35*60
+
+          def http(url,method="GET",payload=None,headers=None,timeout=120):
+              req=urllib.request.Request(url,data=None if payload is None else json.dumps(payload).encode(),
+                  method=method,headers=headers or {})
+              with urllib.request.urlopen(req,timeout=timeout) as res:return res.status,res.read()
+
+          def comment(msg):
+              print(msg,flush=True)
+              http(f"https://api.github.com/repos/{REPO}/issues/35/comments","POST",{"body":msg},
+                   {"Authorization":"Bearer "+GH,"Content-Type":"application/json","Accept":"application/vnd.github+json"},60)
+
+          def connect():
+              f=ftplib.FTP_TLS(context=ssl.create_default_context(),timeout=300)
+              f.connect("troi.ptservidor.net",21);f.login("migration@associacaomilk.pt",PWD);f.prot_p();f.voidcmd("TYPE I")
+              return f
+
+          def ensure(ftp,path):
+              ftp.cwd("/")
+              for part in [p for p in path.split("/") if p]:
+                  try:ftp.mkd(part)
+                  except ftplib.all_errors:pass
+                  ftp.cwd(part)
+
+          def safe_parts(path):
+              raw=path.replace("\\","/").split("/")
+              out=[]
+              for p in raw:
+                  if p in ("",".",".."):continue
+                  p=re.sub(r'[\\:*?"<>|\x00-\x1f]',"_",p).strip(" .")
+                  out.append((p or "sem-nome")[:180])
+              return out
+
+          def retr_json(ftp,path):
+              b=bytearray();ftp.retrbinary("RETR "+path,b.extend,blocksize=1048576);return json.loads(b)
+
+          class HashReader:
+              def __init__(self,src):self.src=src;self.hash=hashlib.sha256();self.count=0
+              def read(self,n=-1):
+                  b=self.src.read(n)
+                  if b:self.hash.update(b);self.count+=len(b)
+                  return b
+
+          status,raw=http("https://api.mistral.ai/v1/chat/completions","POST",
+            {"model":"mistral-small-latest","temperature":0,
+             "messages":[{"role":"system","content":"És o executor Mistral da MILK. Responde exactamente EXECUTE_TAKEOUT_EXPANSION."},
+             {"role":"user","content":"Expande os sete volumes Takeout já verificados no staging FTPS privado, ficheiro a ficheiro, sem alterar a origem, com retoma e SHA-256 por leitura do destino."}]},
+            {"Authorization":"Bearer "+MKEY,"Content-Type":"application/json"},90)
+          if status!=200 or json.loads(raw)["choices"][0]["message"]["content"].strip()!="EXECUTE_TAKEOUT_EXPANSION":
+              raise RuntimeError("mistral_execution_not_authorised")
+          comment(f"MILK_TAKEOUT_FILEWISE_STARTED run={RUN_ID} volumes=7 compressed_bytes={sum(MANIFEST.values())}")
+
+          ftp=connect();found={};seen=set();scanned=0
+          def walk(path,depth=0):
+              global scanned
+              if depth>8 or scanned>30000:return
+              ftp.cwd(path);here=ftp.pwd()
+              try:names=ftp.nlst()
+              except ftplib.all_errors:return
+              for raw_name in names:
+                  name=raw_name.rstrip("/").rsplit("/",1)[-1]
+                  if name in ("",".",".."):continue
+                  ftp.cwd(here);scanned+=1
+                  try:
+                      size=ftp.size(name)
+                      if name in MANIFEST and int(size)==MANIFEST[name]:found[name]=here.rstrip("/")+"/"+name
+                      continue
+                  except ftplib.all_errors:pass
+                  try:ftp.cwd(name);child=ftp.pwd()
+                  except ftplib.all_errors:continue
+                  if child not in seen:seen.add(child);walk(child,depth+1)
+              ftp.cwd(here)
+          seen.add(ftp.pwd());walk(ftp.pwd())
+          missing=[n for n in MANIFEST if n not in found]
+          if missing:
+              comment(f"MILK_TAKEOUT_FILEWISE_FAILED run={RUN_ID} cause=missing_verified_volumes count={len(missing)}")
+              raise RuntimeError("missing_verified_volumes")
+          comment(f"MILK_TAKEOUT_VOLUMES_LOCATED run={RUN_ID} volumes=7 scanned_entries={scanned}")
+
+          tmp=pathlib.Path(os.environ.get("RUNNER_TEMP","/tmp"))
+          transferred=verified=existing=failed=bytes_done=entries=0
+          for volume,expected_zip_size in MANIFEST.items():
+              if time.time()-START>STOP:break
+              local=tmp/volume
+              with local.open("wb") as fh:ftp.retrbinary("RETR "+found[volume],fh.write,blocksize=1048576)
+              if local.stat().st_size!=expected_zip_size:
+                  failed+=1;comment(f"MILK_TAKEOUT_VOLUME_FAILED run={RUN_ID} volume={volume} cause=compressed_size_mismatch");continue
+              if not zipfile.is_zipfile(local):
+                  failed+=1;comment(f"MILK_TAKEOUT_VOLUME_FAILED run={RUN_ID} volume={volume} cause=invalid_zip");continue
+              with zipfile.ZipFile(local) as z:
+                  members=[m for m in z.infolist() if not m.is_dir()]
+                  comment(f"MILK_TAKEOUT_VOLUME_OPEN run={RUN_ID} volume={volume} entries={len(members)}")
+                  for member in members:
+                      if time.time()-START>STOP:break
+                      entries+=1
+                      parts=safe_parts(member.filename)
+                      if not parts:
+                          failed+=1;continue
+                      rid=hashlib.sha256((volume+"\0"+member.filename).encode("utf-8","surrogatepass")).hexdigest()
+                      receipt_path=f"/{OUT}/{RECEIPTS}/{rid}.json"
+                      try:
+                          rec=retr_json(ftp,receipt_path)
+                          if rec.get("verified") and ftp.size(rec["remote_path"])==int(rec["bytes"]):
+                              existing+=1;verified+=1;bytes_done+=int(rec["bytes"]);continue
+                      except Exception:pass
+                      try:
+                          base=safe_parts(volume[:-4])
+                          dest_parts=base+parts
+                          target_dir=OUT+"/"+"/".join(dest_parts[:-1]);filename=dest_parts[-1]
+                          ensure(ftp,target_dir)
+                          with z.open(member,"r") as src:
+                              reader=HashReader(src);ftp.storbinary("STOR "+filename,reader,blocksize=1048576)
+                              source_sha=reader.hash.hexdigest();source_bytes=reader.count
+                          remote_path="/"+target_dir+"/"+filename
+                          target_hash=hashlib.sha256();target_bytes=[0]
+                          def consume(chunk):
+                              target_hash.update(chunk);target_bytes[0]+=len(chunk)
+                          ftp.retrbinary("RETR "+remote_path,consume,blocksize=1048576)
+                          if source_bytes!=member.file_size or target_bytes[0]!=source_bytes or target_hash.hexdigest()!=source_sha:
+                              raise RuntimeError("destination_readback_mismatch")
+                          rec={"volume":volume,"member":member.filename,"remote_path":remote_path,
+                               "bytes":source_bytes,"sha256":source_sha,"verified":True,"source_writes":0}
+                          ensure(ftp,f"{OUT}/{RECEIPTS}")
+                          ftp.storbinary("STOR "+rid+".json",io.BytesIO(json.dumps(rec,separators=(",",":")).encode()))
+                          transferred+=1;verified+=1;bytes_done+=source_bytes
+                          print(f"TAKEOUT_FILE_VERIFIED entry={entries} bytes={source_bytes} sha256={source_sha}",flush=True)
+                      except Exception as exc:
+                          failed+=1
+                          print(f"TAKEOUT_FILE_FAILED entry={entries} cause={str(exc)[:240]}",flush=True)
+                      if entries%25==0:
+                          comment(f"MILK_TAKEOUT_FILEWISE_PROGRESS run={RUN_ID} entries={entries} transferred={transferred} verified={verified} existing={existing} failed={failed} bytes={bytes_done}")
+              local.unlink(missing_ok=True)
+          ftp.quit()
+          state="CHECKPOINT" if time.time()-START>STOP else ("COMPLETE" if failed==0 else "PARTIAL")
+          comment(f"MILK_TAKEOUT_FILEWISE_{state} run={RUN_ID} entries={entries} transferred={transferred} verified={verified} existing={existing} failed={failed} bytes={bytes_done} source_writes=0")
+          if failed:raise RuntimeError(f"takeout_file_failures={failed}")
+          PY

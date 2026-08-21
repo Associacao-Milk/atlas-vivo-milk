@@ -16,8 +16,8 @@ jobs:
       - name: Validar CITATION.cff
         run: |
           # Verificar se ORCID está presente
-          if ! grep -q "0009-0004-9132-2925" CITATION.cff; then
-            echo "::error::ORCID 0009-0004-9132-2925 não encontrado em CITATION.cff"
+          if ! grep -q "0009-0009-1781-4020" CITATION.cff; then
+            echo "::error::ORCID 0009-0009-1781-4020 não encontrado em CITATION.cff"
             exit 1
           fi
           # Verificar licença EUPL-1.2
@@ -94,13 +94,13 @@ jobs:
               },
               "contributors": [
                 {
-                  "orcid": "0009-0004-9132-2925",
+                  "orcid": "0009-0009-1781-4020",
                   "credit-name": "Eduardo Maurício Vieira Cabral e Araujo",
                   "role": "author"
                 }
               ]
             }' \
-            "https://pub.orcid.org/v3.0/0009-0004-9132-2925/work" || \
+            "https://pub.orcid.org/v3.0/0009-0009-1781-4020/work" || \
           echo "::warning::Não foi possível sincronizar com ORCID (API Pública pode não permitir escrita)"
 
   # Job 4: Notificar Slack (Opcional)
@@ -119,5 +119,5 @@ jobs:
           SLACK_MESSAGE: |
             Repositório: ${{ github.event.repository.name }}
             DOI: ${{ needs.deposit-zenodo.outputs.doi || 'Não gerado' }}
-            ORCID: 0009-0004-9132-2925
+            ORCID: 0009-0009-1781-4020
             Conformidade: RGPD ✅ | AI Act ✅ | NIS2 ✅

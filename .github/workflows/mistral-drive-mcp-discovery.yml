@@ -1,0 +1,83 @@
+name: MILK Mistral Drive MCP Discovery
+on:
+  push:
+    branches: [master]
+    paths: ['.github/workflows/mistral-drive-mcp-discovery.yml']
+permissions:
+  contents: read
+  issues: write
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+    steps:
+      - name: Mistral discovers and validates active Google Drive connector
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, re, urllib.error, urllib.request
+          key=os.environ["MISTRAL_API_KEY"]; gh=os.environ["GH_TOKEN"]; repo=os.environ["REPO"]
+          target="WORK_HANDOFF_ATLAS_VIVO_MILK_2026-08-12__TRANSFERENCIA_STAGING.zip"
+          target_id="1GJFngHQP3D-IbmFdzyF08Q_3EzcRhBTv"
+          def comment(msg):
+              req=urllib.request.Request(f"https://api.github.com/repos/{repo}/issues/35/comments",data=json.dumps({"body":msg}).encode(),method="POST",headers={"Authorization":"Bearer "+gh,"Content-Type":"application/json","Accept":"application/vnd.github+json"})
+              urllib.request.urlopen(req,timeout=30).read()
+          def req(path,method="GET",payload=None,timeout=120):
+              data=None if payload is None else json.dumps(payload).encode()
+              q=urllib.request.Request("https://api.mistral.ai"+path,data=data,method=method,headers={"Authorization":"Bearer "+key,"Content-Type":"application/json","Accept":"application/json"})
+              with urllib.request.urlopen(q,timeout=timeout) as r:return json.loads(r.read().decode())
+          def rows(d):
+              if isinstance(d,list): return d
+              if not isinstance(d,dict): return []
+              for k in ("items","data","connectors","results"):
+                  if isinstance(d.get(k),list): return d[k]
+              return []
+          collected=[]
+          for ep in ("/v1/connectors?page_size=200","/v1/connectors/pages?page_size=200"):
+              try: collected.extend(rows(req(ep)))
+              except Exception: pass
+          candidates=[]
+          seen=set()
+          for c in collected:
+              if not isinstance(c,dict): continue
+              ident=str(c.get("id") or c.get("name") or "")
+              label=(str(c.get("name",""))+" "+str(c.get("description",""))+" "+ident).lower()
+              if ident and ("drive" in label or "google" in label) and ident not in seen:
+                  seen.add(ident); candidates.append((ident,str(c.get("name") or ident)))
+          for ident in ("google_drive","google-drive"):
+              if ident not in seen: candidates.append((ident,ident)); seen.add(ident)
+          safe_names=",".join(name[:80] for _,name in candidates)
+          comment(f"MISTRAL_DRIVE_CONNECTOR_DISCOVERY candidates={len(candidates)} names={safe_names or 'none'} drive_writes=0")
+          agents=req("/v1/agents/pages")
+          al=agents.get("data",[]) if isinstance(agents,dict) else agents
+          agent=next((a for a in al if "migra" in (str(a.get("name",""))+" "+str(a.get("description",""))).lower()),None)
+          success=None; last_errors=[]
+          for ident,name in candidates:
+              prompt=(f"Use only the Google Drive connector in read-only mode. Find the exact file named {target}. "
+                      f"Confirm whether its Drive file id is {target_id} and whether its size is 23380653 bytes. "
+                      "Return only DRIVE_TARGET_OK if all three values match; otherwise return DRIVE_TARGET_NOT_FOUND.")
+              payload={"inputs":[{"role":"user","content":prompt}],"tools":[{"type":"connector","connector_id":ident}]}
+              if agent: payload["agent_id"]=agent["id"]
+              else: payload["model"]="mistral-small-latest"
+              try:
+                  conv=req("/v1/conversations","POST",payload,180)
+                  answer=" ".join(str(o.get("content","")) for o in conv.get("outputs",[]) if isinstance(o,dict))
+                  if "DRIVE_TARGET_OK" in answer:
+                      success=(ident,name); break
+                  last_errors.append(name+":not_found")
+              except urllib.error.HTTPError as e:
+                  last_errors.append(name+":http_"+str(e.code))
+              except Exception:
+                  last_errors.append(name+":error")
+          if success:
+              comment(f"MISTRAL_DRIVE_MCP_VALIDATED connector={success[1]} connector_id={success[0]} target_bytes=23380653 drive_writes=0")
+          else:
+              detail=",".join(last_errors)[:800]
+              comment(f"MISTRAL_DRIVE_MCP_NOT_READY candidates={len(candidates)} detail={detail} drive_writes=0")
+              raise SystemExit(22)
+          PY

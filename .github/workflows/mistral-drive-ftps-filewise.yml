@@ -1,0 +1,225 @@
+name: MILK Mistral Drive filewise migration
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 * * * *'
+  push:
+    branches: [master]
+    paths:
+      - '.github/workflows/mistral-drive-ftps-filewise.yml'
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: milk-drive-filewise-migration
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    env:
+      MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+      GOOGLE_DRIVE_TOKEN: ${{ secrets.DRIVE_SOMOSTODOSPOSSIVEIS }}
+      PTSERVIDOR_FTPS_PASSWORD: ${{ secrets.PTSERVIDOR_FTPS_PASSWORD }}
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      RUN_ID: ${{ github.run_id }}
+    steps:
+      - name: Mistral executes preservative filewise migration
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import datetime, ftplib, hashlib, io, json, os, re, ssl, time
+          import urllib.error, urllib.parse, urllib.request
+
+          MKEY=os.environ.get("MISTRAL_API_KEY","").strip()
+          TOKEN=os.environ.get("GOOGLE_DRIVE_TOKEN","").strip()
+          PWD=os.environ.get("PTSERVIDOR_FTPS_PASSWORD","").strip()
+          GH=os.environ.get("GH_TOKEN","").strip()
+          REPO=os.environ.get("REPO","milkivc/atlas-vivo-milk")
+          RUN_ID=os.environ.get("RUN_ID","unknown")
+          DEST_ROOT="atlas-drive-filewise-v1"
+          RECEIPTS=".milk-receipts"
+          START=time.time()
+          HARD_STOP=5*60*60+35*60
+
+          def api(url, method="GET", data=None, headers=None, timeout=600):
+              body=None if data is None else json.dumps(data).encode()
+              req=urllib.request.Request(url,data=body,method=method,headers=headers or {})
+              try:
+                  with urllib.request.urlopen(req,timeout=timeout) as res:
+                      return res.status,res.read()
+              except urllib.error.HTTPError as exc:
+                  return exc.code,exc.read()
+
+          def comment(message):
+              print(message,flush=True)
+              if not GH:return
+              api(f"https://api.github.com/repos/{REPO}/issues/35/comments","POST",
+                  {"body":message},{"Authorization":"Bearer "+GH,"Content-Type":"application/json",
+                  "Accept":"application/vnd.github+json"},60)
+
+          def safe_name(name):
+              name=re.sub(r'[\\/:*?"<>|\x00-\x1f]',"_",name or "sem-nome").strip(" .")
+              return (name or "sem-nome")[:180]
+
+          def ensure_dir(ftp,path):
+              ftp.cwd("/")
+              for part in [p for p in path.split("/") if p]:
+                  try:ftp.mkd(part)
+                  except ftplib.all_errors:pass
+                  ftp.cwd(part)
+
+          def retr_bytes(ftp,path):
+              out=bytearray()
+              ftp.retrbinary("RETR "+path,out.extend,blocksize=1024*1024)
+              return bytes(out)
+
+          def remote_size(ftp,path):
+              try:return ftp.size(path)
+              except ftplib.all_errors:return None
+
+          def drive_json(path,params=None):
+              url="https://www.googleapis.com/drive/v3/"+path
+              if params:url+="?"+urllib.parse.urlencode(params)
+              status,raw=api(url,headers={"Authorization":"Bearer "+TOKEN})
+              if status != 200:
+                  raise RuntimeError(f"drive_api_{status} "+raw[:180].decode("utf-8","replace"))
+              return json.loads(raw)
+
+          def drive_bytes(path,params=None):
+              url="https://www.googleapis.com/drive/v3/"+path
+              if params:url+="?"+urllib.parse.urlencode(params)
+              status,raw=api(url,headers={"Authorization":"Bearer "+TOKEN},timeout=1200)
+              if status != 200:
+                  raise RuntimeError(f"drive_download_{status} "+raw[:180].decode("utf-8","replace"))
+              return raw
+
+          if not (MKEY and TOKEN and PWD):
+              raise RuntimeError("required_secret_missing")
+
+          status,raw=api("https://api.mistral.ai/v1/chat/completions","POST",
+              {"model":"mistral-small-latest","temperature":0,
+               "messages":[
+                 {"role":"system","content":"És o executor Mistral da MILK. Responde exactamente EXECUTE_MIGRATION."},
+                 {"role":"user","content":"Executa migração preservativa ficheiro a ficheiro: Google Drive somente leitura para staging FTPS privado, com retoma e SHA-256."}]},
+              {"Authorization":"Bearer "+MKEY,"Content-Type":"application/json"},90)
+          if status != 200:raise RuntimeError(f"mistral_http_{status}")
+          answer=json.loads(raw)["choices"][0]["message"]["content"].strip()
+          if answer!="EXECUTE_MIGRATION":raise RuntimeError("mistral_execution_not_authorised")
+
+          about=drive_json("about",{"fields":"user,storageQuota"})
+          root=drive_json("files/root",{"fields":"id,name"})
+          comment(f"MILK_FILEWISE_STARTED run={RUN_ID} root={root['id']} drive_writes=0")
+
+          folders=[(root["id"],"")]
+          files=[]
+          discovered_folders=0
+          while folders:
+              folder_id,rel=folders.pop(0)
+              page=None
+              siblings=[]
+              while True:
+                  params={"q":f"'{folder_id}' in parents and trashed=false",
+                          "fields":"nextPageToken,files(id,name,mimeType,size,md5Checksum,modifiedTime)",
+                          "pageSize":"1000","orderBy":"name_natural"}
+                  if page:params["pageToken"]=page
+                  data=drive_json("files",params)
+                  siblings.extend(data.get("files",[]))
+                  page=data.get("nextPageToken")
+                  if not page:break
+              counts={}
+              for item in siblings:counts[item.get("name","")]=counts.get(item.get("name",""),0)+1
+              for item in siblings:
+                  name=safe_name(item.get("name"))
+                  if counts.get(item.get("name",""),0)>1:name+=f"__drive-{item['id'][:10]}"
+                  path=f"{rel}/{name}".strip("/")
+                  if item["mimeType"]=="application/vnd.google-apps.folder":
+                      folders.append((item["id"],path));discovered_folders+=1
+                  else:
+                      item["relativePath"]=path;files.append(item)
+
+          expected_bytes=sum(int(x.get("size") or 0) for x in files)
+          comment(f"SOURCE_DISCOVERED files={len(files)} folders={discovered_folders} binary_bytes={expected_bytes} drive_writes=0")
+
+          export_map={
+            "application/vnd.google-apps.document":("application/vnd.openxmlformats-officedocument.wordprocessingml.document",".docx"),
+            "application/vnd.google-apps.spreadsheet":("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",".xlsx"),
+            "application/vnd.google-apps.presentation":("application/vnd.openxmlformats-officedocument.presentationml.presentation",".pptx"),
+            "application/vnd.google-apps.drawing":("application/pdf",".pdf"),
+            "application/vnd.google-apps.script":("application/vnd.google-apps.script+json",".json")
+          }
+
+          ftp=ftplib.FTP_TLS(context=ssl.create_default_context(),timeout=120)
+          ftp.connect("troi.ptservidor.net",21)
+          ftp.login("migration@associacaomilk.pt",PWD)
+          ftp.prot_p()
+          ensure_dir(ftp,DEST_ROOT)
+          ensure_dir(ftp,f"{DEST_ROOT}/{RECEIPTS}")
+
+          transferred=verified=existing=failed=bytes_done=0
+          for index,item in enumerate(files,1):
+              if time.time()-START>HARD_STOP:
+                  comment(f"MILK_FILEWISE_CHECKPOINT run={RUN_ID} processed={index-1}/{len(files)} transferred={transferred} verified={verified} existing={existing} failed={failed} bytes={bytes_done} reason=runtime_guard")
+                  break
+              fid=item["id"]
+              receipt_path=f"/{DEST_ROOT}/{RECEIPTS}/{fid}.json"
+              try:
+                  receipt=json.loads(retr_bytes(ftp,receipt_path))
+                  rpath=receipt["remote_path"]
+                  if receipt.get("verified") is True and remote_size(ftp,rpath)==int(receipt["bytes"]):
+                      existing+=1;verified+=1;bytes_done+=int(receipt["bytes"]);continue
+              except Exception:pass
+
+              try:
+                  mime=item["mimeType"];rel=item["relativePath"]
+                  if mime in export_map:
+                      export_mime,ext=export_map[mime]
+                      data=drive_bytes(f"files/{fid}/export",{"mimeType":export_mime})
+                      rel+=ext
+                  elif mime.startswith("application/vnd.google-apps."):
+                      raise RuntimeError("unsupported_google_native_type_"+mime)
+                  else:
+                      data=drive_bytes(f"files/{fid}",{"alt":"media"})
+
+                  sha=hashlib.sha256(data).hexdigest()
+                  parent="/".join(rel.split("/")[:-1])
+                  filename=rel.split("/")[-1]
+                  target_dir=f"{DEST_ROOT}/{parent}".strip("/")
+                  ensure_dir(ftp,target_dir)
+                  ftp.storbinary("STOR "+filename,io.BytesIO(data),blocksize=1024*1024)
+                  remote_path=f"/{target_dir}/{filename}"
+                  digest=hashlib.sha256();read_bytes=0
+                  def consume(chunk):
+                      nonlocal read_bytes
+                      digest.update(chunk);read_bytes+=len(chunk)
+                  ftp.retrbinary("RETR "+remote_path,consume,blocksize=1024*1024)
+                  if read_bytes!=len(data) or digest.hexdigest()!=sha:
+                      raise RuntimeError("destination_readback_mismatch")
+                  receipt={"drive_id":fid,"source_name":item.get("name"),"source_mime":mime,
+                           "source_modified":item.get("modifiedTime"),"remote_path":remote_path,
+                           "bytes":len(data),"sha256":sha,"verified":True,
+                           "verified_at":datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                           "drive_writes":0}
+                  ensure_dir(ftp,f"{DEST_ROOT}/{RECEIPTS}")
+                  ftp.storbinary("STOR "+fid+".json",io.BytesIO(json.dumps(receipt,separators=(",",":")).encode()))
+                  transferred+=1;verified+=1;bytes_done+=len(data)
+                  print(f"FILE_VERIFIED {index}/{len(files)} id={fid} bytes={len(data)} sha256={sha}",flush=True)
+              except Exception as exc:
+                  failed+=1
+                  print(f"FILE_FAILED {index}/{len(files)} id={fid} cause={str(exc)[:240]}",flush=True)
+
+              if index%25==0:
+                  comment(f"MILK_FILEWISE_PROGRESS run={RUN_ID} processed={index}/{len(files)} transferred={transferred} verified={verified} existing={existing} failed={failed} bytes={bytes_done}")
+
+          ftp.quit()
+          processed=verified+failed
+          state="COMPLETE" if verified==len(files) and failed==0 else "CHECKPOINT"
+          comment(f"MILK_FILEWISE_{state} run={RUN_ID} discovered={len(files)} folders={discovered_folders} transferred={transferred} verified={verified} existing={existing} failed={failed} bytes={bytes_done} drive_writes=0")
+          if failed:raise RuntimeError(f"file_failures={failed}")
+          PY

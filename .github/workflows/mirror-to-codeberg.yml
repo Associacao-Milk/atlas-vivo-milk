@@ -331,3 +331,83 @@ jobs:
           set -euo pipefail
           body="MISTRAL_CODEBERG_PUBLIC_HYGIENE decision=${DECISION:-not_decided} cleanup=${CLEAN_STATUS:-not_completed} archive_branch=$ARCHIVE_BRANCH force_push=0 deleted_refs=0 protected_paths=integration_orcid_zenodo_active_workflows"
           curl --fail --silent --show-error -X POST -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" -H "Content-Type: application/json" "https://api.github.com/repos/$GH_REPOSITORY/issues/35/comments" -d "$(jq -n --arg body "$body" '{body:$body}')" >/dev/null
+
+
+  mistral_interoperability_audit:
+    needs: [reconcile, mistral_public_hygiene]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+      ZENODO_TOKEN: ${{ secrets.ZENODO_TOKEN }}
+      ORCID_CLIENT_ID: ${{ secrets.ORCID_CLIENT_ID }}
+      ORCID_CLIENT_SECRET: ${{ secrets.ORCID_CLIENT_SECRET }}
+      GH_TOKEN: ${{ github.token }}
+      GH_REPOSITORY: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Gather non-destructive interoperability evidence
+        id: evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          zenodo_status=not_configured
+          if [ -n "$ZENODO_TOKEN" ]; then
+            zenodo_status=$(curl --silent --show-error -o "$RUNNER_TEMP/zenodo.json" -w '%{http_code}' -H "Authorization: Bearer $ZENODO_TOKEN" "https://zenodo.org/api/deposit/depositions?size=1" || true)
+          fi
+          {
+            echo "zenodo_status=$zenodo_status"
+            echo "orcid_credentials=$([ -n "$ORCID_CLIENT_ID" ] && [ -n "$ORCID_CLIENT_SECRET" ] && echo configured || echo incomplete)"
+            echo "citation_cff=$([ -f CITATION.cff ] && echo present || echo absent)"
+            echo "zenodo_metadata=$([ -f .zenodo.json ] && echo present || echo absent)"
+            echo "codemeta=$([ -f codemeta.json ] && echo present || echo absent)"
+            echo "license=$([ -f LICENSE ] && echo present || echo absent)"
+            echo "governance=$([ -f GOVERNANCE.md ] && echo present || echo absent)"
+            echo "security=$([ -f SECURITY.md ] && echo present || echo absent)"
+          } >> "$GITHUB_OUTPUT"
+          curl --silent --show-error -o "$RUNNER_TEMP/forgejo-version.json" https://codeberg.org/api/v1/version || true
+
+      - name: Mistral evaluates platform readiness
+        id: audit
+        shell: bash
+        env:
+          ZENODO_STATUS: ${{ steps.evidence.outputs.zenodo_status }}
+          ORCID_CREDENTIALS: ${{ steps.evidence.outputs.orcid_credentials }}
+          CITATION_CFF: ${{ steps.evidence.outputs.citation_cff }}
+          ZENODO_METADATA: ${{ steps.evidence.outputs.zenodo_metadata }}
+          CODEMETA: ${{ steps.evidence.outputs.codemeta }}
+          LICENSE_FILE: ${{ steps.evidence.outputs.license }}
+          GOVERNANCE_FILE: ${{ steps.evidence.outputs.governance }}
+          SECURITY_FILE: ${{ steps.evidence.outputs.security }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, pathlib, urllib.request
+          evidence={k:os.environ[k] for k in ["ZENODO_STATUS","ORCID_CREDENTIALS","CITATION_CFF","ZENODO_METADATA","CODEMETA","LICENSE_FILE","GOVERNANCE_FILE","SECURITY_FILE"]}
+          prompt=(
+            "You are the Mistral interoperability agent for Associação MILK. "
+            "Using only this non-destructive evidence, produce concise PT-PT Markdown under: "
+            "CODEBERG_FORGEJO, ZENODO, ORCID, METADADOS, BLOQUEIOS_REAIS, and NEXT_SAFE_EXECUTIONS. "
+            "Never claim a DOI, ORCID work, release, credential scope, or deposit exists unless evidence proves it. "
+            "Do not include secrets or request their values. Evidence: " + json.dumps(evidence,ensure_ascii=False)
+          )
+          request=urllib.request.Request("https://api.mistral.ai/v1/conversations",
+            data=json.dumps({"model":"mistral-small-latest","inputs":[{"role":"user","content":prompt}]}).encode(),
+            method="POST",headers={"Authorization":"Bearer "+os.environ["MISTRAL_API_KEY"],"Content-Type":"application/json"})
+          with urllib.request.urlopen(request,timeout=120) as response: payload=json.loads(response.read().decode())
+          answer="\n".join(str(x.get("content","")) for x in payload.get("outputs",[]) if isinstance(x,dict)).strip()
+          if not answer: raise SystemExit("Mistral interoperability audit returned no content")
+          with open(os.environ["GITHUB_OUTPUT"],"a",encoding="utf-8") as out: out.write("report<<EOF\n"+answer+"\nEOF\n")
+          PY
+
+      - name: Publish Mistral interoperability receipt
+        if: always()
+        shell: bash
+        env:
+          REPORT: ${{ steps.audit.outputs.report }}
+        run: |
+          set -euo pipefail
+          body="MISTRAL_INTEROPERABILITY_AUDIT\n\n${REPORT:-Audit not completed.}"
+          curl --fail --silent --show-error -X POST -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" -H "Content-Type: application/json" "https://api.github.com/repos/$GH_REPOSITORY/issues/35/comments" -d "$(jq -n --arg body "$body" '{body:$body}')" >/dev/null

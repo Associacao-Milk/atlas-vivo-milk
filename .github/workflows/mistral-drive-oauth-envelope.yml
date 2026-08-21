@@ -27,17 +27,7 @@ jobs:
           from cryptography.hazmat.primitives.ciphers.aead import AESGCM
           from mistralai.client import Mistral
           key=os.environ["MISTRAL_API_KEY"];gh=os.environ["GH_TOKEN"];repo=os.environ["REPO"];run=os.environ["RUN_ID"]
-          pub=b"""-----BEGIN PUBLIC KEY-----
-MIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEAsvWnmfgjwLM5FZ8S5obF
-KHV0OD7aiQvdKZsIPHeJWeM5AyEFp9AAive0Jp0MA0Z+7Bu6d7S/Xx5UJj3XKInR
-byKEcPhO/++/zrAPPzYMfyrVmXynKxypm6vx9uyboU8uRyN+X/YNw+2j5LKu7Oif
-cpjJ9WREMahj/Om7IqeU3BqxfLRi2M00BDcUKSHhRmJiy3w/X37u7TH3itmNqe6s
-cUBI2n91DJk2Ua+SXVQ+GKdqB7M5VwwPR+kpx6o28caFJIhBmHMwAtatCotqQKpf
-AJj/M23yH9Uk3CNVDnmcg7I+HzQsi6ec7SgtbNM5RJzJtCowG50bHo8bq4LPwH5N
-lg+U9da5cFBZI7SAdpp7o4yGTQZLDd9kny0OZNeGjHpO0HsdukquaX9EEpD2oL1L
-Az5cFJp0NPOeZwLoVKKpY1x90AcRHm5Rmgvp9FijllSbfJeD97ne1p2seZyshYvc
-UOqHS94qbY1UF2QBULY0o7+RyYSueI2A/vkEVtON4VKrAgMBAAE=
------END PUBLIC KEY-----"""
+          pub=base64.b64decode("LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUlJQm9qQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FZOEFNSUlCaWdLQ0FZRUFzdldubWZnandMTTVGWjhTNW9iRgpLSFYwT0Q3YWlRdmRLWnNJUEhlSldlTTVBeUVGcDlBQWl2ZTBKcDBNQTBaKzdCdTZkN1MvWHg1VUpqM1hLSW5SCmJ5S0VjUGhPLysrL3pyQVBQellNZnlyVm1YeW5LeHlwbTZ2eDl1eWJvVTh1UnlOK1gvWU53KzJqNUxLdTdPaWYKY3BqSjlXUkVNYWhqL09tN0lxZVUzQnF4ZkxSaTJNMDBCRGNVS1NIaFJtSml5M3cvWDM3dTdUSDNpdG1OcWU2cwpjVUJJMm45MURKazJVYStTWFZRK0dLZHFCN001Vnd3UFIra3B4Nm8yOGNhRkpJaEJtSE13QXRhdENvdHFRS3BmCkFKai9NMjN5SDlVazNDTlZEbm1jZzdJK0h6UXNpNmVjN1NndGJOTTVSSnpKdENvd0c1MGJIbzhicTRMUHdINU4KbGcrVTlkYTVjRkJaSTdTQWRwcDdvNHlHVFFaTERkOWtueTBPWk5lR2pIcE8wSHNkdWtxdWFYOUVFcEQyb0wxTApBejVjRkpwME5QT2Vad0xvVktLcFkxeDkwQWNSSG01Um1ndnA5RmlqbGxTYmZKZUQ5N25lMXAyc2VaeXNoWXZjClVPcUhTOTRxYlkxVUYyUUJVTFkwbzcrUnlZU3VlSTJBL3ZrRVZ0T040VktyQWdNQkFBRT0KLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg==")
           with Mistral(api_key=key) as client:
               auth=client.beta.connectors.get_auth_url(connector_id_or_name="google_drive_mcp",app_return_url="https://console.mistral.ai/")
               url=str(getattr(auth,"auth_url",""));ttl=int(getattr(auth,"ttl",0) or 0)

@@ -15,7 +15,7 @@ jobs:
       PTSERVIDOR_FTPS_PASSWORD: ${{ secrets.PTSERVIDOR_FTPS_PASSWORD }}
       GH_TOKEN: ${{ github.token }}
       REPO: ${{ github.repository }}
-      RELAY_SUBJECT: MILK-MISTRAL-GMAIL-SIGNED-RELAY-20260821-0248
+      RELAY_SUBJECT: MILK-MISTRAL-GMAIL-SIGNED-RELAY-20260821-0219
       TARGET_FILE: ATLAS_VIVO_MILK_CURADORIAS_FISICAS_DIGITAIS_CORPO_INTEGRAL_2026-08-08.docx
     steps:
       - name: Mistral relay -> FTPS -> download-back SHA256
@@ -38,45 +38,40 @@ jobs:
           for a in al:
               s=(str(a.get('name',''))+' '+str(a.get('description',''))).lower()
               if 'migra' in s and ('preserv' in s or 'transfer' in s): agent=a; break
-          comment('MISTRAL_GMAIL_SIGNED_RELAY_V2_STARTED agent='+(str(agent.get('name')) if agent else 'runtime')+' drive_writes=0')
+          comment('MISTRAL_GMAIL_SIGNED_RELAY_V3_STARTED agent='+(str(agent.get('name')) if agent else 'runtime')+' drive_writes=0')
           url=None
-          for _ in range(8):
-              prompt=f'Use ONLY Gmail connector read-only. Search exact subject "{subject}" and open matching thread. Return exactly one line: RELAY_URL=<complete https URL after RELAY_URL=>. Do not modify mail.'
+          for _ in range(6):
+              prompt=f'Use ONLY Gmail connector read-only. Search exact subject "{subject}" and open the matching thread. The thread contains multiple RELAY_URL= lines. Return ONLY the LAST/MOST RECENT RELAY_URL value as one line RELAY_URL=<complete https URL>. Do not modify mail.'
               payload={'inputs':[{'role':'user','content':prompt}],'tools':[{'type':'connector','connector_id':'gmail'}]}
               if agent: payload['agent_id']=agent['id']
               else: payload['model']='mistral-small-latest'
               try:
                   conv=post('/v1/conversations',payload)
                   text=' '.join(str(x.get('content','')) for x in conv.get('outputs',[]) if isinstance(x,dict))
-                  m=re.search(r'RELAY_URL=(https://[^\s<>]+)',text)
-                  if m:
-                      url=html.unescape(m.group(1)).strip().strip('`"\'').rstrip(').,]'); break
+                  matches=re.findall(r'RELAY_URL=(https://[^\s<>]+)',text)
+                  if matches:
+                      url=html.unescape(matches[-1]).strip().strip('`"\'').rstrip(').,]'); break
               except Exception: pass
               time.sleep(1)
           if not url:
-              comment('MISTRAL_GMAIL_SIGNED_RELAY_V2_FAILED stage=resolve_url drive_writes=0'); raise SystemExit(20)
-          print('::add-mask::'+url)
-          comment('MISTRAL_GMAIL_SIGNED_RELAY_V2_RESOLVED url_disclosed=no drive_writes=0')
+              comment('MISTRAL_GMAIL_SIGNED_RELAY_V3_FAILED stage=resolve_url drive_writes=0'); raise SystemExit(20)
+          print('::add-mask::'+url); comment('MISTRAL_GMAIL_SIGNED_RELAY_V3_RESOLVED url_disclosed=no drive_writes=0')
           try:
-              q=urllib.request.Request(url,headers={'User-Agent':'MILK-Mistral-Migration/2.0','Accept':'*/*'})
+              q=urllib.request.Request(url,headers={'User-Agent':'MILK-Mistral-Migration/3.0','Accept':'*/*'})
               with urllib.request.urlopen(q,timeout=300) as r: data=r.read(); http_status=getattr(r,'status',200)
           except urllib.error.HTTPError as e:
-              comment(f'MISTRAL_GMAIL_SIGNED_RELAY_V2_FAILED stage=http_download http_status={e.code} url_disclosed=no drive_writes=0'); raise
-          except Exception as e:
-              comment(f'MISTRAL_GMAIL_SIGNED_RELAY_V2_FAILED stage=http_download error_type={type(e).__name__} url_disclosed=no drive_writes=0'); raise
+              comment(f'MISTRAL_GMAIL_SIGNED_RELAY_V3_FAILED stage=http_download http_status={e.code} url_disclosed=no drive_writes=0'); raise
           if len(data)!=11395370 or data[:2]!=b'PK':
-              comment(f'MISTRAL_GMAIL_SIGNED_RELAY_V2_FAILED stage=binary_validation bytes={len(data)} http_status={http_status} drive_writes=0'); raise RuntimeError('binary validation failed')
+              comment(f'MISTRAL_GMAIL_SIGNED_RELAY_V3_FAILED stage=binary_validation bytes={len(data)} http_status={http_status} drive_writes=0'); raise RuntimeError('binary validation failed')
           local=tmp/fname; local.write_bytes(data); size=len(data); sha=hashlib.sha256(data).hexdigest()
           comment(f'MISTRAL_REAL_DRIVE_BINARY_ACQUIRED file={fname} bytes={size} sha256={sha} drive_writes=0')
           base=['curl','--fail','--silent','--show-error','--ssl-reqd','--ftp-pasv','--connect-timeout','30','--max-time','1200','--user','migration@associacaomilk.pt:'+pwd]
-          rdir='drive-current-relay-2026-08-21'
-          subprocess.run(base+['--quote','MKD '+rdir,'ftp://troi.ptservidor.net:21/'],check=False)
+          rdir='drive-current-relay-2026-08-21'; subprocess.run(base+['--quote','MKD '+rdir,'ftp://troi.ptservidor.net:21/'],check=False)
           ftpu='ftp://troi.ptservidor.net:21/'+rdir+'/'+urllib.parse.quote(fname,safe='._-() ')
           try: subprocess.run(base+['-T',str(local),ftpu],check=True)
           except subprocess.CalledProcessError as e:
               comment(f'MISTRAL_REAL_DRIVE_FILE_TRANSFER_FAILED stage=ftps_upload rc={e.returncode} bytes=0 drive_writes=0'); raise
-          back=tmp/('back-'+fname)
-          subprocess.run(base+[ftpu,'-o',str(back)],check=True)
+          back=tmp/('back-'+fname); subprocess.run(base+[ftpu,'-o',str(back)],check=True)
           bsize=back.stat().st_size; bsha=hashlib.sha256(back.read_bytes()).hexdigest()
           if bsize!=size or bsha!=sha:
               comment(f'MISTRAL_REAL_DRIVE_FILE_TRANSFER_FAILED stage=download_back_verify remote_bytes={bsize} drive_writes=0'); raise RuntimeError('SHA256 mismatch')

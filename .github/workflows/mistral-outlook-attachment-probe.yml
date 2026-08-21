@@ -1,0 +1,42 @@
+name: MILK Mistral Outlook Attachment Probe
+on:
+  push:
+    branches: [master]
+    paths: ['.github/workflows/mistral-outlook-attachment-probe.yml']
+permissions:
+  contents: read
+  issues: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    env:
+      MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+    steps:
+      - shell: bash
+        run: |
+          python - <<'PY'
+          import os,json,urllib.request
+          key=os.environ['MISTRAL_API_KEY'];gh=os.environ['GH_TOKEN'];repo=os.environ['REPO']
+          def comment(msg):
+            q=urllib.request.Request(f'https://api.github.com/repos/{repo}/issues/35/comments',data=json.dumps({'body':msg}).encode(),method='POST',headers={'Authorization':'Bearer '+gh,'Content-Type':'application/json'})
+            urllib.request.urlopen(q,timeout=30).read()
+          # find connector names containing outlook/microsoft mail
+          q=urllib.request.Request('https://api.mistral.ai/v1/connectors?page_size=200',headers={'Authorization':'Bearer '+key,'Accept':'application/json'})
+          with urllib.request.urlopen(q,timeout=60) as r:d=json.loads(r.read().decode())
+          items=d.get('items') or d.get('data') or []
+          cs=[]
+          for c in items:
+            n=str(c.get('name') or c.get('title') or '')
+            if any(x in n.lower() for x in ('outlook','microsoft','office')):cs.append(n)
+          comment('MISTRAL_OUTLOOK_CONNECTOR_CANDIDATES '+','.join(cs))
+          for n in cs:
+            try:
+              q=urllib.request.Request('https://api.mistral.ai/v1/connectors/'+n+'/tools?page_size=200',headers={'Authorization':'Bearer '+key,'Accept':'application/json'})
+              with urllib.request.urlopen(q,timeout=60) as r:t=json.loads(r.read().decode())
+              tl=t if isinstance(t,list) else (t.get('items') or t.get('data') or t.get('tools') or [])
+              names=[str(x.get('name')) for x in tl if isinstance(x,dict)]
+              comment('MISTRAL_OUTLOOK_TOOLS connector='+n+' names='+','.join(names))
+            except Exception as e: comment('MISTRAL_OUTLOOK_TOOL_ERROR connector='+n+' type='+type(e).__name__)
+          PY

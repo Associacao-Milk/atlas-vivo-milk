@@ -41,6 +41,7 @@ jobs:
           meta={}
           try: meta=call("/v1/connectors/"+urllib.parse.quote(cid,safe=""))
           except Exception: pass
+          call_id=str(meta.get("id") or cid) if isinstance(meta,dict) else cid
           safe_meta={k:meta.get(k) for k in ("id","name","auth_type","visibility","status","user_credentials_count","is_active") if isinstance(meta,dict) and k in meta}
           try:
               td=call("/v1/connectors/"+urllib.parse.quote(cid,safe="")+"/tools?page_size=200")
@@ -72,7 +73,7 @@ jobs:
               if not args:
                   attempts.append(name+":no_args");continue
               try:
-                  res=call("/v1/connectors/"+urllib.parse.quote(cid,safe="")+"/call_tool","POST",{"tool_name":name,"arguments":args},180)
+                  res=call("/v1/connectors/"+urllib.parse.quote(call_id,safe="")+"/call_tool","POST",{"tool_name":name,"arguments":args},180)
                   raw=json.dumps(res,ensure_ascii=False)
                   if target in raw or target_id in raw:
                       found=True; attempts.append(name+":found");break

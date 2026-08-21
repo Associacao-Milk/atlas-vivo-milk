@@ -1,0 +1,88 @@
+name: MILK Mistral Drive MCP Tool Probe
+on:
+  push:
+    branches: [master]
+    paths: ['.github/workflows/mistral-drive-mcp-tool-probe.yml']
+permissions:
+  contents: read
+  issues: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+    steps:
+      - name: Probe Drive MCP tools and exact target
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, urllib.error, urllib.parse, urllib.request
+          key=os.environ["MISTRAL_API_KEY"]; gh=os.environ["GH_TOKEN"]; repo=os.environ["REPO"]
+          target="WORK_HANDOFF_ATLAS_VIVO_MILK_2026-08-12__TRANSFERENCIA_STAGING.zip"
+          target_id="1GJFngHQP3D-IbmFdzyF08Q_3EzcRhBTv"
+          def comment(msg):
+              q=urllib.request.Request(f"https://api.github.com/repos/{repo}/issues/35/comments",data=json.dumps({"body":msg}).encode(),method="POST",headers={"Authorization":"Bearer "+gh,"Content-Type":"application/json","Accept":"application/vnd.github+json"})
+              urllib.request.urlopen(q,timeout=30).read()
+          def call(path,method="GET",payload=None,timeout=120):
+              data=None if payload is None else json.dumps(payload).encode()
+              q=urllib.request.Request("https://api.mistral.ai"+path,data=data,method=method,headers={"Authorization":"Bearer "+key,"Content-Type":"application/json","Accept":"application/json"})
+              with urllib.request.urlopen(q,timeout=timeout) as r:return json.loads(r.read().decode())
+          def rows(d):
+              if isinstance(d,list):return d
+              if isinstance(d,dict):
+                  for k in ("items","data","tools","results"):
+                      if isinstance(d.get(k),list):return d[k]
+              return []
+          cid="google_drive_mcp"
+          meta={}
+          try: meta=call("/v1/connectors/"+urllib.parse.quote(cid,safe=""))
+          except Exception: pass
+          safe_meta={k:meta.get(k) for k in ("id","name","auth_type","visibility","status","user_credentials_count","is_active") if isinstance(meta,dict) and k in meta}
+          try:
+              td=call("/v1/connectors/"+urllib.parse.quote(cid,safe="")+"/tools?page_size=200")
+          except urllib.error.HTTPError as e:
+              comment(f"MISTRAL_DRIVE_MCP_TOOL_PROBE_FAILED connector={cid} stage=list_tools http={e.code} drive_writes=0")
+              raise
+          tools=rows(td)
+          names=[str(t.get("name","")) for t in tools if isinstance(t,dict)]
+          comment("MISTRAL_DRIVE_MCP_TOOLS connector="+cid+" count="+str(len(names))+" names="+",".join(names)[:1200]+" meta="+json.dumps(safe_meta,separators=(",",":"))+" drive_writes=0")
+          candidates=[]
+          for t in tools:
+              if not isinstance(t,dict):continue
+              name=str(t.get("name",""))
+              low=name.lower()
+              if any(x in low for x in ("search","list","find")) and any(x in low for x in ("drive","file","folder","document")):
+                  candidates.append(t)
+          found=False; attempts=[]
+          for t in candidates[:12]:
+              name=str(t.get("name",""))
+              schema=t.get("input_schema") or t.get("parameters") or t.get("schema") or {}
+              props=schema.get("properties",{}) if isinstance(schema,dict) else {}
+              args={}
+              for p,spec in props.items():
+                  low=p.lower()
+                  if low in ("query","q","search_query","name","filename","file_name","text"): args[p]=target
+                  elif low in ("topn","top_k","limit","page_size","max_results"): args[p]=50
+                  elif low in ("folder_id","parent_id") and isinstance(spec,dict) and p in (schema.get("required") or []): args[p]="root"
+              if not args:
+                  attempts.append(name+":no_args");continue
+              try:
+                  res=call("/v1/connectors/"+urllib.parse.quote(cid,safe="")+"/call_tool","POST",{"tool_name":name,"arguments":args},180)
+                  raw=json.dumps(res,ensure_ascii=False)
+                  if target in raw or target_id in raw:
+                      found=True; attempts.append(name+":found");break
+                  attempts.append(name+":empty")
+              except urllib.error.HTTPError as e:
+                  attempts.append(name+":http_"+str(e.code))
+              except Exception:
+                  attempts.append(name+":error")
+          if found:
+              comment("MISTRAL_DRIVE_MCP_DIRECT_READ_VALIDATED connector="+cid+" target_bytes=23380653 tool="+attempts[-1].split(":")[0]+" drive_writes=0")
+          else:
+              comment("MISTRAL_DRIVE_MCP_DIRECT_READ_NOT_READY connector="+cid+" attempts="+",".join(attempts)[:1000]+" drive_writes=0")
+              raise SystemExit(23)
+          PY

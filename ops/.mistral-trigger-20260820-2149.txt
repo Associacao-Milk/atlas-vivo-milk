@@ -1,1 +1,0 @@
-Trigger only. No secrets. Drive read-only. Mistral agents execute migration.

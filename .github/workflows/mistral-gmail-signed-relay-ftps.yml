@@ -1,4 +1,4 @@
-name: MILK Mistral Box Binary Capability Diagnostic
+name: MILK Direct Drive Credential Probe
 on:
   push:
     branches: [master]
@@ -7,41 +7,54 @@ permissions:
   contents: read
   issues: write
 jobs:
-  diagnose:
+  probe:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
+      DRIVE_SECRET: ${{ secrets.DRIVE_SOMOSTODOSPOSSIVEIS }}
       MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
       GH_TOKEN: ${{ github.token }}
       REPO: ${{ github.repository }}
     steps:
-      - name: Enumerate Box connector tools in Mistral runtime
+      - name: Classify without disclosure and test Drive API
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
-          import os,json,urllib.request
-          key=os.environ['MISTRAL_API_KEY']; gh=os.environ['GH_TOKEN']; repo=os.environ['REPO']
+          import os,json,re,urllib.request,urllib.error
+          s=os.environ.get('DRIVE_SECRET',''); gh=os.environ['GH_TOKEN']; repo=os.environ['REPO']; mk=os.environ.get('MISTRAL_API_KEY','')
           def comment(msg):
               q=urllib.request.Request(f'https://api.github.com/repos/{repo}/issues/35/comments',data=json.dumps({'body':msg}).encode(),method='POST',headers={'Authorization':'Bearer '+gh,'Content-Type':'application/json','Accept':'application/vnd.github+json'})
               urllib.request.urlopen(q,timeout=30).read()
-          def get(path):
-              q=urllib.request.Request('https://api.mistral.ai'+path,headers={'Authorization':'Bearer '+key,'Accept':'application/json'})
-              with urllib.request.urlopen(q,timeout=60) as r:return json.loads(r.read().decode())
-          connectors=get('/v1/connectors')
-          data=connectors.get('data',connectors if isinstance(connectors,list) else [])
-          box=next((x for x in data if str(x.get('id','')).lower()=='box' or 'box' in str(x.get('name','')).lower()),None)
-          if not box:
-              comment('MISTRAL_BOX_DIAG failed=no_box_connector'); raise SystemExit(20)
-          cid=box.get('id') or box.get('connector_id')
-          tools=get(f'/v1/connectors/{cid}/tools')
-          arr=tools.get('data',tools if isinstance(tools,list) else [])
-          names=[]
-          for t in arr:
-              n=t.get('name') or t.get('function',{}).get('name') or t.get('id')
-              if n:names.append(str(n))
-          safe=','.join(names)
-          comment(f'MISTRAL_BOX_TOOL_NAMES count={len(names)} names={safe}')
-          binary=[n for n in names if any(k in n.lower() for k in ['download','content','file','shared','link','url'])]
-          comment('MISTRAL_BOX_BINARY_CANDIDATES '+(','.join(binary) if binary else 'none'))
+          kind='unknown'
+          if not s: kind='empty'
+          elif s.lstrip().startswith('{'):
+              try:
+                  o=json.loads(s); kind='json_'+str(o.get('type','object'))
+              except Exception: kind='json_invalid'
+          elif s.startswith('ya29.'): kind='google_access_token'
+          elif s.startswith('1//'): kind='google_refresh_token'
+          elif s.startswith('4/'): kind='google_authorization_code'
+          elif s.count('.')==2 and s.startswith('eyJ'): kind='jwt_like'
+          elif '\n' in s and '[drive]' in s.lower(): kind='rclone_config_like'
+          comment(f'DRIVE_SECRET_SAFE_CLASSIFICATION kind={kind} length_bucket='+(('<80' if len(s)<80 else '80-255' if len(s)<256 else '256+') )+' disclosed=no')
+          if not s: raise SystemExit(20)
+          req=urllib.request.Request('https://www.googleapis.com/drive/v3/files?pageSize=1&fields=files(id),nextPageToken',headers={'Authorization':'Bearer '+s,'Accept':'application/json'})
+          try:
+              with urllib.request.urlopen(req,timeout=30) as r:
+                  status=getattr(r,'status',200); r.read(512)
+              comment(f'DRIVE_SECRET_BEARER_PROBE http_status={status} usable=yes disclosed=no')
+          except urllib.error.HTTPError as e:
+              comment(f'DRIVE_SECRET_BEARER_PROBE http_status={e.code} usable=no disclosed=no')
+              # Ask Mistral only to classify the already-derived nonsecret shape, never the value.
+              if mk:
+                  payload={'model':'mistral-small-latest','inputs':[{'role':'user','content':f'A secret was safely classified as {kind}, length bucket '+('<80' if len(s)<80 else '80-255' if len(s)<256 else '256+')+f', and direct Google Drive bearer test returned HTTP {e.code}. Return only one of: ACCESS_TOKEN, REFRESH_TOKEN, AUTH_CODE, SERVICE_ACCOUNT, RCLONE_CONFIG, UNKNOWN.'}]}
+                  q=urllib.request.Request('https://api.mistral.ai/v1/conversations',data=json.dumps(payload).encode(),method='POST',headers={'Authorization':'Bearer '+mk,'Content-Type':'application/json','Accept':'application/json'})
+                  try:
+                      with urllib.request.urlopen(q,timeout=60) as r: out=json.loads(r.read().decode())
+                      text=' '.join(str(x.get('content','')) for x in out.get('outputs',[]) if isinstance(x,dict))
+                      m=re.search(r'ACCESS_TOKEN|REFRESH_TOKEN|AUTH_CODE|SERVICE_ACCOUNT|RCLONE_CONFIG|UNKNOWN',text)
+                      comment('MISTRAL_DRIVE_SECRET_CLASSIFICATION result='+(m.group(0) if m else 'UNKNOWN')+' secret_seen=no')
+                  except Exception: pass
+              raise SystemExit(21)
           PY

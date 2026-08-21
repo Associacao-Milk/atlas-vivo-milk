@@ -60,7 +60,8 @@ jobs:
           found=False; attempts=[]
           for t in candidates[:12]:
               name=str(t.get("name",""))
-              schema=t.get("input_schema") or t.get("parameters") or t.get("schema") or {}
+              schema=(t.get("input_schema") or t.get("inputSchema") or t.get("parameters") or
+                      (t.get("function") or {}).get("parameters") or t.get("schema") or {})
               props=schema.get("properties",{}) if isinstance(schema,dict) else {}
               args={}
               for p,spec in props.items():

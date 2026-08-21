@@ -194,12 +194,11 @@ jobs:
                   ensure_dir(ftp,target_dir)
                   ftp.storbinary("STOR "+filename,io.BytesIO(data),blocksize=1024*1024)
                   remote_path=f"/{target_dir}/{filename}"
-                  digest=hashlib.sha256();read_bytes=0
+                  digest=hashlib.sha256();read_bytes=[0]
                   def consume(chunk):
-                      nonlocal read_bytes
-                      digest.update(chunk);read_bytes+=len(chunk)
+                      digest.update(chunk);read_bytes[0]+=len(chunk)
                   ftp.retrbinary("RETR "+remote_path,consume,blocksize=1024*1024)
-                  if read_bytes!=len(data) or digest.hexdigest()!=sha:
+                  if read_bytes[0]!=len(data) or digest.hexdigest()!=sha:
                       raise RuntimeError("destination_readback_mismatch")
                   receipt={"drive_id":fid,"source_name":item.get("name"),"source_mime":mime,
                            "source_modified":item.get("modifiedTime"),"remote_path":remote_path,

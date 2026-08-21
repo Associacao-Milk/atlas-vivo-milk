@@ -1,4 +1,4 @@
-name: MILK Mistral Gmail Connector Diagnostic
+name: MILK Mistral Box Binary Capability Diagnostic
 on:
   push:
     branches: [master]
@@ -15,12 +15,12 @@ jobs:
       GH_TOKEN: ${{ github.token }}
       REPO: ${{ github.repository }}
     steps:
-      - name: Verify Gmail draft visibility through Mistral
+      - name: Enumerate Box connector tools in Mistral runtime
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
-          import os,json,urllib.request,re
+          import os,json,urllib.request
           key=os.environ['MISTRAL_API_KEY']; gh=os.environ['GH_TOKEN']; repo=os.environ['REPO']
           def comment(msg):
               q=urllib.request.Request(f'https://api.github.com/repos/{repo}/issues/35/comments',data=json.dumps({'body':msg}).encode(),method='POST',headers={'Authorization':'Bearer '+gh,'Content-Type':'application/json','Accept':'application/vnd.github+json'})
@@ -28,16 +28,20 @@ jobs:
           def get(path):
               q=urllib.request.Request('https://api.mistral.ai'+path,headers={'Authorization':'Bearer '+key,'Accept':'application/json'})
               with urllib.request.urlopen(q,timeout=60) as r:return json.loads(r.read().decode())
-          def post(path,payload):
-              q=urllib.request.Request('https://api.mistral.ai'+path,data=json.dumps(payload).encode(),method='POST',headers={'Authorization':'Bearer '+key,'Content-Type':'application/json','Accept':'application/json'})
-              with urllib.request.urlopen(q,timeout=180) as r:return json.loads(r.read().decode())
-          agents=get('/v1/agents/pages'); al=agents.get('data',[]) if isinstance(agents,dict) else agents; agent=next((a for a in al if 'migra' in (str(a.get('name',''))+' '+str(a.get('description',''))).lower()),None)
-          payload={'inputs':[{'role':'user','content':'Use ONLY Gmail connector. Call list_drafts. Do NOT reveal any draft body, URL, recipient or complete subject. Check whether any draft subject begins with MILKRELAY::. Return exactly FOUND=yes if one exists, otherwise FOUND=no.'}],'tools':[{'type':'connector','connector_id':'gmail'}]}
-          if agent: payload['agent_id']=agent['id']
-          else: payload['model']='mistral-small-latest'
-          conv=post('/v1/conversations',payload)
-          text=' '.join(str(x.get('content','')) for x in conv.get('outputs',[]) if isinstance(x,dict))
-          found='yes' if re.search(r'FOUND\s*=\s*yes',text,re.I) else 'no'
-          comment(f'MISTRAL_GMAIL_DRAFT_VISIBILITY found={found} output_types='+','.join(sorted({str(x.get('type','?')) for x in conv.get('outputs',[]) if isinstance(x,dict)}))+' drive_writes=0')
-          if found!='yes': raise SystemExit(20)
+          connectors=get('/v1/connectors')
+          data=connectors.get('data',connectors if isinstance(connectors,list) else [])
+          box=next((x for x in data if str(x.get('id','')).lower()=='box' or 'box' in str(x.get('name','')).lower()),None)
+          if not box:
+              comment('MISTRAL_BOX_DIAG failed=no_box_connector'); raise SystemExit(20)
+          cid=box.get('id') or box.get('connector_id')
+          tools=get(f'/v1/connectors/{cid}/tools')
+          arr=tools.get('data',tools if isinstance(tools,list) else [])
+          names=[]
+          for t in arr:
+              n=t.get('name') or t.get('function',{}).get('name') or t.get('id')
+              if n:names.append(str(n))
+          safe=','.join(names)
+          comment(f'MISTRAL_BOX_TOOL_NAMES count={len(names)} names={safe}')
+          binary=[n for n in names if any(k in n.lower() for k in ['download','content','file','shared','link','url'])]
+          comment('MISTRAL_BOX_BINARY_CANDIDATES '+(','.join(binary) if binary else 'none'))
           PY

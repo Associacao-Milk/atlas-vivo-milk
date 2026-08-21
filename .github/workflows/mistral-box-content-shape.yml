@@ -1,0 +1,37 @@
+name: MILK Mistral Box Content Shape
+on:
+  push:
+    branches: [master]
+    paths: ['.github/workflows/mistral-box-content-shape.yml']
+permissions:
+  contents: read
+  issues: write
+jobs:
+  shape:
+    runs-on: ubuntu-latest
+    env:
+      MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+    steps:
+      - shell: bash
+        run: |
+          python - <<'PY'
+          import os,json,urllib.request,re
+          key=os.environ['MISTRAL_API_KEY'];gh=os.environ['GH_TOKEN'];repo=os.environ['REPO'];fid='2322958592651'
+          def comment(msg):
+            q=urllib.request.Request(f'https://api.github.com/repos/{repo}/issues/35/comments',data=json.dumps({'body':msg}).encode(),method='POST',headers={'Authorization':'Bearer '+gh,'Content-Type':'application/json'})
+            urllib.request.urlopen(q,timeout=30).read()
+          q=urllib.request.Request('https://api.mistral.ai/v1/connectors/box/tools/get_file_content/call',data=json.dumps({'arguments':{'file_id':fid}}).encode(),method='POST',headers={'Authorization':'Bearer '+key,'Content-Type':'application/json','Accept':'application/json'})
+          with urllib.request.urlopen(q,timeout=120) as r:d=json.loads(r.read().decode())
+          c=d.get('content') or []
+          shapes=[]
+          for x in c:
+            if not isinstance(x,dict):continue
+            typ=str(x.get('type') or 'dict'); text=str(x.get('text') or '')
+            schemes=sorted(set(re.findall(r'\b([a-zA-Z][a-zA-Z0-9+.-]{1,20})://',text)))
+            red=re.sub(r'https?://\S+','<HTTP_URL>',text)
+            red=re.sub(r'[A-Za-z0-9_-]{32,}','<OPAQUE>',red)
+            shapes.append({'type':typ,'len':len(text),'schemes':schemes,'redacted_prefix':red[:500]})
+          comment('MISTRAL_BOX_CONTENT_SHAPE '+json.dumps(shapes,separators=(',',':'))[:1800])
+          PY

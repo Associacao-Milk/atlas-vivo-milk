@@ -1,75 +1,153 @@
-name: Mirror to Codeberg
+name: MILK Mistral — GitHub to Codeberg (safe sync)
 
 on:
   push:
-    branches:
-      - master
-      - main
-      - '*'
-  pull_request:
-    branches:
-      - master
-      - main
-  schedule:
-    - cron: '0 * * * *'  # Sincroniza a cada hora
+    branches: [master]
+    paths:
+      - '.github/workflows/mirror-to-codeberg.yml'
+      - '.github/workflows/sync-codeberg.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: milk-codeberg-master-sync
+  cancel-in-progress: false
 
 jobs:
-  mirror-to-codeberg:
-    name: Mirror repository to Codeberg
+  reconcile:
+    name: Mistral verifies and fast-forwards Codeberg
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      CODEBERG_TOKEN: ${{ secrets.CODEBERG_TOKEN }}
+      CODEBERG_USER: milkivc
+      CODEBERG_REPO: atlas-vivo-milk
+      MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+      GH_TOKEN: ${{ github.token }}
+      GH_REPOSITORY: ${{ github.repository }}
     steps:
-      - name: Checkout repository
+      - name: Checkout canonical GitHub history
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Create Codeberg repository if not exists
-        env:
-          CODEBERG_TOKEN: ${{ secrets.CODEBERG_TOKEN }}
-          CODEBERG_USER: milkivc
-          CODEBERG_REPO: atlas-vivo-milk
+      - name: Require configured credentials
+        shell: bash
         run: |
-          REPO_EXISTS=$(curl -s -o /dev/null -w "%{http_code}" \
-            -H "Authorization: token $CODEBERG_TOKEN" \
-            "https://codeberg.org/api/v1/repos/$CODEBERG_USER/$CODEBERG_REPO")
-          
-          if [ "$REPO_EXISTS" != "200" ]; then
-            echo "🆕 Criando repositório no Codeberg: $CODEBERG_REPO"
-            curl -X POST \
-              -H "Authorization: token $CODEBERG_TOKEN" \
-              -H "Content-Type: application/json" \
-              -d '{"name": "$CODEBERG_REPO", "description": "Mirror de milkivc/atlas-vivo-milk - Associação MILK", "private": false, "mirror": true}' \
-              "https://codeberg.org/api/v1/user/repos"
-            echo "✅ Repositório criado no Codeberg"
-          else
-            echo "✅ Repositório já existe no Codeberg"
+          set -euo pipefail
+          test -n "$CODEBERG_TOKEN" || { echo "::error::CODEBERG_TOKEN missing"; exit 2; }
+          test -n "$MISTRAL_API_KEY" || { echo "::error::MISTRAL_API_KEY missing"; exit 3; }
+
+      - name: Inspect histories without mutation
+        id: inspect
+        shell: bash
+        run: |
+          set -euo pipefail
+          credential_file="$RUNNER_TEMP/codeberg-credentials"
+          trap 'rm -f "$credential_file"' EXIT
+          git config credential.helper "store --file=$credential_file"
+          printf 'protocol=https\nhost=codeberg.org\nusername=%s\npassword=%s\n\n' "$CODEBERG_USER" "$CODEBERG_TOKEN" | git credential approve
+          chmod 600 "$credential_file"
+          git remote add codeberg "https://codeberg.org/$CODEBERG_USER/$CODEBERG_REPO.git"
+
+          if ! git fetch --no-tags codeberg master; then
+            echo "state=unreachable_or_missing" >> "$GITHUB_OUTPUT"
+            echo "local_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+            echo "remote_sha=none" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
 
-      - name: Sync to Codeberg
-        env:
-          CODEBERG_TOKEN: ${{ secrets.CODEBERG_TOKEN }}
-          CODEBERG_USER: milkivc
-          CODEBERG_REPO: atlas-vivo-milk
-        run: |
-          git remote add codeberg https://$CODEBERG_USER:$CODEBERG_TOKEN@codeberg.org/$CODEBERG_USER/$CODEBERG_REPO.git
-          git push --mirror codeberg --force
-          echo "✅ Sincronização com Codeberg concluída!"
-          echo "🔗 Repositório no Codeberg: https://codeberg.org/$CODEBERG_USER/$CODEBERG_REPO"
-
-      - name: Verify sync
-        env:
-          CODEBERG_TOKEN: ${{ secrets.CODEBERG_TOKEN }}
-          CODEBERG_USER: milkivc
-          CODEBERG_REPO: atlas-vivo-milk
-        run: |
-          LOCAL_COMMIT=$(git rev-parse HEAD)
-          REMOTE_COMMIT=$(curl -s \
-            -H "Authorization: token $CODEBERG_TOKEN" \
-            "https://codeberg.org/api/v1/repos/$CODEBERG_USER/$CODEBERG_REPO/commits" | jq -r '.[0].sha' 2>/dev/null || echo "")
-          
-          if [ "$LOCAL_COMMIT" = "$REMOTE_COMMIT" ]; then
-            echo "✅ Commit verificado no Codeberg"
+          local_sha=$(git rev-parse HEAD)
+          remote_sha=$(git rev-parse refs/remotes/codeberg/master)
+          if [ "$local_sha" = "$remote_sha" ]; then
+            state=equal
+          elif git merge-base --is-ancestor "$remote_sha" "$local_sha"; then
+            state=github_ahead_fast_forward
+          elif git merge-base --is-ancestor "$local_sha" "$remote_sha"; then
+            state=codeberg_ahead
           else
-            echo "⚠️  Commit não corresponde. Tentando novamente..."
-            git push --mirror codeberg --force
+            state=diverged
           fi
+          echo "state=$state" >> "$GITHUB_OUTPUT"
+          echo "local_sha=$local_sha" >> "$GITHUB_OUTPUT"
+          echo "remote_sha=$remote_sha" >> "$GITHUB_OUTPUT"
+
+      - name: Mistral agent decides the bounded operation
+        id: mistral
+        shell: bash
+        env:
+          RECONCILE_STATE: ${{ steps.inspect.outputs.state }}
+          LOCAL_SHA: ${{ steps.inspect.outputs.local_sha }}
+          REMOTE_SHA: ${{ steps.inspect.outputs.remote_sha }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, urllib.request
+          state=os.environ["RECONCILE_STATE"]
+          expected={
+            "equal":"NOOP_EQUAL",
+            "github_ahead_fast_forward":"EXECUTE_FAST_FORWARD_SYNC",
+            "codeberg_ahead":"STOP_REMOTE_AHEAD",
+            "diverged":"STOP_DIVERGED",
+            "unreachable_or_missing":"STOP_UNREACHABLE_OR_MISSING",
+          }[state]
+          prompt=f"""You are the Mistral execution agent for the Associação MILK repository mirror.
+          Facts: GitHub master={os.environ['LOCAL_SHA']}; Codeberg master={os.environ['REMOTE_SHA']}; state={state}.
+          Policy: never force-push, never delete refs, never rewrite either history, and only fast-forward Codeberg master when GitHub is strictly ahead.
+          Return exactly this token and nothing else: {expected}"""
+          req=urllib.request.Request(
+            "https://api.mistral.ai/v1/conversations",
+            data=json.dumps({"model":"mistral-small-latest","inputs":[{"role":"user","content":prompt}]}).encode(),
+            method="POST",
+            headers={"Authorization":"Bearer "+os.environ["MISTRAL_API_KEY"],"Content-Type":"application/json","Accept":"application/json"})
+          with urllib.request.urlopen(req,timeout=120) as response:
+            payload=json.loads(response.read().decode())
+          text=" ".join(str(x.get("content","")) for x in payload.get("outputs",[]) if isinstance(x,dict)).strip()
+          if expected not in text:
+            raise SystemExit("Mistral decision did not match the deterministic safety policy")
+          with open(os.environ["GITHUB_OUTPUT"],"a",encoding="utf-8") as f:
+            f.write("decision="+expected+"\n")
+          PY
+
+      - name: Execute only an approved fast-forward
+        if: steps.mistral.outputs.decision == 'EXECUTE_FAST_FORWARD_SYNC'
+        shell: bash
+        run: |
+          set -euo pipefail
+          credential_file="$RUNNER_TEMP/codeberg-credentials"
+          trap 'rm -f "$credential_file"' EXIT
+          git config credential.helper "store --file=$credential_file"
+          printf 'protocol=https\nhost=codeberg.org\nusername=%s\npassword=%s\n\n' "$CODEBERG_USER" "$CODEBERG_TOKEN" | git credential approve
+          chmod 600 "$credential_file"
+          git remote get-url codeberg >/dev/null 2>&1 || git remote add codeberg "https://codeberg.org/$CODEBERG_USER/$CODEBERG_REPO.git"
+          git fetch --no-tags codeberg master
+          git merge-base --is-ancestor refs/remotes/codeberg/master HEAD
+          git push codeberg HEAD:refs/heads/master
+          git fetch --no-tags codeberg master
+          test "$(git rev-parse HEAD)" = "$(git rev-parse refs/remotes/codeberg/master)"
+
+      - name: Publish a factual receipt
+        if: always()
+        shell: bash
+        env:
+          RECONCILE_STATE: ${{ steps.inspect.outputs.state }}
+          LOCAL_SHA: ${{ steps.inspect.outputs.local_sha }}
+          REMOTE_SHA: ${{ steps.inspect.outputs.remote_sha }}
+          DECISION: ${{ steps.mistral.outputs.decision }}
+        run: |
+          set -euo pipefail
+          final_remote="$REMOTE_SHA"
+          if git show-ref --verify --quiet refs/remotes/codeberg/master; then
+            final_remote=$(git rev-parse refs/remotes/codeberg/master)
+          fi
+          body="MISTRAL_CODEBERG_RECONCILIATION state=$RECONCILE_STATE decision=$DECISION github_master=$LOCAL_SHA codeberg_master=$final_remote force_push=0 deleted_refs=0"
+          curl --fail --silent --show-error             -X POST             -H "Authorization: Bearer $GH_TOKEN"             -H "Accept: application/vnd.github+json"             -H "Content-Type: application/json"             "https://api.github.com/repos/$GH_REPOSITORY/issues/35/comments"             -d "$(jq -n --arg body "$body" '{body:$body}')" >/dev/null
+
+      - name: Stop on non-reconcilable histories
+        if: steps.mistral.outputs.decision == 'STOP_REMOTE_AHEAD' || steps.mistral.outputs.decision == 'STOP_DIVERGED' || steps.mistral.outputs.decision == 'STOP_UNREACHABLE_OR_MISSING'
+        run: |
+          echo "::error::Codeberg was left unchanged because a safe fast-forward was not possible."
+          exit 20

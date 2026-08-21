@@ -1,0 +1,34 @@
+name: MILK Mistral Box Download Tools
+on:
+  push:
+    branches: [master]
+    paths: ['.github/workflows/mistral-box-download-tools.yml']
+permissions:
+  contents: read
+  issues: write
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    env:
+      MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+    steps:
+      - shell: bash
+        run: |
+          python - <<'PY'
+          import os,json,urllib.request
+          key=os.environ['MISTRAL_API_KEY']; gh=os.environ['GH_TOKEN']; repo=os.environ['REPO']
+          def comment(msg):
+            req=urllib.request.Request(f'https://api.github.com/repos/{repo}/issues/35/comments',data=json.dumps({'body':msg}).encode(),method='POST',headers={'Authorization':'Bearer '+gh,'Content-Type':'application/json'})
+            urllib.request.urlopen(req,timeout=30).read()
+          req=urllib.request.Request('https://api.mistral.ai/v1/connectors/box/tools?page_size=200',headers={'Authorization':'Bearer '+key,'Accept':'application/json'})
+          with urllib.request.urlopen(req,timeout=60) as r: data=json.loads(r.read().decode())
+          tl=data if isinstance(data,list) else (data.get('items') or data.get('data') or data.get('tools') or [])
+          names=[]
+          for t in tl:
+            if isinstance(t,dict): names.append(str(t.get('name')))
+          comment('MISTRAL_BOX_ALL_TOOL_NAMES count='+str(len(names))+' names='+','.join(names))
+          likely=[n for n in names if any(x in n.lower() for x in ('download','content','file','link','representation'))]
+          comment('MISTRAL_BOX_BINARY_CANDIDATES '+','.join(likely))
+          PY

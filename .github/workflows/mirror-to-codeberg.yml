@@ -1,4 +1,5 @@
 name: MILK Mistral — GitHub to Codeberg (safe sync)
+run-name: Mistral Codeberg reconciliation · ${{ github.ref_name }}
 
 on:
   push:

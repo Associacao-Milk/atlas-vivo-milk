@@ -102,7 +102,7 @@ jobs:
           prompt=("You are the Mistral execution agent for Associação MILK. "
                   f"Target=codeberg.org/associacaomilk/atlas-vivo-milk main; GitHub master={os.environ['LOCAL_SHA']}; "
                   f"Codeberg main={os.environ['REMOTE_SHA']}; state={os.environ['RECONCILE_STATE']}. "
-                  "Never force-push, delete refs, or rewrite history. For diverged histories, preserve Codeberg README.md and LICENSE, merge both histories, then fast-forward both remotes. "
+                  "Never force-push, delete refs, or rewrite history. For diverged histories, preserve the Codeberg history but retain the current GitHub working files, merge both histories, then fast-forward both remotes. "
                   f"Return exactly: {expected}")
           request=urllib.request.Request("https://api.mistral.ai/v1/conversations",
             data=json.dumps({"model":"mistral-small-latest","inputs":[{"role":"user","content":prompt}]}).encode(),
@@ -139,7 +139,7 @@ jobs:
             git fetch --no-tags codeberg-write "$CODEBERG_BRANCH"
             git merge --no-commit --no-ff --allow-unrelated-histories "refs/remotes/codeberg-write/$CODEBERG_BRANCH" || true
             test "$(git diff --name-only --diff-filter=U | sort | tr '\n' ' ')" = "LICENSE README.md "
-            git checkout --theirs -- LICENSE README.md
+            git checkout --ours -- LICENSE README.md
             git add -A
             git commit -m "chore(migration): preserve Codeberg history and reconcile Atlas sources"
             git push origin HEAD:refs/heads/master

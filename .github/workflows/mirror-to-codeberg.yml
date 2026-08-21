@@ -135,6 +135,8 @@ jobs:
           printf 'protocol=https\nhost=codeberg.org\nusername=%s\npassword=%s\n\n' "$CODEBERG_USER" "$CODEBERG_TOKEN" | git credential approve
           chmod 600 "$credential_file"
           git remote add codeberg-write "https://codeberg.org/$CODEBERG_USER/$CODEBERG_REPO.git"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if [ "${{ steps.mistral.outputs.decision }}" = "EXECUTE_PRESERVATIVE_MERGE" ]; then
             git fetch --no-tags codeberg-write "$CODEBERG_BRANCH"
             git merge --no-commit --no-ff --allow-unrelated-histories "refs/remotes/codeberg-write/$CODEBERG_BRANCH" || true

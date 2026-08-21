@@ -2,7 +2,6 @@ name: MILK Sealed Real Drive Canary -> PTServidor FTPS
 on:
   push:
     branches: [master]
-    paths: ['.github/workflows/mistral-gmail-signed-relay-ftps.yml']
 permissions:
   contents: read
   issues: write
@@ -14,12 +13,22 @@ jobs:
       PTSERVIDOR_FTPS_PASSWORD: ${{ secrets.PTSERVIDOR_FTPS_PASSWORD }}
       GH_TOKEN: ${{ github.token }}
       REPO: ${{ github.repository }}
+      RUN_SHA: ${{ github.sha }}
       SEALED_KEY_COMMENT_ID: '5364312895'
       DATA_BLOB_SHA: bd3ac4161fafdf83f80b060b3925ce7c373f2cff
       SOURCE_SHA256: da1faa27826eb67555eb4cdd718b8368374bee70b16f7c33aa70db14db4e34ce
       SOURCE_BYTES: '19845'
       TARGET_FILE: T001_Vila_Nova_de_Milfontes.json.txt
     steps:
+      - name: Immediate execution receipt
+        shell: bash
+        run: |
+          python - <<'PY'
+          import os,json,urllib.request
+          gh=os.environ['GH_TOKEN']; repo=os.environ['REPO']; sha=os.environ['RUN_SHA']
+          q=urllib.request.Request(f'https://api.github.com/repos/{repo}/issues/35/comments',data=json.dumps({'body':f'MILK_SEALED_CANARY_RUN_STARTED commit={sha} drive_writes=0'}).encode(),method='POST',headers={'Authorization':'Bearer '+gh,'Content-Type':'application/json','Accept':'application/vnd.github+json'})
+          urllib.request.urlopen(q,timeout=30).read()
+          PY
       - name: Decrypt sealed real Drive canary
         shell: bash
         run: |
@@ -38,8 +47,7 @@ jobs:
               comment('MILK_SEALED_CANARY_FAILED stage=secret_missing drive_writes=0'); raise SystemExit(20)
           q=urllib.request.Request(f'https://api.github.com/repos/{repo}/issues/comments/{cid}',headers={'Authorization':'Bearer '+gh,'Accept':'application/vnd.github+json'})
           with urllib.request.urlopen(q,timeout=60) as r:c=json.loads(r.read().decode())
-          body=str(c.get('body',''))
-          prefix='MILK_RUNNER_SEALED_PRIVATE_KEY_B64 '
+          body=str(c.get('body','')); prefix='MILK_RUNNER_SEALED_PRIVATE_KEY_B64 '
           if not body.startswith(prefix):
               comment('MILK_SEALED_CANARY_FAILED stage=sealed_private_key_receipt_invalid drive_writes=0'); raise SystemExit(21)
           sealed=base64.b64decode(body[len(prefix):].strip())
@@ -62,7 +70,7 @@ jobs:
           (tmp/fname).write_bytes(data)
           comment(f'MILK_REAL_DRIVE_CANARY_DECRYPTED file={fname} bytes={len(data)} sha256={sha} drive_writes=0')
           PY
-      - name: FTPS upload, download-back and SHA256
+      - name: FTPS upload download-back SHA256
         shell: bash
         run: |
           set -euo pipefail
@@ -72,19 +80,29 @@ jobs:
           def comment(msg):
               q=urllib.request.Request(f'https://api.github.com/repos/{repo}/issues/35/comments',data=json.dumps({'body':msg}).encode(),method='POST',headers={'Authorization':'Bearer '+gh,'Content-Type':'application/json','Accept':'application/vnd.github+json'})
               urllib.request.urlopen(q,timeout=30).read()
-          base=['curl','--fail','--silent','--show-error','--ssl-reqd','--ftp-pasv','--connect-timeout','30','--max-time','600','--user','migration@associacaomilk.pt:'+pwd]
-          rdir='drive-canary-2026-08-21'; root='ftp://troi.ptservidor.net:21/'
-          subprocess.run(base+['--quote','MKD '+rdir,root],check=False,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
-          remote=root+rdir+'/'+urllib.parse.quote(fname,safe='._-()')
-          try: subprocess.run(base+['-T',str(local),remote],check=True)
-          except subprocess.CalledProcessError as e:
-              comment(f'MILK_REAL_DRIVE_CANARY_TRANSFER_FAILED stage=ftps_upload host=troi.ptservidor.net rc={e.returncode} drive_writes=0'); raise
-          back=tmp/('back-'+fname)
-          try: subprocess.run(base+[remote,'-o',str(back)],check=True)
-          except subprocess.CalledProcessError as e:
-              comment(f'MILK_REAL_DRIVE_CANARY_TRANSFER_FAILED stage=download_back host=troi.ptservidor.net rc={e.returncode} drive_writes=0'); raise
-          b=back.read_bytes(); sha=hashlib.sha256(b).hexdigest()
-          if len(b)!=n or sha!=expected:
-              comment(f'MILK_REAL_DRIVE_CANARY_TRANSFER_FAILED stage=sha256_verify remote_bytes={len(b)} drive_writes=0'); raise RuntimeError('remote SHA mismatch')
-          comment(f'MILK_REAL_DRIVE_CANARY_TRANSFER_VERIFIED file={fname} bytes={len(b)} sha256={sha} remote={rdir}/{fname} failed=0 drive_writes=0')
+          def attempt(host):
+              base=['curl','--fail','--silent','--show-error','--ssl-reqd','--ftp-pasv','--connect-timeout','30','--max-time','600','--user','migration@associacaomilk.pt:'+pwd]
+              root=f'ftp://{host}:21/'; rdir='drive-canary-2026-08-21'
+              subprocess.run(base+['--quote','MKD '+rdir,root],check=False,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+              remote=root+rdir+'/'+urllib.parse.quote(fname,safe='._-()')
+              subprocess.run(base+['-T',str(local),remote],check=True)
+              back=tmp/('back-'+host.replace('.','_')+'-'+fname)
+              subprocess.run(base+[remote,'-o',str(back)],check=True)
+              b=back.read_bytes(); sha=hashlib.sha256(b).hexdigest()
+              if len(b)!=n or sha!=expected: raise RuntimeError('remote SHA mismatch')
+              return rdir,sha,len(b)
+          last=None
+          for host in ['troi.ptservidor.net','associacaomilk.pt']:
+              try:
+                  rdir,sha,size=attempt(host)
+                  comment(f'MILK_REAL_DRIVE_CANARY_TRANSFER_VERIFIED host={host} file={fname} bytes={size} sha256={sha} remote={rdir}/{fname} failed=0 drive_writes=0')
+                  raise SystemExit(0)
+              except subprocess.CalledProcessError as e:
+                  last=f'host={host} rc={e.returncode}'
+                  comment(f'MILK_REAL_DRIVE_CANARY_HOST_ATTEMPT_FAILED host={host} rc={e.returncode} drive_writes=0')
+              except Exception as e:
+                  last=f'host={host} error={type(e).__name__}'
+                  comment(f'MILK_REAL_DRIVE_CANARY_HOST_ATTEMPT_FAILED host={host} error_type={type(e).__name__} drive_writes=0')
+          comment(f'MILK_REAL_DRIVE_CANARY_TRANSFER_FAILED stage=all_hosts detail={last} drive_writes=0')
+          raise SystemExit(22)
           PY

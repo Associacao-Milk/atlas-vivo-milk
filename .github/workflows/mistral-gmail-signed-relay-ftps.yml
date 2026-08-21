@@ -14,6 +14,7 @@ jobs:
       PTSERVIDOR_FTPS_PASSWORD: ${{ secrets.PTSERVIDOR_FTPS_PASSWORD }}
       GH_TOKEN: ${{ github.token }}
       REPO: ${{ github.repository }}
+      SEALED_KEY_COMMENT_ID: '5364312895'
       DATA_BLOB_SHA: bd3ac4161fafdf83f80b060b3925ce7c373f2cff
       SOURCE_SHA256: da1faa27826eb67555eb4cdd718b8368374bee70b16f7c33aa70db14db4e34ce
       SOURCE_BYTES: '19845'
@@ -25,26 +26,23 @@ jobs:
           set -euo pipefail
           python -m pip install -q cryptography
           python - <<'PY'
-          import os,json,urllib.request,base64,hashlib,pathlib,re
+          import os,json,urllib.request,base64,hashlib,pathlib
           from cryptography.hazmat.primitives.ciphers.aead import AESGCM
           from cryptography.hazmat.primitives import serialization,hashes
           from cryptography.hazmat.primitives.asymmetric import padding
-          gh=os.environ['GH_TOKEN']; repo=os.environ['REPO']; pwd=os.environ.get('PTSERVIDOR_FTPS_PASSWORD',''); blob=os.environ['DATA_BLOB_SHA']; fname=os.environ['TARGET_FILE']; expected=os.environ['SOURCE_SHA256']; expected_n=int(os.environ['SOURCE_BYTES']); tmp=pathlib.Path(os.environ.get('RUNNER_TEMP','/tmp'))
+          gh=os.environ['GH_TOKEN']; repo=os.environ['REPO']; pwd=os.environ.get('PTSERVIDOR_FTPS_PASSWORD',''); blob=os.environ['DATA_BLOB_SHA']; cid=os.environ['SEALED_KEY_COMMENT_ID']; fname=os.environ['TARGET_FILE']; expected=os.environ['SOURCE_SHA256']; expected_n=int(os.environ['SOURCE_BYTES']); tmp=pathlib.Path(os.environ.get('RUNNER_TEMP','/tmp'))
           def comment(msg):
               q=urllib.request.Request(f'https://api.github.com/repos/{repo}/issues/35/comments',data=json.dumps({'body':msg}).encode(),method='POST',headers={'Authorization':'Bearer '+gh,'Content-Type':'application/json','Accept':'application/vnd.github+json'})
               urllib.request.urlopen(q,timeout=30).read()
           if not pwd:
               comment('MILK_SEALED_CANARY_FAILED stage=secret_missing drive_writes=0'); raise SystemExit(20)
-          q=urllib.request.Request(f'https://api.github.com/repos/{repo}/issues/35/comments?per_page=100',headers={'Authorization':'Bearer '+gh,'Accept':'application/vnd.github+json'})
-          with urllib.request.urlopen(q,timeout=60) as r: comments=json.loads(r.read().decode())
-          sealed_b64=None
-          for c in reversed(comments):
-              body=str(c.get('body',''))
-              if body.startswith('MILK_RUNNER_SEALED_PRIVATE_KEY_B64 '):
-                  sealed_b64=body.split(' ',1)[1].strip(); break
-          if not sealed_b64:
-              comment('MILK_SEALED_CANARY_FAILED stage=sealed_private_key_missing drive_writes=0'); raise SystemExit(21)
-          sealed=base64.b64decode(sealed_b64)
+          q=urllib.request.Request(f'https://api.github.com/repos/{repo}/issues/comments/{cid}',headers={'Authorization':'Bearer '+gh,'Accept':'application/vnd.github+json'})
+          with urllib.request.urlopen(q,timeout=60) as r:c=json.loads(r.read().decode())
+          body=str(c.get('body',''))
+          prefix='MILK_RUNNER_SEALED_PRIVATE_KEY_B64 '
+          if not body.startswith(prefix):
+              comment('MILK_SEALED_CANARY_FAILED stage=sealed_private_key_receipt_invalid drive_writes=0'); raise SystemExit(21)
+          sealed=base64.b64decode(body[len(prefix):].strip())
           if sealed[:8]!=b'MILKKEY1': raise RuntimeError('sealed key magic mismatch')
           salt,nonce,ct=sealed[8:24],sealed[24:36],sealed[36:]
           kek=hashlib.pbkdf2_hmac('sha256',pwd.encode(),salt,600000,dklen=32)

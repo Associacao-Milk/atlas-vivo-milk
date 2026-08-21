@@ -45,12 +45,24 @@ jobs:
           [ -n "$CODEBERG_TOKEN" ] && token_configured=1
           api_body="$RUNNER_TEMP/codeberg-repo.json"
           headers=()
+          auth_user=unknown
+          auth_status=missing
           [ "$token_configured" = 1 ] && headers=(-H "Authorization: token $CODEBERG_TOKEN")
+          if [ "$token_configured" = 1 ]; then
+            auth_status=$(curl --silent --show-error -o "$RUNNER_TEMP/codeberg-user.json" -w '%{http_code}' "${headers[@]}" "https://codeberg.org/api/v1/user" || true)
+            if [ "$auth_status" = 200 ]; then auth_user=$(jq -r '.login // "unknown"' "$RUNNER_TEMP/codeberg-user.json"); fi
+          fi
           api_status=$(curl --silent --show-error -o "$api_body" -w '%{http_code}' "${headers[@]}"             "https://codeberg.org/api/v1/repos/$CODEBERG_USER/$CODEBERG_REPO" || true)
 
           state=api_unreachable
           if [ "$api_status" = 404 ]; then
-            if [ "$token_configured" = 1 ]; then state=repo_missing_can_create; else state=repo_missing_or_private_auth_required; fi
+            if [ "$token_configured" != 1 ]; then
+              state=repo_missing_or_private_auth_required
+            elif [ "$auth_user" != "$CODEBERG_USER" ]; then
+              state=token_account_mismatch
+            else
+              state=repo_missing_can_create
+            fi
           elif [ "$api_status" = 200 ]; then
             credential_file="$RUNNER_TEMP/codeberg-credentials"
             if [ "$token_configured" = 1 ]; then
@@ -80,6 +92,8 @@ jobs:
           echo "remote_sha=$remote_sha" >> "$GITHUB_OUTPUT"
           echo "api_status=$api_status" >> "$GITHUB_OUTPUT"
           echo "token_configured=$token_configured" >> "$GITHUB_OUTPUT"
+          echo "auth_user=$auth_user" >> "$GITHUB_OUTPUT"
+          echo "auth_status=$auth_status" >> "$GITHUB_OUTPUT"
 
       - name: Mistral agent decides the bounded operation
         id: mistral
@@ -104,6 +118,7 @@ jobs:
             "diverged":"STOP_DIVERGED",
             "repo_exists_fetch_failed":"STOP_FETCH_FAILED",
             "api_unreachable":"STOP_API_UNREACHABLE",
+            "token_account_mismatch":"STOP_TOKEN_ACCOUNT_MISMATCH",
           }[state]
           prompt=("You are the Mistral execution agent for Associação MILK. "
                   f"Exact target=codeberg.org/milkivc/atlas-vivo-milk; GitHub master={os.environ['LOCAL_SHA']}; "
@@ -162,10 +177,12 @@ jobs:
           REMOTE_SHA: ${{ steps.inspect.outputs.remote_sha }}
           API_STATUS: ${{ steps.inspect.outputs.api_status }}
           TOKEN_CONFIGURED: ${{ steps.inspect.outputs.token_configured }}
+          AUTH_USER: ${{ steps.inspect.outputs.auth_user }}
+          AUTH_STATUS: ${{ steps.inspect.outputs.auth_status }}
           DECISION: ${{ steps.mistral.outputs.decision }}
         run: |
           set -euo pipefail
-          body="MISTRAL_CODEBERG_RECONCILIATION state=${RECONCILE_STATE:-not_inspected} decision=${DECISION:-not_decided} api_status=${API_STATUS:-unknown} token_configured=${TOKEN_CONFIGURED:-unknown} github_master=${LOCAL_SHA:-unknown} codeberg_master_before=${REMOTE_SHA:-unknown} force_push=0 deleted_refs=0"
+          body="MISTRAL_CODEBERG_RECONCILIATION state=${RECONCILE_STATE:-not_inspected} decision=${DECISION:-not_decided} api_status=${API_STATUS:-unknown} token_configured=${TOKEN_CONFIGURED:-unknown} codeberg_account=${AUTH_USER:-unknown} auth_status=${AUTH_STATUS:-unknown} github_master=${LOCAL_SHA:-unknown} codeberg_master_before=${REMOTE_SHA:-unknown} force_push=0 deleted_refs=0"
           curl --fail --silent --show-error -X POST             -H "Authorization: Bearer $GH_TOKEN"             -H "Accept: application/vnd.github+json"             -H "Content-Type: application/json"             "https://api.github.com/repos/$GH_REPOSITORY/issues/35/comments"             -d "$(jq -n --arg body "$body" '{body:$body}')" >/dev/null
 
       - name: Stop when safe reconciliation is impossible

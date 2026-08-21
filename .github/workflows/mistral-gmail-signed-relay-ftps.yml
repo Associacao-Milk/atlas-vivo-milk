@@ -1,4 +1,4 @@
-name: MILK Runner Sealed Transport Key
+name: MILK Sealed Real Drive Canary -> PTServidor FTPS
 on:
   push:
     branches: [master]
@@ -7,38 +7,86 @@ permissions:
   contents: read
   issues: write
 jobs:
-  keygen:
+  transfer:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     env:
       PTSERVIDOR_FTPS_PASSWORD: ${{ secrets.PTSERVIDOR_FTPS_PASSWORD }}
       GH_TOKEN: ${{ github.token }}
       REPO: ${{ github.repository }}
+      DATA_BLOB_SHA: bd3ac4161fafdf83f80b060b3925ce7c373f2cff
+      SOURCE_SHA256: da1faa27826eb67555eb4cdd718b8368374bee70b16f7c33aa70db14db4e34ce
+      SOURCE_BYTES: '19845'
+      TARGET_FILE: T001_Vila_Nova_de_Milfontes.json.txt
     steps:
-      - name: Generate RSA key and seal private key with existing runner secret
+      - name: Decrypt sealed real Drive canary
         shell: bash
         run: |
           set -euo pipefail
           python -m pip install -q cryptography
           python - <<'PY'
-          import os,json,urllib.request,base64,hashlib,secrets
-          from cryptography.hazmat.primitives.asymmetric import rsa
-          from cryptography.hazmat.primitives import serialization
+          import os,json,urllib.request,base64,hashlib,pathlib,re
           from cryptography.hazmat.primitives.ciphers.aead import AESGCM
-          pwd=os.environ.get('PTSERVIDOR_FTPS_PASSWORD',''); gh=os.environ['GH_TOKEN']; repo=os.environ['REPO']
+          from cryptography.hazmat.primitives import serialization,hashes
+          from cryptography.hazmat.primitives.asymmetric import padding
+          gh=os.environ['GH_TOKEN']; repo=os.environ['REPO']; pwd=os.environ.get('PTSERVIDOR_FTPS_PASSWORD',''); blob=os.environ['DATA_BLOB_SHA']; fname=os.environ['TARGET_FILE']; expected=os.environ['SOURCE_SHA256']; expected_n=int(os.environ['SOURCE_BYTES']); tmp=pathlib.Path(os.environ.get('RUNNER_TEMP','/tmp'))
           def comment(msg):
               q=urllib.request.Request(f'https://api.github.com/repos/{repo}/issues/35/comments',data=json.dumps({'body':msg}).encode(),method='POST',headers={'Authorization':'Bearer '+gh,'Content-Type':'application/json','Accept':'application/vnd.github+json'})
               urllib.request.urlopen(q,timeout=30).read()
           if not pwd:
-              comment('MILK_RUNNER_KEYGEN_FAILED reason=ftps_secret_empty'); raise SystemExit(20)
-          priv=rsa.generate_private_key(public_exponent=65537,key_size=3072)
-          pub=priv.public_key()
-          priv_pem=priv.private_bytes(serialization.Encoding.PEM,serialization.PrivateFormat.PKCS8,serialization.NoEncryption())
-          pub_pem=pub.public_bytes(serialization.Encoding.PEM,serialization.PublicFormat.SubjectPublicKeyInfo)
-          salt=secrets.token_bytes(16); nonce=secrets.token_bytes(12)
-          key=hashlib.pbkdf2_hmac('sha256',pwd.encode(),salt,600000,dklen=32)
-          sealed=b'MILKKEY1'+salt+nonce+AESGCM(key).encrypt(nonce,priv_pem,b'MILK-RUNNER-KEY-v1')
-          comment('MILK_RUNNER_PUBLIC_KEY_B64 '+base64.b64encode(pub_pem).decode())
-          comment('MILK_RUNNER_SEALED_PRIVATE_KEY_B64 '+base64.b64encode(sealed).decode())
-          comment('MILK_RUNNER_KEYGEN_READY ftps_secret_present=yes private_key_disclosed=no')
+              comment('MILK_SEALED_CANARY_FAILED stage=secret_missing drive_writes=0'); raise SystemExit(20)
+          q=urllib.request.Request(f'https://api.github.com/repos/{repo}/issues/35/comments?per_page=100',headers={'Authorization':'Bearer '+gh,'Accept':'application/vnd.github+json'})
+          with urllib.request.urlopen(q,timeout=60) as r: comments=json.loads(r.read().decode())
+          sealed_b64=None
+          for c in reversed(comments):
+              body=str(c.get('body',''))
+              if body.startswith('MILK_RUNNER_SEALED_PRIVATE_KEY_B64 '):
+                  sealed_b64=body.split(' ',1)[1].strip(); break
+          if not sealed_b64:
+              comment('MILK_SEALED_CANARY_FAILED stage=sealed_private_key_missing drive_writes=0'); raise SystemExit(21)
+          sealed=base64.b64decode(sealed_b64)
+          if sealed[:8]!=b'MILKKEY1': raise RuntimeError('sealed key magic mismatch')
+          salt,nonce,ct=sealed[8:24],sealed[24:36],sealed[36:]
+          kek=hashlib.pbkdf2_hmac('sha256',pwd.encode(),salt,600000,dklen=32)
+          try: priv_pem=AESGCM(kek).decrypt(nonce,ct,b'MILK-RUNNER-KEY-v1')
+          except Exception:
+              comment('MILK_SEALED_CANARY_FAILED stage=private_key_unseal drive_writes=0'); raise
+          priv=serialization.load_pem_private_key(priv_pem,password=None)
+          q=urllib.request.Request(f'https://api.github.com/repos/{repo}/git/blobs/{blob}',headers={'Authorization':'Bearer '+gh,'Accept':'application/vnd.github+json'})
+          with urllib.request.urlopen(q,timeout=60) as r:o=json.loads(r.read().decode())
+          pkg=base64.b64decode(o['content'])
+          if pkg[:8]!=b'MILKRSA1': raise RuntimeError('data package magic mismatch')
+          wlen=int.from_bytes(pkg[8:10],'big'); wrapped=pkg[10:10+wlen]; dnonce=pkg[10+wlen:22+wlen]; dct=pkg[22+wlen:]
+          aes_key=priv.decrypt(wrapped,padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()),algorithm=hashes.SHA256(),label=b'MILK-RSA-CANARY-v1'))
+          data=AESGCM(aes_key).decrypt(dnonce,dct,b'MILK-RSA-CANARY-v1')
+          sha=hashlib.sha256(data).hexdigest()
+          if len(data)!=expected_n or sha!=expected: raise RuntimeError('source canary integrity mismatch')
+          (tmp/fname).write_bytes(data)
+          comment(f'MILK_REAL_DRIVE_CANARY_DECRYPTED file={fname} bytes={len(data)} sha256={sha} drive_writes=0')
+          PY
+      - name: FTPS upload, download-back and SHA256
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os,subprocess,pathlib,hashlib,urllib.parse,json,urllib.request
+          pwd=os.environ['PTSERVIDOR_FTPS_PASSWORD']; gh=os.environ['GH_TOKEN']; repo=os.environ['REPO']; fname=os.environ['TARGET_FILE']; expected=os.environ['SOURCE_SHA256']; n=int(os.environ['SOURCE_BYTES']); tmp=pathlib.Path(os.environ.get('RUNNER_TEMP','/tmp')); local=tmp/fname
+          def comment(msg):
+              q=urllib.request.Request(f'https://api.github.com/repos/{repo}/issues/35/comments',data=json.dumps({'body':msg}).encode(),method='POST',headers={'Authorization':'Bearer '+gh,'Content-Type':'application/json','Accept':'application/vnd.github+json'})
+              urllib.request.urlopen(q,timeout=30).read()
+          base=['curl','--fail','--silent','--show-error','--ssl-reqd','--ftp-pasv','--connect-timeout','30','--max-time','600','--user','migration@associacaomilk.pt:'+pwd]
+          rdir='drive-canary-2026-08-21'; root='ftp://troi.ptservidor.net:21/'
+          subprocess.run(base+['--quote','MKD '+rdir,root],check=False,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+          remote=root+rdir+'/'+urllib.parse.quote(fname,safe='._-()')
+          try: subprocess.run(base+['-T',str(local),remote],check=True)
+          except subprocess.CalledProcessError as e:
+              comment(f'MILK_REAL_DRIVE_CANARY_TRANSFER_FAILED stage=ftps_upload host=troi.ptservidor.net rc={e.returncode} drive_writes=0'); raise
+          back=tmp/('back-'+fname)
+          try: subprocess.run(base+[remote,'-o',str(back)],check=True)
+          except subprocess.CalledProcessError as e:
+              comment(f'MILK_REAL_DRIVE_CANARY_TRANSFER_FAILED stage=download_back host=troi.ptservidor.net rc={e.returncode} drive_writes=0'); raise
+          b=back.read_bytes(); sha=hashlib.sha256(b).hexdigest()
+          if len(b)!=n or sha!=expected:
+              comment(f'MILK_REAL_DRIVE_CANARY_TRANSFER_FAILED stage=sha256_verify remote_bytes={len(b)} drive_writes=0'); raise RuntimeError('remote SHA mismatch')
+          comment(f'MILK_REAL_DRIVE_CANARY_TRANSFER_VERIFIED file={fname} bytes={len(b)} sha256={sha} remote={rdir}/{fname} failed=0 drive_writes=0')
           PY

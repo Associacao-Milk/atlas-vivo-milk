@@ -106,3 +106,4 @@ jobs:
           comment(f'MILK_REAL_DRIVE_CANARY_TRANSFER_FAILED stage=all_hosts detail={last} drive_writes=0')
           raise SystemExit(22)
           PY
+# trigger: 2026-08-21T04:44+01:00

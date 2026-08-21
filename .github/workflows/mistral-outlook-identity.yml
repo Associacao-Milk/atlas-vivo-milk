@@ -1,0 +1,30 @@
+name: MILK Mistral Outlook Identity
+on:
+  push:
+    branches: [master]
+    paths: ['.github/workflows/mistral-outlook-identity.yml']
+permissions:
+  contents: read
+  issues: write
+jobs:
+  who:
+    runs-on: ubuntu-latest
+    env:
+      MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+    steps:
+      - shell: bash
+        run: |
+          python - <<'PY'
+          import os,json,urllib.request,re
+          key=os.environ['MISTRAL_API_KEY'];gh=os.environ['GH_TOKEN'];repo=os.environ['REPO']
+          def comment(msg):
+            q=urllib.request.Request(f'https://api.github.com/repos/{repo}/issues/35/comments',data=json.dumps({'body':msg}).encode(),method='POST',headers={'Authorization':'Bearer '+gh,'Content-Type':'application/json'})
+            urllib.request.urlopen(q,timeout=30).read()
+          q=urllib.request.Request('https://api.mistral.ai/v1/connectors/outlook/tools/outlook_who_am_i/call',data=b'{"arguments":{}}',method='POST',headers={'Authorization':'Bearer '+key,'Content-Type':'application/json','Accept':'application/json'})
+          with urllib.request.urlopen(q,timeout=60) as r:d=json.loads(r.read().decode())
+          txt=' '.join(str(x.get('text','')) for x in d.get('content',[]) if isinstance(x,dict))
+          emails=re.findall(r'[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}',txt)
+          comment('MISTRAL_OUTLOOK_IDENTITY email='+(emails[0] if emails else 'not_resolved')+' raw_content_types='+','.join(str(x.get('type')) for x in d.get('content',[]) if isinstance(x,dict)))
+          PY

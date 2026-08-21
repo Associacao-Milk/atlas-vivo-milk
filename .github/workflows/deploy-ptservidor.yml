@@ -129,22 +129,35 @@ jobs:
           password=os.environ["FTPS_PASSWORD"].strip()
           sha=os.environ["GITHUB_SHA"]
           source=pathlib.Path("deploy/atlas-public")
-          ftp=ftplib.FTP_TLS(context=ssl.create_default_context(),timeout=120)
-          ftp.connect("troi.ptservidor.net",21)
-          ftp.login("migration@associacaomilk.pt",password)
-          ftp.prot_p()
           candidates=["/atlas.associacaomilk.pt","/home/associ16/atlas.associacaomilk.pt"]
+          ftp=None
           target=None
-          for candidate in candidates:
+          route_user=None
+          for username in ("associ16","migration@associacaomilk.pt"):
+              candidate_ftp=ftplib.FTP_TLS(context=ssl.create_default_context(),timeout=120)
               try:
-                  ftp.cwd(candidate)
-                  target=ftp.pwd()
-                  break
+                  candidate_ftp.connect("troi.ptservidor.net",21)
+                  candidate_ftp.login(username,password)
+                  candidate_ftp.prot_p()
               except ftplib.all_errors:
-                  pass
-          if target is None:
-              ftp.quit()
-              raise SystemExit("FTPS_WEBROOT_UNAVAILABLE: migration account cannot reach Atlas webroot")
+                  try: candidate_ftp.close()
+                  except Exception: pass
+                  continue
+              for candidate in candidates:
+                  try:
+                      candidate_ftp.cwd(candidate)
+                      target=candidate_ftp.pwd()
+                      ftp=candidate_ftp
+                      route_user=username
+                      break
+                  except ftplib.all_errors:
+                      pass
+              if ftp is not None:
+                  break
+              candidate_ftp.quit()
+          if ftp is None or target is None:
+              raise SystemExit("FTPS_WEBROOT_UNAVAILABLE: verified secret cannot reach Atlas webroot")
+          print("MILK_ATLAS_FTPS_ROUTE user="+route_user+" target="+target)
           if target.rstrip("/").endswith("/public_html"):
               ftp.quit()
               raise SystemExit("FTPS_SAFETY_STOP: resolved main-domain webroot")

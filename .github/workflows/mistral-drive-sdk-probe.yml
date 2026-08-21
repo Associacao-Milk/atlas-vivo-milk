@@ -1,4 +1,5 @@
 name: MILK Mistral Drive SDK Probe
+# OAuth recheck 2026-08-21
 on:
   push:
     branches: [master]

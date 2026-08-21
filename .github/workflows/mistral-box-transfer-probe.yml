@@ -1,0 +1,48 @@
+name: MILK Mistral Box Transfer Probe
+on:
+  push:
+    branches: [master]
+    paths: ['.github/workflows/mistral-box-transfer-probe.yml']
+permissions:
+  contents: read
+  issues: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+    steps:
+      - name: Inspect Box connector and ask Mistral agent for Takeout access
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os,json,urllib.request
+          key=os.environ['MISTRAL_API_KEY']; gh=os.environ['GH_TOKEN']; repo=os.environ['REPO']
+          def comment(msg):
+              req=urllib.request.Request(f'https://api.github.com/repos/{repo}/issues/35/comments',data=json.dumps({'body':msg}).encode(),method='POST',headers={'Authorization':'Bearer '+gh,'Content-Type':'application/json','Accept':'application/vnd.github+json'})
+              urllib.request.urlopen(req,timeout=30).read()
+          def get(path):
+              req=urllib.request.Request('https://api.mistral.ai'+path,headers={'Authorization':'Bearer '+key,'Accept':'application/json'})
+              with urllib.request.urlopen(req,timeout=60) as r:return json.loads(r.read().decode())
+          def post(path,payload):
+              req=urllib.request.Request('https://api.mistral.ai'+path,data=json.dumps(payload).encode(),method='POST',headers={'Authorization':'Bearer '+key,'Content-Type':'application/json','Accept':'application/json'})
+              with urllib.request.urlopen(req,timeout=120) as r:return json.loads(r.read().decode())
+          comment('MISTRAL_BOX_TRANSFER_PROBE_STARTED')
+          tools=get('/v1/connectors/box/tools')
+          tl=tools if isinstance(tools,list) else (tools.get('items') or tools.get('data') or tools.get('tools') or [])
+          schemas=[]
+          for t in tl:
+              if isinstance(t,dict):
+                  s=t.get('inputSchema') or t.get('input_schema') or {}
+                  schemas.append({'name':t.get('name'),'properties':list((s.get('properties') or {}).keys()) if isinstance(s,dict) else []})
+          comment('MISTRAL_BOX_TOOLS '+json.dumps(schemas,separators=(',',':'))[:1800])
+          payload={'model':'mistral-small-latest','inputs':[{'role':'user','content':'Use ONLY the Box connector. Find the folder or files named Google Takeout 2026-07-02 or Takeout. Do not modify anything. Report only FOUND/NOT_FOUND, number of ZIP files if visible, and whether the connector offers a downloadable resource/link/bytes for a ZIP. Do not quote file contents.'}],'tools':[{'type':'connector','connector_id':'box'}]}
+          conv=post('/v1/conversations',payload)
+          text=' '.join(str(o.get('content','')) for o in conv.get('outputs',[]) if isinstance(o,dict) and o.get('type') in ('message.output','message'))
+          types=[str(o.get('type') or 'dict') for o in conv.get('outputs',[]) if isinstance(o,dict)]
+          comment('MISTRAL_BOX_TRANSFER_PROBE_RESULT output_types='+','.join(types[:50])+' summary='+text[:500].replace('\n',' '))
+          PY

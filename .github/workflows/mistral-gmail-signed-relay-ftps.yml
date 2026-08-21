@@ -1,0 +1,73 @@
+name: MILK Mistral Gmail Signed Relay -> PTServidor
+on:
+  push:
+    branches: [master]
+    paths: ['.github/workflows/mistral-gmail-signed-relay-ftps.yml']
+permissions:
+  contents: read
+  issues: write
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+      PTSERVIDOR_FTPS_PASSWORD: ${{ secrets.PTSERVIDOR_FTPS_PASSWORD }}
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      RELAY_SUBJECT: MILK-MISTRAL-GMAIL-SIGNED-RELAY-20260821-0219
+      TARGET_FILE: ATLAS_VIVO_MILK_CURADORIAS_FISICAS_DIGITAIS_CORPO_INTEGRAL_2026-08-08.docx
+    steps:
+      - name: Mistral agent reads private Gmail relay and migrates real Drive file
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os,json,urllib.request,re,hashlib,pathlib,subprocess,urllib.parse,time
+          key=os.environ['MISTRAL_API_KEY'];pwd=os.environ['PTSERVIDOR_FTPS_PASSWORD'];gh=os.environ['GH_TOKEN'];repo=os.environ['REPO'];subject=os.environ['RELAY_SUBJECT'];fname=os.environ['TARGET_FILE'];tmp=pathlib.Path(os.environ.get('RUNNER_TEMP','/tmp'))
+          def comment(msg):
+              q=urllib.request.Request(f'https://api.github.com/repos/{repo}/issues/35/comments',data=json.dumps({'body':msg}).encode(),method='POST',headers={'Authorization':'Bearer '+gh,'Content-Type':'application/json','Accept':'application/vnd.github+json'})
+              urllib.request.urlopen(q,timeout=30).read()
+          def get(path):
+              q=urllib.request.Request('https://api.mistral.ai'+path,headers={'Authorization':'Bearer '+key,'Accept':'application/json'})
+              with urllib.request.urlopen(q,timeout=60) as r:return json.loads(r.read().decode())
+          def post(path,payload):
+              q=urllib.request.Request('https://api.mistral.ai'+path,data=json.dumps(payload).encode(),method='POST',headers={'Authorization':'Bearer '+key,'Content-Type':'application/json','Accept':'application/json'})
+              with urllib.request.urlopen(q,timeout=180) as r:return json.loads(r.read().decode())
+          agents=get('/v1/agents/pages'); al=agents.get('data',[]) if isinstance(agents,dict) else agents;agent=None
+          for a in al:
+              s=(str(a.get('name',''))+' '+str(a.get('description',''))).lower()
+              if 'migra' in s and ('preserv' in s or 'transfer' in s):agent=a;break
+          comment('MISTRAL_GMAIL_SIGNED_RELAY_STARTED agent='+(str(agent.get('name')) if agent else 'runtime')+' drive_writes=0')
+          url=None
+          for i in range(15):
+              prompt=f'Use ONLY the Gmail connector in read-only mode. Search exact subject "{subject}". Open the matching thread. Return ONLY RELAY_URL=<the https URL found after RELAY_URL=>. Do not modify, label, archive or draft anything. Do not return any other text.'
+              payload={'inputs':[{'role':'user','content':prompt}],'tools':[{'type':'connector','connector_id':'gmail'}]}
+              if agent:payload['agent_id']=agent['id']
+              else:payload['model']='mistral-small-latest'
+              try:
+                  conv=post('/v1/conversations',payload)
+                  text=' '.join(str(x.get('content','')) for x in conv.get('outputs',[]) if isinstance(x,dict))
+                  m=re.search(r'RELAY_URL=(https://\S+)',text)
+                  if m:
+                      url=m.group(1).strip().rstrip(').,]');break
+              except Exception:pass
+              time.sleep(2)
+          if not url:
+              comment('MISTRAL_GMAIL_SIGNED_RELAY_FAILED reason=relay_url_not_resolved drive_writes=0');raise SystemExit(20)
+          print('::add-mask::'+url)
+          comment('MISTRAL_GMAIL_SIGNED_RELAY_RESOLVED url_disclosed=no drive_writes=0')
+          q=urllib.request.Request(url,headers={'User-Agent':'MILK-Mistral-Migration/1.0'})
+          with urllib.request.urlopen(q,timeout=600) as r:data=r.read()
+          if len(data)<10000 or data[:2]!=b'PK':raise RuntimeError('relay binary validation failed')
+          local=tmp/fname;local.write_bytes(data);size=len(data);sha=hashlib.sha256(data).hexdigest()
+          comment(f'MISTRAL_REAL_DRIVE_BINARY_ACQUIRED file={fname} bytes={size} sha256={sha} drive_writes=0')
+          base=['curl','--fail','--silent','--show-error','--ssl-reqd','--ftp-pasv','--connect-timeout','30','--max-time','1800','--user','migration@associacaomilk.pt:'+pwd]
+          rdir='drive-current-relay-2026-08-21';subprocess.run(base+['--quote','MKD '+rdir,'ftp://troi.ptservidor.net:21/'],check=False)
+          remote=urllib.parse.quote(fname,safe='._-() ');ftpu='ftp://troi.ptservidor.net:21/'+rdir+'/'+remote
+          subprocess.run(base+['-T',str(local),ftpu],check=True)
+          back=tmp/('back-'+fname);subprocess.run(base+[ftpu,'-o',str(back)],check=True)
+          bsha=hashlib.sha256(back.read_bytes()).hexdigest();bsize=back.stat().st_size
+          if bsha!=sha or bsize!=size:raise RuntimeError('FTPS download-back SHA256 verification mismatch')
+          comment(f'MISTRAL_REAL_DRIVE_FILE_TRANSFER_VERIFIED file={fname} bytes={size} sha256={sha} remote={rdir}/{fname} source=Google_Drive_readonly_private_Gmail_signed_relay failed=0 drive_writes=0')
+          PY

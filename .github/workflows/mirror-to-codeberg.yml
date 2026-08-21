@@ -9,7 +9,7 @@ on:
       - '.github/workflows/sync-codeberg.yml'
   workflow_dispatch:
 
-# secret-refresh-20260821c
+# secret-refresh-20260821d
 permissions:
   contents: read
   issues: write

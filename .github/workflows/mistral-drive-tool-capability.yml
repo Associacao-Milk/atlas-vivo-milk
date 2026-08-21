@@ -1,0 +1,51 @@
+name: MILK Mistral Drive Tool Capability
+on:
+  push:
+    branches: [master]
+    paths: ['.github/workflows/mistral-drive-tool-capability.yml']
+permissions:
+  contents: read
+  issues: write
+jobs:
+  capability:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+    steps:
+      - name: Let Mistral inspect its native Drive tool capability
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os,json,urllib.request
+          key=os.environ['MISTRAL_API_KEY']; gh=os.environ['GH_TOKEN']; repo=os.environ['REPO']
+          def comment(msg):
+              req=urllib.request.Request(f'https://api.github.com/repos/{repo}/issues/35/comments',data=json.dumps({'body':msg}).encode(),method='POST',headers={'Authorization':'Bearer '+gh,'Content-Type':'application/json','Accept':'application/vnd.github+json'})
+              urllib.request.urlopen(req,timeout=30).read()
+          def get(path):
+              req=urllib.request.Request('https://api.mistral.ai'+path,headers={'Authorization':'Bearer '+key,'Accept':'application/json'})
+              with urllib.request.urlopen(req,timeout=60) as r:return json.loads(r.read().decode())
+          def post(path,payload):
+              req=urllib.request.Request('https://api.mistral.ai'+path,data=json.dumps(payload).encode(),method='POST',headers={'Authorization':'Bearer '+key,'Content-Type':'application/json','Accept':'application/json'})
+              with urllib.request.urlopen(req,timeout=120) as r:return json.loads(r.read().decode())
+          comment('MISTRAL_DRIVE_TOOL_CAPABILITY_STARTED drive_writes=0')
+          tools=get('/v1/connectors/google_drive/tools')
+          tl=tools if isinstance(tools,list) else (tools.get('items') or tools.get('data') or tools.get('tools') or [])
+          schemas=[]
+          for t in tl:
+              if isinstance(t,dict):
+                  s=t.get('inputSchema') or t.get('input_schema') or {}
+                  schemas.append({'name':t.get('name'),'required':s.get('required') if isinstance(s,dict) else None,'properties':list((s.get('properties') or {}).keys()) if isinstance(s,dict) else []})
+          comment('MISTRAL_DRIVE_TOOL_SCHEMAS '+json.dumps(schemas,separators=(',',':'))[:1200])
+          # Agent performs the actual read-only tool call; we inspect only output object types.
+          payload={'model':'mistral-small-latest','inputs':[{'role':'user','content':'Use the google_drive connector read-only. Search for ATLAS_VIVO_MILK_CURADORIAS_FISICAS_DIGITAIS_CORPO_INTEGRAL_2026-08-08.docx and, if found, open it. Do not quote or return document contents. Report only whether it was found and the types of tool outputs/resources you received (text, resource_link, embedded_resource, URL, metadata). Never modify Drive.'}],'tools':[{'type':'connector','connector_id':'google_drive'}]}
+          conv=post('/v1/conversations',payload)
+          types=[]
+          for o in conv.get('outputs',[]):
+              if isinstance(o,dict): types.append(str(o.get('type') or 'dict'))
+          text=' '.join(str(o.get('content','')) for o in conv.get('outputs',[]) if isinstance(o,dict) and o.get('type') in ('message.output','message'))
+          comment('MISTRAL_DRIVE_TOOL_CAPABILITY_RESULT output_types='+','.join(types[:40])+' summary='+text[:400].replace('\n',' ')+' drive_writes=0')
+          PY

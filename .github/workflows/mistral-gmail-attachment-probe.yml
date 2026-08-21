@@ -1,0 +1,32 @@
+name: MILK Mistral Gmail Attachment Probe
+on:
+  push:
+    branches: [master]
+    paths: ['.github/workflows/mistral-gmail-attachment-probe.yml']
+permissions:
+  contents: read
+  issues: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    env:
+      MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+    steps:
+      - shell: bash
+        run: |
+          python - <<'PY'
+          import os,json,urllib.request
+          key=os.environ['MISTRAL_API_KEY'];gh=os.environ['GH_TOKEN'];repo=os.environ['REPO']
+          def comment(msg):
+            q=urllib.request.Request(f'https://api.github.com/repos/{repo}/issues/35/comments',data=json.dumps({'body':msg}).encode(),method='POST',headers={'Authorization':'Bearer '+gh,'Content-Type':'application/json'})
+            urllib.request.urlopen(q,timeout=30).read()
+          q=urllib.request.Request('https://api.mistral.ai/v1/connectors/gmail/tools?page_size=200',headers={'Authorization':'Bearer '+key,'Accept':'application/json'})
+          with urllib.request.urlopen(q,timeout=60) as r:d=json.loads(r.read().decode())
+          tl=d if isinstance(d,list) else (d.get('items') or d.get('data') or d.get('tools') or [])
+          names=[str(t.get('name')) for t in tl if isinstance(t,dict)]
+          comment('MISTRAL_GMAIL_TOOL_NAMES count='+str(len(names))+' names='+','.join(names))
+          likely=[n for n in names if any(x in n.lower() for x in ('attach','download','message','mail','search','file'))]
+          comment('MISTRAL_GMAIL_BINARY_CANDIDATES '+','.join(likely))
+          PY

@@ -100,7 +100,9 @@ jobs:
                   raise RuntimeError(f"drive_download_{status} "+raw[:180].decode("utf-8","replace"))
               return raw
 
+          comment(f"MILK_FILEWISE_JOB_ENTERED run={RUN_ID} drive_writes=0")
           if not (MKEY and TOKEN and PWD):
+              comment(f"MILK_FILEWISE_FAILED run={RUN_ID} cause=required_secret_missing drive_writes=0")
               raise RuntimeError("required_secret_missing")
 
           status,raw=api("https://api.mistral.ai/v1/chat/completions","POST",

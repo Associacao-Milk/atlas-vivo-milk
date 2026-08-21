@@ -1,65 +1,19 @@
-(() => {
-  'use strict';
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const cosmos = document.querySelector('#cosmos');
-  const count = reduced ? 36 : Math.min(130, Math.floor(innerWidth / 9));
-  const fragment = document.createDocumentFragment();
-  for (let i = 0; i < count; i += 1) {
-    const star = document.createElement('i');
-    star.className = 'star';
-    star.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;--s:${.5+Math.random()*2.4}px;--o:${.2+Math.random()*.75};--d:${12+Math.random()*34}s;--x:${-45+Math.random()*90}px;--y:${-45+Math.random()*90}px;animation-delay:${-Math.random()*30}s`;
-    fragment.append(star);
-  }
-  cosmos.append(fragment);
-
-  const opening = document.querySelector('#opening');
-  const territory = document.querySelector('#territory');
-  document.querySelector('#enterAtlas').addEventListener('click', () => {
-    opening.classList.add('leaving');
-    setTimeout(() => {
-      opening.hidden = true;
-      territory.hidden = false;
-      territory.focus?.();
-      scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
-    }, reduced ? 10 : 650);
-  });
-
-  const ticket = document.querySelector('#ticket');
-  const response = document.querySelector('#ticketResponse');
-  document.querySelectorAll('[data-ticket]').forEach((button) => button.addEventListener('click', () => {
-    response.textContent = '';
-    ticket.showModal();
-  }));
-  ticket.querySelector('.close').addEventListener('click', () => ticket.close());
-  ticket.addEventListener('click', (event) => { if (event.target === ticket) ticket.close(); });
-  const replies = {
-    brincar: 'As dinâmicas do lugar surgem depois da leitura e validação territorial.',
-    convite: 'Os convites das festas serão apresentados com data, fonte e validação humana.',
-    sorte: 'O inesperado não inventa o território: abre uma porta para o escutar.'
-  };
-  ticket.querySelectorAll('[data-action]').forEach((button) => button.addEventListener('click', () => {
-    response.textContent = replies[button.dataset.action];
-  }));
-
-  const panel = document.querySelector('#panel');
-  const panelBody = document.querySelector('#panelBody');
-  const panels = {
-    cronicas: `<p class="status">portal curatorial</p><h2>Crónicas Cãotadas por Fucô</h2><p>Fucô fareja histórias, pequenos desvios, memórias e vozes dos lugares. O conteúdo público só aparece depois de identificado, contextualizado e validado.</p><ul><li>memória colectiva sem apagar a autoria</li><li>relação com freguesia, concelho e fontes</li><li>revisão humana antes da publicação</li></ul>`,
-    galeria: `<p class="status">portal curatorial</p><h2>Galeria Diletante</h2><p>Um espaço para imagens, expressões e leituras que não reduzem a arte a mercadoria. Cada peça mantém autoria, proveniência, licença e ligação territorial.</p><ul><li>originais preservados</li><li>derivados identificados como derivados</li><li>acessibilidade e direitos verificados</li></ul>`,
-    contribuir: `<p class="status">porta de contribuição</p><h2>Deixar uma palavra no Atlas</h2><p>Nuno é a porta pública para palavra, som, fotografia, desenho e memória. A recepção segura será activada quando o backend de consentimento, retirada, idade mínima e revisão humana estiver operacional.</p><p><strong>Nenhum dado está a ser recolhido nesta versão pública.</strong></p>`
-  };
-  document.querySelectorAll('[data-panel]').forEach((button) => button.addEventListener('click', () => {
-    panelBody.innerHTML = panels[button.dataset.panel];
-    panel.showModal();
-  }));
-  panel.querySelector('.close').addEventListener('click', () => panel.close());
-  panel.addEventListener('click', (event) => { if (event.target === panel) panel.close(); });
-
-  const sound = document.querySelector('#soundToggle');
-  sound.addEventListener('click', () => {
-    const next = sound.getAttribute('aria-pressed') !== 'true';
-    sound.setAttribute('aria-pressed', String(next));
-    sound.textContent = `som: ${next ? 'preparado' : 'desligado'}`;
-    if (next) setTimeout(() => { sound.textContent = 'som: sem faixa publicada'; }, 900);
-  });
-})();
+const D=[
+['Inventário do Meu Mundo','Três objectos tornam-se constelação e manto digital.'],['Catástrofe Produtiva','Criar, romper e trabalhar com aquilo que sobrevive.'],['O Ponto de Kusama','O gesto mínimo repete-se até produzir um campo comum.'],['O Corpo que Percebe','Camadas sonoras orientam a atenção sem transformar o corpo em dado.'],['Escutar o Silêncio','Som ambiente torna-se desenho apenas com autorização local.'],['O Rizoma Interior','Nada se apaga: cada fragmento pode mover-se e transformar-se.'],['O Cubo Interior','Seis vestígios da sessão habitam um cubo tridimensional.']];
+const deck=document.querySelector('#dinamicas');D.forEach((d,i)=>deck.insertAdjacentHTML('beforeend',`<article class="card" data-n="${i+1}"><span class="tag">motor D${i+1}</span><h2>${d[0]}</h2><p>${d[1]}</p><button class="open" data-engine="${i}">activar dinâmica</button></article>`));
+const dlg=document.querySelector('#engine'),body=document.querySelector('#engineBody');dlg.querySelector('.close').onclick=()=>{stopMedia();dlg.close()};dlg.onclick=e=>{if(e.target===dlg){stopMedia();dlg.close()}};
+let audio,stream,raf;const state={inventory:[],catastrophe:'',points:0,body:'',silence:'',rizoma:[]};
+function stopMedia(){if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;if(raf)cancelAnimationFrame(raf);raf=0}
+function wrap(i,content){return `<section class="engine"><span class="tag">motor D${i+1} · sessão local</span><h2>${D[i][0]}</h2><p>${D[i][1]}</p><p class="result">Este motor não recolhe, mede, armazena ou envia dados pessoais, corporais ou comportamentais. Tudo permanece local e sob decisão humana.</p>${content}</section>`}
+function canvas(id){return `<canvas class="work" id="${id}" width="900" height="500"></canvas>`}
+function pen(c,color='#f2d18b'){const x=c.getContext('2d');x.lineCap='round';x.lineWidth=4;x.strokeStyle=color;let on=false;const p=e=>{const r=c.getBoundingClientRect();return[(e.clientX-r.left)*c.width/r.width,(e.clientY-r.top)*c.height/r.height]};c.onpointerdown=e=>{on=true;c.setPointerCapture(e.pointerId);x.beginPath();x.moveTo(...p(e))};c.onpointermove=e=>{if(on){x.lineTo(...p(e));x.stroke()}};c.onpointerup=()=>on=false;return x}
+function tone(freq=110,dur=1){audio??=new AudioContext();const o=audio.createOscillator(),g=audio.createGain();o.frequency.value=freq;g.gain.setValueAtTime(.05,audio.currentTime);g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+dur);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+dur)}
+function d1(){body.innerHTML=wrap(0,`<div class="engine-grid">${[1,2,3].map(n=>`<div class="panel"><label>Objecto ${n}<input id="o${n}" maxlength="60"></label><label>Carga simbólica<textarea id="c${n}" maxlength="500"></textarea></label><label>Gesto <input id="g${n}" maxlength="8" placeholder="símbolo"></label></div>`).join('')}</div><div class="toolbar"><button class="action" id="manto">gerar manto digital</button></div><div class="result" id="out"></div>`);body.querySelector('#manto').onclick=()=>{state.inventory=[1,2,3].map(n=>({o:body.querySelector('#o'+n).value.trim(),c:body.querySelector('#c'+n).value.trim(),g:body.querySelector('#g'+n).value.trim()}));body.querySelector('#out').textContent=state.inventory.map((v,i)=>`${v.g||'✦'} ${v.o||'objecto '+(i+1)} — ${v.c||'por descobrir'}`).join('\n        ╲  constelação  ╱\n')}}
+function d2(){body.innerHTML=wrap(1,`${canvas('cat')}<div class="toolbar"><button class="action" data-cat="rasgar">rasgar</button><button class="action" data-cat="cobrir">cobrir</button><button class="action" data-cat="inverter">inverter</button><button class="action" data-cat="apagar">apagar</button><button class="action" id="clean">recomeçar</button></div><label>O que sobreviveu?<textarea id="survive"></textarea></label><div class="result" id="out">desenhe primeiro; depois escolha a ruptura</div>`);const c=body.querySelector('#cat'),x=pen(c);x.fillStyle='#fff';x.font='26px Georgia';x.fillText('crie aqui',35,55);body.querySelectorAll('[data-cat]').forEach(b=>b.onclick=()=>{const k=b.dataset.cat;state.catastrophe=k;if(k==='inverter')c.style.filter='invert(1)';if(k==='cobrir'){x.fillStyle='#111d';x.fillRect(0,0,c.width*.68,c.height)}if(k==='apagar')for(let i=0;i<60;i++)x.clearRect(Math.random()*c.width,Math.random()*c.height,40+Math.random()*120,30+Math.random()*90);if(k==='rasgar'){for(let i=0;i<10;i++){x.strokeStyle='#050505';x.lineWidth=8;x.beginPath();x.moveTo(Math.random()*c.width,0);x.lineTo(Math.random()*c.width,c.height);x.stroke()}}body.querySelector('#out').textContent=`ruptura aplicada: ${k}. agora trabalhe com o que resta.`});body.querySelector('#clean').onclick=()=>{c.style.filter='';x.clearRect(0,0,c.width,c.height)}}
+function d3(){body.innerHTML=wrap(2,`${canvas('kusama')}<div class="toolbar"><button class="action" id="pulse">gesto sonoro</button><button class="action" id="clear">novo campo</button></div><div class="result" id="out">toque ou arraste no campo</div>`);const c=body.querySelector('#kusama'),x=c.getContext('2d');function p(e){const r=c.getBoundingClientRect();return[(e.clientX-r.left)*c.width/r.width,(e.clientY-r.top)*c.height/r.height]}c.onpointerdown=e=>{const[a,b]=p(e);x.beginPath();x.fillStyle=`hsl(${state.points*17%360} 85% 67%)`;x.arc(a,b,4+(state.points%8),0,Math.PI*2);x.fill();state.points++;body.querySelector('#out').textContent=`${state.points} gestos mínimos neste campo`};c.onpointermove=e=>{if(e.buttons)c.onpointerdown(e)};body.querySelector('#pulse').onclick=()=>{tone(60+state.points%80,.4);state.points++};body.querySelector('#clear').onclick=()=>{x.clearRect(0,0,c.width,c.height);state.points=0}}
+function d4(){const layers=['temperatura da pele','apoio no chão','peso das mãos','relação com outros corpos','acção final'];body.innerHTML=wrap(3,`<p>As camadas sonoras são apenas guias voluntários de atenção: não são sensores, medições, diagnósticos ou registos.</p><div class="layers">${layers.map((l,i)=>`<button data-layer="${i}">${i+1}. ${l}</button>`).join('')}</div><label>Vestígio voluntário da experiência<textarea id="note" maxlength="200"></textarea></label><div class="result" id="out">nenhum registo automático</div>`);body.querySelectorAll('[data-layer]').forEach(b=>b.onclick=()=>{const i=+b.dataset.layer;tone([40,64,220,96,330][i],[2,1.5,1,2,3][i]);body.querySelector('#out').textContent=`guia sonoro activo: ${layers[i]}; nenhuma medição foi realizada`});body.querySelector('#note').oninput=e=>state.body=e.target.value}
+function d5(){body.innerHTML=wrap(4,`${canvas('spec')}<div class="toolbar"><button class="action" id="listen">autorizar microfone e escutar</button><button class="action" id="stop">parar</button></div><p class="result" id="out">O áudio não é gravado nem enviado.</p>`);const c=body.querySelector('#spec'),x=c.getContext('2d');body.querySelector('#listen').onclick=async()=>{try{audio??=new AudioContext();stream=await navigator.mediaDevices.getUserMedia({audio:true});const a=audio.createAnalyser();a.fftSize=256;audio.createMediaStreamSource(stream).connect(a);const data=new Uint8Array(a.frequencyBinCount);const draw=()=>{a.getByteFrequencyData(data);x.fillStyle='#05070bd0';x.fillRect(0,0,c.width,c.height);const w=c.width/data.length;data.forEach((v,i)=>{x.fillStyle=`hsl(${205+v/8} 80% ${20+v/5}%)`;x.fillRect(i*w,c.height-v*1.7,w-1,v*1.7)});raf=requestAnimationFrame(draw)};draw();body.querySelector('#out').textContent='escuta local activa'}catch{body.querySelector('#out').textContent='microfone não autorizado; a dinâmica permanece disponível em silêncio'}};body.querySelector('#stop').onclick=()=>{stopMedia();body.querySelector('#out').textContent='escuta terminada'}}
+function d6(){body.innerHTML=wrap(5,`<label>Novo fragmento <input id="frag" maxlength="40"><button class="action" id="add">acrescentar sem apagar</button></label><div class="rizoma" id="rizoma" aria-label="Campo rizomático transformável"></div><div class="result" id="out">arraste os fragmentos para transformar a relação</div>`);const z=body.querySelector('#rizoma');function add(t){const n=document.createElement('button');n.className='node';n.textContent=t;n.style.left=10+Math.random()*75+'%';n.style.top=8+Math.random()*75+'%';z.append(n);let dx,dy;n.onpointerdown=e=>{const r=n.getBoundingClientRect();dx=e.clientX-r.left;dy=e.clientY-r.top;n.setPointerCapture(e.pointerId)};n.onpointermove=e=>{if(!e.buttons)return;const r=z.getBoundingClientRect();n.style.left=Math.max(0,Math.min(r.width-n.offsetWidth,e.clientX-r.left-dx))+'px';n.style.top=Math.max(0,Math.min(r.height-n.offsetHeight,e.clientY-r.top-dy))+'px'};state.rizoma.push(t)}['encontro','território','memória'].forEach(add);body.querySelector('#add').onclick=()=>{const t=body.querySelector('#frag').value.trim();if(t){add(t);body.querySelector('#frag').value=''}}}
+function d7(){const faces=['corpo','inventário','ruptura','rizoma','ponto','silêncio'];body.innerHTML=wrap(6,`<div class="cube-scene"><div class="cube">${faces.map((f,i)=>`<div class="face f${i+1}">${f}<br><small>${[state.body,state.inventory[0]?.o,state.catastrophe,state.rizoma.at(-1),state.points+' gestos',state.silence][i]||'por viver'}</small></div>`).join('')}</div></div><label><input type="checkbox" id="review"> Revisei os seis vestígios apresentados e decido reuni-los neste cubo local.</label><div class="toolbar"><button class="action" id="link" disabled>gerar ligação soberana desta sessão</button></div><div class="result" id="out">O cubo não decide nem publica: apenas representa os vestígios locais que a pessoa reviu.</div>`);const review=body.querySelector('#review'),link=body.querySelector('#link');review.onchange=()=>link.disabled=!review.checked;link.onclick=()=>{if(!review.checked)return;const payload=btoa(unescape(encodeURIComponent(JSON.stringify(state))));location.hash='cubo='+payload;body.querySelector('#out').textContent='A ligação foi guardada no endereço desta página. Nenhum servidor recebeu o conteúdo e nenhuma decisão curatorial foi tomada.'}}
+const engines=[d1,d2,d3,d4,d5,d6,d7];deck.onclick=e=>{const b=e.target.closest('[data-engine]');if(!b)return;engines[+b.dataset.engine]();dlg.showModal()};
+const cos=document.querySelector('#cosmos'),cx=cos.getContext('2d');let move=true,stars=[];function size(){cos.width=innerWidth*devicePixelRatio;cos.height=innerHeight*devicePixelRatio;stars=Array.from({length:Math.min(150,innerWidth/7)},()=>({x:Math.random()*cos.width,y:Math.random()*cos.height,r:Math.random()*2+.4,v:Math.random()*.18+.03}))}function sky(){cx.clearRect(0,0,cos.width,cos.height);cx.fillStyle='#bce3ff';stars.forEach(s=>{if(move){s.y+=s.v;if(s.y>cos.height)s.y=0}cx.globalAlpha=.2+s.r/3;cx.beginPath();cx.arc(s.x,s.y,s.r,0,7);cx.fill()});requestAnimationFrame(sky)}addEventListener('resize',size);size();sky();document.querySelector('#motion').onclick=e=>{move=!move;e.currentTarget.setAttribute('aria-pressed',move);e.currentTarget.textContent=`movimento: ${move?'ligado':'parado'}`};

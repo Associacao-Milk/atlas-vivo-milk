@@ -188,3 +188,5 @@ jobs:
           comment(f"MILK_TAKEOUT_FILEWISE_{state} run={RUN_ID} entries={entries} transferred={transferred} verified={verified} existing={existing} failed={failed} bytes={bytes_done} source_writes=0")
           if failed:raise RuntimeError(f"takeout_file_failures={failed}")
           PY
+
+# Resume authorized after manual audit: continue from existing receipts; no user action required.

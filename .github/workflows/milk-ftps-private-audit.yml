@@ -1,0 +1,106 @@
+name: MILK private FTPS migration audit
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - '.github/workflows/milk-ftps-private-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      PTSERVIDOR_FTPS_PASSWORD: ${{ secrets.PTSERVIDOR_FTPS_PASSWORD }}
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      RUN_ID: ${{ github.run_id }}
+    steps:
+      - name: Audit private FTPS staging without exposing filenames
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import ftplib, hashlib, json, os, ssl, urllib.request
+
+          pwd=os.environ.get('PTSERVIDOR_FTPS_PASSWORD','').strip()
+          if not pwd:
+              raise SystemExit('FTPS_PASSWORD_MISSING')
+          ftp=ftplib.FTP_TLS(context=ssl.create_default_context(),timeout=180)
+          ftp.connect('troi.ptservidor.net',21)
+          ftp.login('migration@associacaomilk.pt',pwd)
+          ftp.prot_p(); ftp.voidcmd('TYPE I')
+
+          seen=set(); files=0; dirs=0; total_bytes=0; zip_count=0; zip_bytes=0
+          takeout_count=0; takeout_bytes=0; receipts=0; expanded_files=0; expanded_bytes=0
+          hashed_takeouts=[]
+          max_entries=60000
+
+          def walk(path,depth=0):
+              nonlocal_vars=None
+              global files,dirs,total_bytes,zip_count,zip_bytes,takeout_count,takeout_bytes,receipts,expanded_files,expanded_bytes
+              if depth>12 or files+dirs>=max_entries: return
+              try: ftp.cwd(path)
+              except ftplib.all_errors: return
+              here=ftp.pwd()
+              if here in seen: return
+              seen.add(here)
+              try: names=ftp.nlst()
+              except ftplib.all_errors: return
+              for raw in names:
+                  name=raw.rstrip('/').rsplit('/',1)[-1]
+                  if not name or name in ('.','..'): continue
+                  try: ftp.cwd(here)
+                  except: return
+                  try:
+                      sz=ftp.size(name)
+                      files+=1; sz=int(sz or 0); total_bytes+=sz
+                      lower=name.lower()
+                      if lower.endswith('.zip'):
+                          zip_count+=1; zip_bytes+=sz
+                          if lower.startswith('takeout-'):
+                              takeout_count+=1; takeout_bytes+=sz
+                              hashed_takeouts.append({'name_sha256':hashlib.sha256(name.encode()).hexdigest(),'bytes':sz})
+                      full=(here.rstrip('/')+'/'+name)
+                      if '/.milk-receipts/' in full: receipts+=1
+                      if '/atlas-takeout-expanded-v1/' in full and '/.milk-receipts/' not in full:
+                          expanded_files+=1; expanded_bytes+=sz
+                      continue
+                  except ftplib.all_errors:
+                      pass
+                  try:
+                      ftp.cwd(name); child=ftp.pwd(); dirs+=1
+                  except ftplib.all_errors:
+                      continue
+                  walk(child,depth+1)
+              try: ftp.cwd(here)
+              except: pass
+
+          walk('/')
+          ftp.quit()
+          report={
+            'state':'FTPS_PRIVATE_AUDIT_COMPLETE',
+            'files':files,'dirs':dirs,'total_bytes':total_bytes,
+            'zip_count':zip_count,'zip_bytes':zip_bytes,
+            'takeout_count':takeout_count,'takeout_bytes':takeout_bytes,
+            'takeout_name_hashes':hashed_takeouts,
+            'receipts':receipts,
+            'expanded_files':expanded_files,'expanded_bytes':expanded_bytes,
+            'secrets_disclosed':0
+          }
+          print(json.dumps(report,separators=(',',':')))
+          body=(f"MILK_FTPS_PRIVATE_AUDIT_COMPLETE run={os.environ['RUN_ID']} "
+                f"files={files} dirs={dirs} total_bytes={total_bytes} "
+                f"takeout_archives={takeout_count} takeout_bytes={takeout_bytes} "
+                f"receipts={receipts} expanded_files={expanded_files} expanded_bytes={expanded_bytes} secrets_disclosed=0")
+          req=urllib.request.Request(
+              f"https://api.github.com/repos/{os.environ['REPO']}/issues/35/comments",
+              data=json.dumps({'body':body}).encode(),method='POST',
+              headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Content-Type':'application/json','Accept':'application/vnd.github+json'})
+          urllib.request.urlopen(req,timeout=45).read()
+          PY

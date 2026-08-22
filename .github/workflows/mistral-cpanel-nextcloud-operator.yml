@@ -105,7 +105,7 @@ jobs:
           client = Mistral(api_key=MISTRAL)
           agent = client.beta.agents.create(
               model="mistral-medium-latest",
-              name="MILK cPanel Nextcloud Operator",
+              name="MILK cPanel Nextcloud Operator v2",
               description="Executor privado da MILK para cPanel, Nextcloud, WebDAV e migração auditável.",
               instructions=SPEC,
               completion_args={"temperature": 0},
@@ -125,7 +125,7 @@ jobs:
               raise SystemExit(1)
           comment(
               f"MILK_CPANEL_AGENT_ACTIVE run={RUN_ID} spec_sha256={SPEC_SHA} "
-              "skills=9 voice=MILK executor=Mistral secrets_disclosed=0"
+              "skills=15 voice=MILK executor=Mistral secrets_disclosed=0"
           )
 
           if not CPANEL_TOKEN:

@@ -86,4 +86,4 @@ jobs:
           urllib.request.urlopen(req,timeout=30).read()
           PY
 
-# OAuth refresh requested 2026-08-22 15:52 WEST after canonical cPanel/PTServidor manual audit
+# OAuth refresh requested 2026-08-22 16:21 WEST after user reported invalid prior link

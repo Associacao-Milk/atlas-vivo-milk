@@ -2,12 +2,6 @@ name: MILK Mistral Drive filewise migration
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '17 * * * *'
-  push:
-    branches: [master]
-    paths:
-      - '.github/workflows/mistral-drive-ftps-filewise.yml'
 
 permissions:
   contents: read

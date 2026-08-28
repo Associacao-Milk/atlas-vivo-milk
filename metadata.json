@@ -1,33 +1,91 @@
 {
-  "title": "Atlas Vivo MILK - Portugal",
-  "description": "Atlas Vivo MILK é um ecossistema soberano de dados, cultura e património, com foco em interoperabilidade, financiamento e conformidade legal (RGPD, AI Act, NIS2).",
+  "title": "Atlas Vivo MILK — Portugal",
+  "description": "Atlas Vivo MILK é um ecossistema cultural, territorial e tecnológico da Associação MILK para documentação, curadoria e interoperabilidade do património imaterial português, com governação humana, preservação digital e preparação para financiamento europeu.",
+  "status": "integration-review",
+  "public_readiness": {
+    "repository_role": "public_showcase_and_interoperability_layer",
+    "human_validation_required": true,
+    "production_claim": false,
+    "doi_declared": false,
+    "software_heritage_archival_declared": false,
+    "compliance_claim": "alignment_and_governance_preparation_only"
+  },
   "license": "EUPL-1.2",
-  "keywords": ["Atlas Vivo MILK", "cultura", "património", "soberania digital", "interoperabilidade", "Portugal"],
+  "keywords": [
+    "Atlas Vivo MILK",
+    "Associação MILK",
+    "património cultural imaterial",
+    "folclore português",
+    "soberania digital",
+    "interoperabilidade",
+    "Portugal",
+    "European Interoperability Framework",
+    "EU AI Act",
+    "ISO/IEC 42001",
+    "FIWARE",
+    "NGSI-LD",
+    "IIIF",
+    "W3C WCAG",
+    "Cultural Probes",
+    "SAMHSA trauma-informed approach",
+    "Software Heritage",
+    "Zenodo",
+    "ORCID"
+  ],
   "creators": [
     {
-      "name": "Nuno Filipe Fernandes Vieira Cabral e Araujo",
-      "orcid": "0009-0009-1781-4020"
+      "name": "Nuno Filipe Fernandes Vieira Cabral e Araújo",
+      "orcid": "0009-0009-1781-4020",
+      "affiliation": "Associação MILK — Movimento de Intervenções e Linguagens Kulturais e Arte"
     },
     {
-      "name": "Eduardo Maurício Vieira Cabral e Araujo",
-      "orcid": "0009-0007-6892-6570"
+      "name": "Eduardo Maurício Vieira Cabral e Araújo",
+      "orcid": "0009-0007-6892-6570",
+      "affiliation": "Associação MILK — Movimento de Intervenções e Linguagens Kulturais e Arte"
     }
   ],
-  "version": "1.0.0",
+  "version": "1.0.0-review",
   "datePublished": "2026-06-25",
-  "doi": "",
+  "dateModified": "2026-08-28",
+  "doi": null,
+  "preservation": {
+    "software_heritage": {
+      "status": "local_swhid_prepared_not_yet_archived",
+      "revision_swhid_local": "swh:1:rev:75d0ce49ab336c17cbcdb34e215b1f8d1268e29c",
+      "directory_swhid_local": "swh:1:dir:507c8672ff8f434290eb12dd0007ee2f82e0003a",
+      "note": "Estes identificadores foram calculados localmente para o pacote de recuperação. Só devem ser apresentados como arquivados após confirmação pública do Software Heritage."
+    },
+    "zenodo": {
+      "status": "metadata_prepared_no_public_doi_declared"
+    }
+  },
+  "governance": {
+    "data_layers": [
+      "public_showcase",
+      "restricted_working_material",
+      "confidential_or_sensitive_material"
+    ],
+    "ai_use": "assistive_and_governed",
+    "secret_handling": "opaque_secret_references_only",
+    "human_approval_required_for": [
+      "public_release",
+      "software_heritage_save_code_now",
+      "zenodo_deposit_publish",
+      "codeberg_or_forgejo_migration"
+    ]
+  },
   "relatedIdentifiers": [
     {
-      "relation": "isPartOf",
+      "relation": "isSupplementedBy",
       "identifier": "https://github.com/milkivc/atlas-datasets"
     },
     {
-      "relation": "isPartOf",
+      "relation": "isDocumentedBy",
       "identifier": "https://github.com/milkivc/atlas-docs"
     },
     {
-      "relation": "isPartOf",
-      "identifier": "https://codeberg.org/milkivc/associacao-milk-marco-zero"
+      "relation": "isMirroredBy",
+      "identifier": "https://codeberg.org/associacaomilk/atlas-vivo-milk"
     }
   ]
 }

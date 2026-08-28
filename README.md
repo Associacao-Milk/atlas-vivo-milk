@@ -1,22 +1,22 @@
-# 🚀 ATLAS VIVO - Integration APIs
+# ATLAS VIVO MILK — Integrações e Preservação
 
-**Version:** 2.0.0  
-**Author:** Eduardo Mauricio / Associação MILK  
-**Status:** ✅ Complete and Ready for Production
+**Versão documental:** 2.0.0  
+**Responsável institucional:** Associação MILK  
+**Estado:** integração em consolidação; sem declaração de produção, DOI ou conformidade sem evidência verificável
 
 ---
 
 ## 📋 Overview
 
-This directory contains **complete JavaScript API clients** for integrating ATLAS VIVO with all major platforms:
+Este repositório reúne clientes JavaScript e Python para integrar componentes do Atlas Vivo MILK. Cada integração exige credenciais próprias, teste controlado, revisão humana e confirmação de direitos antes de qualquer operação externa.
 
 | API | File | Description | Status |
 |-----|------|-------------|--------|
-| **Zenodo API** | `zenodo_api_integration.js` | DOI minting, deposit management | ✅ Complete |
-| **ORCID API** | `orcid_api_integration.js` | Researcher identification, work linking | ✅ Complete |
-| **GitHub API** | `github_api_integration.js` | Repository management, workflows | ✅ Complete |
-| **Codeberg API** | `github_api_integration.js` | Codeberg repository management | ✅ Complete |
-| **Unified API** | `index.js` | Single interface for all APIs | ✅ Complete |
+| **Zenodo API** | `zenodo_api_integration.js` | DOI minting, deposit management | Em revisão |
+| **ORCID API** | `orcid_api_integration.js` | Researcher identification, work linking | Em revisão |
+| **GitHub API** | `github_api_integration.js` | Repository management, workflows | Em revisão |
+| **Codeberg API** | `github_api_integration.js` | Codeberg repository management | Em revisão |
+| **Unified API** | `index.js` | Single interface for all APIs | Em revisão |
 
 ---
 
@@ -59,7 +59,7 @@ This directory contains **complete JavaScript API clients** for integrating ATLA
 
 ### **Unified API** 🔗
 - ✅ Single interface for all platforms
-- ✅ Complete deposit creation with DOI
+- Em revisão deposit creation with DOI
 - ✅ Automatic ORCID linking
 - ✅ Multi-repository synchronization
 - ✅ Unified statistics
@@ -527,7 +527,7 @@ app.listen(port, () => {
                 
                 // In browser, you would typically use a backend service
                 // This is just for demonstration
-                output.textContent += '✅ APIs loaded successfully!\n';
+                output.textContent += 'APIs carregadas para teste local.\n';
                 output.textContent += 'Available APIs:\n';
                 output.textContent += '  - ZenodoAPI\n';
                 output.textContent += '  - ORCIDAPI\n';
@@ -645,7 +645,7 @@ declare module 'atlas-vivo-integration-apis' {
 
 ## 📄 License
 
-MIT License - Copyright (c) 2026 Associação MILK
+Consultar o ficheiro LICENSE do repositório antes de reutilizar qualquer componente ou conteúdo.
 
 ---
 
@@ -661,4 +661,4 @@ MIT License - Copyright (c) 2026 Associação MILK
 **Document Version:** 2.0.0  
 **Last Updated:** 2026-06-26  
 **Author:** Eduardo Mauricio  
-**Status:** ✅ Complete - Ready for Production
+**Status:** Em revisão - Ready for Production

@@ -1,8 +1,27 @@
 # ATLAS VIVO MILK — Integrações e Preservação
 
-**Versão documental:** 2.0.0  
+**Versão documental:** 2.0.0-review  
 **Responsável institucional:** Associação MILK  
 **Estado:** integração em consolidação; sem declaração de produção, DOI ou conformidade sem evidência verificável
+
+---
+
+## Governação actual da migração
+
+Este repositório está em saneamento público. A camada de vitrine, os metadados de preservação e os workflows de migração devem ser tratados separadamente.
+
+Documentos activos:
+
+- [Governação de migração — Atlas Vivo MILK](docs/MIGRATION_GOVERNANCE_2026-08-28.md)
+- [Auditoria pública do repositório — Atlas Vivo MILK](docs/PUBLIC_REPOSITORY_AUDIT_2026-08-28.md)
+
+Pontos de controlo:
+
+- SWHID local preparado, ainda não arquivado publicamente pelo Software Heritage.
+- DOI/Zenodo preparado, ainda não publicado.
+- ORCID de Nuno e Eduardo registados nos metadados.
+- Workflows Mistral/Drive/FTPS/Nextcloud em revisão antes de qualquer execução.
+- Sem publicação de corpus, segredos ou dados sensíveis neste repositório público.
 
 ---
 
@@ -23,46 +42,45 @@ Este repositório reúne clientes JavaScript e Python para integrar componentes 
 ## 🎯 Features
 
 ### **Zenodo API** 📚
-- ✅ Create and manage deposits
-- ✅ Upload files to deposits
-- ✅ Publish deposits with DOI minting
-- ✅ Link deposits to ORCID records
-- ✅ Search and retrieve deposit information
-- ✅ Manage Zenodo communities
-- ✅ Repository synchronization
-- ✅ Metadata template generation
+- Em revisão: create and manage deposits
+- Em revisão: upload files to deposits
+- Em revisão: publish deposits with DOI minting
+- Em revisão: link deposits to ORCID records
+- Em revisão: search and retrieve deposit information
+- Em revisão: manage Zenodo communities
+- Em revisão: repository synchronization
+- Em revisão: metadata template generation
 
 ### **ORCID API** 👤
-- ✅ OAuth2 authentication
-- ✅ Get researcher information
-- ✅ Add/Update/Delete works
-- ✅ Link works to ORCID records
-- ✅ Search researchers
-- ✅ Manage affiliations
-- ✅ Work payload creation
-- ✅ Multiple ORCID linking
-- ✅ ORCID validation
+- Em revisão: OAuth2 authentication
+- Em revisão: get researcher information
+- Em revisão: add/update/delete works
+- Em revisão: link works to ORCID records
+- Em revisão: search researchers
+- Em revisão: manage affiliations
+- Em revisão: work payload creation
+- Em revisão: multiple ORCID linking
+- Em revisão: ORCID validation
 
 ### **GitHub API** 🐙
-- ✅ Repository management
-- ✅ File operations (create, read, update, delete)
-- ✅ Workflow management
-- ✅ Trigger workflow runs
-- ✅ Issue and PR management
-- ✅ Metadata synchronization
-- ✅ Cross-repository operations
+- Em revisão: repository management
+- Em revisão: file operations
+- Em revisão: workflow management
+- Em revisão: trigger workflow runs
+- Em revisão: issue and PR management
+- Em revisão: metadata synchronization
+- Em revisão: cross-repository operations
 
 ### **Codeberg API** 🐙
-- ✅ All GitHub API features
-- ✅ Codeberg-specific endpoints
-- ✅ Compatible interface
+- Em revisão: Codeberg repository management
+- Em revisão: compatible interface
 
 ### **Unified API** 🔗
-- ✅ Single interface for all platforms
-- Em revisão deposit creation with DOI
-- ✅ Automatic ORCID linking
-- ✅ Multi-repository synchronization
-- ✅ Unified statistics
+- Em revisão: single interface for all platforms
+- Em revisão: deposit creation with DOI
+- Em revisão: automatic ORCID linking
+- Em revisão: multi-repository synchronization
+- Em revisão: unified statistics
 
 ---
 
@@ -73,9 +91,9 @@ agent-integration/js/
 ├── index.js                          # Main entry point
 ├── package.json                      # Node.js package configuration
 ├── README.md                         # This file
-├── zenodo_api_integration.js        # Zenodo API client (11KB)
-├── orcid_api_integration.js         # ORCID API client (12KB)
-└── github_api_integration.js        # GitHub/Codeberg API client (18KB)
+├── zenodo_api_integration.js         # Zenodo API client
+├── orcid_api_integration.js          # ORCID API client
+└── github_api_integration.js         # GitHub/Codeberg API client
 ```
 
 ---
@@ -85,561 +103,111 @@ agent-integration/js/
 ### **Node.js**
 
 ```bash
-# Navigate to the js directory
 cd agent-integration/js
-
-# Install dependencies
 npm install
-
-# Or install globally
-npm install -g .
 ```
 
 ### **Browser**
 
-Include the scripts directly in your HTML:
+Include the scripts directly in controlled local or server-side contexts only. Browser usage must not expose tokens.
 
 ```html
-<!-- Include individual APIs -->
 <script src="zenodo_api_integration.js"></script>
 <script src="orcid_api_integration.js"></script>
 <script src="github_api_integration.js"></script>
-
-<!-- Or include the unified API -->
 <script src="index.js"></script>
-```
-
----
-
-## 💻 Usage Examples
-
-### **1. Initialize Individual APIs**
-
-#### Zenodo API
-```javascript
-// Node.js
-const { ZenodoAPI, getZenodoAPI } = require('./zenodo_api_integration.js');
-
-// Initialize with token
-const zenodo = new ZenodoAPI('your_zenodo_token');
-// Or use environment variable
-const zenodo = getZenodoAPI(); // Uses ZENODO_TOKEN from env
-
-// Create a deposit
-const metadata = {
-    title: 'My Dataset',
-    description: 'Dataset description',
-    creators: [{ name: 'John Doe', affiliation: 'University' }],
-    license: { id: 'CC-BY-4.0' }
-};
-
-const deposit = await zenodo.createDeposit(metadata);
-console.log('Deposit created:', deposit.id);
-
-// Publish and mint DOI
-const published = await zenodo.publishDeposit(deposit.id);
-console.log('DOI:', published.doi);
-```
-
-#### ORCID API
-```javascript
-// Node.js
-const { ORCIDAPI, getORCIDAPI } = require('./orcid_api_integration.js');
-
-// Initialize with credentials
-const orcid = new ORCIDAPI({
-    clientId: 'your_client_id',
-    clientSecret: 'your_client_secret'
-});
-
-// Get researcher info
-const researcher = await orcid.getResearcher('0009-0009-1781-4020');
-console.log('Researcher:', researcher);
-
-// Create work payload
-const workPayload = orcid.createWorkPayload(
-    'My Dataset',
-    '10.5281/zenodo.1234567',
-    'https://doi.org/10.5281/zenodo.1234567',
-    'dataset'
-);
-
-// Link work to ORCID
-const result = await orcid.linkWorkToOrcid('0009-0009-1781-4020', workPayload);
-console.log('Work linked:', result);
-```
-
-#### GitHub API
-```javascript
-// Node.js
-const { GitHubAPI, getGitHubAPI } = require('./github_api_integration.js');
-
-// Initialize with token
-const github = new GitHubAPI({ token: 'your_github_token' });
-
-// List repositories
-const repos = await github.listRepos('milkivc');
-console.log('Repositories:', repos);
-
-// Create/update a file
-const fileResult = await github.createFile(
-    'milkivc', 'atlas-datasets',
-    'metadata.json',
-    JSON.stringify({ title: 'Test' }, null, 2),
-    'Update metadata'
-);
-console.log('File updated:', fileResult);
-
-// Trigger workflow
-const workflowRun = await github.triggerWorkflow(
-    'milkivc', 'atlas-datasets',
-    'auto-sync.yml',
-    'master'
-);
-console.log('Workflow triggered:', workflowRun);
-```
-
-### **2. Use Unified API**
-
-```javascript
-// Node.js
-const { UnifiedAPI } = require('./index.js');
-
-// Initialize with all tokens
-const api = new UnifiedAPI({
-    zenodoToken: process.env.ZENODO_TOKEN,
-    orcidClientId: process.env.ORCID_CLIENT_ID,
-    orcidClientSecret: process.env.ORCID_CLIENT_SECRET,
-    githubToken: process.env.GITHUB_TOKEN,
-    codebergToken: process.env.CODEBERG_TOKEN
-});
-
-// Get all API statistics
-const stats = await api.getAllStats();
-console.log('API Statistics:', stats);
-
-// Create deposit and link to ORCIDs
-const result = await api.createDepositAndLink(
-    {
-        title: 'My Dataset',
-        description: 'Dataset description',
-        creators: [{ name: 'John Doe' }]
-    },
-    ['0009-0009-1781-4020', '0009-0007-6892-6570']
-);
-console.log('Complete result:', result);
-
-// Sync all repositories
-const syncResult = await api.syncAllRepositories(
-    ['atlas-datasets', 'atlas-docs', 'atlas-vivo-milk'],
-    {
-        metadata: { title: 'Updated Metadata' },
-        zenodo: { doi: '10.5281/zenodo.1234567' }
-    }
-);
-console.log('Sync result:', syncResult);
-```
-
-### **3. Initialize All APIs at Once**
-
-```javascript
-// Node.js
-const { initAllAPIs } = require('./index.js');
-
-// Initialize all APIs with environment variables
-const apis = initAllAPIs();
-
-// Use individual APIs
-const zenodoStats = await apis.zenodo.getStats();
-const orcidStats = await apis.orcid.getStats();
-const githubStats = await apis.github.getStats();
-const codebergStats = await apis.codeberg.getStats();
-
-console.log('All API stats:', { zenodoStats, orcidStats, githubStats, codebergStats });
 ```
 
 ---
 
 ## 🔐 Authentication
 
-### **Environment Variables**
+Use environment variables or secret managers. Never commit real tokens, cookies, passwords, `.env` files or application passwords.
 
-Create a `.env` file in your project root:
+Expected handles:
 
 ```bash
-# Zenodo
 ZENODO_TOKEN=your_zenodo_api_token
 ZENODO_COMMUNITY_ID=atlas-vivo-milk
-
-# ORCID
 ORCID_CLIENT_ID=your_orcid_client_id
 ORCID_CLIENT_SECRET=your_orcid_client_secret
-ORCID_TOKEN=your_orcid_access_token
-
-# GitHub
 GITHUB_TOKEN=your_github_personal_access_token
-REPOSITORY_OWNER=milkivc
-
-# Codeberg
 CODEBERG_TOKEN=your_codeberg_personal_access_token
 CODEBERG_USERNAME=associacaomilk
-```
-
-### **Loading Environment Variables**
-
-```javascript
-// Node.js
-require('dotenv').config();
-
-// Then use the APIs
-const zenodo = getZenodoAPI(); // Automatically uses ZENODO_TOKEN
-const github = getGitHubAPI(); // Automatically uses GITHUB_TOKEN
 ```
 
 ---
 
 ## 📊 API Methods Reference
 
+The API clients are present for review and controlled testing. Public documentation in this repository must not be read as confirmation that any deposit, DOI, ORCID write, Codeberg migration or Software Heritage archival has already been completed.
+
 ### **ZenodoAPI**
 
-| Method | Description | Parameters | Returns |
-|--------|-------------|------------|---------|
-| `createDeposit(metadata, published)` | Create new deposit | metadata, published | Deposit info |
-| `getDeposit(depositId)` | Get deposit info | depositId | Deposit info |
-| `updateDeposit(depositId, metadata)` | Update deposit | depositId, metadata | Updated info |
-| `uploadFile(depositId, file, fileName)` | Upload file | depositId, file, fileName | Upload result |
-| `publishDeposit(depositId)` | Publish deposit | depositId | Published info with DOI |
-| `discardDeposit(depositId)` | Discard deposit | depositId | Deletion confirmation |
-| `listDeposits(page, size)` | List deposits | page, size | List of deposits |
-| `searchDeposits(query, page, size)` | Search deposits | query, page, size | Search results |
-| `linkToOrcid(depositId, orcid)` | Link to ORCID | depositId, orcid | Linking confirmation |
-| `createDOI(metadata)` | Create DOI | metadata | DOI info |
-| `getDOIInfo(doi)` | Get DOI info | doi | DOI information |
-| `createMetadataTemplate(title, description, creators, license)` | Create metadata template | title, description, creators, license | Metadata template |
-| `getStats()` | Get API stats | - | Statistics |
+| Method | Description | Status |
+|--------|-------------|--------|
+| `createDeposit` | Create new deposit | Review required |
+| `getDeposit` | Get deposit info | Review required |
+| `updateDeposit` | Update deposit | Review required |
+| `uploadFile` | Upload file | Review required |
+| `publishDeposit` | Publish deposit | Human approval required |
+| `listDeposits` | List deposits | Review required |
+| `searchDeposits` | Search deposits | Review required |
+| `createMetadataTemplate` | Create metadata template | Review required |
 
 ### **ORCIDAPI**
 
-| Method | Description | Parameters | Returns |
-|--------|-------------|------------|---------|
-| `getResearcher(orcid)` | Get researcher info | orcid | Researcher info |
-| `getResearcherWorks(orcid)` | Get researcher works | orcid | List of works |
-| `getWork(orcid, workId)` | Get specific work | orcid, workId | Work info |
-| `addWork(orcid, workData)` | Add work | orcid, workData | Created work |
-| `updateWork(orcid, workId, workData)` | Update work | orcid, workId, workData | Updated work |
-| `deleteWork(orcid, workId)` | Delete work | orcid, workId | Deletion confirmation |
-| `searchResearchers(query)` | Search researchers | query | Search results |
-| `getAffiliations(orcid)` | Get affiliations | orcid | List of affiliations |
-| `addAffiliation(orcid, affiliationData)` | Add affiliation | orcid, affiliationData | Created affiliation |
-| `createWorkPayload(title, doi, url, workType, publicationDate)` | Create work payload | title, doi, url, workType, publicationDate | Work payload |
-| `linkWorkToOrcid(orcid, workData)` | Link work to ORCID | orcid, workData | Linking result |
-| `linkMultipleOrcids(workData, orcids)` | Link to multiple ORCIDs | workData, orcids | Linking results |
-| `getOrcidFromName(name)` | Search ORCID by name | name | ORCID ID or null |
-| `validateOrcid(orcid)` | Validate ORCID format | orcid | boolean |
-| `getStats()` | Get API stats | - | Statistics |
+| Method | Description | Status |
+|--------|-------------|--------|
+| `getResearcher` | Get researcher info | Review required |
+| `getResearcherWorks` | Get researcher works | Review required |
+| `addWork` | Add work | Human approval required |
+| `updateWork` | Update work | Human approval required |
+| `deleteWork` | Delete work | Human approval required |
+| `validateOrcid` | Validate ORCID format | Review required |
 
 ### **GitHubAPI / CodebergAPI**
 
-| Method | Description | Parameters | Returns |
-|--------|-------------|------------|---------|
-| `getUser()` | Get authenticated user | - | User info |
-| `getRepo(owner, repo)` | Get repository info | owner, repo | Repository info |
-| `listRepos(org)` | List repositories | org | List of repos |
-| `createRepo(name, description, private, autoInit)` | Create repository | name, description, private, autoInit | Created repo |
-| `updateRepo(owner, repo, data)` | Update repository | owner, repo, data | Updated repo |
-| `getFile(owner, repo, path)` | Get file info | owner, repo, path | File info |
-| `createFile(owner, repo, path, content, message)` | Create/update file | owner, repo, path, content, message | File result |
-| `deleteFile(owner, repo, path, message)` | Delete file | owner, repo, path, message | Deletion result |
-| `listFiles(owner, repo, path)` | List files | owner, repo, path | List of files |
-| `getWorkflow(owner, repo, workflowId)` | Get workflow info | owner, repo, workflowId | Workflow info |
-| `listWorkflows(owner, repo)` | List workflows | owner, repo | List of workflows |
-| `triggerWorkflow(owner, repo, workflowId, branch, inputs)` | Trigger workflow | owner, repo, workflowId, branch, inputs | Workflow run |
-| `getWorkflowRuns(owner, repo, workflowId)` | Get workflow runs | owner, repo, workflowId | List of runs |
-| `createIssue(owner, repo, title, body, labels)` | Create issue | owner, repo, title, body, labels | Created issue |
-| `createPR(owner, repo, title, body, head, base)` | Create PR | owner, repo, title, body, head, base | Created PR |
-| `syncMetadata(owner, repo, metadata)` | Sync metadata | owner, repo, metadata | Sync result |
-| `getMetadata(owner, repo)` | Get all metadata | owner, repo | All metadata |
-| `syncRepositories(repos, metadata)` | Sync multiple repos | repos, metadata | Sync results |
-| `getStats()` | Get API stats | - | Statistics |
-
-### **UnifiedAPI**
-
-| Method | Description | Parameters | Returns |
-|--------|-------------|------------|---------|
-| `getAllStats()` | Get all API statistics | - | All statistics |
-| `createDepositAndLink(metadata, orcids)` | Create deposit with DOI and link to ORCIDs | metadata, orcids | Complete result |
-| `syncAllRepositories(repos, metadata)` | Sync all repositories | repos, metadata | Sync results |
-
----
-
-## 📝 Examples Directory
-
-### **Complete Workflow Example**
-
-```javascript
-// complete_workflow.js
-const { UnifiedAPI } = require('./index.js');
-
-async function completeWorkflow() {
-    // Initialize API
-    const api = new UnifiedAPI({
-        zenodoToken: process.env.ZENODO_TOKEN,
-        orcidClientId: process.env.ORCID_CLIENT_ID,
-        orcidClientSecret: process.env.ORCID_CLIENT_SECRET,
-        githubToken: process.env.GITHUB_TOKEN,
-        codebergToken: process.env.CODEBERG_TOKEN
-    });
-    
-    // Step 1: Create metadata
-    const metadata = api.zenodo.createMetadataTemplate(
-        'ATLAS VIVO Dataset',
-        'Complete dataset for ATLAS VIVO project',
-        [
-            { name: 'Nuno', affiliation: 'Associação MILK', orcid: '0009-0009-1781-4020' },
-            { name: 'Eduardo', affiliation: 'Associação MILK', orcid: '0009-0007-6892-6570' }
-        ],
-        'CC-BY-4.0'
-    );
-    
-    // Step 2: Create deposit and link to ORCIDs
-    const result = await api.createDepositAndLink(
-        metadata,
-        ['0009-0009-1781-4020', '0009-0007-6892-6570']
-    );
-    
-    console.log('Deposit created and linked:', result);
-    
-    // Step 3: Sync repositories with new metadata
-    const syncResult = await api.syncAllRepositories(
-        ['atlas-datasets', 'atlas-docs', 'atlas-vivo-milk'],
-        {
-            metadata: metadata,
-            zenodo: { doi: result.deposit.doi }
-        }
-    );
-    
-    console.log('Repositories synced:', syncResult);
-    
-    // Step 4: Get all statistics
-    const stats = await api.getAllStats();
-    console.log('API Statistics:', stats);
-}
-
-// Run the workflow
-completeWorkflow().catch(console.error);
-```
-
----
-
-## 🔧 Configuration
-
-### **Token Requirements**
-
-| Platform | Token | Required Scopes | Where to Get |
-|----------|-------|-----------------|--------------|
-| **Zenodo** | `ZENODO_TOKEN` | `deposit:write`, `deposit:actions` | [Zenodo Tokens](https://zenodo.org/account/settings/applications/tokens/new/) |
-| **ORCID** | `ORCID_CLIENT_ID`, `ORCID_CLIENT_SECRET` | `/read-limited`, `/activities/update`, `/person/update` | [ORCID Developer](https://orcid.org/developer-tools) |
-| **GitHub** | `GITHUB_TOKEN` | `repo`, `workflow`, `read:org`, `write:org` | [GitHub Tokens](https://github.com/settings/tokens) |
-| **Codeberg** | `CODEBERG_TOKEN` | `repo`, `user` | [Codeberg Applications](https://codeberg.org/user/settings/applications) |
-
----
-
-## 📊 Error Handling
-
-All APIs include comprehensive error handling:
-
-```javascript
-try {
-    const deposit = await zenodo.createDeposit(metadata);
-    console.log('Success:', deposit);
-} catch (error) {
-    console.error('Error:', error.message);
-    // Handle specific error types
-    if (error.message.includes('401')) {
-        console.error('Authentication failed');
-    } else if (error.message.includes('404')) {
-        console.error('Resource not found');
-    } else {
-        console.error('Unknown error');
-    }
-}
-```
-
----
-
-## 🚀 Deployment
-
-### **Node.js Application**
-
-```javascript
-// server.js
-const express = require('express');
-const { UnifiedAPI } = require('./agent-integration/js/index.js');
-
-const app = express();
-const port = 3000;
-
-// Initialize API
-const api = new UnifiedAPI({
-    zenodoToken: process.env.ZENODO_TOKEN,
-    orcidClientId: process.env.ORCID_CLIENT_ID,
-    orcidClientSecret: process.env.ORCID_CLIENT_SECRET,
-    githubToken: process.env.GITHUB_TOKEN,
-    codebergToken: process.env.CODEBERG_TOKEN
-});
-
-// API endpoint
-app.get('/api/stats', async (req, res) => {
-    try {
-        const stats = await api.getAllStats();
-        res.json(stats);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-// Start server
-app.listen(port, () => {
-    console.log(`ATLAS VIVO API server running on port ${port}`);
-});
-```
-
-### **Browser Application**
-
-```html
-<!DOCTYPE html>
-<html>
-<head>
-    <title>ATLAS VIVO API Demo</title>
-    <script src="agent-integration/js/index.js"></script>
-</head>
-<body>
-    <h1>ATLAS VIVO API Demo</h1>
-    <button onclick="testAPIs()">Test APIs</button>
-    <pre id="output"></pre>
-    
-    <script>
-        async function testAPIs() {
-            try {
-                // Note: Browser usage requires CORS proxy or server-side authentication
-                const output = document.getElementById('output');
-                output.textContent = 'Testing APIs...\n';
-                
-                // In browser, you would typically use a backend service
-                // This is just for demonstration
-                output.textContent += 'APIs carregadas para teste local.\n';
-                output.textContent += 'Available APIs:\n';
-                output.textContent += '  - ZenodoAPI\n';
-                output.textContent += '  - ORCIDAPI\n';
-                output.textContent += '  - GitHubAPI\n';
-                output.textContent += '  - CodebergAPI\n';
-                output.textContent += '  - UnifiedAPI\n';
-                
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        }
-    </script>
-</body>
-</html>
-```
-
----
-
-## 📚 Documentation
-
-### **JSDoc Comments**
-
-All APIs include comprehensive JSDoc comments for:
-- Class descriptions
-- Method descriptions
-- Parameter types
-- Return types
-- Usage examples
-
-### **TypeScript Support**
-
-The APIs are designed to be TypeScript-compatible. You can create type definitions:
-
-```typescript
-// types/index.d.ts
-declare module 'atlas-vivo-integration-apis' {
-    export class ZenodoAPI {
-        constructor(token: string, sandbox?: boolean);
-        createDeposit(metadata: any, published?: boolean): Promise<any>;
-        // ... other methods
-    }
-    
-    export class ORCIDAPI {
-        constructor(options: { clientId: string; clientSecret: string; token?: string; sandbox?: boolean });
-        getResearcher(orcid: string): Promise<any>;
-        // ... other methods
-    }
-    
-    export class GitHubAPI {
-        constructor(options: { token: string; org?: string; baseUrl?: string });
-        getUser(): Promise<any>;
-        // ... other methods
-    }
-    
-    export class CodebergAPI extends GitHubAPI {}
-    
-    export class UnifiedAPI {
-        constructor(options: any);
-        getAllStats(): Promise<any>;
-        createDepositAndLink(metadata: any, orcids: string[]): Promise<any>;
-        syncAllRepositories(repos: string[], metadata: any): Promise<any>;
-    }
-    
-    export function initAllAPIs(): any;
-}
-```
+| Method | Description | Status |
+|--------|-------------|--------|
+| `getUser` | Get authenticated user | Review required |
+| `getRepo` | Get repository info | Review required |
+| `listRepos` | List repositories | Review required |
+| `createRepo` | Create repository | Human approval required |
+| `updateRepo` | Update repository | Human approval required |
+| `createFile` | Create/update file | Human approval required |
+| `deleteFile` | Delete file | Human approval required |
+| `triggerWorkflow` | Trigger workflow | Human approval required |
 
 ---
 
 ## 🎯 Best Practices
 
 ### **1. Token Security**
-- Never commit tokens to version control
-- Use environment variables
-- Rotate tokens regularly
-- Use minimal required scopes
+- Never commit tokens to version control.
+- Use environment variables or secret managers.
+- Rotate tokens regularly.
+- Use minimal required scopes.
+- Do not paste secrets in public issues, logs, commits or documentation.
 
-### **2. Error Handling**
-- Always use try/catch blocks
-- Handle specific error types
-- Provide meaningful error messages
-- Log errors for debugging
-
-### **3. Rate Limiting**
-- Respect API rate limits
-- Implement retry logic for rate limits
-- Use exponential backoff
-- Cache responses when possible
-
-### **4. Testing**
-- Test with sandbox environments first
-- Use dry-run modes when available
-- Verify all tokens are valid
-- Test error scenarios
+### **2. Publication Governance**
+- Test with sandbox environments first.
+- Use dry-run modes when available.
+- Verify all tokens through opaque checks only.
+- Keep private agents and migration operators out of the public showcase.
+- Preserve original evidence and file history.
 
 ---
 
 ## 📞 Support
 
 ### **Issues**
-- Report issues: [GitHub Issues](https://github.com/milkivc/atlas-datasets/issues)
+- Report issues: [GitHub Issues](https://github.com/milkivc/atlas-vivo-milk/issues)
 - Tag: `api-integration`
 
 ### **Contacts**
 - **Technical Lead:** Eduardo Mauricio (eduardo@associacaomilk.pt)
 - **Association:** milk@associacaomilk.pt
-
-### **Platform Support**
-- **Zenodo:** [help.zenodo.org](https://help.zenodo.org)
-- **ORCID:** [support.orcid.org](https://support.orcid.org)
-- **GitHub:** [support.github.com](https://support.github.com)
-- **Codeberg:** [docs.codeberg.org](https://docs.codeberg.org)
 
 ---
 
@@ -653,12 +221,13 @@ Consultar o ficheiro LICENSE do repositório antes de reutilizar qualquer compon
 
 | Version | Date | Changes |
 |---------|------|---------|
-| 2.0.0 | 2026-06-26 | Complete JavaScript APIs created |
+| 2.0.0-review | 2026-08-28 | Metadata, migration governance and public audit aligned |
+| 2.0.0 | 2026-06-26 | JavaScript APIs created |
 | 1.0.0 | 2026-06-26 | Python APIs created |
 
 ---
 
-**Document Version:** 2.0.0  
-**Last Updated:** 2026-06-26  
-**Author:** Eduardo Mauricio  
-**Status:** Em revisão - Ready for Production
+**Document Version:** 2.0.0-review  
+**Last Updated:** 2026-08-28  
+**Author:** Eduardo Mauricio / Associação MILK  
+**Status:** Em revisão — não declarar produção, DOI, SWHID arquivado ou conformidade sem validação externa

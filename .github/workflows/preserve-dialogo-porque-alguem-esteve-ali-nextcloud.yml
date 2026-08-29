@@ -93,7 +93,7 @@ jobs:
                       if not base and not user and not password and '\n' not in raw:
                           password = raw
 
-              base = base or 'https://associacaomilk.pt/nextcloud'
+              base = base or 'https://associacaomilk.pt/nuvem'
               user = user or 'admin'
               if not password:
                   raise RuntimeError('NEXTCLOUD_CREDENTIALS_INCOMPLETE')

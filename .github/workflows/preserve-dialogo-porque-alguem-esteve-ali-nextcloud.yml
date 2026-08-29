@@ -32,47 +32,115 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          python - <<'PY'
+          import configparser
+          import hashlib
+          import json
+          import os
+          import pathlib
+          import re
+          import subprocess
+          import urllib.parse
 
-          SRC='docs/dialogos/2026-08-29-porque-alguem-esteve-ali.md'
-          BASE="${NEXTCLOUD_BASE_URL:-https://associacaomilk.pt/nextcloud}"
-          USER="${NEXTCLOUD_USER:-admin}"
-          PASS="${NEXTCLOUD_APP_PASSWORD:-${NEXTCLOUD_KEY:-}}"
+          raw = os.environ.get('NEXTCLOUD_KEY', '').strip()
+          base = os.environ.get('NEXTCLOUD_BASE_URL', '').strip()
+          user = os.environ.get('NEXTCLOUD_USER', '').strip()
+          password = os.environ.get('NEXTCLOUD_APP_PASSWORD', '').strip()
+          src = pathlib.Path('docs/dialogos/2026-08-29-porque-alguem-esteve-ali.md')
+          tmp = pathlib.Path(os.environ.get('RUNNER_TEMP', '/tmp'))
+          cfg = tmp / 'nextcloud-rclone.conf'
+          readback = tmp / 'dialogue-readback.md'
 
-          if [ -z "$PASS" ]; then
-            echo 'BLOCKED: NEXTCLOUD credential secret is missing'
-            exit 2
-          fi
+          def run(args, label, capture=True):
+              p = subprocess.run(args, text=True, capture_output=capture, check=False)
+              if p.returncode:
+                  detail = ((p.stderr or p.stdout or '').splitlines()[-1:] or ['unknown'])[0][:240]
+                  raise RuntimeError(label + ' detail=' + detail)
+              return p.stdout if capture else ''
 
-          if [[ "$BASE" == *'/remote.php/'* ]]; then
-            DAV="$BASE"
-          else
-            DAV="${BASE%/}/remote.php/dav/files/${USER}/"
-          fi
+          def obscure(value):
+              return run(['rclone', 'obscure', value], 'RCLONE_OBSCURE_FAILED').strip()
 
-          rclone config create milk-nextcloud webdav \
-            url "$DAV" \
-            vendor nextcloud \
-            user "$USER" \
-            pass "$(rclone obscure "$PASS")" >/dev/null
+          remote = None
+          if raw.startswith('[') and re.search(r'(?im)^\s*type\s*=\s*webdav\s*$', raw):
+              cfg.write_text(raw.rstrip() + '\n', encoding='utf-8')
+              parser = configparser.ConfigParser()
+              parser.read_string(raw)
+              for section in parser.sections():
+                  if parser.get(section, 'type', fallback='').strip() == 'webdav':
+                      remote = section
+                      break
+              if not remote:
+                  raise RuntimeError('NEXTCLOUD_WEBDAV_REMOTE_MISSING')
+          else:
+              if raw:
+                  try:
+                      obj = json.loads(raw)
+                      if isinstance(obj, dict):
+                          base = base or str(obj.get('base_url') or obj.get('url') or '')
+                          user = user or str(obj.get('user') or obj.get('username') or '')
+                          password = password or str(obj.get('app_password') or obj.get('password') or '')
+                  except Exception:
+                      pairs = {}
+                      for line in raw.splitlines():
+                          if '=' in line:
+                              key, value = line.split('=', 1)
+                              pairs[key.strip().upper()] = value.strip()
+                      base = base or pairs.get('NEXTCLOUD_BASE_URL', '')
+                      user = user or pairs.get('NEXTCLOUD_USER', '')
+                      password = password or pairs.get('NEXTCLOUD_APP_PASSWORD', '')
+                      if not base and not user and not password and '\n' not in raw:
+                          password = raw
 
-          if rclone lsf 'milk-nextcloud:Atlas Vivo MILK/Continuidade e Decisões/2026-08-27 — Reconstituição Chats e Saneamento Drive' --max-depth 1 >/dev/null 2>&1; then
-            DESTDIR='Atlas Vivo MILK/Continuidade e Decisões/2026-08-27 — Reconstituição Chats e Saneamento Drive'
-          elif rclone lsf 'milk-nextcloud:Atlas Vivo MILK' --max-depth 1 >/dev/null 2>&1; then
-            DESTDIR='Atlas Vivo MILK'
-          else
-            echo 'BLOCKED: existing Atlas Vivo MILK area was not found or WebDAV authentication failed'
-            exit 3
-          fi
+              base = base or 'https://associacaomilk.pt/nextcloud'
+              user = user or 'admin'
+              if not password:
+                  raise RuntimeError('NEXTCLOUD_CREDENTIALS_INCOMPLETE')
+              if '/remote.php/' not in base:
+                  base = base.rstrip('/') + '/remote.php/dav/files/' + urllib.parse.quote(user, safe='') + '/'
+              cfg.write_text(
+                  '[nextcloud]\n'
+                  'type = webdav\n'
+                  'url = ' + base.rstrip('/') + '/\n'
+                  'vendor = nextcloud\n'
+                  'user = ' + user + '\n'
+                  'pass = ' + obscure(password) + '\n',
+                  encoding='utf-8',
+              )
+              remote = 'nextcloud'
 
-          DEST="milk-nextcloud:${DESTDIR}/2026-08-29 — Porque alguém esteve ali — diálogo sobre a essência do Atlas.md"
-          rclone copyto "$SRC" "$DEST"
-          rclone copyto "$DEST" "$RUNNER_TEMP/readback.md"
+          os.chmod(cfg, 0o600)
+          run(['rclone', '--config', str(cfg), 'lsd', remote + ':'], 'NEXTCLOUD_WEBDAV_PROBE_FAILED')
 
-          SRC_HASH="$(sha256sum "$SRC" | awk '{print $1}')"
-          DST_HASH="$(sha256sum "$RUNNER_TEMP/readback.md" | awk '{print $1}')"
-          test "$SRC_HASH" = "$DST_HASH"
+          candidates = [
+              'Atlas Vivo MILK/Continuidade e Decisões/2026-08-27 — Reconstituição Chats e Saneamento Drive',
+              'Atlas Vivo MILK',
+              'Atlas-Vivo-MILK',
+          ]
+          dest_dir = None
+          for candidate in candidates:
+              p = subprocess.run(
+                  ['rclone', '--config', str(cfg), 'lsf', f'{remote}:{candidate}', '--max-depth', '1'],
+                  text=True, capture_output=True, check=False,
+              )
+              if p.returncode == 0:
+                  dest_dir = candidate
+                  break
+          if not dest_dir:
+              raise RuntimeError('NEXTCLOUD_EXISTING_ATLAS_AREA_NOT_FOUND')
 
-          echo 'NEXTCLOUD_DIALOGUE_VERIFIED'
-          echo "destination=${DEST#milk-nextcloud:}"
-          echo "sha256=$SRC_HASH"
-          echo "bytes=$(wc -c < "$SRC" | tr -d ' ')"
+          filename = '2026-08-29 — Porque alguém esteve ali — diálogo sobre a essência do Atlas.md'
+          destination = f'{remote}:{dest_dir}/{filename}'
+          run(['rclone', '--config', str(cfg), 'copyto', str(src), destination], 'NEXTCLOUD_UPLOAD_FAILED', capture=False)
+          run(['rclone', '--config', str(cfg), 'copyto', destination, str(readback)], 'NEXTCLOUD_READBACK_FAILED', capture=False)
+
+          src_hash = hashlib.sha256(src.read_bytes()).hexdigest()
+          dst_hash = hashlib.sha256(readback.read_bytes()).hexdigest()
+          if src_hash != dst_hash:
+              raise RuntimeError('NEXTCLOUD_SHA256_MISMATCH')
+
+          print('NEXTCLOUD_DIALOGUE_VERIFIED')
+          print('destination=' + dest_dir + '/' + filename)
+          print('sha256=' + src_hash)
+          print('bytes=' + str(src.stat().st_size))
+          PY

@@ -1,0 +1,105 @@
+name: MILK repair FTPS and resume migration
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - '.github/workflows/repair-ftps-and-resume-migration.yml'
+
+permissions:
+  contents: read
+  issues: write
+  actions: write
+
+concurrency:
+  group: milk-repair-ftps
+  cancel-in-progress: false
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CPANEL_API_TOKEN: ${{ secrets.CPANEL_API_TOKEN }}
+      CPANEL_TOKEN: ${{ secrets.CPANEL_TOKEN }}
+      PTSERVIDOR_CPANEL_TOKEN: ${{ secrets.PTSERVIDOR_CPANEL_TOKEN }}
+      PTSERVIDOR_FTPS_PASSWORD: ${{ secrets.PTSERVIDOR_FTPS_PASSWORD }}
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      RUN_ID: ${{ github.run_id }}
+    steps:
+      - name: Reapply opaque FTP password, verify FTPS, resume filewise migration
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import ftplib, json, os, ssl, urllib.parse, urllib.request
+
+          USER='associ16'
+          HOST='troi.ptservidor.net'
+          FTP_USER='migration'
+          FTP_DOMAIN='associacaomilk.pt'
+          FTP_LOGIN='migration@associacaomilk.pt'
+          CPANEL=(os.environ.get('CPANEL_API_TOKEN','').strip() or
+                  os.environ.get('CPANEL_TOKEN','').strip() or
+                  os.environ.get('PTSERVIDOR_CPANEL_TOKEN','').strip())
+          FTP_PASSWORD=os.environ.get('PTSERVIDOR_FTPS_PASSWORD','').strip()
+          GH=os.environ['GH_TOKEN']
+          REPO=os.environ['REPO']
+          RUN_ID=os.environ['RUN_ID']
+
+          def comment(msg):
+              print(msg, flush=True)
+              req=urllib.request.Request(
+                  f'https://api.github.com/repos/{REPO}/issues/35/comments',
+                  data=json.dumps({'body':msg}).encode(), method='POST',
+                  headers={'Authorization':'Bearer '+GH,'Content-Type':'application/json','Accept':'application/vnd.github+json'})
+              with urllib.request.urlopen(req,timeout=45) as r:r.read()
+
+          if not CPANEL:
+              comment(f'MILK_FTPS_REPAIR_BLOCKED run={RUN_ID} cause=CPANEL_TOKEN_MISSING secret_values_disclosed=0')
+              raise SystemExit(1)
+          if not FTP_PASSWORD:
+              comment(f'MILK_FTPS_REPAIR_BLOCKED run={RUN_ID} cause=PTSERVIDOR_FTPS_PASSWORD_MISSING secret_values_disclosed=0')
+              raise SystemExit(1)
+
+          def uapi(module, function, params=None):
+              q=urllib.parse.urlencode(params or {})
+              url=f'https://{HOST}:2083/execute/{module}/{function}' + (('?'+q) if q else '')
+              req=urllib.request.Request(url,headers={'Authorization':f'cpanel {USER}:{CPANEL}','Accept':'application/json'})
+              with urllib.request.urlopen(req,timeout=60) as r: payload=json.loads(r.read())
+              result=payload.get('result',payload)
+              if int(result.get('status',0)) != 1:
+                  errors=result.get('errors') or payload.get('errors') or ['unknown']
+                  raise RuntimeError(f'CPANEL_{module}_{function}_FAILED detail={str(errors[0])[:180]}')
+              return result.get('data')
+
+          # Confirm the dedicated migration account exists before changing anything.
+          accounts=uapi('Ftp','list_ftp') or []
+          encoded=json.dumps(accounts,ensure_ascii=False)
+          if 'migration' not in encoded:
+              comment(f'MILK_FTPS_REPAIR_BLOCKED run={RUN_ID} cause=MIGRATION_ACCOUNT_NOT_FOUND secret_values_disclosed=0')
+              raise SystemExit(1)
+
+          # Reapply the already-stored opaque GitHub secret to exactly the dedicated migration account.
+          uapi('Ftp','passwd',{'user':FTP_USER,'domain':FTP_DOMAIN,'pass':FTP_PASSWORD})
+
+          # Independent login verification over explicit TLS.
+          ftp=ftplib.FTP_TLS(context=ssl.create_default_context(),timeout=60)
+          ftp.connect(HOST,21)
+          ftp.login(FTP_LOGIN,FTP_PASSWORD)
+          ftp.prot_p()
+          ftp.voidcmd('TYPE I')
+          ftp.pwd()
+          ftp.quit()
+          comment(f'MILK_FTPS_REPAIRED_AND_VERIFIED run={RUN_ID} account={FTP_LOGIN} tls=yes secret_values_disclosed=0')
+
+          # Resume the real filewise Takeout migration immediately.
+          req=urllib.request.Request(
+              f'https://api.github.com/repos/{REPO}/actions/workflows/mistral-expand-takeout-filewise.yml/dispatches',
+              data=json.dumps({'ref':'master'}).encode(), method='POST',
+              headers={'Authorization':'Bearer '+GH,'Content-Type':'application/json','Accept':'application/vnd.github+json'})
+          with urllib.request.urlopen(req,timeout=45) as r:r.read()
+          comment(f'MILK_TAKEOUT_FILEWISE_REDISPATCHED run={RUN_ID} drive_writes=0')
+          PY

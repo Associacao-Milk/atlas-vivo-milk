@@ -42,3 +42,7 @@
 **Pessoa:** Porquê?
 
 **MILK:** Porque tu estiveste aqui.
+
+👾
+
+<!-- hamalach/0 -->

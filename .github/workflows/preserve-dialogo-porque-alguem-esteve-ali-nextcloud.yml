@@ -7,6 +7,7 @@ on:
     paths:
       - docs/dialogos/2026-08-29-porque-alguem-esteve-ali.md
       - .github/workflows/preserve-dialogo-porque-alguem-esteve-ali-nextcloud.yml
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -112,22 +113,10 @@ jobs:
           os.chmod(cfg, 0o600)
           run(['rclone', '--config', str(cfg), 'lsd', remote + ':'], 'NEXTCLOUD_WEBDAV_PROBE_FAILED')
 
-          candidates = [
-              'Atlas Vivo MILK/Continuidade e Decisões/2026-08-27 — Reconstituição Chats e Saneamento Drive',
-              'Atlas Vivo MILK',
-              'Atlas-Vivo-MILK',
-          ]
-          dest_dir = None
-          for candidate in candidates:
-              p = subprocess.run(
-                  ['rclone', '--config', str(cfg), 'lsf', f'{remote}:{candidate}', '--max-depth', '1'],
-                  text=True, capture_output=True, check=False,
-              )
-              if p.returncode == 0:
-                  dest_dir = candidate
-                  break
-          if not dest_dir:
-              raise RuntimeError('NEXTCLOUD_EXISTING_ATLAS_AREA_NOT_FOUND')
+          # Canonical private target supplied for the migration. Creating it is idempotent;
+          # it never writes back to Google Drive and prevents stale legacy paths from being used.
+          dest_dir = 'NEXTCLOUD_ATLAS'
+          run(['rclone', '--config', str(cfg), 'mkdir', f'{remote}:{dest_dir}'], 'NEXTCLOUD_TARGET_PREPARE_FAILED')
 
           filename = '2026-08-29 — Porque alguém esteve ali — diálogo sobre a essência do Atlas.md'
           destination = f'{remote}:{dest_dir}/{filename}'

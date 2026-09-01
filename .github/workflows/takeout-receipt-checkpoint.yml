@@ -1,0 +1,61 @@
+name: Takeout receipt checkpoint
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - '.github/workflows/takeout-receipt-checkpoint.yml'
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      PTSERVIDOR_FTPS_PASSWORD: ${{ secrets.PTSERVIDOR_FTPS_PASSWORD }}
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      RUN_ID: ${{ github.run_id }}
+    steps:
+      - name: Count verified immutable receipts in staging
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import ftplib,json,os,ssl,urllib.request
+          pwd=os.environ.get('PTSERVIDOR_FTPS_PASSWORD','').strip()
+          gh=os.environ.get('GH_TOKEN','').strip(); repo=os.environ.get('REPO','milkivc/atlas-vivo-milk'); run_id=os.environ.get('RUN_ID','unknown')
+          if not pwd: raise SystemExit('FTPS_PASSWORD_MISSING')
+          ftp=ftplib.FTP_TLS(context=ssl.create_default_context(),timeout=180)
+          ftp.connect('troi.ptservidor.net',21); ftp.login('migration@associacaomilk.pt',pwd); ftp.prot_p(); ftp.voidcmd('TYPE I')
+          path='/atlas-takeout-expanded-v1/.milk-receipts'
+          ftp.cwd(path)
+          names=[n.rstrip('/').rsplit('/',1)[-1] for n in ftp.nlst()]
+          verified=invalid=bytes_total=0
+          volumes={}
+          for name in names:
+            if not name.endswith('.json'): continue
+            b=bytearray()
+            try:
+              ftp.retrbinary('RETR '+name,b.extend,blocksize=262144)
+              rec=json.loads(b)
+              if rec.get('verified') is not True or not rec.get('remote_path'):
+                invalid+=1; continue
+              verified+=1
+              size=int(rec.get('bytes') or 0); bytes_total+=size
+              vol=str(rec.get('volume') or 'unknown'); volumes[vol]=volumes.get(vol,0)+1
+            except Exception:
+              invalid+=1
+          ftp.quit()
+          by_volume=','.join(f'{k}:{v}' for k,v in sorted(volumes.items()))
+          msg=f'TAKEOUT_RECEIPT_CHECKPOINT run={run_id} verified_receipts={verified} bytes={bytes_total} invalid_receipts={invalid} by_volume={by_volume} source_writes=0'
+          print(msg)
+          if gh:
+            req=urllib.request.Request(f'https://api.github.com/repos/{repo}/issues/35/comments',data=json.dumps({'body':msg}).encode(),method='POST',headers={'Authorization':'Bearer '+gh,'Content-Type':'application/json','Accept':'application/vnd.github+json'})
+            try: urllib.request.urlopen(req,timeout=30).read()
+            except Exception: pass
+          PY

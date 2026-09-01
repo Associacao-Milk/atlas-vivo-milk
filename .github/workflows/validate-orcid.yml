@@ -117,7 +117,7 @@ jobs:
           set -euo pipefail
           umask 077
           python - <<'PY'
-          import configparser,json,os,pathlib,re,subprocess,urllib.parse
+          import configparser,io,json,os,pathlib,re,subprocess,urllib.parse
           root=pathlib.Path('deploy/atlas-public')
           if not root.is_dir(): raise RuntimeError('ATLAS_PUBLIC_SOURCE_MISSING')
           raw=os.environ.get('NEXTCLOUD_KEY','').strip(); base=os.environ.get('NEXTCLOUD_BASE_URL','').strip(); user=os.environ.get('NEXTCLOUD_USER','').strip(); password=os.environ.get('NEXTCLOUD_APP_PASSWORD','').strip(); tmp=pathlib.Path(os.environ.get('RUNNER_TEMP','/tmp')); cfg=tmp/'nextcloud-rclone.conf'
@@ -130,10 +130,17 @@ jobs:
           def obscure(v): return run(['rclone','obscure',v],'RCLONE_OBSCURE_FAILED').strip()
           remote=None
           if raw.startswith('[') and re.search(r'(?im)^\s*type\s*=\s*webdav\s*$',raw):
-              cfg.write_text(raw.rstrip()+'\n',encoding='utf-8'); parser=configparser.ConfigParser(); parser.read_string(raw)
+              parser=configparser.ConfigParser(interpolation=None); parser.read_string(raw)
               for section in parser.sections():
-                  if parser.get(section,'type',fallback='').strip()=='webdav': remote=section; break
+                  if parser.get(section,'type',fallback='').strip()=='webdav':
+                      remote=section
+                      secret_user=parser.get(section,'user',fallback='').strip()
+                      if not secret_user: raise RuntimeError('NEXTCLOUD_USER_MISSING_IN_REMOTE')
+                      parser.set(section,'url','https://associacaomilk.pt/nextcloud/remote.php/dav/files/'+urllib.parse.quote(secret_user,safe='')+'/')
+                      parser.set(section,'vendor','nextcloud')
+                      break
               if not remote: raise RuntimeError('NEXTCLOUD_WEBDAV_REMOTE_MISSING')
+              with cfg.open('w',encoding='utf-8') as fh: parser.write(fh)
           else:
               if raw:
                   try:
@@ -147,10 +154,10 @@ jobs:
                               k,v=line.split('=',1); pairs[k.strip().upper()]=v.strip()
                       base=base or pairs.get('NEXTCLOUD_BASE_URL',''); user=user or pairs.get('NEXTCLOUD_USER',''); password=password or pairs.get('NEXTCLOUD_APP_PASSWORD','')
                       if not base and not user and not password and '\n' not in raw: password=raw
-              base=base or 'https://associacaomilk.pt/nextcloud'; user=user or 'admin'
+              base='https://associacaomilk.pt/nextcloud'; user=user or 'admin'
               if not password: raise RuntimeError('NEXTCLOUD_CREDENTIALS_INCOMPLETE')
-              if '/remote.php/' not in base: base=base.rstrip('/')+'/remote.php/dav/files/'+urllib.parse.quote(user,safe='')+'/'
-              cfg.write_text('[nextcloud]\ntype = webdav\nurl = '+base.rstrip('/')+'/\nvendor = nextcloud\nuser = '+user+'\npass = '+obscure(password)+'\n',encoding='utf-8'); remote='nextcloud'
+              base=base.rstrip('/')+'/remote.php/dav/files/'+urllib.parse.quote(user,safe='')+'/'
+              cfg.write_text('[nextcloud]\ntype = webdav\nurl = '+base+'\nvendor = nextcloud\nuser = '+user+'\npass = '+obscure(password)+'\n',encoding='utf-8'); remote='nextcloud'
           os.chmod(cfg,0o600)
           run(['rclone','--config',str(cfg),'lsd',remote+':'],'NEXTCLOUD_WEBDAV_PROBE_FAILED')
           dest='NEXTCLOUD_ATLAS/CAMADA_PUBLICA_WEBAPP_WORK'

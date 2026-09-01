@@ -1,0 +1,140 @@
+name: Atlas Drive staging to Nextcloud server import
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - '.github/workflows/nextcloud-server-import.yml'
+  schedule:
+    - cron: '17 * * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: atlas-nextcloud-server-import
+  cancel-in-progress: false
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      SSH_HOST: troi.ptservidor.net
+      SSH_USER: associ16
+      SSH_PORT: ${{ secrets.PTSERVIDOR_SSH_PORT || secrets.SSH_PORT || '22' }}
+      SSH_KEY: ${{ secrets.PTSERVIDOR_SSH_PRIVATE_KEY || secrets.SSH_PRIVATE_KEY || secrets.CPANEL_SSH_KEY }}
+      SSH_KNOWN_HOSTS: ${{ secrets.PTSERVIDOR_KNOWN_HOSTS || secrets.SSH_KNOWN_HOSTS }}
+    steps:
+      - name: Validate strict SSH route
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$SSH_KEY" || { echo 'NEXTCLOUD_IMPORT_BLOCKED cause=SSH_PRIVATE_KEY_MISSING'; exit 75; }
+          test -n "$SSH_KNOWN_HOSTS" || { echo 'NEXTCLOUD_IMPORT_BLOCKED cause=SSH_KNOWN_HOSTS_MISSING'; exit 75; }
+          case "$SSH_PORT" in (*[!0-9]*|'') echo 'NEXTCLOUD_IMPORT_BLOCKED cause=SSH_PORT_INVALID'; exit 75;; esac
+          install -d -m 0700 "$HOME/.ssh"
+          printf '%s\n' "$SSH_KEY" > "$HOME/.ssh/id_atlas"
+          chmod 0600 "$HOME/.ssh/id_atlas"
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          chmod 0600 "$HOME/.ssh/known_hosts"
+
+      - name: Import verified staging into existing Nextcloud with occ
+        shell: bash
+        run: |
+          set -euo pipefail
+          ssh -i "$HOME/.ssh/id_atlas" -p "$SSH_PORT" \
+            -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes \
+            "$SSH_USER@$SSH_HOST" 'bash -s' <<'REMOTE'
+          set -euo pipefail
+          HOME_ROOT=/home/associ16
+
+          php_bin="$(command -v php || true)"
+          [ -n "$php_bin" ] || { echo 'NEXTCLOUD_IMPORT_BLOCKED cause=PHP_CLI_MISSING'; exit 76; }
+
+          occ=''
+          for candidate in \
+            "$HOME_ROOT/public_html/nextcloud/occ" \
+            "$HOME_ROOT/public_html/nextclud/occ" \
+            "$HOME_ROOT/nextcloud/occ" \
+            "$HOME_ROOT/nextclud/occ"; do
+            if [ -f "$candidate" ]; then occ="$candidate"; break; fi
+          done
+          if [ -z "$occ" ]; then
+            occ="$(find "$HOME_ROOT" -maxdepth 5 -type f -name occ -path '*nextcl*' 2>/dev/null | head -n 1 || true)"
+          fi
+          [ -n "$occ" ] || { echo 'NEXTCLOUD_IMPORT_BLOCKED cause=NEXTCLOUD_OCC_NOT_FOUND'; exit 77; }
+
+          appdir="$(dirname "$occ")"
+          cd "$appdir"
+          "$php_bin" occ status >/tmp/atlas-nextcloud-status.txt 2>&1 || {
+            tail -n 20 /tmp/atlas-nextcloud-status.txt
+            echo 'NEXTCLOUD_IMPORT_BLOCKED cause=OCC_STATUS_FAILED'
+            exit 78
+          }
+
+          datadir="$("$php_bin" occ config:system:get datadirectory 2>/dev/null | tail -n 1 | tr -d '\r')"
+          [ -n "$datadir" ] && [ -d "$datadir" ] || { echo 'NEXTCLOUD_IMPORT_BLOCKED cause=DATADIR_NOT_FOUND'; exit 79; }
+          case "$datadir" in
+            "$HOME_ROOT"/*) ;;
+            *) echo 'NEXTCLOUD_IMPORT_BLOCKED cause=DATADIR_OUTSIDE_ACCOUNT_GUARD'; exit 79;;
+          esac
+
+          source=''
+          for candidate in \
+            "$HOME_ROOT/atlas-drive-filewise-v1" \
+            "$HOME_ROOT/atlas_milk_private/migration/atlas-drive-filewise-v1" \
+            "$HOME_ROOT/atlas_milk_private/atlas-drive-filewise-v1" \
+            "$HOME_ROOT/atlas-migration-private/atlas-drive-filewise-v1"; do
+            if [ -d "$candidate" ]; then source="$candidate"; break; fi
+          done
+          if [ -z "$source" ]; then
+            source="$(find "$HOME_ROOT" -maxdepth 7 -type d -name atlas-drive-filewise-v1 2>/dev/null | head -n 1 || true)"
+          fi
+          [ -n "$source" ] && [ -d "$source" ] || { echo 'NEXTCLOUD_IMPORT_BLOCKED cause=FILEWISE_STAGING_NOT_FOUND'; exit 80; }
+
+          target_user=''
+          if "$php_bin" occ user:info admin >/dev/null 2>&1; then
+            target_user='admin'
+          elif "$php_bin" occ user:info atlas_migration >/dev/null 2>&1; then
+            target_user='atlas_migration'
+          else
+            export OC_PASS="$(openssl rand -base64 48 | tr -d '\n')"
+            "$php_bin" occ user:add --password-from-env --display-name 'Atlas Vivo MILK Migration' atlas_migration >/dev/null
+            unset OC_PASS
+            "$php_bin" occ user:setting atlas_migration settings email milk@associacaomilk.pt >/dev/null 2>&1 || true
+            target_user='atlas_migration'
+          fi
+
+          destination="$datadir/$target_user/files/ATLAS_DRIVE_MIGRADO"
+          mkdir -p "$destination"
+
+          source_kb="$(du -sk "$source" | awk '{print $1}')"
+          free_kb="$(df -Pk "$datadir" | awk 'NR==2 {print $4}')"
+          reserve_kb=524288
+          if [ "$free_kb" -le $((source_kb + reserve_kb)) ]; then
+            echo "NEXTCLOUD_IMPORT_BLOCKED cause=INSUFFICIENT_SPACE source_kb=$source_kb free_kb=$free_kb reserve_kb=$reserve_kb"
+            exit 81
+          fi
+
+          rsync -a --ignore-existing --exclude='/.milk-receipts/' "$source/" "$destination/"
+
+          "$php_bin" occ files:scan --path="$target_user/files/ATLAS_DRIVE_MIGRADO" --unscanned >/tmp/atlas-nextcloud-scan.txt 2>&1 || \
+            "$php_bin" occ files:scan --path="$target_user/files/ATLAS_DRIVE_MIGRADO" >/tmp/atlas-nextcloud-scan.txt 2>&1
+
+          source_files="$(find "$source" -type f ! -path '*/.milk-receipts/*' | wc -l | tr -d ' ')"
+          destination_files="$(find "$destination" -type f | wc -l | tr -d ' ')"
+          source_bytes="$(find "$source" -type f ! -path '*/.milk-receipts/*' -printf '%s\n' 2>/dev/null | awk '{s+=$1} END {printf "%.0f",s+0}')"
+          destination_bytes="$(find "$destination" -type f -printf '%s\n' 2>/dev/null | awk '{s+=$1} END {printf "%.0f",s+0}')"
+
+          echo 'NEXTCLOUD_SERVER_IMPORT_VERIFIED'
+          echo "appdir=$appdir"
+          echo "datadir=$datadir"
+          echo "source_files=$source_files"
+          echo "destination_files=$destination_files"
+          echo "source_bytes=$source_bytes"
+          echo "destination_bytes=$destination_bytes"
+          echo 'drive_writes=0'
+          echo 'remote_deletes=0'
+          REMOTE

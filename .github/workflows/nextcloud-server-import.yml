@@ -23,6 +23,7 @@ jobs:
     timeout-minutes: 180
     env:
       PTSERVIDOR_FTPS_PASSWORD: ${{ secrets.PTSERVIDOR_FTPS_PASSWORD }}
+      PTSERVIDOR_FTP_WEBDAV: ${{ secrets.PTSERVIDOR_FTP_WEBDAV }}
       NEXTCLOUD_BASE_URL: ${{ secrets.NEXTCLOUD_BASE_URL }}
       NEXTCLOUD_USER: ${{ secrets.NEXTCLOUD_USER }}
       NEXTCLOUD_APP_PASSWORD: ${{ secrets.NEXTCLOUD_APP_PASSWORD }}
@@ -43,13 +44,14 @@ jobs:
         run: |
           set -euo pipefail
           python - <<'PY'
-          import configparser, ftplib, json, os, pathlib, re, ssl, subprocess, urllib.parse, urllib.request
+          import ftplib, json, os, pathlib, ssl, subprocess, urllib.parse, urllib.request
 
           FTPS_PASSWORD=os.environ.get('PTSERVIDOR_FTPS_PASSWORD','').strip()
-          BASE=os.environ.get('NEXTCLOUD_BASE_URL','').strip()
-          USER=os.environ.get('NEXTCLOUD_USER','').strip()
+          LEGACY_WEBDAV=os.environ.get('PTSERVIDOR_FTP_WEBDAV','').strip()
+          BASE=(os.environ.get('NEXTCLOUD_BASE_URL','').strip() or 'https://associacaomilk.pt/nextcloud')
+          USER_HINT=os.environ.get('NEXTCLOUD_USER','').strip()
           APP_PASSWORD=os.environ.get('NEXTCLOUD_APP_PASSWORD','').strip()
-          RAW=os.environ.get('NEXTCLOUD_KEY','').strip()
+          NEXTCLOUD_KEY=os.environ.get('NEXTCLOUD_KEY','').strip()
           GH=os.environ.get('GH_TOKEN','').strip()
           REPO=os.environ.get('REPO','milkivc/atlas-vivo-milk')
           RUN_ID=os.environ.get('RUN_ID','unknown')
@@ -83,90 +85,79 @@ jobs:
           if not FTPS_PASSWORD:
               raise RuntimeError('PTSERVIDOR_FTPS_PASSWORD_MISSING')
 
-          # Recover only non-secret routing metadata from legacy NEXTCLOUD_KEY when possible.
-          raw_config_section=None
-          if RAW:
-              if RAW.startswith('[') and re.search(r'(?im)^\s*type\s*=\s*webdav\s*$',RAW):
-                  parser=configparser.ConfigParser()
-                  try:
-                      parser.read_string(RAW)
-                      for section in parser.sections():
-                          if parser.get(section,'type',fallback='').strip()=='webdav':
-                              raw_config_section=section
-                              break
-                  except Exception:
-                      raw_config_section=None
-              elif RAW.startswith('{'):
-                  try:
-                      obj=json.loads(RAW)
-                      if isinstance(obj,dict):
-                          BASE=BASE or str(obj.get('base_url') or obj.get('url') or '')
-                          USER=USER or str(obj.get('user') or obj.get('username') or '')
-                          APP_PASSWORD=APP_PASSWORD or str(obj.get('app_password') or obj.get('password') or '')
-                  except Exception: pass
-              elif '\n' not in RAW and '=' not in RAW:
-                  APP_PASSWORD=APP_PASSWORD or RAW
-
-          # Current installation confirmed by PTServidor: path-based Nextcloud on associacaomilk.pt/nextcloud.
-          BASE=BASE or 'https://associacaomilk.pt/nextcloud'
-          USER=USER or 'admin'
-
           parsed=urllib.parse.urlsplit(BASE)
-          if parsed.scheme!='https':
-              raise RuntimeError('NEXTCLOUD_HTTPS_REQUIRED')
+          if parsed.scheme!='https': raise RuntimeError('NEXTCLOUD_HTTPS_REQUIRED')
           if parsed.hostname=='associacaomilk.pt' and not parsed.path.startswith('/nextcloud'):
               raise RuntimeError('NEXTCLOUD_MAIN_SITE_GUARD')
           if parsed.hostname=='atlas.associacaomilk.pt':
               raise RuntimeError('NEXTCLOUD_ATLAS_WEBROOT_GUARD')
 
-          # Prefer discrete current secrets; if unavailable, test a legacy rclone config without revealing it.
-          if APP_PASSWORD:
-              if '/remote.php/' in BASE:
-                  endpoint=BASE.rstrip('/')+'/'
-              else:
-                  endpoint=BASE.rstrip('/')+'/remote.php/dav/files/'+urllib.parse.quote(USER,safe='')+'/'
-              CFG.write_text(
-                  '[nextcloud]\n'
-                  'type = webdav\n'
-                  'url = '+endpoint+'\n'
-                  'vendor = nextcloud\n'
-                  'user = '+USER+'\n'
-                  'pass = '+obscure(APP_PASSWORD)+'\n',encoding='utf-8')
-              nc_remote='nextcloud'
-          elif raw_config_section:
-              CFG.write_text(RAW.rstrip()+'\n',encoding='utf-8')
-              nc_remote=raw_config_section
-          else:
-              raise RuntimeError('NEXTCLOUD_CREDENTIALS_INCOMPLETE missing=app_password')
+          users=[]
+          for u in (USER_HINT,'admin','milk','associ16','migration@associacaomilk.pt'):
+              if u and u not in users: users.append(u)
+          secrets=[]
+          for label,value in (
+              ('NEXTCLOUD_APP_PASSWORD',APP_PASSWORD),
+              ('NEXTCLOUD_KEY',NEXTCLOUD_KEY),
+              ('PTSERVIDOR_FTP_WEBDAV',LEGACY_WEBDAV),
+          ):
+              if value and all(value!=v for _,v in secrets): secrets.append((label,value))
+          if not secrets:
+              raise RuntimeError('NEXTCLOUD_CREDENTIALS_MISSING')
 
-          with CFG.open('a',encoding='utf-8') as h:
-              h.write(
-                  '\n[ftps]\n'
-                  'type = ftp\n'
-                  'host = troi.ptservidor.net\n'
-                  'port = 21\n'
-                  'user = migration@associacaomilk.pt\n'
-                  'pass = '+obscure(FTPS_PASSWORD)+'\n'
-                  'explicit_tls = true\n')
+          winner=None
+          attempts=0
+          for secret_label,password in secrets:
+              for user in users:
+                  attempts+=1
+                  endpoint=BASE.rstrip('/')+'/remote.php/dav/files/'+urllib.parse.quote(user,safe='')+'/'
+                  CFG.write_text(
+                      '[nextcloud]\n'
+                      'type = webdav\n'
+                      'url = '+endpoint+'\n'
+                      'vendor = nextcloud\n'
+                      'user = '+user+'\n'
+                      'pass = '+obscure(password)+'\n',encoding='utf-8')
+                  os.chmod(CFG,0o600)
+                  p=subprocess.run(['rclone','--config',str(CFG),'lsd','nextcloud:'],text=True,capture_output=True,check=False)
+                  if p.returncode==0:
+                      winner=(secret_label,password,user,endpoint)
+                      break
+              if winner: break
+
+          if not winner:
+              comment(f'NEXTCLOUD_AUTH_BLOCKED run={RUN_ID} attempts={attempts} endpoint=associacaomilk.pt/nextcloud secret_values_disclosed=0')
+              raise RuntimeError('NEXTCLOUD_WEBDAV_AUTH_FAILED_ALL_EXISTING_ROUTES')
+
+          secret_label,password,user,endpoint=winner
+          CFG.write_text(
+              '[nextcloud]\n'
+              'type = webdav\n'
+              'url = '+endpoint+'\n'
+              'vendor = nextcloud\n'
+              'user = '+user+'\n'
+              'pass = '+obscure(password)+'\n'
+              '\n[ftps]\n'
+              'type = ftp\n'
+              'host = troi.ptservidor.net\n'
+              'port = 21\n'
+              'user = migration@associacaomilk.pt\n'
+              'pass = '+obscure(FTPS_PASSWORD)+'\n'
+              'explicit_tls = true\n',encoding='utf-8')
           os.chmod(CFG,0o600)
+          comment(f'NEXTCLOUD_WEBDAV_AUTH_VERIFIED run={RUN_ID} user={user} credential_route={secret_label} credentials_disclosed=0')
 
-          run(['rclone','--config',str(CFG),'lsd',nc_remote+':'],'NEXTCLOUD_WEBDAV_AUTH_FAILED')
-          comment(f'NEXTCLOUD_WEBDAV_AUTH_VERIFIED run={RUN_ID} route=path_based credentials_disclosed=0')
-
-          # Read receipt JSONs directly from FTPS. Only verified receipts enter the transfer list.
           ftp=ftplib.FTP_TLS(context=ssl.create_default_context(),timeout=180)
           ftp.connect('troi.ptservidor.net',21)
           ftp.login('migration@associacaomilk.pt',FTPS_PASSWORD)
           ftp.prot_p(); ftp.voidcmd('TYPE I')
           receipt_dir=f'/{SOURCE_ROOT}/{RECEIPTS}'
           try:
-              ftp.cwd(receipt_dir)
-              names=ftp.nlst()
+              ftp.cwd(receipt_dir); names=ftp.nlst()
           except Exception as exc:
-              ftp.quit()
-              raise RuntimeError('FTPS_RECEIPT_DIRECTORY_UNAVAILABLE '+str(exc)[:180])
+              ftp.quit(); raise RuntimeError('FTPS_RECEIPT_DIRECTORY_UNAVAILABLE '+str(exc)[:180])
 
-          verified_paths=set(); verified_bytes=0; bad_receipts=0
+          verified_paths=set(); receipt_bytes={}; bad_receipts=0
           for raw_name in names:
               name=raw_name.rstrip('/').rsplit('/',1)[-1]
               if not name.endswith('.json'): continue
@@ -184,7 +175,7 @@ jobs:
                   if not rel or rel.startswith(RECEIPTS+'/') or '/../' in '/'+rel+'/' or rel.startswith('../'):
                       bad_receipts+=1; continue
                   verified_paths.add(rel)
-                  verified_bytes+=int(rec.get('bytes') or 0)
+                  receipt_bytes[rel]=int(rec.get('bytes') or 0)
               except Exception:
                   bad_receipts+=1
           ftp.quit()
@@ -198,28 +189,29 @@ jobs:
               'rclone','--config',str(CFG),'size','ftps:'+SOURCE_ROOT,
               '--files-from',str(FILES),'--json'
           ],'FTPS_VERIFIED_SET_SIZE_FAILED'))
+          expected_receipt_bytes=sum(receipt_bytes.get(p,0) for p in verified_paths)
+          if source.get('count')!=len(verified_paths):
+              raise RuntimeError('FTPS_RECEIPT_SOURCE_COUNT_MISMATCH')
 
           comment(
               f'NEXTCLOUD_IMPORT_DISCOVERED run={RUN_ID} verified_receipts={len(verified_paths)} '
-              f'source_count={source.get("count",0)} source_bytes={source.get("bytes",0)} bad_receipts={bad_receipts} source_writes=0')
+              f'source_count={source.get("count",0)} source_bytes={source.get("bytes",0)} '
+              f'receipt_bytes={expected_receipt_bytes} bad_receipts={bad_receipts} source_writes=0')
 
-          destination=nc_remote+':'+DESTINATION
+          destination='nextcloud:'+DESTINATION
           run([
               'rclone','--config',str(CFG),'copy','ftps:'+SOURCE_ROOT,destination,
               '--files-from',str(FILES),'--transfers','4','--checkers','8',
               '--retries','6','--low-level-retries','20','--create-empty-src-dirs'
           ],'NEXTCLOUD_TRANSFER_FAILED',capture=False)
-
           run([
               'rclone','--config',str(CFG),'check','ftps:'+SOURCE_ROOT,destination,
               '--files-from',str(FILES),'--one-way','--download','--checkers','6','--retries','4'
           ],'NEXTCLOUD_READBACK_CHECK_FAILED',capture=False)
-
           dest=json.loads(run([
               'rclone','--config',str(CFG),'size',destination,
               '--files-from',str(FILES),'--json'
           ],'NEXTCLOUD_DESTINATION_SIZE_FAILED'))
-
           if source.get('count')!=dest.get('count') or source.get('bytes')!=dest.get('bytes'):
               raise RuntimeError('NEXTCLOUD_RECONCILIATION_MISMATCH')
 

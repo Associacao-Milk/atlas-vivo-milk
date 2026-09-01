@@ -144,3 +144,5 @@ jobs:
           print('source_writes=0')
           print('remote_deletes=0')
           PY
+
+# Trigger after workflow registration; target remains private Nextcloud staging only.

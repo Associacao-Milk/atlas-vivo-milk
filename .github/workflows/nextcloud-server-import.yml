@@ -1,4 +1,4 @@
-name: Atlas Drive staging to Nextcloud server import
+name: Atlas verified FTPS to Nextcloud import
 
 on:
   workflow_dispatch:
@@ -7,10 +7,11 @@ on:
     paths:
       - '.github/workflows/nextcloud-server-import.yml'
   schedule:
-    - cron: '17 * * * *'
+    - cron: '27 * * * *'
 
 permissions:
   contents: read
+  issues: write
 
 concurrency:
   group: atlas-nextcloud-server-import
@@ -19,122 +20,211 @@ concurrency:
 jobs:
   import:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 180
     env:
-      SSH_HOST: troi.ptservidor.net
-      SSH_USER: associ16
-      SSH_PORT: ${{ secrets.PTSERVIDOR_SSH_PORT || secrets.SSH_PORT || '22' }}
-      SSH_KEY: ${{ secrets.PTSERVIDOR_SSH_PRIVATE_KEY || secrets.SSH_PRIVATE_KEY || secrets.CPANEL_SSH_KEY }}
-      SSH_KNOWN_HOSTS: ${{ secrets.PTSERVIDOR_KNOWN_HOSTS || secrets.SSH_KNOWN_HOSTS }}
+      PTSERVIDOR_FTPS_PASSWORD: ${{ secrets.PTSERVIDOR_FTPS_PASSWORD }}
+      NEXTCLOUD_BASE_URL: ${{ secrets.NEXTCLOUD_BASE_URL }}
+      NEXTCLOUD_USER: ${{ secrets.NEXTCLOUD_USER }}
+      NEXTCLOUD_APP_PASSWORD: ${{ secrets.NEXTCLOUD_APP_PASSWORD }}
+      NEXTCLOUD_KEY: ${{ secrets.NEXTCLOUD_KEY }}
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      RUN_ID: ${{ github.run_id }}
     steps:
-      - name: Validate strict SSH route
+      - name: Install transfer client
         shell: bash
         run: |
           set -euo pipefail
-          test -n "$SSH_KEY" || { echo 'NEXTCLOUD_IMPORT_BLOCKED cause=SSH_PRIVATE_KEY_MISSING'; exit 75; }
-          test -n "$SSH_KNOWN_HOSTS" || { echo 'NEXTCLOUD_IMPORT_BLOCKED cause=SSH_KNOWN_HOSTS_MISSING'; exit 75; }
-          case "$SSH_PORT" in (*[!0-9]*|'') echo 'NEXTCLOUD_IMPORT_BLOCKED cause=SSH_PORT_INVALID'; exit 75;; esac
-          install -d -m 0700 "$HOME/.ssh"
-          printf '%s\n' "$SSH_KEY" > "$HOME/.ssh/id_atlas"
-          chmod 0600 "$HOME/.ssh/id_atlas"
-          printf '%s\n' "$SSH_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
-          chmod 0600 "$HOME/.ssh/known_hosts"
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq rclone
 
-      - name: Import verified staging into existing Nextcloud with occ
+      - name: Import only FTPS objects with verified receipts into Nextcloud
         shell: bash
         run: |
           set -euo pipefail
-          ssh -i "$HOME/.ssh/id_atlas" -p "$SSH_PORT" \
-            -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes \
-            "$SSH_USER@$SSH_HOST" 'bash -s' <<'REMOTE'
-          set -euo pipefail
-          HOME_ROOT=/home/associ16
+          python - <<'PY'
+          import configparser, ftplib, json, os, pathlib, re, ssl, subprocess, urllib.parse, urllib.request
 
-          php_bin="$(command -v php || true)"
-          [ -n "$php_bin" ] || { echo 'NEXTCLOUD_IMPORT_BLOCKED cause=PHP_CLI_MISSING'; exit 76; }
+          FTPS_PASSWORD=os.environ.get('PTSERVIDOR_FTPS_PASSWORD','').strip()
+          BASE=os.environ.get('NEXTCLOUD_BASE_URL','').strip()
+          USER=os.environ.get('NEXTCLOUD_USER','').strip()
+          APP_PASSWORD=os.environ.get('NEXTCLOUD_APP_PASSWORD','').strip()
+          RAW=os.environ.get('NEXTCLOUD_KEY','').strip()
+          GH=os.environ.get('GH_TOKEN','').strip()
+          REPO=os.environ.get('REPO','milkivc/atlas-vivo-milk')
+          RUN_ID=os.environ.get('RUN_ID','unknown')
+          TMP=pathlib.Path(os.environ.get('RUNNER_TEMP','/tmp'))
+          CFG=TMP/'rclone-nextcloud.conf'
+          FILES=TMP/'verified-ftps-files.txt'
+          SOURCE_ROOT='atlas-takeout-expanded-v1'
+          RECEIPTS='.milk-receipts'
+          DESTINATION='Atlas Vivo MILK/.staging/Drive Takeout'
 
-          occ=''
-          for candidate in \
-            "$HOME_ROOT/public_html/nextcloud/occ" \
-            "$HOME_ROOT/public_html/nextclud/occ" \
-            "$HOME_ROOT/nextcloud/occ" \
-            "$HOME_ROOT/nextclud/occ"; do
-            if [ -f "$candidate" ]; then occ="$candidate"; break; fi
-          done
-          if [ -z "$occ" ]; then
-            occ="$(find "$HOME_ROOT" -maxdepth 5 -type f -name occ -path '*nextcl*' 2>/dev/null | head -n 1 || true)"
-          fi
-          [ -n "$occ" ] || { echo 'NEXTCLOUD_IMPORT_BLOCKED cause=NEXTCLOUD_OCC_NOT_FOUND'; exit 77; }
+          def comment(msg):
+              print(msg,flush=True)
+              if not GH: return
+              req=urllib.request.Request(
+                  f'https://api.github.com/repos/{REPO}/issues/35/comments',
+                  data=json.dumps({'body':msg}).encode(),method='POST',
+                  headers={'Authorization':'Bearer '+GH,'Content-Type':'application/json','Accept':'application/vnd.github+json'})
+              try: urllib.request.urlopen(req,timeout=45).read()
+              except Exception: pass
 
-          appdir="$(dirname "$occ")"
-          cd "$appdir"
-          "$php_bin" occ status >/tmp/atlas-nextcloud-status.txt 2>&1 || {
-            tail -n 20 /tmp/atlas-nextcloud-status.txt
-            echo 'NEXTCLOUD_IMPORT_BLOCKED cause=OCC_STATUS_FAILED'
-            exit 78
-          }
+          def run(args,label,capture=True):
+              p=subprocess.run(args,text=True,capture_output=capture,check=False)
+              if p.returncode:
+                  detail=((p.stderr or p.stdout or '').splitlines()[-1:] or ['unknown'])[0][:300]
+                  raise RuntimeError(label+' detail='+detail)
+              return p.stdout if capture else ''
 
-          datadir="$("$php_bin" occ config:system:get datadirectory 2>/dev/null | tail -n 1 | tr -d '\r')"
-          [ -n "$datadir" ] && [ -d "$datadir" ] || { echo 'NEXTCLOUD_IMPORT_BLOCKED cause=DATADIR_NOT_FOUND'; exit 79; }
-          case "$datadir" in
-            "$HOME_ROOT"/*) ;;
-            *) echo 'NEXTCLOUD_IMPORT_BLOCKED cause=DATADIR_OUTSIDE_ACCOUNT_GUARD'; exit 79;;
-          esac
+          def obscure(value):
+              return run(['rclone','obscure',value],'RCLONE_OBSCURE_FAILED').strip()
 
-          source=''
-          for candidate in \
-            "$HOME_ROOT/atlas-drive-filewise-v1" \
-            "$HOME_ROOT/atlas_milk_private/migration/atlas-drive-filewise-v1" \
-            "$HOME_ROOT/atlas_milk_private/atlas-drive-filewise-v1" \
-            "$HOME_ROOT/atlas-migration-private/atlas-drive-filewise-v1"; do
-            if [ -d "$candidate" ]; then source="$candidate"; break; fi
-          done
-          if [ -z "$source" ]; then
-            source="$(find "$HOME_ROOT" -maxdepth 7 -type d -name atlas-drive-filewise-v1 2>/dev/null | head -n 1 || true)"
-          fi
-          [ -n "$source" ] && [ -d "$source" ] || { echo 'NEXTCLOUD_IMPORT_BLOCKED cause=FILEWISE_STAGING_NOT_FOUND'; exit 80; }
+          if not FTPS_PASSWORD:
+              raise RuntimeError('PTSERVIDOR_FTPS_PASSWORD_MISSING')
 
-          target_user=''
-          if "$php_bin" occ user:info admin >/dev/null 2>&1; then
-            target_user='admin'
-          elif "$php_bin" occ user:info atlas_migration >/dev/null 2>&1; then
-            target_user='atlas_migration'
-          else
-            export OC_PASS="$(openssl rand -base64 48 | tr -d '\n')"
-            "$php_bin" occ user:add --password-from-env --display-name 'Atlas Vivo MILK Migration' atlas_migration >/dev/null
-            unset OC_PASS
-            "$php_bin" occ user:setting atlas_migration settings email milk@associacaomilk.pt >/dev/null 2>&1 || true
-            target_user='atlas_migration'
-          fi
+          # Recover only non-secret routing metadata from legacy NEXTCLOUD_KEY when possible.
+          raw_config_section=None
+          if RAW:
+              if RAW.startswith('[') and re.search(r'(?im)^\s*type\s*=\s*webdav\s*$',RAW):
+                  parser=configparser.ConfigParser()
+                  try:
+                      parser.read_string(RAW)
+                      for section in parser.sections():
+                          if parser.get(section,'type',fallback='').strip()=='webdav':
+                              raw_config_section=section
+                              break
+                  except Exception:
+                      raw_config_section=None
+              elif RAW.startswith('{'):
+                  try:
+                      obj=json.loads(RAW)
+                      if isinstance(obj,dict):
+                          BASE=BASE or str(obj.get('base_url') or obj.get('url') or '')
+                          USER=USER or str(obj.get('user') or obj.get('username') or '')
+                          APP_PASSWORD=APP_PASSWORD or str(obj.get('app_password') or obj.get('password') or '')
+                  except Exception: pass
+              elif '\n' not in RAW and '=' not in RAW:
+                  APP_PASSWORD=APP_PASSWORD or RAW
 
-          destination="$datadir/$target_user/files/ATLAS_DRIVE_MIGRADO"
-          mkdir -p "$destination"
+          # Current installation confirmed by PTServidor: path-based Nextcloud on associacaomilk.pt/nextcloud.
+          BASE=BASE or 'https://associacaomilk.pt/nextcloud'
+          USER=USER or 'admin'
 
-          source_kb="$(du -sk "$source" | awk '{print $1}')"
-          free_kb="$(df -Pk "$datadir" | awk 'NR==2 {print $4}')"
-          reserve_kb=524288
-          if [ "$free_kb" -le $((source_kb + reserve_kb)) ]; then
-            echo "NEXTCLOUD_IMPORT_BLOCKED cause=INSUFFICIENT_SPACE source_kb=$source_kb free_kb=$free_kb reserve_kb=$reserve_kb"
-            exit 81
-          fi
+          parsed=urllib.parse.urlsplit(BASE)
+          if parsed.scheme!='https':
+              raise RuntimeError('NEXTCLOUD_HTTPS_REQUIRED')
+          if parsed.hostname=='associacaomilk.pt' and not parsed.path.startswith('/nextcloud'):
+              raise RuntimeError('NEXTCLOUD_MAIN_SITE_GUARD')
+          if parsed.hostname=='atlas.associacaomilk.pt':
+              raise RuntimeError('NEXTCLOUD_ATLAS_WEBROOT_GUARD')
 
-          rsync -a --ignore-existing --exclude='/.milk-receipts/' "$source/" "$destination/"
+          # Prefer discrete current secrets; if unavailable, test a legacy rclone config without revealing it.
+          if APP_PASSWORD:
+              if '/remote.php/' in BASE:
+                  endpoint=BASE.rstrip('/')+'/'
+              else:
+                  endpoint=BASE.rstrip('/')+'/remote.php/dav/files/'+urllib.parse.quote(USER,safe='')+'/'
+              CFG.write_text(
+                  '[nextcloud]\n'
+                  'type = webdav\n'
+                  'url = '+endpoint+'\n'
+                  'vendor = nextcloud\n'
+                  'user = '+USER+'\n'
+                  'pass = '+obscure(APP_PASSWORD)+'\n',encoding='utf-8')
+              nc_remote='nextcloud'
+          elif raw_config_section:
+              CFG.write_text(RAW.rstrip()+'\n',encoding='utf-8')
+              nc_remote=raw_config_section
+          else:
+              raise RuntimeError('NEXTCLOUD_CREDENTIALS_INCOMPLETE missing=app_password')
 
-          "$php_bin" occ files:scan --path="$target_user/files/ATLAS_DRIVE_MIGRADO" --unscanned >/tmp/atlas-nextcloud-scan.txt 2>&1 || \
-            "$php_bin" occ files:scan --path="$target_user/files/ATLAS_DRIVE_MIGRADO" >/tmp/atlas-nextcloud-scan.txt 2>&1
+          with CFG.open('a',encoding='utf-8') as h:
+              h.write(
+                  '\n[ftps]\n'
+                  'type = ftp\n'
+                  'host = troi.ptservidor.net\n'
+                  'port = 21\n'
+                  'user = migration@associacaomilk.pt\n'
+                  'pass = '+obscure(FTPS_PASSWORD)+'\n'
+                  'explicit_tls = true\n')
+          os.chmod(CFG,0o600)
 
-          source_files="$(find "$source" -type f ! -path '*/.milk-receipts/*' | wc -l | tr -d ' ')"
-          destination_files="$(find "$destination" -type f | wc -l | tr -d ' ')"
-          source_bytes="$(find "$source" -type f ! -path '*/.milk-receipts/*' -printf '%s\n' 2>/dev/null | awk '{s+=$1} END {printf "%.0f",s+0}')"
-          destination_bytes="$(find "$destination" -type f -printf '%s\n' 2>/dev/null | awk '{s+=$1} END {printf "%.0f",s+0}')"
+          run(['rclone','--config',str(CFG),'lsd',nc_remote+':'],'NEXTCLOUD_WEBDAV_AUTH_FAILED')
+          comment(f'NEXTCLOUD_WEBDAV_AUTH_VERIFIED run={RUN_ID} route=path_based credentials_disclosed=0')
 
-          echo 'NEXTCLOUD_SERVER_IMPORT_VERIFIED'
-          echo "appdir=$appdir"
-          echo "datadir=$datadir"
-          echo "source_files=$source_files"
-          echo "destination_files=$destination_files"
-          echo "source_bytes=$source_bytes"
-          echo "destination_bytes=$destination_bytes"
-          echo 'drive_writes=0'
-          echo 'remote_deletes=0'
-          REMOTE
+          # Read receipt JSONs directly from FTPS. Only verified receipts enter the transfer list.
+          ftp=ftplib.FTP_TLS(context=ssl.create_default_context(),timeout=180)
+          ftp.connect('troi.ptservidor.net',21)
+          ftp.login('migration@associacaomilk.pt',FTPS_PASSWORD)
+          ftp.prot_p(); ftp.voidcmd('TYPE I')
+          receipt_dir=f'/{SOURCE_ROOT}/{RECEIPTS}'
+          try:
+              ftp.cwd(receipt_dir)
+              names=ftp.nlst()
+          except Exception as exc:
+              ftp.quit()
+              raise RuntimeError('FTPS_RECEIPT_DIRECTORY_UNAVAILABLE '+str(exc)[:180])
+
+          verified_paths=set(); verified_bytes=0; bad_receipts=0
+          for raw_name in names:
+              name=raw_name.rstrip('/').rsplit('/',1)[-1]
+              if not name.endswith('.json'): continue
+              buf=bytearray()
+              try:
+                  ftp.retrbinary('RETR '+name,buf.extend,blocksize=262144)
+                  rec=json.loads(buf)
+                  if rec.get('verified') is not True:
+                      bad_receipts+=1; continue
+                  remote_path=str(rec.get('remote_path') or '')
+                  prefix='/'+SOURCE_ROOT+'/'
+                  if not remote_path.startswith(prefix):
+                      bad_receipts+=1; continue
+                  rel=remote_path[len(prefix):]
+                  if not rel or rel.startswith(RECEIPTS+'/') or '/../' in '/'+rel+'/' or rel.startswith('../'):
+                      bad_receipts+=1; continue
+                  verified_paths.add(rel)
+                  verified_bytes+=int(rec.get('bytes') or 0)
+              except Exception:
+                  bad_receipts+=1
+          ftp.quit()
+
+          if not verified_paths:
+              comment(f'NEXTCLOUD_IMPORT_WAITING run={RUN_ID} cause=no_verified_receipts_yet source_writes=0')
+              raise SystemExit(0)
+
+          FILES.write_text('\n'.join(sorted(verified_paths))+'\n',encoding='utf-8')
+          source=json.loads(run([
+              'rclone','--config',str(CFG),'size','ftps:'+SOURCE_ROOT,
+              '--files-from',str(FILES),'--json'
+          ],'FTPS_VERIFIED_SET_SIZE_FAILED'))
+
+          comment(
+              f'NEXTCLOUD_IMPORT_DISCOVERED run={RUN_ID} verified_receipts={len(verified_paths)} '
+              f'source_count={source.get("count",0)} source_bytes={source.get("bytes",0)} bad_receipts={bad_receipts} source_writes=0')
+
+          destination=nc_remote+':'+DESTINATION
+          run([
+              'rclone','--config',str(CFG),'copy','ftps:'+SOURCE_ROOT,destination,
+              '--files-from',str(FILES),'--transfers','4','--checkers','8',
+              '--retries','6','--low-level-retries','20','--create-empty-src-dirs'
+          ],'NEXTCLOUD_TRANSFER_FAILED',capture=False)
+
+          run([
+              'rclone','--config',str(CFG),'check','ftps:'+SOURCE_ROOT,destination,
+              '--files-from',str(FILES),'--one-way','--download','--checkers','6','--retries','4'
+          ],'NEXTCLOUD_READBACK_CHECK_FAILED',capture=False)
+
+          dest=json.loads(run([
+              'rclone','--config',str(CFG),'size',destination,
+              '--files-from',str(FILES),'--json'
+          ],'NEXTCLOUD_DESTINATION_SIZE_FAILED'))
+
+          if source.get('count')!=dest.get('count') or source.get('bytes')!=dest.get('bytes'):
+              raise RuntimeError('NEXTCLOUD_RECONCILIATION_MISMATCH')
+
+          comment(
+              f'NEXTCLOUD_IMPORT_VERIFIED run={RUN_ID} discovered={source.get("count",0)} '
+              f'verified={dest.get("count",0)} failed=0 bytes={dest.get("bytes",0)} '
+              f'destination="{DESTINATION}" source_writes=0 remote_deletes=0')
+          PY

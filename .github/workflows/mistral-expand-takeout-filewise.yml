@@ -65,7 +65,7 @@ jobs:
 
           def connect():
               f=ftplib.FTP_TLS(context=ssl.create_default_context(),timeout=300)
-              f.connect("associacaomilk.pt",21);f.login("migration@associacaomilk.pt",PWD);f.prot_p();f.voidcmd("TYPE I")
+              f.connect("troi.ptservidor.net",21);f.login("migration@associacaomilk.pt",PWD);f.prot_p();f.voidcmd("TYPE I")
               return f
 
           def ensure(ftp,path):

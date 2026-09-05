@@ -2,7 +2,7 @@
 
 **Versão documental:** 2.0.0-review  
 **Responsável institucional:** Associação MILK  
-**Estado:** integração em consolidação; sem declaração de produção, DOI ou conformidade sem evidência verificável
+**Estado:** integração em consolidação; registo institucional Zenodo e DOI confirmados; produção e conformidade continuam dependentes de evidência verificável
 
 ---
 
@@ -18,7 +18,7 @@ Documentos activos:
 Pontos de controlo:
 
 - SWHID local preparado, ainda não arquivado publicamente pelo Software Heritage.
-- DOI/Zenodo preparado, ainda não publicado.
+- Registo institucional publicado no Zenodo: [DOI 10.5281/zenodo.22412484](https://doi.org/10.5281/zenodo.22412484); versão 1.0.0: [10.5281/zenodo.22412485](https://doi.org/10.5281/zenodo.22412485).
 - ORCID de Nuno e Eduardo registados nos metadados.
 - Workflows Mistral/Drive/FTPS/Nextcloud em revisão antes de qualquer execução.
 - Sem publicação de corpus, segredos ou dados sensíveis neste repositório público.
@@ -230,4 +230,4 @@ Consultar o ficheiro LICENSE do repositório antes de reutilizar qualquer compon
 **Document Version:** 2.0.0-review  
 **Last Updated:** 2026-08-28  
 **Author:** Eduardo Mauricio / Associação MILK  
-**Status:** Em revisão — não declarar produção, DOI, SWHID arquivado ou conformidade sem validação externa
+**Status:** Em revisão — DOI institucional confirmado; não declarar produção, SWHID arquivado ou conformidade sem validação externa

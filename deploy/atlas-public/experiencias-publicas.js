@@ -6,16 +6,19 @@ const ticket = document.querySelector('#ticket');
 if (!deck || !dialog || !body) throw new Error('ATLAS_EXPERIENCE_MOUNT_MISSING');
 
 const registries = [...document.querySelectorAll('.public-runtime-registry')];
+let territoryReady = registries.length === 0;
 registries.forEach((registry) => {
   registry.hidden = true;
   registry.setAttribute('aria-hidden', 'true');
 });
 
 window.addEventListener('atlas:validated-territories-ready', () => {
+  territoryReady = true;
   registries.forEach((registry) => {
     registry.hidden = false;
     registry.setAttribute('aria-hidden', 'false');
   });
+  openRoute();
 }, { once: true });
 
 const EXPERIENCE_NAMES = [
@@ -88,6 +91,9 @@ function canvasFor(el) {
   const canvas = document.createElement('canvas');
   const context = canvas.getContext('2d');
   canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%';
+  canvas.tabIndex = 0;
+  canvas.setAttribute('role', 'button');
+  canvas.setAttribute('aria-label', `${el.getAttribute('aria-label')}: tocar no centro`);
   el.appendChild(canvas);
   const resize = () => {
     const ratio = Math.min(devicePixelRatio || 1, 2);
@@ -99,6 +105,14 @@ function canvasFor(el) {
   resize();
   const observer = new ResizeObserver(resize);
   observer.observe(el);
+  canvas.addEventListener('keydown', event => {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    event.preventDefault();
+    const rect = canvas.getBoundingClientRect();
+    const options = { bubbles: true, clientX: rect.left + rect.width / 2, clientY: rect.top + rect.height / 2 };
+    canvas.dispatchEvent(new PointerEvent('pointerdown', options));
+    canvas.dispatchEvent(new PointerEvent('pointerup', options));
+  });
   el.addEventListener('atlas:destroy', () => observer.disconnect(), { once: true });
   return { canvas, context, observer };
 }
@@ -365,9 +379,9 @@ function hundredSidedDie() {
   return el;
 }
 
-const makers = { pedras: stones, paredes: walls, planta: impossiblePlan, carta: letter, janelas: windows, batimetria: bathymetry, eco, dado: hundredSidedDie };
+const makers = { pedras: stones, paredes: walls, planta: impossiblePlan, carta: letter, janelas: windows, batimetria: bathymetry, eco: echo, dado: hundredSidedDie };
 
-function openExperience(id) {
+function openExperience(id, { syncRoute = true } = {}) {
   const maker = makers[id];
   if (!maker) return;
   const previous = body.firstElementChild;
@@ -375,6 +389,13 @@ function openExperience(id) {
   body.replaceChildren(maker());
   dialog.classList.add('atlas-experience');
   if (!dialog.open) dialog.showModal();
+  if (syncRoute) history.pushState({ experience: id }, '', `#experiencia=${encodeURIComponent(id)}`);
+}
+
+function openRoute() {
+  const id = new URLSearchParams(location.search).get('experiencia')
+    || new URLSearchParams(location.hash.slice(1)).get('experiencia');
+  if (id && makers[id]) openExperience(id, { syncRoute: false });
 }
 
 deck.addEventListener('click', event => {
@@ -391,7 +412,11 @@ document.addEventListener('keydown', event => {
 dialog.addEventListener('close', () => {
   body.firstElementChild?.dispatchEvent(new Event('atlas:destroy'));
   body.replaceChildren();
+  if (location.hash.startsWith('#experiencia=')) history.replaceState(null, '', `${location.pathname}${location.search}`);
 });
+
+window.addEventListener('hashchange', openRoute);
+queueMicrotask(openRoute);
 
 document.querySelector('[data-ticket-action="brincar"]')?.addEventListener('click', () => {
   const id = EXPERIENCE_NAMES[Math.floor(Math.random() * EXPERIENCE_NAMES.length)][0];

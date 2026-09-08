@@ -110,14 +110,10 @@ for d_nome, d_data in hierarquia["distritos"].items():
 
 print(f"Total nomes para deteccao: {len(todos_nomes)}")
 
-# Regex unico para todos os territorios — apenas nomes > 4 chars para evitar falsos positivos
-nomes_filtrados = [n for n in sorted(todos_nomes.keys(), key=len, reverse=True) if len(n) > 4]
-# Dividir em grupos de 200 para nao estourar o motor de regex
-TERR_PATS = []
-for i in range(0, len(nomes_filtrados), 200):
-    grupo = nomes_filtrados[i:i+200]
-    TERR_PATS.append(re.compile(r'\b(' + '|'.join(re.escape(n) for n in grupo) + r')\b', re.IGNORECASE))
-print(f"Total nomes para deteccao: {len(nomes_filtrados)} em {len(TERR_PATS)} grupos de regex")
+# Deteccao por substring (muito mais rapido que regex com 2000+ padroes)
+# So nomes > 5 chars para evitar falsos positivos
+nomes_lookup = {n: info for n, info in todos_nomes.items() if len(n) > 5}
+print(f"Total nomes para deteccao: {len(nomes_lookup)} (substring match)")
 
 # === 3. CLASSIFICAR TODOS OS DOCUMENTOS ===
 print(f"\nClassificando 10.538 documentos contra gazetteer completo...")
@@ -144,33 +140,32 @@ for fp in sorted(CORPUS.glob("*.json")):
     if md.get("district") and md.get("municipality"):
         continue
 
-    # Detetar todos os territorios mencionados (multiplos grupos de regex)
+    # Detetar territorios por substring (rapido)
     distrito = md.get("district")
     municipio = md.get("municipality")
     freguesia = md.get("parish")
 
-    for pat in TERR_PATS:
-        for m in pat.finditer(combined):
-            nome_encontrado = m.group(1).lower()
-            info = todos_nomes.get(nome_encontrado)
-            if not info:
-                continue
-            tipo, d, c, f = info
-            if not distrito and tipo == "distrito":
-                md["district"] = d
-                distrito = d
-                alterado = True
-                stats["novo_distrito"] += 1
-            if not municipio and tipo in ("concelho", "freguesia"):
-                md["municipality"] = c or d
-                municipio = c or d
-                alterado = True
-                stats["novo_municipio"] += 1
-            if not freguesia and tipo == "freguesia":
-                md["parish"] = f
-                freguesia = f
-                alterado = True
-                stats["novo_freguesia"] += 1
+    for nome_lower, info in nomes_lookup.items():
+        if nome_lower not in combined:
+            continue
+        if distrito and municipio and freguesia:
+            break
+        tipo, d, c, f = info
+        if not distrito and tipo == "distrito":
+            md["district"] = d
+            distrito = d
+            alterado = True
+            stats["novo_distrito"] += 1
+        if not municipio and tipo in ("concelho", "freguesia"):
+            md["municipality"] = c or d
+            municipio = c or d
+            alterado = True
+            stats["novo_municipio"] += 1
+        if not freguesia and tipo == "freguesia":
+            md["parish"] = f
+            freguesia = f
+            alterado = True
+            stats["novo_freguesia"] += 1
 
     # Territory
     if md.get("district") or md.get("municipality"):

@@ -1,0 +1,10 @@
+{
+  "schema": "ia_milk.training_report.v1",
+  "baseline_val_f1": 0.2172,
+  "best_val_f1": 0.2307,
+  "best_epoch": 5,
+  "promoted": true,
+  "epochs_run": 5,
+  "train_size": 8379,
+  "val_size": 1102
+}

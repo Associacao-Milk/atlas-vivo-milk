@@ -2,24 +2,86 @@
   "schema": "ia_milk.capability_matrix.v1",
   "updated_at": "2026-09-08T22:45:00+00:00",
   "capabilities": {
-    "neural_classifier": {"status": "IMPLEMENTED_UNTESTED", "file": "milk_neural.py", "issues": ["BCE sign error", "sigmoid not numerically stable"]},
-    "semantic_retrieval": {"status": "IMPLEMENTED_UNTESTED", "file": "src/milk_ai/retrieval.py", "notes": "TF-IDF lexical, no dense semantic yet"},
-    "reranking": {"status": "NOT_IMPLEMENTED"},
-    "knowledge_graph": {"status": "IMPLEMENTED_UNTESTED", "file": "state/atlas_graph.json", "notes": "63 nodes, basic"},
-    "scientific_evidence": {"status": "NOT_IMPLEMENTED"},
-    "hermeneutics": {"status": "NOT_IMPLEMENTED"},
-    "hypothesis_engine": {"status": "NOT_IMPLEMENTED"},
-    "solution_engine": {"status": "NOT_IMPLEMENTED"},
-    "multimodal_text": {"status": "IMPLEMENTED_UNTESTED", "file": "src/milk_ai/ingest.py", "notes": "txt, md, docx, pdf, xlsx, pptx"},
-    "multimodal_image": {"status": "IMPLEMENTED_UNTESTED", "file": "scripts/ingest_total.py", "notes": "metadata only, OCR optional"},
-    "multimodal_pdf": {"status": "IMPLEMENTED_UNTESTED", "file": "src/milk_ai/ingest.py:_read_pdf"},
-    "multimodal_table": {"status": "IMPLEMENTED_UNTESTED", "file": "src/milk_ai/ingest.py:_read_xlsx"},
-    "geospatial": {"status": "IMPLEMENTED_UNTESTED", "file": "escrutinio_territorial.py", "notes": "308 municipios, 3092 freguesias, 1641 unclassified"},
-    "temporal": {"status": "NOT_IMPLEMENTED"},
-    "research": {"status": "IMPLEMENTED_UNTESTED", "file": "src/milk_ai/research.py", "notes": "OpenAlex, Crossref, DataCite"},
-    "continuous_learning": {"status": "IMPLEMENTED_UNTESTED", "file": "scripts/continuous_learning.py", "notes": "daemon, not yet activated"},
-    "evaluation": {"status": "NOT_IMPLEMENTED"},
-    "provenance": {"status": "TESTED", "file": "src/milk_ai/provenance.py"},
-    "rollback": {"status": "IMPLEMENTED_UNTESTED", "file": "git + snapshots", "notes": "snapshot verified, git checkpoint committed"}
+    "neural_classifier": {
+      "status": "TESTED",
+      "file": "milk_neural.py",
+      "issues": [
+        "Model biased to 3/11 classes — needs retrain with fixed math"
+      ]
+    },
+    "semantic_retrieval": {
+      "status": "IMPLEMENTED_UNTESTED",
+      "file": "src/milk_ai/retrieval.py",
+      "notes": "TF-IDF lexical, no dense semantic yet"
+    },
+    "reranking": {
+      "status": "NOT_IMPLEMENTED"
+    },
+    "knowledge_graph": {
+      "status": "IMPLEMENTED_UNTESTED",
+      "file": "state/atlas_graph.json",
+      "notes": "63 nodes, basic"
+    },
+    "scientific_evidence": {
+      "status": "NOT_IMPLEMENTED"
+    },
+    "hermeneutics": {
+      "status": "NOT_IMPLEMENTED"
+    },
+    "hypothesis_engine": {
+      "status": "NOT_IMPLEMENTED"
+    },
+    "solution_engine": {
+      "status": "NOT_IMPLEMENTED"
+    },
+    "multimodal_text": {
+      "status": "IMPLEMENTED_UNTESTED",
+      "file": "src/milk_ai/ingest.py",
+      "notes": "txt, md, docx, pdf, xlsx, pptx"
+    },
+    "multimodal_image": {
+      "status": "IMPLEMENTED_UNTESTED",
+      "file": "scripts/ingest_total.py",
+      "notes": "metadata only, OCR optional"
+    },
+    "multimodal_pdf": {
+      "status": "IMPLEMENTED_UNTESTED",
+      "file": "src/milk_ai/ingest.py:_read_pdf"
+    },
+    "multimodal_table": {
+      "status": "IMPLEMENTED_UNTESTED",
+      "file": "src/milk_ai/ingest.py:_read_xlsx"
+    },
+    "geospatial": {
+      "status": "IMPLEMENTED_UNTESTED",
+      "file": "escrutinio_territorial.py",
+      "notes": "308 municipios, 3092 freguesias, 1641 unclassified"
+    },
+    "temporal": {
+      "status": "NOT_IMPLEMENTED"
+    },
+    "research": {
+      "status": "IMPLEMENTED_UNTESTED",
+      "file": "src/milk_ai/research.py",
+      "notes": "OpenAlex, Crossref, DataCite"
+    },
+    "continuous_learning": {
+      "status": "IMPLEMENTED_UNTESTED",
+      "file": "scripts/continuous_learning.py",
+      "notes": "daemon, not yet activated"
+    },
+    "evaluation": {
+      "status": "IMPLEMENTED_UNTESTED",
+      "file": "tests/evaluate_test.py"
+    },
+    "provenance": {
+      "status": "TESTED",
+      "file": "src/milk_ai/provenance.py"
+    },
+    "rollback": {
+      "status": "IMPLEMENTED_UNTESTED",
+      "file": "git + snapshots",
+      "notes": "snapshot verified, git checkpoint committed"
+    }
   }
 }

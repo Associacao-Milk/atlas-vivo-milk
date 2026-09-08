@@ -1,22 +1,83 @@
 {
   "schema": "ia_milk.execution_state.v1",
-  "updated_at": "2026-09-08T22:45:00+00:00",
+  "updated_at": "2026-09-08T22:48:37.939651",
   "canonical_root": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO",
-  "git_head": "96aac28",
-  "current_phase": "A_NEURAL_CERTIFICATION",
-  "phases_completed": ["INTEGRATION_A_B", "SNAPSHOT_PROTECTION", "GIT_CHECKPOINT"],
-  "current_task": "neural_math_certification",
+  "git_head": "see git log",
+  "current_phase": "B_EVALUATION_DONE",
+  "phases_completed": [
+    "INTEGRATION_A_B",
+    "SNAPSHOT_PROTECTION",
+    "GIT_CHECKPOINT",
+    "A_NEURAL_CERTIFICATION",
+    "B_EVALUATION"
+  ],
+  "current_task": "C_CONTROLLED_TRAINING",
   "corpus_documents": 10538,
   "models": {
-    "milk_neural.npz": {"loaded": true, "params": 2859659, "status": "loaded_read_only"},
-    "milk_vec.pkl": {"loaded": true, "vocab": 5000, "status": "loaded_read_only"},
-    "milk_hist.json": {"loaded": true, "cycles": 7, "status": "loss_negative_issue"}
+    "milk_neural.npz": {
+      "loaded": true,
+      "params": 2859659,
+      "status": "loaded_read_only"
+    },
+    "milk_vec.pkl": {
+      "loaded": true,
+      "vocab": 5000,
+      "status": "loaded_read_only"
+    },
+    "milk_hist.json": {
+      "loaded": true,
+      "cycles": 7,
+      "status": "loss_negative_issue"
+    }
   },
   "known_issues": [
-    {"id": "BCE_SIGN", "severity": "critical", "file": "milk_neural.py:49", "description": "bce() missing negative sign, produces negative loss", "status": "PENDING_FIX"},
-    {"id": "TERRITORIAL_GAP", "severity": "medium", "description": "1641/3092 freguesias unclassified", "status": "DEFERRED"},
-    {"id": "CORPUS_3_NEW", "severity": "low", "description": "3 new docs since last training not yet in estado_aprendizado", "status": "DEFERRED"}
+    {
+      "id": "BCE_SIGN",
+      "severity": "critical",
+      "file": "milk_neural.py:49",
+      "description": "BCE sign fixed",
+      "status": "FIXED"
+    },
+    {
+      "id": "TERRITORIAL_GAP",
+      "severity": "medium",
+      "description": "1641/3092 freguesias unclassified",
+      "status": "DEFERRED"
+    },
+    {
+      "id": "CORPUS_3_NEW",
+      "severity": "low",
+      "description": "3 new docs since last training not yet in estado_aprendizado",
+      "status": "DEFERRED"
+    },
+    {
+      "id": "GRADIENT_NORM",
+      "severity": "critical",
+      "file": "milk_neural.py:102",
+      "description": "Gradient divided by m instead of y.size — 11x too small. FIXED.",
+      "status": "FIXED"
+    },
+    {
+      "id": "MODEL_BIAS",
+      "severity": "high",
+      "description": "Model only detects 3/11 classes (cultural, economica, tecnologica). Needs retraining with fixed BCE+gradient.",
+      "status": "PENDING_RETRAIN"
+    }
   ],
-  "stop_conditions": ["data_loss", "credential", "irreversible", "private_to_external", "structural_risk", "human_decision"],
-  "auto_proceed": true
+  "stop_conditions": [
+    "data_loss",
+    "credential",
+    "irreversible",
+    "private_to_external",
+    "structural_risk",
+    "human_decision"
+  ],
+  "auto_proceed": true,
+  "evaluation": {
+    "f1_macro": 0.2201,
+    "f1_micro": 0.5527,
+    "hamming_loss": 0.0376,
+    "classes_detected": 3,
+    "classes_total": 11
+  }
 }

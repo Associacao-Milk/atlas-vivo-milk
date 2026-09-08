@@ -1,0 +1,82 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://associacaomilk.pt/schema/atlas-vivo-document-1.0.0.json",
+  "title": "Registro Canonico do Documento — Atlas Vivo MILK",
+  "description": "Schema formal do registro ingerido em MILK_AI_STATE_CANONICO/corpus/documents.",
+  "type": "object",
+  "required": ["sha256", "source_id", "metadata", "chunks", "text"],
+  "additionalProperties": false,
+  "properties": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "source_id": { "type": "string" },
+    "text": { "type": "string" },
+    "provenance_paths": { "type": "array", "items": { "type": "string" } },
+    "chunks": { "type": "array", "items": { "$ref": "#/definitions/chunk" } },
+    "metadata": { "$ref": "#/definitions/metadata" }
+  },
+  "definitions": {
+    "chunk": {
+      "type": "object",
+      "required": ["chunk_id", "source_id", "sha256", "ordinal", "text", "metadata"],
+      "additionalProperties": false,
+      "properties": {
+        "chunk_id": { "type": "string" },
+        "source_id": { "type": "string" },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "ordinal": { "type": "integer", "minimum": 0 },
+        "heading": { "type": ["string", "null"] },
+        "text": { "type": "string" },
+        "metadata": { "$ref": "#/definitions/chunkMetadata" }
+      }
+    },
+    "chunkMetadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "consent_status": { "$ref": "#/definitions/statusEnum" },
+        "epistemic_state": { "$ref": "#/definitions/epistemicEnum" },
+        "human_validated": { "type": "boolean" },
+        "municipality": { "type": ["string", "null"] },
+        "original_name": { "type": ["string", "null"] },
+        "parish": { "type": ["string", "null"] },
+        "rgpd_status": { "$ref": "#/definitions/statusEnum" },
+        "rights_status": { "$ref": "#/definitions/statusEnum" },
+        "territory": { "type": ["string", "null"] },
+        "visibility": { "$ref": "#/definitions/visibilityEnum" }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["sha256", "source_id", "original_name", "ingested_at", "responsible_entity", "visibility", "consent_status", "rgpd_status", "rights_status", "epistemic_state", "human_validated"],
+      "additionalProperties": false,
+      "properties": {
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "source_id": { "type": "string" },
+        "original_name": { "type": ["string", "null"] },
+        "original_path": { "type": ["string", "null"] },
+        "size_bytes": { "type": ["integer", "null"], "minimum": 0 },
+        "ingested_at": { "type": "string", "format": "date-time" },
+        "author": { "type": ["string", "null"] },
+        "responsible_entity": { "type": ["string", "null"] },
+        "document_type": { "type": ["string", "null"] },
+        "curatorial_device": { "type": ["string", "null"] },
+        "territory": { "type": ["string", "null"] },
+        "district": { "type": ["string", "null"] },
+        "municipality": { "type": ["string", "null"] },
+        "parish": { "type": ["string", "null"] },
+        "consent_status": { "$ref": "#/definitions/statusEnum" },
+        "rgpd_status": { "$ref": "#/definitions/statusEnum" },
+        "rights_status": { "$ref": "#/definitions/statusEnum" },
+        "visibility": { "$ref": "#/definitions/visibilityEnum" },
+        "epistemic_state": { "$ref": "#/definitions/epistemicEnum" },
+        "human_validated": { "type": "boolean" },
+        "validated_by": { "type": ["string", "null"] },
+        "validation_date": { "type": ["string", "null"] },
+        "notes": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "statusEnum": { "type": "string", "enum": ["por_validar", "validado", "rejeitado", "quarentena", "anonimizado"] },
+    "epistemicEnum": { "type": "string", "enum": ["preparado", "curado", "publicado", "arquivado", "depreciado"] },
+    "visibilityEnum": { "type": "string", "enum": ["restrita", "interna", "publica", "deposito_legal"] }
+  }
+}

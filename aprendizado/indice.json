@@ -1,6 +1,6 @@
 {
-  "ultima_atualizacao": "2026-09-08T19:38:46.592620",
-  "total_ciclos": 4,
+  "ultima_atualizacao": "2026-09-08T19:49:13.147621",
+  "total_ciclos": 1,
   "ciclos": [
     {
       "ciclo": 1,
@@ -43,6 +43,18 @@
       "timestamp": "2026-09-08T19:38:46.590621",
       "intensidade_media": 1.66,
       "solucoes": 11
+    },
+    {
+      "ciclo": 5,
+      "timestamp": "2026-09-08T19:44:32.494743",
+      "intensidade_media": 1.66,
+      "solucoes": 10
+    },
+    {
+      "ciclo": 1,
+      "timestamp": "2026-09-08T19:49:13.145665",
+      "intensidade_media": 1.66,
+      "solucoes": 10
     }
   ],
   "evolucao_intensidade": -1.0

@@ -1,5 +1,5 @@
 {
-  "gerado_em": "2026-09-08T19:40:38.548489",
+  "gerado_em": "2026-09-08T19:48:12.754789",
   "gazetteer": {
     "distritos": 29,
     "concelhos": 308,
@@ -9,8 +9,8 @@
   "classificacao": {
     "alterados": 1451,
     "novos_distritos": 0,
-    "novos_municipios": 562,
-    "novos_freguesias": 540
+    "novos_municipios": 0,
+    "novos_freguesias": 0
   },
   "cobertura": {
     "None > None": {

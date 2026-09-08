@@ -1,31 +1,7 @@
 {
-  "gerado_em": "2026-09-08T18:16:51.515481",
-  "duracao": 46.2,
+  "gerado_em": "2026-09-08T19:12:27.446157",
+  "duracao": 32.5,
   "processados": 10535,
-  "classificados": 5242,
-  "stats": {
-    "tipo_codigo_fonte": 2378,
-    "tipo_dados_estruturados": 2059,
-    "tipo_documento_texto": 437,
-    "tipo_documento_pdf": 102,
-    "tipo_artigo_academico": 4,
-    "tipo_pagina_web": 183,
-    "com_distrito": 105,
-    "com_municipio": 144,
-    "tipo_manual": 15,
-    "tipo_estatuto": 3,
-    "tipo_correspondencia": 7,
-    "tipo_proposta": 5,
-    "tipo_metodologia": 3,
-    "tipo_financiamento": 1,
-    "tipo_apresentacao": 2,
-    "tipo_planilha": 16,
-    "tipo_manifesto": 3,
-    "tipo_relatorio": 15,
-    "tipo_ata": 1,
-    "tipo_estrutura_dados": 2,
-    "tipo_roteiro": 1,
-    "tipo_etnografia": 4,
-    "tipo_estudo": 1
-  }
+  "classificados": 0,
+  "stats": {}
 }

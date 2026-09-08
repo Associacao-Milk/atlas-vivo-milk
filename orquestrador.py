@@ -133,13 +133,13 @@ print(r.get('status','erro'))
     return {"antes": antes, "depois": depois, "novos": novos, "stats": dict(stats)}
 
 def fase_classificacao():
-    """Fase 2: Classificar documentos sem tipo ou territorio."""
-    print("  [2/5] Classificacao territorial e tipologica...")
-    result = _correr_script("classificar_otimizado.py")
+    """Fase 2: Classificar documentos com gazetteer completo (308 municipios, 3092 freguesias)."""
+    print("  [2/5] Classificacao territorial completa (308 municipios)...")
+    result = _correr_script("escrutinio_territorial.py")
     if result:
-        # Extrair linhas relevantes
         for linha in result.split("\n"):
-            if any(k in linha for k in ["Classificado", "Com distrito", "Com municipio", "concluida"]):
+            if any(k in linha for k in ["Documentos alterados", "Novos distritos", "Novos municipios",
+                                        "Novos freguesias", "municipios sem", "Gazetteer", "Classificacao em"]):
                 print(f"       {linha.strip()}")
     return result is not None
 

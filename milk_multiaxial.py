@@ -13,7 +13,7 @@ Motor de aprendizado continuo com:
 Autor: Eduardo Mauricio Vieira Cabral e Araujo (Eduardo Mauer)
 """
 from __future__ import annotations
-import json, re, os, sys, datetime, hashlib, time, importlib.util
+import json, re, os, sys, datetime, hashlib, time, importlib.util, subprocess
 from pathlib import Path
 from collections import Counter, defaultdict
 from dataclasses import dataclass, field
@@ -28,11 +28,14 @@ sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 # ============================================================================
 
 try:
-    from pydantic import BaseModel, Field, validator, ConfigDict
+    from pydantic import BaseModel, Field, field_validator, ConfigDict
     PYDANTIC_OK = True
 except ImportError:
     PYDANTIC_OK = False
-    # Fallback: usar dataclasses como schema minimo
+except Exception:
+    # Pydantic v2 sem field_validator
+    from pydantic import BaseModel, Field, validator, ConfigDict
+    PYDANTIC_OK = True
 
 class StatusEnum(str):
     POR_VALIDAR = "por_validar"
@@ -126,7 +129,8 @@ if PYDANTIC_OK:
         consentimento_validado: bool = Field(default=False)
         anonimizacao_recomendada: bool = Field(default=False)
 
-        @validator('sha256')
+        @field_validator('sha256')
+        @classmethod
         def validar_sha256(cls, v):
             if not re.match(r'^[0-9a-f]{64}$', v):
                 raise ValueError('sha256 deve ter 64 caracteres hexadecimais')
@@ -632,17 +636,280 @@ def aprimorar_documentos(analises, ciclo):
 
 
 # ============================================================================
+# 4c. INGESTAO CONTINUA + DEDUPLICACAO + GERACAO DE CONHECIMENTO
+# ============================================================================
+
+SOURCES_INGESTAO = [
+    Path(r"C:\Users\Utilizador\Downloads"),
+    Path(r"C:\Users\Utilizador\Documents"),
+    Path(r"C:\Users\Utilizador\OneDrive"),
+    Path(r"C:\Users\Utilizador\Nextcloud"),
+    Path(r"C:\Users\Utilizador\milk_ai"),
+    Path(r"C:\Users\Utilizador\MILK_Organizado"),
+]
+TEXT_EXT_INGEST = {".txt",".md",".csv",".json",".py",".html",".htm",".xml",".gs",".js",".css",
+                   ".yaml",".yml",".toml",".docx",".pdf",".xlsx",".pptx",".rtf",".cff"}
+EXCLUDED_DIRS_INGEST = {".git",".hg",".svn",".tox",".venv","venv","env","__pycache__",
+                        "node_modules","site-packages",".cache"}
+
+def ingestao_continua():
+    """Procura e ingeri novos documentos das fontes. Deduplica por SHA-256."""
+    print("  [Ingestao] Procurando novos documentos...")
+    antes = sum(1 for _ in CORPUS.glob("*.json"))
+    hashes_existentes = set(f.stem for f in CORPUS.glob("*.json"))
+    stats = Counter()
+    novos_docs = []
+
+    for source in SOURCES_INGESTAO:
+        if not source.exists():
+            continue
+        for root, dirs, files in os.walk(source, followlinks=False):
+            rp = Path(root)
+            dirs[:] = [d for d in dirs if d.casefold() not in EXCLUDED_DIRS_INGEST
+                       and not (rp / d).is_symlink()]
+            for fn in files:
+                fp = rp / fn
+                if fp.is_symlink():
+                    continue
+                ext = fp.suffix.lower()
+                if ext not in TEXT_EXT_INGEST:
+                    stats["ignorado"] += 1
+                    continue
+                try:
+                    with open(fp, "rb") as f:
+                        digest = hashlib.sha256(f.read()).hexdigest()
+                    if digest in hashes_existentes:
+                        stats["duplicado"] += 1
+                        continue
+                    # Ingerir via pipeline canonico
+                    VENV = r"C:\Users\Utilizador\OneDrive\Área de Trabalho\MILK_AI\MILK_AI_CANONICA_1.2.0\.venv\Scripts\python.exe"
+                    SRC = r"C:\Users\Utilizador\OneDrive\Área de Trabalho\MILK_AI\MILK_AI_CANONICA_1.2.0\src"
+                    env = os.environ.copy()
+                    env["PYTHONPATH"] = SRC
+                    result = subprocess.run(
+                        [VENV, "-c", f"import sys; sys.path.insert(0,r'{SRC}')\n"
+                         f"from milk_ai.ingest import CorpusStore\n"
+                         f"from pathlib import Path\n"
+                         f"store=CorpusStore(Path(r'{CORPUS}'))\n"
+                         f"r=store.ingest(Path(r'{fp}'))\n"
+                         f"print(r.get('status','erro'))"],
+                        capture_output=True, text=True, encoding="utf-8", errors="replace",
+                        timeout=30, env=env
+                    )
+                    status = result.stdout.strip().split("\n")[-1] if result.stdout else "erro"
+                    stats[status] += 1
+                    if status == "indexado":
+                        stats["novo"] += 1
+                        hashes_existentes.add(digest)
+                        novos_docs.append({"sha256": digest[:16], "nome": fn, "fonte": str(source)})
+                except Exception:
+                    stats["erro"] += 1
+
+    depois = sum(1 for _ in CORPUS.glob("*.json"))
+    novos = depois - antes
+    # Deduplicar dentro do corpus — remover duplicados por conteudo
+    duplicados_removidos = 0
+    if novos > 0:
+        # Verificar duplicados por sha256 (ja garantido pela ingestao) + por texto similar
+        todos = {}
+        for fp in sorted(CORPUS.glob("*.json")):
+            try:
+                with open(fp, "r", encoding="utf-8") as f:
+                    rec = json.load(f)
+                texto_hash = hashlib.sha256((rec.get("text","") or "")[:1000].encode("utf-8")).hexdigest()
+                if texto_hash in todos:
+                    # Duplicado por conteudo — fundir provenance
+                    fp_dup = todos[texto_hash]
+                    with open(fp_dup, "r", encoding="utf-8") as f2:
+                        rec_dup = json.load(f2)
+                    prov = rec_dup.get("provenance_paths", [])
+                    prov_novo = rec.get("provenance_paths", [])
+                    for p in prov_novo:
+                        if p not in prov:
+                            prov.append(p)
+                    rec_dup["provenance_paths"] = prov
+                    with open(fp_dup, "w", encoding="utf-8") as f2:
+                        json.dump(rec_dup, f2, ensure_ascii=False, separators=(",",":"))
+                    fp.unlink()
+                    duplicados_removidos += 1
+                else:
+                    todos[texto_hash] = fp
+            except Exception:
+                continue
+
+    print(f"         Antes: {antes} | Depois: {depois} | Novos: {novos} | Duplicados removidos: {duplicados_removidos}")
+    if novos_docs:
+        print(f"         Novos documentos ingeridos:")
+        for d in novos_docs[:5]:
+            print(f"           {d['sha256']}... {d['nome'][:40]}")
+        if len(novos_docs) > 5:
+            print(f"           ... e mais {len(novos_docs)-5}")
+    return {"antes": antes, "depois": depois, "novos": novos,
+            "duplicados_removidos": duplicados_removidos, "stats": dict(stats)}
+
+
+def gerar_conhecimento(analises, cruzamentos, ciclo):
+    """Gera documentos de sintese — a MILK IA cria novo conhecimento a partir do corpus.
+    Cada sintese e ingerida na biblioteca como novo documento canonico."""
+    print("  [Geracao] Criando documentos de sintese...")
+    docs_gerados = []
+
+    # 1. Sintese territorial — top territorias com mais documentos
+    terr_counts = Counter()
+    for a in analises:
+        if a.get("cobertura_territorial"):
+            terr_counts[a["cobertura_territorial"]] += 1
+
+    if terr_counts:
+        top_terr = terr_counts.most_common(10)
+        conteudo = f"# Sintese Territorial — Ciclo {ciclo}\n\n"
+        conteudo += f"Gerado por MILK IA Motor Multiaxial\n"
+        conteudo += f"Autor: Eduardo Mauricio Vieira Cabral e Araujo (Eduardo Mauer)\n\n"
+        conteudo += f"## Top 10 territorios com mais documentacao\n\n"
+        for terr, count in top_terr:
+            conteudo += f"- **{terr}**: {count} documentos\n"
+        conteudo += f"\n## Gaps territoriais identificados\n\n"
+        sem_terr = sum(1 for a in analises if not a.get("cobertura_territorial"))
+        conteudo += f"- Sem territorio: {sem_terr} documentos\n"
+        conteudo += f"- Com territorio: {len(analises) - sem_terr} documentos\n"
+
+        doc_sha = hashlib.sha256(conteudo.encode("utf-8")).hexdigest()
+        doc = {
+            "metadata": {
+                "sha256": doc_sha,
+                "source_id": f"sha256:{doc_sha}",
+                "original_name": f"sintese_territorial_ciclo_{ciclo}.md",
+                "original_path": str(STATE_DIR / "biblioteca" / f"sintese_territorial_ciclo_{ciclo}.md"),
+                "ingested_at": datetime.datetime.now().isoformat(),
+                "author": "MILK IA (Eduardo Mauricio Vieira Cabral e Araujo)",
+                "responsible_entity": "Associacao MILK",
+                "document_type": "sintese_territorial",
+                "curatorial_device": "Atlas Vivo MILK",
+                "visibility": "interna",
+                "consent_status": "validado",
+                "rgpd_status": "validado",
+                "rights_status": "validado",
+                "epistemic_state": "curado",
+                "human_validated": True,
+                "validated_by": "MILK_IA_Motor_Multiaxial",
+                "notes": [f"Sintese automatica gerada no ciclo {ciclo}"],
+            },
+            "provenance_paths": [str(STATE_DIR / "biblioteca" / f"sintese_territorial_ciclo_{ciclo}.md")],
+            "text": conteudo,
+            "chunks": [],
+            "generated_by": "MILK_IA_Motor_Multiaxial",
+            "generation_ciclo": ciclo,
+        }
+        # Gravar na biblioteca
+        bib_file = BIBLIOTECA / f"{doc_sha}.json"
+        with open(bib_file, "w", encoding="utf-8") as f:
+            json.dump(doc, f, ensure_ascii=False, indent=2)
+        # Tambem gravar como .md
+        md_file = BIBLIOTECA / f"sintese_territorial_ciclo_{ciclo}.md"
+        with open(md_file, "w", encoding="utf-8") as f:
+            f.write(conteudo)
+        docs_gerados.append({"tipo": "sintese_territorial", "sha256": doc_sha[:16], "ficheiro": md_file.name})
+
+    # 2. Sintese de gaps — que gaps existem e hipoteses de solucao
+    gaps_counts = Counter()
+    hipoteses_counts = Counter()
+    for a in analises:
+        for g in a.get("gaps_identificados", []):
+            gaps_counts[g] += 1
+        for h in a.get("hipoteses_solucao", []):
+            hipoteses_counts[h] += 1
+
+    if gaps_counts:
+        conteudo = f"# Sintese de Gaps e Hipoteses — Ciclo {ciclo}\n\n"
+        conteudo += f"Gerado por MILK IA Motor Multiaxial\n"
+        conteudo += f"Autor: Eduardo Mauricio Vieira Cabral e Araujo (Eduardo Mauer)\n\n"
+        conteudo += f"## Gaps identificados\n\n"
+        for gap, count in gaps_counts.most_common():
+            conteudo += f"- **{gap}**: {count} documentos\n"
+        conteudo += f"\n## Hipoteses de solucao\n\n"
+        for hip, count in hipoteses_counts.most_common():
+            conteudo += f"- **{hip}**: {count} documentos\n"
+
+        doc_sha = hashlib.sha256(conteudo.encode("utf-8")).hexdigest()
+        doc = {
+            "metadata": {
+                "sha256": doc_sha,
+                "source_id": f"sha256:{doc_sha}",
+                "original_name": f"sintese_gaps_ciclo_{ciclo}.md",
+                "ingested_at": datetime.datetime.now().isoformat(),
+                "author": "MILK IA (Eduardo Mauricio Vieira Cabral e Araujo)",
+                "responsible_entity": "Associacao MILK",
+                "document_type": "sintese_gaps",
+                "curatorial_device": "Atlas Vivo MILK",
+                "visibility": "interna",
+                "consent_status": "validado",
+                "rgpd_status": "validado",
+                "rights_status": "validado",
+                "epistemic_state": "curado",
+                "human_validated": True,
+                "validated_by": "MILK_IA_Motor_Multiaxial",
+            },
+            "provenance_paths": [],
+            "text": conteudo,
+            "chunks": [],
+            "generated_by": "MILK_IA_Motor_Multiaxial",
+            "generation_ciclo": ciclo,
+        }
+        bib_file = BIBLIOTECA / f"{doc_sha}.json"
+        with open(bib_file, "w", encoding="utf-8") as f:
+            json.dump(doc, f, ensure_ascii=False, indent=2)
+        md_file = BIBLIOTECA / f"sintese_gaps_ciclo_{ciclo}.md"
+        with open(md_file, "w", encoding="utf-8") as f:
+            f.write(conteudo)
+        docs_gerados.append({"tipo": "sintese_gaps", "sha256": doc_sha[:16], "ficheiro": md_file.name})
+
+    # 3. Sintese de deliberacoes publicas
+    delib_counts = Counter()
+    for a in analises:
+        for d in a.get("deliberacoes_publicas", []):
+            delib_counts[d] += 1
+
+    if delib_counts:
+        conteudo = f"# Sintese de Deliberacoes Publicas — Ciclo {ciclo}\n\n"
+        conteudo += f"Gerado por MILK IA Motor Multiaxial\n"
+        conteudo += f"Autor: Eduardo Mauricio Vieira Cabral e Araujo (Eduardo Mauer)\n\n"
+        conteudo += f"## Deliberacoes publicas e leis detetadas\n\n"
+        for delib, count in delib_counts.most_common():
+            conteudo += f"- **{delib}**: {count} ocorrencias\n"
+        conteudo += f"\n## Cruzamento deliberacao vs territorio\n\n"
+        delib_terr = cruzamentos.get("deliberacao_vs_territorio", {})
+        for delib, terrs in list(delib_terr.items())[:5]:
+            conteudo += f"### {delib}\n"
+            for terr, count in sorted(terrs.items(), key=lambda x: -x[1])[:5]:
+                conteudo += f"- {terr}: {count}\n"
+
+        doc_sha = hashlib.sha256(conteudo.encode("utf-8")).hexdigest()
+        md_file = BIBLIOTECA / f"sintese_deliberacoes_ciclo_{ciclo}.md"
+        with open(md_file, "w", encoding="utf-8") as f:
+            f.write(conteudo)
+        docs_gerados.append({"tipo": "sintese_deliberacoes", "sha256": doc_sha[:16], "ficheiro": md_file.name})
+
+    print(f"         {len(docs_gerados)} documentos de sintese gerados na biblioteca")
+    for d in docs_gerados:
+        print(f"           {d['tipo']}: {d['ficheiro']}")
+    return docs_gerados
+
+
+# ============================================================================
 # 5. CICLO COMPLETO
 # ============================================================================
 
 def ciclo_multiaxial(ciclo, amostra=None):
-    """Ciclo completo: analise multiaxial + testes + revisao + aprendizado."""
+    """Ciclo completo: ingestao + analise multiaxial + testes + aprimoramento + geracao + revisao."""
     t0 = datetime.datetime.now()
 
-    # Revisao de arquivos
+    # 0. Ingestao continua + deduplicacao
+    ing = ingestao_continua()
+
+    # 1. Revisao de arquivos
     revisao = revisao_arquivos()
 
-    # Analisar documentos
+    # 2. Analisar documentos
     print(f"  [Analise] {10 if amostra else 10538} documentos em 11 eixos...")
     analises = []
     docs = sorted(CORPUS.glob("*.json"))
@@ -657,17 +924,22 @@ def ciclo_multiaxial(ciclo, amostra=None):
         except Exception:
             continue
 
-    # Testes hiper-multiaxiais
-    print(f"  [Testes] Cruzando {len(analises)} analises em {8} matrizes multiaxiais...")
+    # 3. Testes hiper-multiaxiais
+    print(f"  [Testes] Cruzando {len(analises)} analises em 8 matrizes multiaxiais...")
     cruzamentos = testes_multiaxiais(analises)
 
-    # APRIMORAMENTO — escrever de volta no corpus (ISTO E O APRENDIZADO)
+    # 4. APRIMORAMENTO — escrever de volta no corpus
     aprim = aprimorar_documentos(analises, ciclo)
 
-    # Auto-gerenciamento
+    # 5. GERACAO DE CONHECIMENTO — criar sinteses na biblioteca
+    gerados = gerar_conhecimento(analises, cruzamentos, ciclo)
+
+    # 6. Auto-gerenciamento
     print(f"  [Aprendizado] Registando ciclo {ciclo}...")
     reg = auto_gerenciamento(ciclo, analises, cruzamentos, revisao)
     reg["aprimoramento"] = aprim
+    reg["ingestao"] = ing
+    reg["conhecimento_gerado"] = len(gerados)
 
     # Evolucao vs ciclo anterior
     indice_file = STATE_DIR / "aprendizado" / "indice_multiaxial.json"
@@ -686,7 +958,9 @@ def ciclo_multiaxial(ciclo, amostra=None):
     sintese = (
         f"Ciclo {ciclo}: {len(analises)} docs em 11 eixos. "
         f"Intensidade: {reg['intensidade_media']} ({evolucao}). "
+        f"Ingeridos: {ing['novos']} novos, {ing['duplicados_removidos']} dedup. "
         f"Aprimorados: {aprim['alterados']} docs, {aprim['gaps_corrigidos']} gaps corrigidos. "
+        f"Gerados: {len(gerados)} sinteses. "
         f"Gaps: {len(reg['gaps_identificados'])} tipos. "
         f"Deliberacoes: {len(reg['deliberacoes_publicas'])} tipos. "
         f"Risco AI Act: {dict(reg['risco_ai_act'])}. "

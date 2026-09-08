@@ -1,6 +1,6 @@
 {
   "ciclo": 3,
-  "timestamp": "2026-09-08T20:16:11.913480",
+  "timestamp": "2026-09-08T20:30:44.026896",
   "total_documentos": 10538,
   "intensidade_media": 1.55,
   "eixos_ativos": {
@@ -21,7 +21,6 @@
     "sem_cobertura_territorial": 8774,
     "sem_interoperabilidade_eif": 8383,
     "deliberacoes_publicas_por_classificar: 1": 70,
-    "consentimento_pendente_com_dados_pessoais": 61,
     "deliberacoes_publicas_por_classificar: 2": 12,
     "risco_elevado_sem_supervisao": 4,
     "deliberacoes_publicas_por_classificar: 3": 1
@@ -728,37 +727,6 @@
         "Mértola > Espírito Santo": 1,
         "Porto > Serpa": 1,
         "Castro Marim > Ajuda": 1
-      },
-      "consentimento_pendente_com_dados_pessoais": {
-        "Penalva do Castelo > Ajuda": 1,
-        "Penalva do Castelo > Real": 2,
-        "Lisboa > Lisboa > Ajuda": 2,
-        "Guarda > Guarda": 4,
-        "Guarda > Meios": 1,
-        "Viseu > Real": 4,
-        "<sem territorio>": 6,
-        "Horta > Almeida > Santa Maria": 1,
-        "Lisboa > Ajuda": 4,
-        "Marco de Canaveses > Marco": 1,
-        "Lisboa > Lisboa": 10,
-        "Arouca > Chave": 1,
-        "Caminha": 2,
-        "Mirandela > Passos": 1,
-        "Vila Nova de Famalicão > Bairro": 3,
-        "Albufeira > Real": 1,
-        "Braga > Barcelos > Sé": 1,
-        "Viseu > Campo": 1,
-        "Vagos > Marco": 1,
-        "Lisboa > Lisboa > Pena": 1,
-        "Gavião > Real": 4,
-        "Barcelos > Silva": 1,
-        "Lisboa > Real": 1,
-        "Redondo > Redondo": 1,
-        "Castro Marim > Altura": 1,
-        "Barcelos > Ajuda": 1,
-        "Real": 2,
-        "Mora > Fiscal": 1,
-        "Aveiro > Ajuda": 1
       },
       "deliberacoes_publicas_por_classificar: 1": {
         "Porto > Lisboa > Real": 1,

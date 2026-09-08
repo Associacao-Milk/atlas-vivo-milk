@@ -1,44 +1,43 @@
 {
   "ciclo": 1,
-  "timestamp": "2026-09-08T20:20:23.041485",
-  "total_documentos": 200,
-  "intensidade_media": 2.01,
+  "timestamp": "2026-09-08T20:32:21.039145",
+  "total_documentos": 100,
+  "intensidade_media": 2.23,
   "eixos_ativos": {
-    "tecnologica": 51,
-    "existencial": 23,
-    "territorial": 15,
-    "social": 9,
-    "administrativa": 8,
-    "cultural": 7,
-    "humana": 7,
-    "legal": 5,
-    "economica": 4,
+    "tecnologica": 27,
+    "existencial": 10,
+    "territorial": 9,
+    "social": 5,
+    "administrativa": 5,
+    "cultural": 4,
+    "legal": 3,
     "juridica": 2,
-    "ambiental": 2
+    "economica": 2,
+    "humana": 2,
+    "ambiental": 1
   },
   "gaps_identificados": {
-    "sem_validacao_humana": 200,
-    "sem_cobertura_territorial": 163,
-    "sem_interoperabilidade_eif": 153,
-    "deliberacoes_publicas_por_classificar: 1": 2,
+    "sem_validacao_humana": 100,
+    "sem_cobertura_territorial": 83,
+    "sem_interoperabilidade_eif": 76,
+    "deliberacoes_publicas_por_classificar: 1": 1,
     "deliberacoes_publicas_por_classificar: 2": 1
   },
   "deliberacoes_publicas": {
     "junta_freguesia": 1,
     "despacho": 1,
-    "planeamento_territorial": 1,
-    "deliberacao": 1
+    "planeamento_territorial": 1
   },
   "risco_ai_act": {
-    "minimo": 197,
-    "limitado": 3
+    "minimo": 98,
+    "limitado": 2
   },
   "eif_camadas": {
-    "organizacional": 10,
-    "tecnica": 28,
-    "governance": 13,
-    "legal": 2,
-    "semantica": 2
+    "organizacional": 7,
+    "tecnica": 16,
+    "governance": 4,
+    "legal": 1,
+    "semantica": 1
   },
   "revisao_arquivos": {
     "total": 10538,
@@ -48,39 +47,39 @@
   "top_cruzamentos": {
     "eixo_vs_eixo": {
       "existencial": {
-        "tecnologica": 15,
-        "administrativa": 6,
-        "economica": 4,
-        "ambiental": 2
-      },
-      "territorial": {
-        "existencial": 11,
-        "administrativa": 7,
         "tecnologica": 8,
-        "economica": 3,
-        "ambiental": 2
-      },
-      "social": {
-        "cultural": 5,
-        "territorial": 6,
-        "existencial": 8,
-        "administrativa": 5,
-        "tecnologica": 8,
-        "juridica": 2,
-        "legal": 3,
+        "administrativa": 4,
         "economica": 2,
         "ambiental": 1
       },
-      "cultural": {
-        "territorial": 7,
-        "existencial": 7,
-        "administrativa": 4,
+      "territorial": {
+        "existencial": 6,
+        "administrativa": 5,
         "tecnologica": 5,
         "economica": 2,
-        "ambiental": 2
+        "ambiental": 1
+      },
+      "social": {
+        "cultural": 4,
+        "territorial": 4,
+        "existencial": 5,
+        "administrativa": 4,
+        "tecnologica": 4,
+        "juridica": 2,
+        "legal": 1,
+        "economica": 1,
+        "ambiental": 1
+      },
+      "cultural": {
+        "territorial": 4,
+        "existencial": 4,
+        "administrativa": 4,
+        "tecnologica": 3,
+        "economica": 1,
+        "ambiental": 1
       },
       "administrativa": {
-        "tecnologica": 5,
+        "tecnologica": 3,
         "economica": 1,
         "ambiental": 1
       },
@@ -94,83 +93,62 @@
         "ambiental": 1
       },
       "legal": {
-        "territorial": 3,
-        "existencial": 4,
+        "territorial": 1,
+        "existencial": 2,
         "economica": 1,
-        "tecnologica": 4,
-        "administrativa": 1,
-        "cultural": 1
+        "tecnologica": 2
       },
       "economica": {
-        "tecnologica": 2,
-        "ambiental": 2
+        "tecnologica": 1,
+        "ambiental": 1
       },
       "humana": {
-        "existencial": 7,
-        "tecnologica": 6,
-        "social": 4,
+        "existencial": 2,
+        "tecnologica": 1,
+        "social": 1,
         "juridica": 1,
-        "cultural": 3,
-        "territorial": 4,
-        "administrativa": 2,
-        "economica": 2,
-        "ambiental": 1,
-        "legal": 2
+        "cultural": 1,
+        "territorial": 1,
+        "administrativa": 1,
+        "economica": 1,
+        "ambiental": 1
       }
     },
     "gaps_vs_territorio": {
       "sem_cobertura_territorial": {
-        "<sem territorio>": 160,
-        "Real": 2,
+        "<sem territorio>": 81,
+        "Real": 1,
         "Sé": 1
       },
       "sem_validacao_humana": {
-        "<sem territorio>": 160,
+        "<sem territorio>": 81,
         "Penalva do Castelo > Ajuda": 1,
-        "Guarda > Guarda": 7,
+        "Guarda > Guarda": 3,
         "Castelo Branco > Lisboa > Campanha": 2,
         "Porto > Lisboa > Real": 1,
-        "Santa Marta de Penaguião > Fontes": 3,
+        "Santa Marta de Penaguião > Fontes": 2,
         "Seia > Teixeira": 1,
         "Penalva do Castelo > Real": 3,
         "Penela > Ajuda": 1,
-        "Real": 2,
+        "Real": 1,
         "Lajes do Pico > Piedade": 1,
-        "Castro Verde > Entradas": 2,
+        "Castro Verde > Entradas": 1,
         "Chaves > Real": 1,
-        "Sé": 1,
-        "Castelo Branco > Moura": 1,
-        "Cuba": 2,
-        "Tomar > Ajuda": 1,
-        "Lisboa > Lisboa": 2,
-        "Porto > Lisboa": 1,
-        "Tomar": 1,
-        "Lisboa > Lisboa > Ajuda": 1,
-        "Loulé > Salir": 1,
-        "Moura > Campo": 1,
-        "Tomar > Ponte": 1,
-        "Cuba > Costa": 2
+        "Sé": 1
       },
       "sem_interoperabilidade_eif": {
-        "<sem territorio>": 131,
+        "<sem territorio>": 65,
         "Penalva do Castelo > Ajuda": 1,
-        "Guarda > Guarda": 6,
-        "Santa Marta de Penaguião > Fontes": 2,
+        "Guarda > Guarda": 3,
+        "Santa Marta de Penaguião > Fontes": 1,
         "Penalva do Castelo > Real": 2,
         "Lajes do Pico > Piedade": 1,
-        "Castro Verde > Entradas": 2,
+        "Castro Verde > Entradas": 1,
         "Chaves > Real": 1,
-        "Sé": 1,
-        "Castelo Branco > Moura": 1,
-        "Tomar > Ajuda": 1,
-        "Porto > Lisboa": 1,
-        "Tomar": 1,
-        "Loulé > Salir": 1,
-        "Tomar > Ponte": 1
+        "Sé": 1
       },
       "deliberacoes_publicas_por_classificar: 1": {
-        "Porto > Lisboa > Real": 1,
-        "Lisboa > Lisboa": 1
+        "Porto > Lisboa > Real": 1
       },
       "deliberacoes_publicas_por_classificar: 2": {
         "Santa Marta de Penaguião > Fontes": 1

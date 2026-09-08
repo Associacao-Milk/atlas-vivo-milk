@@ -1,6 +1,6 @@
 {
-  "ultima_atualizacao": "2026-09-08T20:20:37.537975",
-  "total_ciclos": 2,
+  "ultima_atualizacao": "2026-09-08T20:32:21.040773",
+  "total_ciclos": 1,
   "ciclos": [
     {
       "ciclo": 1,
@@ -85,6 +85,34 @@
       "intensidade": 2.01,
       "gaps": 5,
       "deliberacoes": 4
+    },
+    {
+      "ciclo": 1,
+      "timestamp": "2026-09-08T20:23:10.819622",
+      "intensidade": 1.55,
+      "gaps": 8,
+      "deliberacoes": 10
+    },
+    {
+      "ciclo": 2,
+      "timestamp": "2026-09-08T20:26:54.222767",
+      "intensidade": 1.55,
+      "gaps": 7,
+      "deliberacoes": 10
+    },
+    {
+      "ciclo": 3,
+      "timestamp": "2026-09-08T20:30:44.026896",
+      "intensidade": 1.55,
+      "gaps": 7,
+      "deliberacoes": 10
+    },
+    {
+      "ciclo": 1,
+      "timestamp": "2026-09-08T20:32:21.039145",
+      "intensidade": 2.23,
+      "gaps": 5,
+      "deliberacoes": 3
     }
   ]
 }

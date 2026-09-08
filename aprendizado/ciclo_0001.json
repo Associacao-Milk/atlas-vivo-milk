@@ -1,11 +1,11 @@
 {
   "ciclo": 1,
-  "timestamp": "2026-09-08T19:13:30.933651",
-  "documentos_analisados": 10535,
+  "timestamp": "2026-09-08T19:21:20.002125",
+  "documentos_analisados": 10538,
   "intensidade_media": 1.66,
   "camadas_ativas": {
     "existencial": 909,
-    "territorial": 556,
+    "territorial": 557,
     "humana": 349,
     "cultural": 314,
     "legal": 305,
@@ -13,9 +13,9 @@
     "juridica": 132
   },
   "temas_ativos": {
-    "milk": 1168,
-    "atlas_vivo": 976,
-    "care": 393,
+    "milk": 1170,
+    "atlas_vivo": 978,
+    "care": 394,
     "rgpd": 351,
     "curadoria": 212,
     "qr_code": 186,
@@ -25,8 +25,8 @@
     "dado_sem_lado": 115
   },
   "entidades_ativas": {
-    "MILK": 1252,
-    "Atlas Vivo": 392,
+    "MILK": 1255,
+    "Atlas Vivo": 394,
     "Associação MILK": 176,
     "Dado Sem Lado": 105,
     "Reizinho": 91,
@@ -48,13 +48,13 @@
     "Moura": 18,
     "Porto > Porto": 11
   },
-  "sintese": "Corpus de 10535 documentos com intensidade semantica media de 1.66. Camadas detectadas: existencial(909), territorial(556), humana(349), cultural(314), legal(305), social(239), juridica(132). Temas dominantes: milk(1168), atlas_vivo(976), care(393), rgpd(351), curadoria(212).",
+  "sintese": "Corpus de 10538 documentos com intensidade semantica media de 1.66. Camadas detectadas: existencial(909), territorial(557), humana(349), cultural(314), legal(305), social(239), juridica(132). Temas dominantes: milk(1170), atlas_vivo(978), care(394), rgpd(351), curadoria(212).",
   "solucoes_propostas": 11,
   "top_solucoes": [
     {
       "tipo": "gap_territorial",
       "severidade": "alta",
-      "descricao": "9938 documentos (94.3%) sem territorio classificado",
+      "descricao": "9940 documentos (94.3%) sem territorio classificado",
       "solucao": "Expandir gazetteer e usar original_path para inferir territorio",
       "prioridade": 1
     },
@@ -68,7 +68,7 @@
     {
       "tipo": "oportunidade_curadoria",
       "severidade": "baixa",
-      "descricao": "1294 documentos com camadas semantica detectadas",
+      "descricao": "1295 documentos com camadas semantica detectadas",
       "solucao": "Usar camadas detectadas para criar rotas curatoriais tematicas",
       "prioridade": 3
     },
@@ -82,14 +82,14 @@
     {
       "tipo": "entidade_sem_territorio",
       "severidade": "media",
-      "descricao": "Entidade 'MILK' mencionada em 998 documentos sem territorio",
+      "descricao": "Entidade 'MILK' mencionada em 1000 documentos sem territorio",
       "solucao": "Localizar referencias a 'MILK' geograficamente",
       "prioridade": 5
     }
   ],
   "conexoes_tematicas": {
     "atlas_vivo": {
-      "milk": 947,
+      "milk": 949,
       "curadoria": 145,
       "financiamento": 45
     },
@@ -171,8 +171,8 @@
     },
     "care": {
       "qr_code": 12,
-      "atlas_vivo": 197,
-      "milk": 256,
+      "atlas_vivo": 198,
+      "milk": 257,
       "curadoria": 212,
       "consentimento": 62,
       "rgpd": 61,

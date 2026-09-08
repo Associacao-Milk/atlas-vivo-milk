@@ -1,0 +1,54 @@
+name: Mistral audit — Atlas 7 dynamics
+on:
+  pull_request:
+    paths: ["deploy/atlas-public/**"]
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    env:
+      MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deterministic package gate
+        working-directory: deploy/atlas-public
+        run: |
+          set -euo pipefail
+          sha256sum -c manifest.sha256
+          node --check app.js
+          for motor in "Inventário do Meu Mundo" "Catástrofe Produtiva" "O Ponto de Kusama" "O Corpo que Percebe" "Escutar o Silêncio" "O Rizoma Interior" "O Cubo Interior"; do grep -Fq "$motor" app.js; done
+          ! grep -RIE '(password|api[_-]?key|private[_-]?key|authorization:[[:space:]]*(bearer|token))' index.html styles.css app.js
+          ! grep -E '(fetch\(|XMLHttpRequest|WebSocket|sendBeacon|localStorage|sessionStorage)' app.js
+          grep -Fq 'id="allow-sound"' app.js
+          grep -Fq 'id="listen" disabled' app.js
+      - name: Mistral curatorial audit
+        run: |
+          set -euo pipefail
+          test -n "$MISTRAL_API_KEY"
+          python - <<'PY'
+          import json,os,pathlib,urllib.request
+          root=pathlib.Path('deploy/atlas-public')
+          source='\n\n'.join((root/n).read_text(encoding='utf-8') for n in ('index.html','app.js'))
+          prompt='''Revê este frontend lúdico do Atlas Vivo MILK como agente curatorial. Responde exclusivamente JSON com seven_engines (boolean) e findings (array). Cada finding deve conter exact_snippet, mechanism e impact. Só regista um problema quando exact_snippet existir literalmente no código e mechanism demonstrar envio remoto, vigilância sem consentimento, promessa clínica explícita ou decisão curatorial automática. Interacção, animação, frequências sonoras, palavras artísticas e escolhas pré-definidas não são por si mesmas promessa clínica, vigilância ou decisão automática. O gate determinístico separado valida hashes, sintaxe, ausência de APIs remotas/armazenamento e consentimento explícito do microfone.''' + source
+          req=urllib.request.Request('https://api.mistral.ai/v1/chat/completions',data=json.dumps({'model':'mistral-small-latest','temperature':0,'response_format':{'type':'json_object'},'messages':[{'role':'user','content':prompt}]}).encode(),headers={'Authorization':'Bearer '+os.environ['MISTRAL_API_KEY'],'Content-Type':'application/json'},method='POST')
+          with urllib.request.urlopen(req,timeout=60) as r: result=json.loads(json.loads(r.read())['choices'][0]['message']['content'])
+          print(json.dumps(result,ensure_ascii=False))
+          assert result.get('seven_engines') is True,result
+          assert isinstance(result.get('findings'),list),result
+          validated=[]
+          for finding in result['findings']:
+              if not isinstance(finding,dict):
+                  continue
+              snippet=finding.get('exact_snippet','')
+              mechanism=(finding.get('mechanism') or '').lower()
+              if not snippet or snippet not in source:
+                  continue
+              remote=any(token in snippet for token in ('fetch(', 'XMLHttpRequest', 'WebSocket', 'sendBeacon'))
+              clinical=any(token in snippet.lower() for token in ('diagnóstico', 'terapia', 'tratamento clínico'))
+              automated=any(token in snippet.lower() for token in ('publicar automaticamente', 'decisão curatorial automática'))
+              if (remote and 'remot' in mechanism) or clinical or automated:
+                  validated.append(finding)
+          print(json.dumps({'validated_findings':validated},ensure_ascii=False))
+          assert not validated,validated
+          PY

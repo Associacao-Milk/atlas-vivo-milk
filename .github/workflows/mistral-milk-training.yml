@@ -1,0 +1,101 @@
+name: MILK Mistral training corpus
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+      - codex/milk-curadorias-ia-webapp-20260821
+    paths:
+      - 'deploy/atlas-public/catalogo-curatorial.json'
+      - 'integrations/atlas-kernel/config/milk-voice.json'
+      - '.github/workflows/mistral-milk-training.yml'
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: milk-mistral-training
+  cancel-in-progress: false
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+      PTSERVIDOR_FTPS_PASSWORD: ${{ secrets.PTSERVIDOR_FTPS_PASSWORD }}
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      RUN_ID: ${{ github.run_id }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build, evaluate and store MILK curriculum privately
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import ftplib,hashlib,io,json,os,ssl,urllib.error,urllib.request
+
+          key=os.environ["MISTRAL_API_KEY"].strip()
+          password=os.environ["PTSERVIDOR_FTPS_PASSWORD"].strip()
+          gh=os.environ["GH_TOKEN"];repo=os.environ["REPO"];run_id=os.environ["RUN_ID"]
+          catalog=json.load(open("deploy/atlas-public/catalogo-curatorial.json",encoding="utf-8"))
+          voice=json.load(open("integrations/atlas-kernel/config/milk-voice.json",encoding="utf-8"))
+
+          def request(url,method="GET",payload=None,headers=None,timeout=180):
+              req=urllib.request.Request(url,data=None if payload is None else json.dumps(payload).encode(),
+                  method=method,headers=headers or {})
+              with urllib.request.urlopen(req,timeout=timeout) as result:return result.status,result.read()
+
+          def comment(text):
+              request(f"https://api.github.com/repos/{repo}/issues/35/comments","POST",{"body":text},
+                  {"Authorization":"Bearer "+gh,"Content-Type":"application/json","Accept":"application/vnd.github+json"},60)
+
+          forbidden=("email","telefone","morada","nome_completo","biometria","saude","menor_id")
+          raw=json.dumps(catalog,ensure_ascii=False).lower()
+          if any(term in raw for term in forbidden):raise RuntimeError("public_training_corpus_contains_forbidden_fields")
+          if catalog.get("recolha_publica")!="local_only":raise RuntimeError("public_collection_policy_invalid")
+          if voice["separation"]["human"]!="decide publicação, interpretação institucional e uso de dados":
+              raise RuntimeError("human_governance_missing")
+
+          roles=[
+            ("hermeneuta_curatorial","Preserva autoria e densidade; converte cada entrada em pares de convite e resposta sem explicar o Atlas."),
+            ("ontologia_toponimica","Produz relações entre gesto, família, território e proveniência sem inventar topónimos."),
+            ("mediacao_ludica","Produz variações jogáveis, acessíveis e não competitivas em português europeu."),
+            ("auditoria_rgpd","Detecta recolha, perfil psicológico, vigilância, menores e publicação automática; devolve bloqueios.")
+          ]
+          outputs=[]
+          corpus={"voice":voice,"entries":catalog["entradas"]}
+          for role,instruction in roles:
+              payload={"model":"mistral-small-latest","temperature":0.1,"response_format":{"type":"json_object"},
+                       "messages":[
+                         {"role":"system","content":f"És o agente Mistral {role} da MILK. {instruction} A voz externa é MILK. Devolve JSON válido com role, findings, training_pairs, tests e review_required."},
+                         {"role":"user","content":json.dumps(corpus,ensure_ascii=False)}]}
+              status,body=request("https://api.mistral.ai/v1/chat/completions","POST",payload,
+                    {"Authorization":"Bearer "+key,"Content-Type":"application/json"},240)
+              if status!=200:raise RuntimeError(f"mistral_{role}_http_{status}")
+              content=json.loads(body)["choices"][0]["message"]["content"]
+              parsed=json.loads(content)
+              parsed["role"]=role;outputs.append(parsed)
+
+          result={"schema_version":"1.0.0","run_id":run_id,
+                  "source_sha256":hashlib.sha256(json.dumps(corpus,sort_keys=True,ensure_ascii=False).encode()).hexdigest(),
+                  "data_classification":"publico_sem_dados_pessoais","fine_tuning_claimed":False,
+                  "mode":"curriculo_supervisionado_e_avaliacao_mistral",
+                  "human_review_required":True,"agents":outputs}
+          data=json.dumps(result,ensure_ascii=False,sort_keys=True,separators=(",",":")).encode()
+          sha=hashlib.sha256(data).hexdigest();name=f"milk-training-{run_id}.json"
+
+          ftp=ftplib.FTP_TLS(context=ssl.create_default_context(),timeout=120)
+          ftp.connect("troi.ptservidor.net",21);ftp.login("migration@associacaomilk.pt",password);ftp.prot_p()
+          for part in ("atlas-milk-ai-training-v1","runs"):
+              try:ftp.mkd(part)
+              except ftplib.all_errors:pass
+              ftp.cwd(part)
+          ftp.storbinary("STOR "+name,io.BytesIO(data),blocksize=1048576)
+          back=bytearray();ftp.retrbinary("RETR "+name,back.extend,blocksize=1048576);ftp.quit()
+          if hashlib.sha256(back).hexdigest()!=sha:raise RuntimeError("private_training_receipt_mismatch")
+          comment(f"MILK_MISTRAL_TRAINING_VERIFIED run={run_id} agents={len(outputs)} catalogue_entries={len(catalog['entradas'])} bytes={len(data)} sha256={sha} storage=private_ftps human_review_required=yes fine_tuning_claimed=no")
+          PY

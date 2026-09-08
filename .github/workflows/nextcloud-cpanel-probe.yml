@@ -1,0 +1,60 @@
+name: Nextcloud cPanel recovery probe
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - '.github/workflows/nextcloud-cpanel-probe.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      CPANEL_TOKEN: ${{ secrets.CPANEL_API_TOKEN || secrets.CPANEL_TOKEN || secrets.PTSERVIDOR_CPANEL_TOKEN }}
+    steps:
+      - name: Probe cPanel token and locate existing Nextcloud
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, urllib.parse, urllib.request, urllib.error
+          host='troi.ptservidor.net'
+          user='associ16'
+          token=os.environ.get('CPANEL_TOKEN','').strip()
+          if not token:
+              raise SystemExit('CPANEL_RECOVERY_BLOCKED cause=CPANEL_API_TOKEN_MISSING')
+
+          def uapi(module,function,params=None):
+              q=urllib.parse.urlencode(params or {})
+              url=f'https://{host}:2083/execute/{module}/{function}' + (('?' + q) if q else '')
+              req=urllib.request.Request(url,headers={'Authorization':f'cpanel {user}:{token}','Accept':'application/json'})
+              try:
+                  with urllib.request.urlopen(req,timeout=45) as r:
+                      payload=json.loads(r.read())
+              except urllib.error.HTTPError as exc:
+                  body=exc.read().decode('utf-8','replace')[:300]
+                  raise RuntimeError(f'CPANEL_HTTP_{exc.code} detail={body}')
+              result=payload.get('result',payload)
+              if int(result.get('status',payload.get('status',0)) or 0)!=1:
+                  raise RuntimeError('CPANEL_UAPI_FAILED '+str(result.get('errors') or payload.get('errors') or 'unknown')[:300])
+              return result.get('data',payload.get('data'))
+
+          domains=uapi('DomainInfo','list_domains')
+          listing=uapi('Fileman','list_files',{'dir':'public_html','show_hidden':1,'types':'file|dir'})
+          names=[]
+          if isinstance(listing,list):
+              for item in listing:
+                  if isinstance(item,dict): names.append(str(item.get('file') or item.get('name') or item.get('path') or ''))
+          elif isinstance(listing,dict):
+              for item in listing.get('files',[]) if isinstance(listing.get('files'),list) else []:
+                  if isinstance(item,dict): names.append(str(item.get('file') or item.get('name') or item.get('path') or ''))
+          candidates=[n for n in names if 'nextcl' in n.lower()]
+          print('CPANEL_RECOVERY_READY token=present')
+          print('nextcloud_candidates='+','.join(candidates[:20]))
+          print('domain_probe=ok')
+          PY

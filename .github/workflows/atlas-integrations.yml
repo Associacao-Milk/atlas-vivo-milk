@@ -1,0 +1,25 @@
+name: Atlas integration kernel
+
+on:
+  push:
+    paths:
+      - "integrations/atlas-kernel/**"
+      - ".github/workflows/atlas-integrations.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install
+        run: python -m pip install -e integrations/atlas-kernel
+      - name: Test
+        run: PYTHONPATH=integrations/atlas-kernel/src python -m unittest discover -s integrations/atlas-kernel/tests -v

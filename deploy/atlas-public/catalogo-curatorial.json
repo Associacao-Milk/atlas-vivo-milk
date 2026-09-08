@@ -1,0 +1,500 @@
+{
+  "schema": "https://atlas.associacaomilk.pt/schemas/catalogo-curatorial-v1.json",
+  "versao": "1.0.0",
+  "idioma": "pt-PT",
+  "tipografia": "Montserrat",
+  "principio": "a camada pública brinca; a camada invisível trabalha e documenta",
+  "recolha_publica": "local_only",
+  "entradas": [
+    {
+      "ordem": 1,
+      "id": "livro-cubo",
+      "nome": "Livro Cubo",
+      "familia": "curadoria",
+      "mecanica": "rodar",
+      "convite": "Roda uma face. Abre uma camada. Deixa um vestígio.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 2,
+      "id": "festival-dado-sem-lado",
+      "nome": "Festival Dado Sem Lado",
+      "familia": "curadoria",
+      "mecanica": "sortear",
+      "convite": "Lança sem procurar o lado certo.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 3,
+      "id": "arquitetura-sete-dinamicas",
+      "nome": "Arquitectura Digital das 7 Dinâmicas",
+      "familia": "curadoria",
+      "mecanica": "ligar",
+      "convite": "Escolhe um jogo. Liga-o a outro.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 4,
+      "id": "galeria-diletante",
+      "nome": "Galeria Diletante",
+      "familia": "curadoria",
+      "mecanica": "escolher",
+      "convite": "Escolhe sem autoridade. Aproxima duas coisas.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 5,
+      "id": "cronicas-fuco",
+      "nome": "Crónicas Cãotadas por Fucô",
+      "familia": "curadoria",
+      "mecanica": "continuar",
+      "convite": "Apanha uma frase pelo rabo. Continua-a.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 6,
+      "id": "reizinho-sainha",
+      "nome": "Reizinho Sainha",
+      "familia": "curadoria",
+      "mecanica": "desobedecer",
+      "convite": "Inventa uma regra. Quebra-a com delicadeza.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 7,
+      "id": "nuno-escuta",
+      "nome": "Nuno / Escuta",
+      "familia": "curadoria",
+      "mecanica": "escutar",
+      "convite": "Escuta um vestígio. Responde com outro.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 8,
+      "id": "cosmicoxes",
+      "nome": "COSMICOXES",
+      "familia": "curadoria",
+      "mecanica": "constelar",
+      "convite": "Toca três pontos. Faz nascer uma constelação.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 9,
+      "id": "dado-rosa",
+      "nome": "Dado Rosa",
+      "familia": "curadoria",
+      "mecanica": "sortear",
+      "convite": "Atira uma possibilidade ao ar.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 10,
+      "id": "dado-100lado",
+      "nome": "DADO 100LADO",
+      "familia": "curadoria",
+      "mecanica": "rodar",
+      "convite": "Roda até o lado deixar de existir.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 11,
+      "id": "nos",
+      "nome": "NÓS",
+      "familia": "curadoria",
+      "mecanica": "atar",
+      "convite": "Ata duas palavras que nunca se encontraram.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 12,
+      "id": "falarte",
+      "nome": "falARTE",
+      "familia": "curadoria",
+      "mecanica": "falar",
+      "convite": "Diz uma palavra como matéria.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 13,
+      "id": "simplicidade",
+      "nome": "simpliCIDADE",
+      "familia": "curadoria",
+      "mecanica": "reduzir",
+      "convite": "Retira até sobrar um gesto habitável.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 14,
+      "id": "arteria",
+      "nome": "ARTÉRIA",
+      "familia": "curadoria",
+      "mecanica": "circular",
+      "convite": "Faz circular uma memória entre dois pontos.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 15,
+      "id": "cinco-portas",
+      "nome": "Cinco Portas",
+      "familia": "curadoria",
+      "mecanica": "abrir",
+      "convite": "Abre uma porta. Não perguntes para onde.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 16,
+      "id": "palavra-ritual",
+      "nome": "Palavra Ritual",
+      "familia": "curadoria",
+      "mecanica": "repetir",
+      "convite": "Repete até a palavra mudar de corpo.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 17,
+      "id": "curadoria-inesperado",
+      "nome": "Curadoria do Inesperado",
+      "familia": "curadoria",
+      "mecanica": "desviar",
+      "convite": "Escolhe o que não estavas a procurar.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 18,
+      "id": "casa-nao-existia",
+      "nome": "A Casa que Não Existia",
+      "familia": "curadoria",
+      "mecanica": "habitar",
+      "convite": "Constrói uma divisão com três palavras.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 19,
+      "id": "campo-ourique-olho-orelha",
+      "nome": "Campo de Ourique: Olho / Orelha",
+      "familia": "curadoria",
+      "mecanica": "alternar",
+      "convite": "Olha sem ouvir. Ouve sem olhar.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 20,
+      "id": "bilhete-assimetrico",
+      "nome": "Bilhete Assimétrico",
+      "familia": "curadoria",
+      "mecanica": "trocar",
+      "convite": "Escreve metade. Guarda a outra em silêncio.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 21,
+      "id": "caderno-rasgado",
+      "nome": "Caderno Rasgado",
+      "familia": "curadoria",
+      "mecanica": "rasgar",
+      "convite": "Parte uma frase. Faz duas entradas.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 22,
+      "id": "selo-atlas-vaquinhas",
+      "nome": "Selo Atlas / Vaquinhas",
+      "familia": "curadoria",
+      "mecanica": "marcar",
+      "convite": "Marca um possível sem o fechar.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 23,
+      "id": "inventario-meu-mundo",
+      "nome": "Inventário do Meu Mundo",
+      "familia": "jogo",
+      "mecanica": "inventariar",
+      "convite": "Escolhe três coisas. Dá-lhes um gesto.",
+      "camada": "publica",
+      "estado": "implementado_especifico"
+    },
+    {
+      "ordem": 24,
+      "id": "catastrofe-produtiva",
+      "nome": "Catástrofe Produtiva",
+      "familia": "jogo",
+      "mecanica": "transformar",
+      "convite": "Faz. Rasga. Continua.",
+      "camada": "publica",
+      "estado": "implementado_especifico"
+    },
+    {
+      "ordem": 25,
+      "id": "ponto-kusama",
+      "nome": "O Ponto de Kusama",
+      "familia": "jogo",
+      "mecanica": "pontuar",
+      "convite": "Um ponto. Outro. Até o campo mudar.",
+      "camada": "publica",
+      "estado": "implementado_especifico"
+    },
+    {
+      "ordem": 26,
+      "id": "corpo-percebe",
+      "nome": "O Corpo que Percebe",
+      "familia": "jogo",
+      "mecanica": "mover",
+      "convite": "Fecha os olhos. O corpo começa.",
+      "camada": "publica",
+      "estado": "implementado_especifico"
+    },
+    {
+      "ordem": 27,
+      "id": "escutar-silencio",
+      "nome": "Escutar o Silêncio",
+      "familia": "jogo",
+      "mecanica": "escutar",
+      "convite": "Escuta o que quase não existe.",
+      "camada": "publica",
+      "estado": "implementado_especifico"
+    },
+    {
+      "ordem": 28,
+      "id": "rizoma-interior",
+      "nome": "O Rizoma Interior",
+      "familia": "jogo",
+      "mecanica": "ligar",
+      "convite": "Liga sem ordenar.",
+      "camada": "publica",
+      "estado": "implementado_especifico"
+    },
+    {
+      "ordem": 29,
+      "id": "cubo-interior",
+      "nome": "O Cubo Interior",
+      "familia": "jogo",
+      "mecanica": "rodar",
+      "convite": "Roda o que ficou.",
+      "camada": "publica",
+      "estado": "implementado_especifico"
+    },
+    {
+      "ordem": 30,
+      "id": "festas-827",
+      "nome": "827 Festas",
+      "familia": "folclore",
+      "mecanica": "convidar",
+      "convite": "Recebe um convite territorial. Responde com um gesto.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 31,
+      "id": "lendas-138",
+      "nome": "138 Lendas",
+      "familia": "folclore",
+      "mecanica": "desviar",
+      "convite": "Escolhe um princípio. Inventa outro fim.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 32,
+      "id": "parlendas",
+      "nome": "Parlendas",
+      "familia": "folclore",
+      "mecanica": "ritmar",
+      "convite": "Bate o ritmo. Troca a última palavra.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 33,
+      "id": "trava-linguas",
+      "nome": "Trava-línguas",
+      "familia": "folclore",
+      "mecanica": "tropeçar",
+      "convite": "Diz depressa. Guarda o tropeção.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 34,
+      "id": "lengalengas",
+      "nome": "Lengalengas",
+      "familia": "folclore",
+      "mecanica": "continuar",
+      "convite": "Repete. Acrescenta. Passa adiante.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 35,
+      "id": "adivinhas",
+      "nome": "Adivinhas",
+      "familia": "folclore",
+      "mecanica": "ocultar",
+      "convite": "Esconde a resposta dentro da pergunta.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 36,
+      "id": "proverbios",
+      "nome": "Provérbios",
+      "familia": "folclore",
+      "mecanica": "virar",
+      "convite": "Vira o provérbio do avesso.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 37,
+      "id": "pregoes",
+      "nome": "Pregões",
+      "familia": "folclore",
+      "mecanica": "chamar",
+      "convite": "Chama uma coisa que ainda não chegou.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 38,
+      "id": "cantares",
+      "nome": "Cantares",
+      "familia": "folclore",
+      "mecanica": "ecoar",
+      "convite": "Escolhe uma sílaba. Faz-lhe eco.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 39,
+      "id": "dancas",
+      "nome": "Danças",
+      "familia": "folclore",
+      "mecanica": "mover",
+      "convite": "Move só aquilo que normalmente fica parado.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 40,
+      "id": "oficios",
+      "nome": "Ofícios",
+      "familia": "folclore",
+      "mecanica": "gesticular",
+      "convite": "Escolhe um ofício. Faz o gesto sem nome.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 41,
+      "id": "alcunhas",
+      "nome": "Alcunhas",
+      "familia": "folclore",
+      "mecanica": "nomear",
+      "convite": "Dá um nome ao que não cabe no nome.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 42,
+      "id": "contos-orais",
+      "nome": "Contos Orais",
+      "familia": "folclore",
+      "mecanica": "continuar",
+      "convite": "Começa no meio. Entrega o fim a outra pessoa.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 43,
+      "id": "romarias",
+      "nome": "Romarias",
+      "familia": "folclore",
+      "mecanica": "percorrer",
+      "convite": "Escolhe três paragens para uma viagem imóvel.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 44,
+      "id": "brincadeiras-roda",
+      "nome": "Brincadeiras de Roda",
+      "familia": "folclore",
+      "mecanica": "circular",
+      "convite": "Faz a palavra passar sem a prender.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 45,
+      "id": "palavra-da-freguesia",
+      "nome": "Palavra da Freguesia",
+      "familia": "girias",
+      "mecanica": "situar",
+      "convite": "Escolhe uma palavra local. Muda-a de lugar.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 46,
+      "id": "giria-do-avesso",
+      "nome": "Gíria do Avesso",
+      "familia": "girias",
+      "mecanica": "traduzir",
+      "convite": "Traduz sem explicar. Deixa o som decidir.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 47,
+      "id": "eco-toponimico",
+      "nome": "Eco Toponímico",
+      "familia": "girias",
+      "mecanica": "ecoar",
+      "convite": "Diz o lugar. Escuta o que o nome devolve.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 48,
+      "id": "palavra-intrusa",
+      "nome": "Palavra Intrusa",
+      "familia": "girias",
+      "mecanica": "misturar",
+      "convite": "Mete uma palavra de outra terra na frase.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    },
+    {
+      "ordem": 49,
+      "id": "dicionario-mutante",
+      "nome": "Dicionário Mutante",
+      "familia": "girias",
+      "mecanica": "transformar",
+      "convite": "Troca uma letra. Guarda o novo sentido.",
+      "camada": "publica",
+      "estado": "operavel_motor_comum"
+    }
+  ]
+}

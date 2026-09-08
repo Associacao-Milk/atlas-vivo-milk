@@ -1,0 +1,222 @@
+name: Atlas verified FTPS to Nextcloud import
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - '.github/workflows/nextcloud-server-import.yml'
+  schedule:
+    - cron: '27 * * * *'
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: atlas-nextcloud-server-import
+  cancel-in-progress: false
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      PTSERVIDOR_FTPS_PASSWORD: ${{ secrets.PTSERVIDOR_FTPS_PASSWORD }}
+      PTSERVIDOR_FTP_WEBDAV: ${{ secrets.PTSERVIDOR_FTP_WEBDAV }}
+      NEXTCLOUD_BASE_URL: ${{ secrets.NEXTCLOUD_BASE_URL }}
+      NEXTCLOUD_USER: ${{ secrets.NEXTCLOUD_USER }}
+      NEXTCLOUD_APP_PASSWORD: ${{ secrets.NEXTCLOUD_APP_PASSWORD }}
+      NEXTCLOUD_KEY: ${{ secrets.NEXTCLOUD_KEY }}
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      RUN_ID: ${{ github.run_id }}
+    steps:
+      - name: Install transfer client
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq rclone
+
+      - name: Import only FTPS objects with verified receipts into Nextcloud
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import ftplib, json, os, pathlib, ssl, subprocess, urllib.parse, urllib.request
+
+          FTPS_PASSWORD=os.environ.get('PTSERVIDOR_FTPS_PASSWORD','').strip()
+          LEGACY_WEBDAV=os.environ.get('PTSERVIDOR_FTP_WEBDAV','').strip()
+          BASE=(os.environ.get('NEXTCLOUD_BASE_URL','').strip() or 'https://associacaomilk.pt/nextcloud')
+          USER_HINT=os.environ.get('NEXTCLOUD_USER','').strip()
+          APP_PASSWORD=os.environ.get('NEXTCLOUD_APP_PASSWORD','').strip()
+          NEXTCLOUD_KEY=os.environ.get('NEXTCLOUD_KEY','').strip()
+          GH=os.environ.get('GH_TOKEN','').strip()
+          REPO=os.environ.get('REPO','milkivc/atlas-vivo-milk')
+          RUN_ID=os.environ.get('RUN_ID','unknown')
+          TMP=pathlib.Path(os.environ.get('RUNNER_TEMP','/tmp'))
+          CFG=TMP/'rclone-nextcloud.conf'
+          FILES=TMP/'verified-ftps-files.txt'
+          SOURCE_ROOT='atlas-takeout-expanded-v1'
+          RECEIPTS='.milk-receipts'
+          DESTINATION='Atlas Vivo MILK/.staging/Drive Takeout'
+
+          def comment(msg):
+              print(msg,flush=True)
+              if not GH: return
+              req=urllib.request.Request(
+                  f'https://api.github.com/repos/{REPO}/issues/35/comments',
+                  data=json.dumps({'body':msg}).encode(),method='POST',
+                  headers={'Authorization':'Bearer '+GH,'Content-Type':'application/json','Accept':'application/vnd.github+json'})
+              try: urllib.request.urlopen(req,timeout=45).read()
+              except Exception: pass
+
+          def run(args,label,capture=True):
+              p=subprocess.run(args,text=True,capture_output=capture,check=False)
+              if p.returncode:
+                  detail=((p.stderr or p.stdout or '').splitlines()[-1:] or ['unknown'])[0][:300]
+                  raise RuntimeError(label+' detail='+detail)
+              return p.stdout if capture else ''
+
+          def obscure(value):
+              return run(['rclone','obscure',value],'RCLONE_OBSCURE_FAILED').strip()
+
+          if not FTPS_PASSWORD:
+              raise RuntimeError('PTSERVIDOR_FTPS_PASSWORD_MISSING')
+
+          parsed=urllib.parse.urlsplit(BASE)
+          if parsed.scheme!='https': raise RuntimeError('NEXTCLOUD_HTTPS_REQUIRED')
+          if parsed.hostname=='associacaomilk.pt' and not parsed.path.startswith('/nextcloud'):
+              raise RuntimeError('NEXTCLOUD_MAIN_SITE_GUARD')
+          if parsed.hostname=='atlas.associacaomilk.pt':
+              raise RuntimeError('NEXTCLOUD_ATLAS_WEBROOT_GUARD')
+
+          users=[]
+          for u in (USER_HINT,'admin','milk','associ16','migration@associacaomilk.pt'):
+              if u and u not in users: users.append(u)
+          secrets=[]
+          for label,value in (
+              ('NEXTCLOUD_APP_PASSWORD',APP_PASSWORD),
+              ('NEXTCLOUD_KEY',NEXTCLOUD_KEY),
+              ('PTSERVIDOR_FTP_WEBDAV',LEGACY_WEBDAV),
+          ):
+              if value and all(value!=v for _,v in secrets): secrets.append((label,value))
+          if not secrets:
+              raise RuntimeError('NEXTCLOUD_CREDENTIALS_MISSING')
+
+          winner=None
+          attempts=0
+          for secret_label,password in secrets:
+              for user in users:
+                  attempts+=1
+                  endpoint=BASE.rstrip('/')+'/remote.php/dav/files/'+urllib.parse.quote(user,safe='')+'/'
+                  CFG.write_text(
+                      '[nextcloud]\n'
+                      'type = webdav\n'
+                      'url = '+endpoint+'\n'
+                      'vendor = nextcloud\n'
+                      'user = '+user+'\n'
+                      'pass = '+obscure(password)+'\n',encoding='utf-8')
+                  os.chmod(CFG,0o600)
+                  p=subprocess.run(['rclone','--config',str(CFG),'lsd','nextcloud:'],text=True,capture_output=True,check=False)
+                  if p.returncode==0:
+                      winner=(secret_label,password,user,endpoint)
+                      break
+              if winner: break
+
+          if not winner:
+              comment(f'NEXTCLOUD_AUTH_BLOCKED run={RUN_ID} attempts={attempts} endpoint=associacaomilk.pt/nextcloud secret_values_disclosed=0')
+              raise RuntimeError('NEXTCLOUD_WEBDAV_AUTH_FAILED_ALL_EXISTING_ROUTES')
+
+          secret_label,password,user,endpoint=winner
+          CFG.write_text(
+              '[nextcloud]\n'
+              'type = webdav\n'
+              'url = '+endpoint+'\n'
+              'vendor = nextcloud\n'
+              'user = '+user+'\n'
+              'pass = '+obscure(password)+'\n'
+              '\n[ftps]\n'
+              'type = ftp\n'
+              'host = troi.ptservidor.net\n'
+              'port = 21\n'
+              'user = migration@associacaomilk.pt\n'
+              'pass = '+obscure(FTPS_PASSWORD)+'\n'
+              'explicit_tls = true\n',encoding='utf-8')
+          os.chmod(CFG,0o600)
+          comment(f'NEXTCLOUD_WEBDAV_AUTH_VERIFIED run={RUN_ID} user={user} credential_route={secret_label} credentials_disclosed=0')
+
+          ftp=ftplib.FTP_TLS(context=ssl.create_default_context(),timeout=180)
+          ftp.connect('troi.ptservidor.net',21)
+          ftp.login('migration@associacaomilk.pt',FTPS_PASSWORD)
+          ftp.prot_p(); ftp.voidcmd('TYPE I')
+          receipt_dir=f'/{SOURCE_ROOT}/{RECEIPTS}'
+          try:
+              ftp.cwd(receipt_dir); names=ftp.nlst()
+          except Exception as exc:
+              ftp.quit(); raise RuntimeError('FTPS_RECEIPT_DIRECTORY_UNAVAILABLE '+str(exc)[:180])
+
+          verified_paths=set(); receipt_bytes={}; bad_receipts=0
+          for raw_name in names:
+              name=raw_name.rstrip('/').rsplit('/',1)[-1]
+              if not name.endswith('.json'): continue
+              buf=bytearray()
+              try:
+                  ftp.retrbinary('RETR '+name,buf.extend,blocksize=262144)
+                  rec=json.loads(buf)
+                  if rec.get('verified') is not True:
+                      bad_receipts+=1; continue
+                  remote_path=str(rec.get('remote_path') or '')
+                  prefix='/'+SOURCE_ROOT+'/'
+                  if not remote_path.startswith(prefix):
+                      bad_receipts+=1; continue
+                  rel=remote_path[len(prefix):]
+                  if not rel or rel.startswith(RECEIPTS+'/') or '/../' in '/'+rel+'/' or rel.startswith('../'):
+                      bad_receipts+=1; continue
+                  verified_paths.add(rel)
+                  receipt_bytes[rel]=int(rec.get('bytes') or 0)
+              except Exception:
+                  bad_receipts+=1
+          ftp.quit()
+
+          if not verified_paths:
+              comment(f'NEXTCLOUD_IMPORT_WAITING run={RUN_ID} cause=no_verified_receipts_yet source_writes=0')
+              raise SystemExit(0)
+
+          FILES.write_text('\n'.join(sorted(verified_paths))+'\n',encoding='utf-8')
+          source=json.loads(run([
+              'rclone','--config',str(CFG),'size','ftps:'+SOURCE_ROOT,
+              '--files-from',str(FILES),'--json'
+          ],'FTPS_VERIFIED_SET_SIZE_FAILED'))
+          expected_receipt_bytes=sum(receipt_bytes.get(p,0) for p in verified_paths)
+          if source.get('count')!=len(verified_paths):
+              raise RuntimeError('FTPS_RECEIPT_SOURCE_COUNT_MISMATCH')
+
+          comment(
+              f'NEXTCLOUD_IMPORT_DISCOVERED run={RUN_ID} verified_receipts={len(verified_paths)} '
+              f'source_count={source.get("count",0)} source_bytes={source.get("bytes",0)} '
+              f'receipt_bytes={expected_receipt_bytes} bad_receipts={bad_receipts} source_writes=0')
+
+          destination='nextcloud:'+DESTINATION
+          run([
+              'rclone','--config',str(CFG),'copy','ftps:'+SOURCE_ROOT,destination,
+              '--files-from',str(FILES),'--transfers','4','--checkers','8',
+              '--retries','6','--low-level-retries','20','--create-empty-src-dirs'
+          ],'NEXTCLOUD_TRANSFER_FAILED',capture=False)
+          run([
+              'rclone','--config',str(CFG),'check','ftps:'+SOURCE_ROOT,destination,
+              '--files-from',str(FILES),'--one-way','--download','--checkers','6','--retries','4'
+          ],'NEXTCLOUD_READBACK_CHECK_FAILED',capture=False)
+          dest=json.loads(run([
+              'rclone','--config',str(CFG),'size',destination,
+              '--files-from',str(FILES),'--json'
+          ],'NEXTCLOUD_DESTINATION_SIZE_FAILED'))
+          if source.get('count')!=dest.get('count') or source.get('bytes')!=dest.get('bytes'):
+              raise RuntimeError('NEXTCLOUD_RECONCILIATION_MISMATCH')
+
+          comment(
+              f'NEXTCLOUD_IMPORT_VERIFIED run={RUN_ID} discovered={source.get("count",0)} '
+              f'verified={dest.get("count",0)} failed=0 bytes={dest.get("bytes",0)} '
+              f'destination="{DESTINATION}" source_writes=0 remote_deletes=0')
+          PY

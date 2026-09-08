@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "atlas-integration-kernel"
+version = "1.0.0"
+description = "Núcleo soberano de interoperabilidade do Atlas Vivo MILK"
+requires-python = ">=3.11"
+dependencies = ["pydantic>=2.7,<3"]
+
+[project.scripts]
+atlas-integrations = "atlas_integrations.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+

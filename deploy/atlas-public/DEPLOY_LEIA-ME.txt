@@ -1,0 +1,34 @@
+ATLAS VIVO MILK — PACOTE PÚBLICO
+
+DESTINO EXCLUSIVO
+/home/associ16/atlas.associacaomilk.pt
+
+CONTEÚDO DO PACOTE
+- index.html
+- styles.css
+- app.js
+- assets/
+
+NÃO ALTERAR NEM APAGAR NO SERVIDOR
+-.well-known/
+-cgi-bin/
+-.htaccess
+-.user.ini
+-php.ini
+
+O index.html de 232 bytes actualmente publicado é a página provisória e deve ser
+preservado como index.placeholder-2026-06-30.html antes da substituição.
+
+ESTADO
+- Interface pública funcional e responsiva.
+- Sem recolha de dados pessoais.
+- Sem coordenadas ou conteúdo territorial inventados.
+- Portais curatoriais identificados.
+- Backend de contribuições bloqueado até existir consentimento, revisão humana e RGPD.
+- Migração do arquivo privado de 14,81 GiB continua separada da raiz pública.
+
+VALIDAÇÃO
+- Verificar https://atlas.associacaomilk.pt/
+- Confirmar consola sem erros.
+- Confirmar navegação por teclado e redução de movimento.
+- Não declarar o arquivo Drive migrado apenas por este pacote público estar instalado.

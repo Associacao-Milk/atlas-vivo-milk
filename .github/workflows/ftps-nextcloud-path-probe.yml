@@ -1,0 +1,61 @@
+name: FTPS Nextcloud path probe
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - '.github/workflows/ftps-nextcloud-path-probe.yml'
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PTSERVIDOR_FTPS_PASSWORD: ${{ secrets.PTSERVIDOR_FTPS_PASSWORD }}
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      RUN_ID: ${{ github.run_id }}
+    steps:
+      - name: Probe only known Nextcloud/staging paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import ftplib,json,os,ssl,urllib.request
+          pwd=os.environ.get('PTSERVIDOR_FTPS_PASSWORD','').strip()
+          gh=os.environ.get('GH_TOKEN','').strip(); repo=os.environ.get('REPO','milkivc/atlas-vivo-milk'); run_id=os.environ.get('RUN_ID','unknown')
+          if not pwd: raise SystemExit('FTPS_PASSWORD_MISSING')
+          ftp=ftplib.FTP_TLS(context=ssl.create_default_context(),timeout=120)
+          ftp.connect('troi.ptservidor.net',21); ftp.login('migration@associacaomilk.pt',pwd); ftp.prot_p()
+          start=ftp.pwd()
+          candidates=[
+            '/',
+            '/nextclouddata','/nextcloud','/nextclud','/public_html/nextcloud','/public_html/nextclud',
+            '/home/associ16/nextclouddata','/home/associ16/public_html/nextcloud','/home/associ16/public_html/nextclud',
+            '../nextclouddata','../public_html/nextcloud','../public_html/nextclud',
+            '/atlas-takeout-expanded-v1','/atlas-drive-filewise-v1'
+          ]
+          results=[]
+          for path in candidates:
+            try:
+              ftp.cwd(start)
+              ftp.cwd(path)
+              resolved=ftp.pwd()
+              results.append((path,'yes',resolved))
+            except Exception:
+              results.append((path,'no',''))
+          ftp.cwd(start)
+          ftp.quit()
+          safe=';'.join(f'{p}={ok}:{resolved}' for p,ok,resolved in results)
+          msg=f'FTPS_NEXTCLOUD_PATH_PROBE run={run_id} start={start} results={safe} writes=0 filenames_disclosed=0'
+          print(msg)
+          if gh:
+            req=urllib.request.Request(f'https://api.github.com/repos/{repo}/issues/35/comments',data=json.dumps({'body':msg}).encode(),method='POST',headers={'Authorization':'Bearer '+gh,'Content-Type':'application/json','Accept':'application/vnd.github+json'})
+            try: urllib.request.urlopen(req,timeout=30).read()
+            except Exception: pass
+          PY

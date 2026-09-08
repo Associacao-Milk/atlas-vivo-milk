@@ -1,0 +1,29 @@
+{
+  "name": "atlas-vivo-milk-backend",
+  "version": "1.0.0",
+  "description": "Backend services for Atlas Vivo MILK - Portuguese cultural heritage mapping",
+  "main": "index.js",
+  "scripts": {
+    "fetch:dgt": "node fetch_dgt_data.js",
+    "fetch:ipma": "node fetch_ipma_data.js",
+    "fetch:dados-gov": "node fetch_dados_gov.js",
+    "fetch:assembleia": "node fetch_assembleia_data.js",
+    "fetch:all": "node fetch_dgt_data.js && node fetch_ipma_data.js && node fetch_dados_gov.js && node fetch_assembleia_data.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.0"
+  },
+  "keywords": [
+    "cultural-heritage",
+    "portugal",
+    "open-data",
+    "geospatial",
+    "api-integration"
+  ],
+  "author": "Associação MILK",
+  "license": "EUPL-1.2",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/milkivc/atlas-vivo-milk.git"
+  }
+}

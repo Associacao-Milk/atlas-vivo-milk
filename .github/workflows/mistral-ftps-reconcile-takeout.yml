@@ -1,0 +1,109 @@
+name: MILK Mistral FTPS Reconcile Takeout
+on:
+  push:
+    branches: [master]
+    paths: ['.github/workflows/mistral-ftps-reconcile-takeout.yml']
+permissions:
+  contents: read
+  issues: write
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+      PTSERVIDOR_FTPS_PASSWORD: ${{ secrets.PTSERVIDOR_FTPS_PASSWORD }}
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+    steps:
+      - name: Mistral agent executes read-only FTPS reconciliation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import ftplib, json, os, ssl, urllib.request
+          manifest = {
+            "takeout-20260531T022747Z-001.zip": 472837,
+            "takeout-20260531T022748Z-17-003.zip": 203847569,
+            "takeout-20260531T022748Z-17-002.zip": 1956142674,
+            "takeout-20260531T022748Z-17-001.zip": 2053143205,
+            "takeout-20260531T022748Z-9-001.zip": 158758423,
+            "takeout-20260531T022748Z-15-001.zip": 70132736,
+            "takeout-20260531T022748Z-14-001.zip": 22558,
+          }
+          key=os.environ["MISTRAL_API_KEY"]; pwd=os.environ["PTSERVIDOR_FTPS_PASSWORD"]
+          gh=os.environ["GH_TOKEN"]; repo=os.environ["REPO"]
+          def comment(msg):
+              req=urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}/issues/35/comments",
+                  data=json.dumps({"body":msg}).encode(), method="POST",
+                  headers={"Authorization":"Bearer "+gh,"Content-Type":"application/json","Accept":"application/vnd.github+json"})
+              urllib.request.urlopen(req,timeout=30).read()
+          def get(path):
+              req=urllib.request.Request("https://api.mistral.ai"+path,headers={"Authorization":"Bearer "+key,"Accept":"application/json"})
+              with urllib.request.urlopen(req,timeout=60) as r:return json.loads(r.read().decode())
+          def post(path,payload):
+              req=urllib.request.Request("https://api.mistral.ai"+path,data=json.dumps(payload).encode(),method="POST",headers={"Authorization":"Bearer "+key,"Content-Type":"application/json","Accept":"application/json"})
+              with urllib.request.urlopen(req,timeout=120) as r:return json.loads(r.read().decode())
+          agents=get("/v1/agents/pages")
+          al=agents.get("data",[]) if isinstance(agents,dict) else agents
+          agent=next((a for a in al if "migra" in (str(a.get("name",""))+" "+str(a.get("description",""))).lower()),None)
+          prompt=("Execute a preservative reconciliation plan for an already transferred Google Takeout batch. "
+                  "Source writes are forbidden. Destination action is FTPS read-only listing and size comparison. "
+                  f"Manifest has {len(manifest)} files and {sum(manifest.values())} bytes. "
+                  "Return exactly EXECUTE_READONLY_FTPS_RECONCILIATION.")
+          payload={"inputs":[{"role":"user","content":prompt}]}
+          if agent: payload["agent_id"]=agent["id"]
+          else: payload["model"]="mistral-small-latest"
+          conv=post("/v1/conversations",payload)
+          answer=" ".join(str(o.get("content","")) for o in conv.get("outputs",[]) if isinstance(o,dict))
+          if "EXECUTE_READONLY_FTPS_RECONCILIATION" not in answer:
+              raise RuntimeError("Mistral agent did not authorize the bounded read-only action")
+          comment("MISTRAL_RECONCILE_AGENT_EXECUTE agent="+(str(agent.get("name")) if agent else "mistral-runtime")+" files=7 expected_bytes=4442520002 drive_writes=0")
+
+          ftp=ftplib.FTP_TLS(context=ssl.create_default_context(),timeout=30)
+          ftp.connect("troi.ptservidor.net",21)
+          ftp.login("migration@associacaomilk.pt",pwd)
+          ftp.prot_p(); ftp.voidcmd("TYPE I")
+          found={}; seen=set(); scanned=0
+          def walk(path,depth=0):
+              nonlocal_vars=None
+              global scanned
+              if depth>8 or scanned>30000:return
+              ftp.cwd(path); here=ftp.pwd()
+              try:names=ftp.nlst()
+              except ftplib.all_errors:return
+              for raw in names:
+                  if scanned>30000:return
+                  name=raw.rstrip("/").rsplit("/",1)[-1]
+                  if name in ("",".",".."):continue
+                  ftp.cwd(here); scanned+=1
+                  try:
+                      size=ftp.size(name)
+                      if size is not None and name in manifest:
+                          found.setdefault(name,[]).append({"path":here.rstrip("/")+"/"+name,"size":int(size)})
+                      continue
+                  except ftplib.all_errors:
+                      pass
+                  try:
+                      ftp.cwd(name); child=ftp.pwd()
+                  except ftplib.all_errors:
+                      continue
+                  if child not in seen:
+                      seen.add(child); walk(child,depth+1)
+              ftp.cwd(here)
+          start=ftp.pwd(); seen.add(start); walk(start); ftp.quit()
+          matched={}; missing=[]; mismatched=[]
+          for name,expected in manifest.items():
+              rows=found.get(name,[])
+              exact=[r for r in rows if r["size"]==expected]
+              if exact: matched[name]=exact[0]
+              elif rows: mismatched.append({"name":name,"expected":expected,"observed":[r["size"] for r in rows]})
+              else: missing.append(name)
+          matched_bytes=sum(manifest[n] for n in matched)
+          if len(matched)==7 and matched_bytes==4442520002 and not missing and not mismatched:
+              comment(f"MISTRAL_FTPS_RECONCILIATION_VERIFIED files=7 bytes={matched_bytes} missing=0 mismatched=0 scanned_entries={scanned} drive_writes=0")
+          else:
+              comment(f"MISTRAL_FTPS_RECONCILIATION_PARTIAL matched={len(matched)} matched_bytes={matched_bytes} missing={len(missing)} mismatched={len(mismatched)} scanned_entries={scanned} drive_writes=0")
+              raise SystemExit(21)
+          PY

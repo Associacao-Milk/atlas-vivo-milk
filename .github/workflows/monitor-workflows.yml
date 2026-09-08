@@ -1,0 +1,62 @@
+name: Monitor Workflows
+
+on:
+  schedule:
+    # Executar a cada 6 horas
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+    # Permitir execução manual
+    inputs:
+      check_critical:
+        description: 'Verificar apenas workflows críticos'
+        required: false
+        default: 'true'
+
+jobs:
+  monitor:
+    name: Monitor all workflows
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install node-fetch dotenv
+
+      - name: Monitor workflows
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node src/backend/monitor/monitor_workflows.js --monitor-all
+
+      - name: Check critical workflows
+        if: inputs.check_critical != 'false'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node src/backend/monitor/monitor_workflows.js --check-critical
+
+      - name: Send notification on failure
+        if: failure()
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { data: runs } = await github.rest.actions.listWorkflowRunsForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 5
+            });
+            
+            const failedRuns = runs.workflow_runs.filter(run => run.conclusion === 'failure');
+            
+            if (failedRuns.length > 0) {
+              console.log('⚠️ Workflows com falha detectados:');
+              failedRuns.forEach(run => {
+                console.log(`- ${run.name}: https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${run.id}`);
+              });
+            }

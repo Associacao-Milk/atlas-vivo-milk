@@ -1,0 +1,39 @@
+# Branch Protection Rules for Atlas Vivo MILK
+# These rules ensure compliance with RGPD, AI Act, and EU Tech Sovereignty Package
+
+branch_protection_rule:
+  # Protect the main branch
+  - pattern: main
+    required_status_checks:
+      strict: true
+      contexts:
+        - "ci/validate-metadata"
+        - "ci/generate-doi"
+    enforce_admins: true
+    required_pull_request_reviews:
+      required_approving_review_count: 1
+      dismiss_stale_reviews: true
+      require_code_owner_reviews: true
+    restrictions:
+      users: []
+      teams: []
+      apps: []
+    require_signed_commits: true
+    require_conversation_resolution: true
+    require_linear_history: false
+    allow_force_pushes: false
+    allow_deletions: false
+
+  # Protect the develop branch
+  - pattern: develop
+    required_status_checks:
+      strict: true
+      contexts:
+        - "ci/validate-metadata"
+    enforce_admins: true
+    required_pull_request_reviews:
+      required_approving_review_count: 1
+      dismiss_stale_reviews: true
+    restrictions: null
+    require_signed_commits: true
+    require_conversation_resolution: true

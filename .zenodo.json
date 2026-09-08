@@ -1,0 +1,52 @@
+{
+  "metadata": {
+    "title": "Atlas Vivo MILK",
+    "upload_type": "software",
+    "description": "Plataforma Web para preservação e mapeamento do patrimônio imaterial português. Alinhada com RGPD, AI Act, NIS2 e princípios de soberania tecnológica da UE.",
+    "creators": [
+      {
+        "name": "Associação MILK - Movimento de Intervenções e Linguagens Kulturais e Arte",
+        "affiliation": "Associação MILK"
+      },
+      {
+        "name": "Eduardo Maurício Vieira Cabral e Araujo",
+        "orcid": "0009-0009-1781-4020",
+        "affiliation": "Associação MILK"
+      }
+    ],
+    "license": "EUPL-1.2",
+    "version": "1.0.0",
+    "keywords": [
+      "folclore",
+      "património imaterial",
+      "lendas",
+      "Portugal",
+      "Web App",
+      "cultura",
+      "soberania digital",
+      "RGPD",
+      "AI Act",
+      "NIS2"
+    ],
+    "notes": "Projeto financiado por fundos europeus. Dados anonimizados em conformidade com RGPD. Infraestrutura alinhada com provedores UE.",
+    "related_identifiers": [
+      {
+        "identifier": "https://github.com/milkivc/atlas-vivo-milk",
+        "scheme": "url",
+        "relation": "isSupplementTo"
+      }
+    ],
+    "communities": [
+      {
+        "identifier": "milkivc"
+      }
+    ],
+    "access_right": "open",
+    "conformity": {
+      "rgpd": true,
+      "ai_act": true,
+      "nis2": true,
+      "eu_tech_sovereignty": true
+    }
+  }
+}

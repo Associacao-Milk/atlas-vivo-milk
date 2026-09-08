@@ -1,0 +1,233 @@
+name: Deploy Atlas to PTServidor
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - "deploy/atlas-public/**"
+      - ".github/workflows/deploy-ptservidor.yml"
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: atlas-ptservidor-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy validated public Atlas
+    runs-on: ubuntu-latest
+    env:
+      DEPLOY_HOST: troi.ptservidor.net
+      DEPLOY_USER: associ16
+      DEPLOY_PORT: ${{ secrets.PTSERVIDOR_SSH_PORT || secrets.SSH_PORT || '22' }}
+      DEPLOY_KEY: ${{ secrets.PTSERVIDOR_SSH_PRIVATE_KEY || secrets.SSH_PRIVATE_KEY || secrets.CPANEL_SSH_KEY }}
+      DEPLOY_KNOWN_HOSTS: ${{ secrets.PTSERVIDOR_KNOWN_HOSTS || secrets.SSH_KNOWN_HOSTS }}
+      FTPS_PASSWORD: ${{ secrets.PTSERVIDOR_FTPS_PASSWORD }}
+      WEBROOT: /home/associ16/atlas.associacaomilk.pt
+      PRIVATE_RELEASES: /home/associ16/.atlas-releases
+      PRIVATE_STAGING: /home/associ16/.atlas-staging
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate release package
+        working-directory: deploy/atlas-public
+        run: |
+          set -euo pipefail
+          sha256sum -c manifest.sha256
+          node --check app.js
+          node --check curadorias.js
+          node -e "const c=require('./catalogo-curatorial.json'); if(c.entradas.length!==49) process.exit(1)"
+          test -f book.css
+          grep -Fq "Atlas Vivo MILK" index.html
+          test "$(find assets -maxdepth 1 -type f -name '*.png' | wc -l)" -eq 7
+
+      - name: Select authenticated deployment route
+        id: route
+        run: |
+          set -euo pipefail
+          if [ -n "$DEPLOY_KEY" ] && [ -n "$DEPLOY_KNOWN_HOSTS" ]; then
+            case "$DEPLOY_PORT" in (*[!0-9]*|'') echo "::error::SSH port must be numeric"; exit 2;; esac
+            echo "route=ssh" >> "$GITHUB_OUTPUT"
+          elif [ -n "$FTPS_PASSWORD" ]; then
+            echo "route=ftps" >> "$GITHUB_OUTPUT"
+          else
+            echo "::error::Neither strict SSH nor verified FTPS credentials are available"
+            exit 2
+          fi
+
+      - name: Configure strict SSH
+        if: steps.route.outputs.route == 'ssh'
+        run: |
+          set -euo pipefail
+          install -d -m 0700 "$HOME/.ssh"
+          printf '%s\n' "$DEPLOY_KEY" > "$HOME/.ssh/id_atlas"
+          chmod 0600 "$HOME/.ssh/id_atlas"
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          chmod 0600 "$HOME/.ssh/known_hosts"
+
+      - name: Preflight isolated paths
+        if: steps.route.outputs.route == 'ssh'
+        run: |
+          set -euo pipefail
+          ssh -i "$HOME/.ssh/id_atlas" -p "$DEPLOY_PORT" -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes "$DEPLOY_USER@$DEPLOY_HOST"             "set -eu; test -d '$WEBROOT'; test ! '$WEBROOT' = '/home/associ16/public_html'; mkdir -p '$PRIVATE_RELEASES' '$PRIVATE_STAGING/$GITHUB_SHA'; df -Pk /home/associ16"
+
+      - name: Transfer release to private staging
+        if: steps.route.outputs.route == 'ssh'
+        run: |
+          set -euo pipefail
+          tar -C deploy/atlas-public -cf - . |             ssh -i "$HOME/.ssh/id_atlas" -p "$DEPLOY_PORT" -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes "$DEPLOY_USER@$DEPLOY_HOST"               "tar -xf - -C '$PRIVATE_STAGING/$GITHUB_SHA'"
+          ssh -i "$HOME/.ssh/id_atlas" -p "$DEPLOY_PORT" -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes "$DEPLOY_USER@$DEPLOY_HOST"             "cd '$PRIVATE_STAGING/$GITHUB_SHA' && sha256sum -c manifest.sha256"
+
+      - name: Backup and promote Atlas only
+        if: steps.route.outputs.route == 'ssh'
+        run: |
+          set -euo pipefail
+          ssh -i "$HOME/.ssh/id_atlas" -p "$DEPLOY_PORT" -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes "$DEPLOY_USER@$DEPLOY_HOST"             bash -s -- "$GITHUB_SHA" <<'REMOTE'
+          set -euo pipefail
+          sha="$1"
+          webroot="/home/associ16/atlas.associacaomilk.pt"
+          releases="/home/associ16/.atlas-releases"
+          staging="/home/associ16/.atlas-staging/$sha"
+          test -d "$webroot"
+          test -d "$staging"
+          test ! "$webroot" = "/home/associ16/public_html"
+          stamp="$(date -u +%Y%m%dT%H%M%SZ)"
+          set --
+          for item in index.html styles.css book.css app.js curadorias.js catalogo-curatorial.json assets; do
+            if [ -e "$webroot/$item" ]; then set -- "$@" "$item"; fi
+          done
+          if [ "$#" -gt 0 ]; then
+            tar -czf "$releases/atlas-public-$stamp.tar.gz" -C "$webroot" "$@"
+          fi
+          if [ -f "$webroot/index.html" ] && [ ! -f "$webroot/index.placeholder-2026-06-30.html" ]; then
+            cp -p "$webroot/index.html" "$webroot/index.placeholder-2026-06-30.html"
+          fi
+          mkdir -p "$webroot/assets"
+          install -m 0644 "$staging/index.html" "$webroot/index.html"
+          install -m 0644 "$staging/styles.css" "$webroot/styles.css"
+          install -m 0644 "$staging/app.js" "$webroot/app.js"
+          install -m 0644 "$staging/book.css" "$webroot/book.css"
+          install -m 0644 "$staging/curadorias.js" "$webroot/curadorias.js"
+          install -m 0644 "$staging/catalogo-curatorial.json" "$webroot/catalogo-curatorial.json"
+          cp -p "$staging"/assets/*.png "$webroot/assets/"
+          cd "$webroot"
+          sha256sum -c "$staging/manifest.sha256"
+          REMOTE
+
+      - name: Backup and deploy Atlas through verified FTPS fallback
+        if: steps.route.outputs.route == 'ftps'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import ftplib, hashlib, io, os, pathlib, ssl
+          password=os.environ["FTPS_PASSWORD"].strip()
+          sha=os.environ["GITHUB_SHA"]
+          source=pathlib.Path("deploy/atlas-public")
+          candidates=["/atlas.associacaomilk.pt","/home/associ16/atlas.associacaomilk.pt"]
+          ftp=None
+          target=None
+          route_user=None
+          for username in ("associ16","migration@associacaomilk.pt"):
+              candidate_ftp=ftplib.FTP_TLS(context=ssl.create_default_context(),timeout=120)
+              try:
+                  candidate_ftp.connect("troi.ptservidor.net",21)
+                  candidate_ftp.login(username,password)
+                  candidate_ftp.prot_p()
+              except ftplib.all_errors:
+                  try: candidate_ftp.close()
+                  except Exception: pass
+                  continue
+              for candidate in candidates:
+                  try:
+                      candidate_ftp.cwd(candidate)
+                      target=candidate_ftp.pwd()
+                      ftp=candidate_ftp
+                      route_user=username
+                      break
+                  except ftplib.all_errors:
+                      pass
+              if ftp is not None:
+                  break
+              candidate_ftp.quit()
+          if ftp is None or target is None:
+              raise SystemExit("FTPS_WEBROOT_UNAVAILABLE: verified secret cannot reach Atlas webroot")
+          print("MILK_ATLAS_FTPS_ROUTE user="+route_user+" target="+target)
+          if target.rstrip("/").endswith("/public_html"):
+              ftp.quit()
+              raise SystemExit("FTPS_SAFETY_STOP: resolved main-domain webroot")
+          def ensure(path):
+              ftp.cwd("/")
+              for part in [p for p in path.split("/") if p]:
+                  try: ftp.mkd(part)
+                  except ftplib.all_errors: pass
+                  ftp.cwd(part)
+          def read(remote):
+              out=bytearray()
+              ftp.retrbinary("RETR "+remote,out.extend,blocksize=1048576)
+              return bytes(out)
+          files=["index.html","styles.css","app.js","book.css","curadorias.js","catalogo-curatorial.json"]
+          files += ["assets/"+p.name for p in sorted((source/"assets").glob("*.png"))]
+          backup="/atlas-deploy-backups/"+sha
+          ensure(backup)
+          for rel in files:
+              remote=target.rstrip("/")+"/"+rel
+              try:
+                  old=read(remote)
+              except ftplib.all_errors:
+                  continue
+              ensure(backup+"/"+str(pathlib.PurePosixPath(rel).parent))
+              ftp.storbinary("STOR "+pathlib.PurePosixPath(rel).name,io.BytesIO(old),blocksize=1048576)
+          for rel in files:
+              payload=(source/rel).read_bytes()
+              ensure(target+"/"+str(pathlib.PurePosixPath(rel).parent))
+              name=pathlib.PurePosixPath(rel).name
+              ftp.storbinary("STOR "+name,io.BytesIO(payload),blocksize=1048576)
+              remote=target.rstrip("/")+"/"+rel
+              restored=read(remote)
+              if len(restored)!=len(payload) or hashlib.sha256(restored).digest()!=hashlib.sha256(payload).digest():
+                  raise SystemExit("FTPS_READBACK_MISMATCH "+rel)
+          ftp.quit()
+          print("MILK_ATLAS_FTPS_PROMOTED files="+str(len(files))+" target="+target)
+          PY
+
+      - name: Public smoke test
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3 4 5; do
+            if curl --fail --silent --show-error --location --max-time 20 https://atlas.associacaomilk.pt/ -o /tmp/atlas-live.html; then break; fi
+            sleep 5
+          done
+          grep -Fq "Atlas Vivo MILK" /tmp/atlas-live.html
+          grep -Fq "Atlas Vivo MILK" /tmp/atlas-live.html
+          curl --fail --silent --show-error --location --max-time 20 https://atlas.associacaomilk.pt/app.js -o /tmp/atlas-live.js
+          grep -Fq "O mundo dentro do profundo" /tmp/atlas-live.html
+          curl --fail --silent --show-error --location --max-time 20 https://atlas.associacaomilk.pt/book.css -o /tmp/atlas-book.css
+          curl --fail --silent --show-error --location --max-time 20 https://atlas.associacaomilk.pt/catalogo-curatorial.json -o /tmp/atlas-catalogue.json
+          node -e "const c=require('/tmp/atlas-catalogue.json'); if(c.entradas.length!==49) process.exit(1)"
+          test -s /tmp/atlas-book.css
+          curl --fail --silent --show-error --location --max-time 20 https://atlas.associacaomilk.pt/curadorias.js -o /tmp/atlas-curadorias.js
+          for motor in "Inventário do Meu Mundo" "Catástrofe Produtiva" "O Ponto de Kusama" "O Corpo que Percebe" "Escutar o Silêncio" "O Rizoma Interior" "O Cubo Interior"; do grep -Fq "$motor" /tmp/atlas-catalogue.json; done
+          grep -Fq "Montserrat" /tmp/atlas-book.css
+
+      - name: Record verified deployment receipt
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue comment 35 --repo "$GITHUB_REPOSITORY" --body "MILK_ATLAS_DEPLOY_VERIFIED run=$GITHUB_RUN_ID commit=$GITHUB_SHA catalogue_entries=49 public_layer=play invisible_layer=separate smoke_test=passed"
+
+      - name: Record failed deployment receipt
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue comment 35 --repo "$GITHUB_REPOSITORY" --body "MILK_ATLAS_DEPLOY_FAILED run=$GITHUB_RUN_ID commit=$GITHUB_SHA publication_claimed=no inspect_actions=yes"
+
+# Deployment trigger authorized by human validation on 2026-08-13.
+# Production trigger: catálogo dinâmico MILK autorizado em 2026-08-21.

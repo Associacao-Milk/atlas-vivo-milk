@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "http://datacite.org/schema/kernel-4",
+  "identifier": {
+    "identifier": "10.5281/zenodo.XXXXXXX",
+    "identifierType": "DOI"
+  },
+  "creators": [
+    {
+      "name": "Associação MILK",
+      "nameType": "Organizational",
+      "affiliation": "Associação MILK - Movimento de Intervenções e Linguagens Kulturais e Arte"
+    }
+  ],
+  "titles": [
+    {
+      "title": "Atlas Vivo MILK Dataset"
+    }
+  ],
+  "publisher": "Zenodo",
+  "publicationYear": "2026",
+  "subjects": [
+    {"subject": "Cultural Heritage"},
+    {"subject": "Folklore"},
+    {"subject": "Portugal"},
+    {"subject": "Digital Humanities"}
+  ],
+  "contributors": [],
+  "dates": [{"date": "2026", "dateType": "Issued"}],
+  "language": "pt",
+  "resourceType": {"resourceTypeGeneral": "Dataset"},
+  "alternateIdentifiers": [{"alternateIdentifier": "atlas-vivo-milk", "alternateIdentifierType": "GitHub Repository"}],
+  "relatedIdentifiers": [],
+  "sizes": [],
+  "formats": [],
+  "version": "1.0",
+  "rightsList": [{"rights": "Creative Commons Attribution-ShareAlike 4.0 International", "rightsUri": "https://creativecommons.org/licenses/by-sa/4.0/"}],
+  "descriptions": [{"description": "Participatory cultural mapping dataset containing Portuguese folklore, oral histories, and territorial narratives.", "descriptionType": "Abstract"}],
+  "geoLocations": [{"geoLocationPlace": "Portugal"}],
+  "fundingReferences": []
+}

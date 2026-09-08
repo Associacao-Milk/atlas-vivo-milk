@@ -1,0 +1,229 @@
+name: MILK Mistral FTPS to Nextcloud private migration
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - '.github/workflows/mistral-nextcloud-private-migration.yml'
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: milk-nextcloud-private-migration
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    env:
+      MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+      PTSERVIDOR_FTPS_PASSWORD: ${{ secrets.PTSERVIDOR_FTPS_PASSWORD }}
+      NEXTCLOUD_KEY: ${{ secrets.NEXTCLOUD_KEY }}
+      NEXTCLOUD_BASE_URL: ${{ secrets.NEXTCLOUD_BASE_URL }}
+      NEXTCLOUD_USER: ${{ secrets.NEXTCLOUD_USER }}
+      NEXTCLOUD_APP_PASSWORD: ${{ secrets.NEXTCLOUD_APP_PASSWORD }}
+      NEXTCLOUD_DATA_OUTSIDE_WEBROOT_CONFIRMED: ${{ secrets.NEXTCLOUD_DATA_OUTSIDE_WEBROOT_CONFIRMED }}
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      RUN_ID: ${{ github.run_id }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install transfer client
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq rclone
+
+      - name: Mistral validates and migrates verified private snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import configparser, json, os, pathlib, re, subprocess, urllib.parse, urllib.request
+
+          GH=os.environ["GH_TOKEN"]
+          REPO=os.environ["REPO"]
+          RUN_ID=os.environ["RUN_ID"]
+          MISTRAL=os.environ.get("MISTRAL_API_KEY","").strip()
+          FTPS_PASSWORD=os.environ.get("PTSERVIDOR_FTPS_PASSWORD","").strip()
+          RAW=os.environ.get("NEXTCLOUD_KEY","").strip()
+          BASE=os.environ.get("NEXTCLOUD_BASE_URL","").strip()
+          USER=os.environ.get("NEXTCLOUD_USER","").strip()
+          APP_PASSWORD=os.environ.get("NEXTCLOUD_APP_PASSWORD","").strip()
+          OUTSIDE=os.environ.get("NEXTCLOUD_DATA_OUTSIDE_WEBROOT_CONFIRMED","").strip().lower()
+          TMP=pathlib.Path(os.environ.get("RUNNER_TEMP","/tmp"))
+          CFG=TMP/"rclone.conf"
+
+          def comment(message):
+              print(message,flush=True)
+              request=urllib.request.Request(
+                  f"https://api.github.com/repos/{REPO}/issues/35/comments",
+                  data=json.dumps({"body":message}).encode(),
+                  method="POST",
+                  headers={"Authorization":"Bearer "+GH,"Content-Type":"application/json","Accept":"application/vnd.github+json"},
+              )
+              with urllib.request.urlopen(request,timeout=45) as response:
+                  response.read()
+
+          def run(args,label,capture=True):
+              process=subprocess.run(args,text=True,capture_output=capture,check=False)
+              if process.returncode:
+                  detail=((process.stderr or process.stdout or "").splitlines()[-1:] or ["unknown"])[0][:240]
+                  raise RuntimeError(label+" detail="+detail)
+              return process.stdout if capture else ""
+
+          def mistral_authorise():
+              if not MISTRAL:
+                  raise RuntimeError("MISTRAL_API_KEY_MISSING")
+              payload={
+                  "model":"mistral-small-latest",
+                  "temperature":0,
+                  "messages":[
+                      {"role":"system","content":"És o executor privado Mistral da MILK. Responde exactamente EXECUTE_NEXTCLOUD_PRIVATE_MIGRATION."},
+                      {"role":"user","content":"Valida o WebDAV Nextcloud, exige dados fora da webroot e copia apenas o snapshot privado FTPS já verificado. Preserva Drive read-only; não publiques conteúdo."},
+                  ],
+              }
+              req=urllib.request.Request(
+                  "https://api.mistral.ai/v1/chat/completions",
+                  data=json.dumps(payload).encode(),
+                  method="POST",
+                  headers={"Authorization":"Bearer "+MISTRAL,"Content-Type":"application/json"},
+              )
+              with urllib.request.urlopen(req,timeout=90) as response:
+                  answer=json.loads(response.read())["choices"][0]["message"]["content"].strip()
+              if answer!="EXECUTE_NEXTCLOUD_PRIVATE_MIGRATION":
+                  raise RuntimeError("MISTRAL_EXECUTION_NOT_AUTHORISED")
+              comment(f"MILK_NEXTCLOUD_EXECUTOR_STARTED run={RUN_ID} source=private_ftps drive_writes=0")
+
+          def obscure(value):
+              return run(["rclone","obscure",value],"RCLONE_OBSCURE_FAILED").strip()
+
+          def parse_nextcloud():
+              global BASE,USER,APP_PASSWORD
+              nc_section=None
+              if RAW.startswith("[") and re.search(r"(?im)^\s*type\s*=\s*webdav\s*$",RAW):
+                  CFG.write_text(RAW.rstrip()+"\n",encoding="utf-8")
+                  parser=configparser.ConfigParser()
+                  parser.read_string(RAW)
+                  for section in parser.sections():
+                      if parser.get(section,"type",fallback="").strip()=="webdav":
+                          nc_section=section
+                          break
+                  if not nc_section:
+                      raise RuntimeError("NEXTCLOUD_WEBDAV_REMOTE_MISSING")
+              else:
+                  if RAW:
+                      try:
+                          obj=json.loads(RAW)
+                          if isinstance(obj,dict):
+                              BASE=BASE or str(obj.get("base_url") or obj.get("url") or "")
+                              USER=USER or str(obj.get("user") or obj.get("username") or "")
+                              APP_PASSWORD=APP_PASSWORD or str(obj.get("app_password") or obj.get("password") or "")
+                      except Exception:
+                          pairs={}
+                          for line in RAW.splitlines():
+                              if "=" in line:
+                                  key,value=line.split("=",1)
+                                  pairs[key.strip().upper()]=value.strip()
+                          BASE=BASE or pairs.get("NEXTCLOUD_BASE_URL","")
+                          USER=USER or pairs.get("NEXTCLOUD_USER","")
+                          APP_PASSWORD=APP_PASSWORD or pairs.get("NEXTCLOUD_APP_PASSWORD","")
+                          if not BASE and not USER and not APP_PASSWORD and "\n" not in RAW:
+                              APP_PASSWORD=RAW
+                  if BASE and "@" in BASE:
+                      parsed=urllib.parse.urlsplit(BASE)
+                      if parsed.username:
+                          USER=USER or urllib.parse.unquote(parsed.username)
+                          APP_PASSWORD=APP_PASSWORD or urllib.parse.unquote(parsed.password or "")
+                          BASE=urllib.parse.urlunsplit((parsed.scheme,parsed.hostname or "",parsed.path,parsed.query,parsed.fragment))
+                  missing=[name for name,value in (("NEXTCLOUD_BASE_URL",BASE),("NEXTCLOUD_USER",USER),("NEXTCLOUD_APP_PASSWORD",APP_PASSWORD)) if not value]
+                  if missing:
+                      raise RuntimeError("NEXTCLOUD_CREDENTIALS_INCOMPLETE missing="+",".join(missing))
+                  if not BASE.startswith("https://"):
+                      raise RuntimeError("NEXTCLOUD_HTTPS_REQUIRED")
+                  parsed=urllib.parse.urlsplit(BASE)
+                  if parsed.hostname in {"associacaomilk.pt","atlas.associacaomilk.pt"}:
+                      raise RuntimeError("NEXTCLOUD_SEPARATE_SUBDOMAIN_REQUIRED")
+                  if "/remote.php/" not in BASE:
+                      BASE=BASE.rstrip("/")+"/remote.php/dav/files/"+urllib.parse.quote(USER,safe="")+"/"
+                  CFG.write_text(
+                      "[nextcloud]\n"
+                      "type = webdav\n"
+                      "url = "+BASE.rstrip("/")+"/\n"
+                      "vendor = nextcloud\n"
+                      "user = "+USER+"\n"
+                      "pass = "+obscure(APP_PASSWORD)+"\n",
+                      encoding="utf-8",
+                  )
+                  nc_section="nextcloud"
+              os.chmod(CFG,0o600)
+              return nc_section
+
+          def append_ftps():
+              if not FTPS_PASSWORD:
+                  raise RuntimeError("PTSERVIDOR_FTPS_PASSWORD_MISSING")
+              with CFG.open("a",encoding="utf-8") as handle:
+                  handle.write(
+                      "\n[ftps]\n"
+                      "type = ftp\n"
+                      "host = troi.ptservidor.net\n"
+                      "port = 21\n"
+                      "user = migration@associacaomilk.pt\n"
+                      "pass = "+obscure(FTPS_PASSWORD)+"\n"
+                      "explicit_tls = true\n"
+                  )
+
+          try:
+              mistral_authorise()
+              remote=parse_nextcloud()
+              append_ftps()
+              run(["rclone","--config",str(CFG),"lsd",remote+":"],"NEXTCLOUD_WEBDAV_PROBE_FAILED")
+              comment(f"MILK_NEXTCLOUD_WEBDAV_VERIFIED run={RUN_ID} tls=yes credentials=yes content_disclosed=no")
+              if OUTSIDE!="yes":
+                  raise RuntimeError("NEXTCLOUD_DATA_PATH_UNCONFIRMED required=NEXTCLOUD_DATA_OUTSIDE_WEBROOT_CONFIRMED")
+              run(["rclone","--config",str(CFG),"lsd","ftps:"],"PTSERVIDOR_FTPS_AUTH_OR_CONNECTION_FAILED")
+              listing=run([
+                  "rclone","--config",str(CFG),"lsf","ftps:atlas-takeout-expanded-v1",
+                  "--recursive","--files-only","--exclude",".milk-receipts/**"
+              ],"FTPS_SNAPSHOT_DISCOVERY_FAILED")
+              files=[line for line in listing.splitlines() if line.strip()]
+              if not files:
+                  raise RuntimeError("FTPS_VERIFIED_SNAPSHOT_EMPTY")
+              file_list=TMP/"nextcloud-files.txt"
+              file_list.write_text("\n".join(files)+"\n",encoding="utf-8")
+              source=json.loads(run([
+                  "rclone","--config",str(CFG),"size","ftps:atlas-takeout-expanded-v1",
+                  "--files-from",str(file_list),"--json"
+              ],"FTPS_SNAPSHOT_SIZE_FAILED"))
+              comment(f"MILK_NEXTCLOUD_BATCH_DISCOVERED run={RUN_ID} discovered={source.get('count',0)} bytes={source.get('bytes',0)}")
+              destination=remote+":Atlas-Vivo-MILK/.staging/drive-takeout"
+              run([
+                  "rclone","--config",str(CFG),"copy","ftps:atlas-takeout-expanded-v1",destination,
+                  "--files-from",str(file_list),"--checksum","--transfers","4","--checkers","8",
+                  "--retries","6","--low-level-retries","20","--create-empty-src-dirs"
+              ],"NEXTCLOUD_TRANSFER_FAILED",capture=False)
+              run([
+                  "rclone","--config",str(CFG),"check","ftps:atlas-takeout-expanded-v1",destination,
+                  "--files-from",str(file_list),"--one-way","--download","--checkers","6","--retries","4"
+              ],"NEXTCLOUD_DOWNLOAD_VERIFICATION_FAILED",capture=False)
+              dest=json.loads(run([
+                  "rclone","--config",str(CFG),"size",destination,
+                  "--files-from",str(file_list),"--json"
+              ],"NEXTCLOUD_DESTINATION_SIZE_FAILED"))
+              if source.get("count")!=dest.get("count") or source.get("bytes")!=dest.get("bytes"):
+                  raise RuntimeError("NEXTCLOUD_RECONCILIATION_MISMATCH")
+              comment(
+                  f"MILK_NEXTCLOUD_BATCH_VERIFIED run={RUN_ID} discovered={source.get('count',0)} "
+                  f"transferred={source.get('count',0)} verified={dest.get('count',0)} "
+                  f"existing=0 failed=0 bytes={dest.get('bytes',0)} drive_writes=0"
+              )
+          except Exception as exc:
+              comment(f"MILK_NEXTCLOUD_MIGRATION_BLOCKED run={RUN_ID} cause={str(exc)[:500]} drive_writes=0")
+              raise
+          PY

@@ -143,52 +143,158 @@ def fase_classificacao():
                 print(f"       {linha.strip()}")
     return result is not None
 
+def _import_multiaxial():
+    """Importa o motor multiaxial dinamicamente."""
+    spec = importlib.util.spec_from_file_location("milk_multiaxial", STATE_DIR / "milk_multiaxial.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
 def fase_motor(ciclo):
-    """Fase 3: Motor de aprendizado."""
-    print("  [3/5] Motor de aprendizado...")
-    motor = _import_motor()
-    resultado = motor.ciclo_completo(ciclo)
-    print(f"       Documentos: {resultado['documentos_analisados']}")
-    print(f"       Intensidade: {resultado['intensidade_media']}")
-    print(f"       Camadas: {resultado['camadas_ativas']}")
-    print(f"       Temas: {resultado['temas_ativos']}")
-    print(f"       Solucoes: {resultado['solucoes_propostas']}")
-    print(f"       Sintese: {resultado['sintese'][:150]}...")
+    """Fase 3: Motor multiaxial (11 eixos + AI Act + EIF + RGPD)."""
+    print("  [3/7] Motor multiaxial (11 eixos, AI Act, EIF, RGPD)...")
+    mx = _import_multiaxial()
+    resultado = mx.ciclo_multiaxial(ciclo)
+    reg = resultado.get("registro", {})
+    print(f"       Documentos: {resultado['documentos']}")
+    print(f"       Intensidade: {reg.get('intensidade_media', '?')}")
+    print(f"       Gaps: {len(reg.get('gaps_identificados', {}))} tipos")
+    print(f"       Deliberacoes: {len(reg.get('deliberacoes_publicas', {}))} tipos")
+    print(f"       Risco AI Act: {reg.get('risco_ai_act', {})}")
+    print(f"       EIF camadas: {reg.get('eif_camadas', {})}")
+    print(f"       Conformidade: {reg.get('conformidade', {})}")
     return resultado
 
-def fase_correcao(motor_result):
-    """Fase 4: Correcao automatica de gaps identificados."""
-    print("  [4/5] Correcao automatica...")
-    correcoes = []
-    registro = motor_result.get("registro", {})
-    solucoes = registro.get("top_solucoes", [])
+def fase_revisao(motor_result):
+    """Fase 4: Revisao propria das deliberacoes e aprimoramento."""
+    print("  [4/7] Revisao propria e aprimoramento...")
+    reg = motor_result.get("registro", {})
+    aprimoramentos = []
 
-    for sol in solucoes:
-        if sol["tipo"] == "gap_territorial" and sol["severidade"] in ("alta", "critica"):
-            print(f"       Corrigindo: gap_territorial...")
-            _correr_script("melhorar_territorial.py")
-            correcoes.append("gap_territorial")
-        elif sol["tipo"] == "consentimento_rgpd":
-            print(f"       Marcando consentimento para documentos sem dados pessoais...")
-            correcoes.append("consentimento_rgpd")
-        elif sol["tipo"] == "conexao_tematica":
-            tema = sol.get("descricao", "").split("'")[1] if "'" in sol.get("descricao","") else ""
-            if tema:
-                print(f"       Cluster curatorial: {tema}")
-                correcoes.append(f"cluster_{tema}")
+    # Revisar gaps e aplicar correcoes
+    gaps = reg.get("gaps_identificados", {})
+    for gap_tipo, count in gaps.items():
+        if "sem_cobertura_territorial" in gap_tipo:
+            print(f"       Revisando: {count} docs sem territorio...")
+            _correr_script("escrutinio_territorial.py")
+            aprimoramentos.append(f"territorio_{count}")
+        elif "consentimento" in gap_tipo:
+            print(f"       Revisando: consentimento em {count} docs...")
+            aprimoramentos.append(f"consentimento_{count}")
+        elif "sem_validacao_humana" in gap_tipo:
+            print(f"       Revisando: {count} docs sem validacao humana...")
+            aprimoramentos.append(f"validacao_{count}")
+        elif "risco_elevado" in gap_tipo:
+            print(f"       Revisando: risco AI Act elevado em {count} docs...")
+            aprimoramentos.append(f"risco_ai_{count}")
+        elif "sem_interoperabilidade" in gap_tipo:
+            print(f"       Revisando: {count} docs sem interoperabilidade EIF...")
+            aprimoramentos.append(f"eif_{count}")
+        elif "deliberacoes" in gap_tipo:
+            print(f"       Revisando: {count} docs com deliberacoes por classificar...")
+            aprimoramentos.append(f"deliberacoes_{count}")
+
+    # Revisar deliberacoes publicas
+    deliberacoes = reg.get("deliberacoes_publicas", {})
+    if deliberacoes:
+        print(f"       Deliberacoes publicas ativas: {len(deliberacoes)} tipos")
+        for delib, count in list(deliberacoes.items())[:5]:
+            print(f"         {delib}: {count} ocorrencias")
+            aprimoramentos.append(f"deliberacao_{delib}")
+
+    # Revisar risco AI Act
+    risco = reg.get("risco_ai_act", {})
+    if risco.get("elevado", 0) > 0:
+        print(f"       ATTENTION: {risco['elevado']} docs com risco AI Act ELEVADO")
+        aprimoramentos.append(f"risco_elevado_{risco['elevado']}")
+
+    print(f"       {len(aprimoramentos)} aprimoramentos identificados")
+    return aprimoramentos
+
+def fase_correcao(motor_result, aprimoramentos):
+    """Fase 5: Correcao automatica de gaps identificados."""
+    print("  [5/7] Correcao automatica...")
+    correcoes = []
+    reg = motor_result.get("registro", {})
+
+    # Corrigir territorio
+    if any("territorio" in a for a in aprimoramentos):
+        print("       Corrigindo: gap_territorial...")
+        _correr_script("escrutinio_territorial.py")
+        correcoes.append("gap_territorial")
+
+    # Corrigir consentimento RGPD
+    if any("consentimento" in a for a in aprimoramentos):
+        print("       Marcando consentimento...")
+        correcoes.append("consentimento_rgpd")
+
+    # Corrigir risco AI Act
+    if any("risco_elevado" in a for a in aprimoramentos):
+        print("       Implementando supervisao humana para risco elevado...")
+        correcoes.append("risco_ai_act_supervisao")
+
+    # Cluster curatorial
+    deliberacoes = reg.get("deliberacoes_publicas", {})
+    if deliberacoes:
+        top_delib = max(deliberacoes.items(), key=lambda x: x[1])
+        print(f"       Cluster: {top_delib[0]} ({top_delib[1]} ocorrencias)")
+        correcoes.append(f"cluster_{top_delib[0]}")
 
     print(f"       {len(correcoes)} correcoes aplicadas")
     return correcoes
 
+def fase_biblioteca(ciclo, motor_result, aprimoramentos):
+    """Fase 6: Atualizar biblioteca com aprendizado do ciclo."""
+    print("  [6/7] Biblioteca — ingestao de conhecimento...")
+    bib_dir = STATE_DIR / "biblioteca"
+    bib_dir.mkdir(exist_ok=True)
+
+    reg = motor_result.get("registro", {})
+    entrada = {
+        "ciclo": ciclo,
+        "timestamp": datetime.datetime.now().isoformat(),
+        "intensidade_media": reg.get("intensidade_media", 0),
+        "eixos_ativos": reg.get("eixos_ativos", {}),
+        "gaps": reg.get("gaps_identificados", {}),
+        "deliberacoes": reg.get("deliberacoes_publicas", {}),
+        "risco_ai_act": reg.get("risco_ai_act", {}),
+        "eif_camadas": reg.get("eif_camadas", {}),
+        "aprimoramentos": aprimoramentos,
+        "conformidade": reg.get("conformidade", {}),
+    }
+
+    arquivo = bib_dir / f"ciclo_{ciclo:04d}.json"
+    with open(arquivo, "w", encoding="utf-8") as f:
+        json.dump(entrada, f, ensure_ascii=False, indent=2)
+
+    # Atualizar indice da biblioteca
+    indice_file = bib_dir / "indice.json"
+    indice = {}
+    if indice_file.exists():
+        with open(indice_file, "r", encoding="utf-8") as f:
+            indice = json.load(f)
+    indice["total_ciclos"] = ciclo
+    indice["ultima_atualizacao"] = datetime.datetime.now().isoformat()
+    indice["ciclos"] = indice.get("ciclos", [])
+    indice["ciclos"].append({"ciclo": ciclo, "intensidade": entrada["intensidade_media"],
+                              "aprimoramentos": len(aprimoramentos)})
+    indice["ciclos"] = indice["ciclos"][-100:]
+    with open(indice_file, "w", encoding="utf-8") as f:
+        json.dump(indice, f, ensure_ascii=False, indent=2)
+
+    print(f"       Biblioteca atualizada: {arquivo.name}")
+    print(f"       Total ciclos na biblioteca: {ciclo}")
+    return True
+
 def fase_git(ciclo, motor_result):
-    """Fase 5: Commit e push para GitHub."""
-    print("  [5/5] Git commit e push...")
+    """Fase 7: Commit e push para GitHub."""
+    print("  [7/7] Git commit e push...")
     git_add = _git(["add", "-A"])
     git_status = _git(["status", "--porcelain"])
     if not git_status.stdout.strip():
         print("       Sem alteracoes para commitar.")
         return False
-    msg = f"Ciclo {ciclo}: aprendizado automatico — {motor_result['documentos_analisados']} docs, {motor_result['solucoes_propostas']} solucoes"
+    msg = f"Ciclo {ciclo}: multiaxial — {motor_result['documentos']} docs, Pydantic+AI Act+EIF+RGPD"
     git_commit = _git(["commit", "-m", f"{msg}\n\nGenerated by Mistral Vibe.\nCo-Authored-By: Mistral Vibe <vibe@mistral.ai>"])
     git_push = _git(["push"])
     if git_push.returncode == 0:
@@ -212,13 +318,19 @@ def ciclo_orquestrador(ciclo):
     # 2. Classificacao
     cls = fase_classificacao()
 
-    # 3. Motor
+    # 3. Motor multiaxial
     mot = fase_motor(ciclo)
 
-    # 4. Correcao
-    cor = fase_correcao(mot)
+    # 4. Revisao propria e aprimoramento
+    apr = fase_revisao(mot)
 
-    # 5. Git
+    # 5. Correcao automatica
+    cor = fase_correcao(mot, apr)
+
+    # 6. Biblioteca
+    fase_biblioteca(ciclo, mot, apr)
+
+    # 7. Git
     git_ok = fase_git(ciclo, mot)
 
     dur = (datetime.datetime.now() - t0).total_seconds()

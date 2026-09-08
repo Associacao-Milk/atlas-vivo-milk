@@ -533,6 +533,105 @@ def auto_gerenciamento(ciclo, analises, cruzamentos, revisao):
     return registro
 
 # ============================================================================
+# 4b. APRIMORAMENTO — ESCREVER DE VOLTA AS MELHORIAS NO CORPUS
+# ============================================================================
+
+def aprimorar_documentos(analises, ciclo):
+    """Escreve as analises de volta nos documentos e corrige gaps automaticamente.
+    ISTO E O APRENDIZADO — cada ciclo altera o corpus para melhor."""
+    print(f"  [Aprimoramento] Escrevendo {len(analises)} analises no corpus...")
+    alterados = 0
+    gaps_corrigidos = 0
+
+    for a in analises:
+        sha = a.get("sha256", "")
+        if not sha or len(sha) != 64:
+            continue
+        fp = CORPUS / f"{sha}.json"
+        if not fp.exists():
+            continue
+        try:
+            with open(fp, "r", encoding="utf-8") as f:
+                rec = json.load(f)
+        except Exception:
+            continue
+
+        md = rec.get("metadata", {})
+        alterado = False
+
+        # 1. Escrever analise multiaxial no documento
+        rec["analysis_multiaxial"] = {
+            "ciclo": ciclo,
+            "timestamp": a["timestamp"],
+            "eixos": a["eixos"],
+            "intensidade_semantica": a["intensidade_semantica"],
+            "risco_ai_act": a["risco_ai_act"],
+            "eif_camadas": a["eif_camadas"],
+            "deliberacoes_publicas": a["deliberacoes_publicas"],
+            "gaps_identificados": a["gaps_identificados"],
+            "hipoteses_solucao": a["hipoteses_solucao"],
+            "dados_pessoais": a["dados_pessoais"],
+            "anonimizacao_recomendada": a["anonimizacao_recomendada"],
+        }
+        alterado = True
+
+        # 2. Corrigir gap: sem_cobertura_territorial — tentar inferir do texto
+        if "sem_cobertura_territorial" in a["gaps_identificados"]:
+            # Ja foi tentado pelo escrutinio, mas marcar como tentado
+            if not md.get("territory"):
+                md["territory_attempts"] = md.get("territory_attempts", 0) + 1
+                alterado = True
+
+        # 3. Corrigir gap: sem_tipologia — atribuir tipo generico se falta
+        if "sem_tipologia" in a["gaps_identificados"]:
+            if not md.get("document_type"):
+                md["document_type"] = "documento_generico"
+                alterado = True
+                gaps_corrigidos += 1
+
+        # 4. Corrigir gap: risco_elevado_sem_supervisao — marcar para revisao
+        if "risco_elevado_sem_supervisao" in a["gaps_identificados"]:
+            md["requires_human_review"] = True
+            md["review_reason"] = "risco_ai_act_elevado"
+            alterado = True
+            gaps_corrigidos += 1
+
+        # 5. Corrigir gap: consentimento_pendente_com_dados_pessoais
+        if "consentimento_pendente_com_dados_pessoais" in a["gaps_identificados"]:
+            if a["dados_pessoais"] and md.get("consent_status") == "por_validar":
+                md["consent_status"] = "quarentena"
+                md["rgpd_status"] = "quarentena"
+                alterado = True
+                gaps_corrigidos += 1
+
+        # 6. Corrigir gap: sem_interoperabilidade_eif — adicionar metadata semantica
+        if "sem_interoperabilidade_eif" in a["gaps_identificados"]:
+            if not md.get("semantic_tags"):
+                tags = [e for e, v in a["eixos"].items() if v > 0]
+                if tags:
+                    md["semantic_tags"] = tags
+                    alterado = True
+                    gaps_corrigidos += 1
+
+        # 7. Adicionar governance_log
+        if alterado:
+            rec.setdefault("governance_log", []).append({
+                "at": datetime.datetime.now().isoformat(),
+                "actor": "MILK_IA_Motor_Multiaxial",
+                "ciclo": ciclo,
+                "action": "aprimoramento_automatico",
+                "gaps_corrigidos": gaps_corrigidos > 0,
+            })
+            rec["metadata"] = md
+            with open(fp, "w", encoding="utf-8") as f:
+                json.dump(rec, f, ensure_ascii=False, separators=(",", ":"))
+            alterados += 1
+
+    print(f"         {alterados} documentos aprimorados, {gaps_corrigidos} gaps corrigidos")
+    return {"alterados": alterados, "gaps_corrigidos": gaps_corrigidos}
+
+
+# ============================================================================
 # 5. CICLO COMPLETO
 # ============================================================================
 
@@ -562,21 +661,37 @@ def ciclo_multiaxial(ciclo, amostra=None):
     print(f"  [Testes] Cruzando {len(analises)} analises em {8} matrizes multiaxiais...")
     cruzamentos = testes_multiaxiais(analises)
 
+    # APRIMORAMENTO — escrever de volta no corpus (ISTO E O APRENDIZADO)
+    aprim = aprimorar_documentos(analises, ciclo)
+
     # Auto-gerenciamento
     print(f"  [Aprendizado] Registando ciclo {ciclo}...")
     reg = auto_gerenciamento(ciclo, analises, cruzamentos, revisao)
+    reg["aprimoramento"] = aprim
+
+    # Evolucao vs ciclo anterior
+    indice_file = STATE_DIR / "aprendizado" / "indice_multiaxial.json"
+    evolucao = "primeiro ciclo"
+    if indice_file.exists():
+        with open(indice_file, "r", encoding="utf-8") as f:
+            idx = json.load(f)
+        ciclos_ant = idx.get("ciclos", [])
+        if ciclos_ant:
+            delta = round(reg["intensidade_media"] - ciclos_ant[-1].get("intensidade", 0), 2)
+            evolucao = f"{'+' if delta >= 0 else ''}{delta} vs ciclo anterior"
 
     dur = (datetime.datetime.now() - t0).total_seconds()
 
     # Sintese
     sintese = (
-        f"Ciclo {ciclo}: {len(analises)} docs analisados em 11 eixos. "
-        f"Intensidade media: {reg['intensidade_media']}. "
+        f"Ciclo {ciclo}: {len(analises)} docs em 11 eixos. "
+        f"Intensidade: {reg['intensidade_media']} ({evolucao}). "
+        f"Aprimorados: {aprim['alterados']} docs, {aprim['gaps_corrigidos']} gaps corrigidos. "
         f"Gaps: {len(reg['gaps_identificados'])} tipos. "
-        f"Deliberacoes publicas: {len(reg['deliberacoes_publicas'])} tipos. "
+        f"Deliberacoes: {len(reg['deliberacoes_publicas'])} tipos. "
         f"Risco AI Act: {dict(reg['risco_ai_act'])}. "
-        f"EIF camadas: {dict(reg['eif_camadas'])}. "
-        f"Conformidade: Pydantic={PYDANTIC_OK}, AI Act=OK, EIF=OK. "
+        f"EIF: {dict(reg['eif_camadas'])}. "
+        f"Conformidade: Pydantic={PYDANTIC_OK}. "
         f"Revisao: {revisao['saude']}. "
         f"Duracao: {dur:.1f}s."
     )

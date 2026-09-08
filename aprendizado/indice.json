@@ -1,6 +1,6 @@
 {
-  "ultima_atualizacao": "2026-09-08T19:27:11.416538",
-  "total_ciclos": 2,
+  "ultima_atualizacao": "2026-09-08T19:33:02.951151",
+  "total_ciclos": 3,
   "ciclos": [
     {
       "ciclo": 1,
@@ -29,6 +29,12 @@
     {
       "ciclo": 2,
       "timestamp": "2026-09-08T19:27:11.405360",
+      "intensidade_media": 1.66,
+      "solucoes": 11
+    },
+    {
+      "ciclo": 3,
+      "timestamp": "2026-09-08T19:33:02.949413",
       "intensidade_media": 1.66,
       "solucoes": 11
     }

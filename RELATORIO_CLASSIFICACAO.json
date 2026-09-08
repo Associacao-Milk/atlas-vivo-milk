@@ -1,10 +1,7 @@
 {
-  "gerado_em": "2026-09-08T19:20:22.175962",
-  "duracao": 27.4,
+  "gerado_em": "2026-09-08T19:26:05.480862",
+  "duracao": 29.5,
   "processados": 10538,
-  "classificados": 1,
-  "stats": {
-    "com_distrito": 1,
-    "com_municipio": 1
-  }
+  "classificados": 0,
+  "stats": {}
 }

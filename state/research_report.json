@@ -1,0 +1,332 @@
+{
+  "schema": "ia_milk.research.bibliography.v1",
+  "generated_at": "2026-09-07T09:46:34+00:00",
+  "query": "tecnologia cultura métodos de análise social",
+  "references": [
+    {
+      "titulo": "Efficacy and Long-Term Safety of a Dengue Vaccine in Regions of Endemic Disease",
+      "autores": [
+        "Sri Rezeki Hadinegoro",
+        "José Luis Arredondo-Garcı́a",
+        "Maria Rosario Capeding",
+        "Carmen Deseda",
+        "Tawee Chotpitayasunondh",
+        "Reynaldo Dietze",
+        "H.I. Hj Muhammad Ismail",
+        "Humberto Reynales",
+        "Kriengsak Limkittikul",
+        "Doris Maribel Rivera-Medina",
+        "Huu Ngoc Tran",
+        "Alain Bouckenooghe"
+      ],
+      "ano": 2015,
+      "url": "https://doi.org/10.1056/nejmoa1506223",
+      "fonte": "OpenAlex",
+      "tipo": "artigo/pesquisa",
+      "resumo": "AGRADECIMENTOSAgradeço a Deus por me amparar nos momentos difíceis, me dar força para superar as dificuldades e mostrar os caminhos nas horas incertas.À minha orientadora, Profa Dra Ana Cláudia Granato Malpass, por me dar a chance de trabalhar ao seu lado, pela confiança na realização do trabalho, pelos ensinamentos e, sobretudo pela amizade e carinho com que me acolheu desde nosso primeiro encontro e ao professor Drº Geoffroy Roger Pointer Malpass pela oportunidade.À Profa Dra Lúcia Scatena por ter participado da banca de qualificação e pelos ensinamentos no decorrer do trabalho.À Profa Dra Luciana de Almeida Teixeira, por aceitar participar das bancas de qualificação e defesa, pelas valiosas sugestões e contribuições.À Profa Dra Marciana Fernandes Moll, por aceitar o convite em participar da banca de defesa final, na qualidade de membro externo da UFTM.Agradeço especialmente à minha mãe Cida, mulher simples, com uma sabedoria sem tamanho e que me ensina a viver na linguagem do amor.Ao meu maior presente de Deus, meu Miguel, que ainda não tenho nos braços, mas que já é fonte inesgotável de amor.Ao meu esposo Danilo, presente em todas as etapas deste trabalho, obrigada pelo companheirismo, amor e compreensão.À minha família, onde encontro carinho e segurança.À minha irmã Jacqueline e sobrinhas Ana Laura, Maria Clara e Júlia, por entenderem meus momentos de ausência e pelo amor incondicional.Às minhas amigas: Mayta, pelo carinho e pelo apoio na elaboração das planilhas e gráficos, sem sua ajuda minha trajetória teria sido muito mais árdua; Maira, por me direcionar inúmeras vezes ao longo de todo o trabalho, sua atenção e conselhos foram essenciais; Elisabeth, obrigada pelas palavras de confiança e incentivo, lições de vida e carinho; Natália, que me \"aguentou\" e compartilhou diversos momentos ao longo dessa dissertação.Aos Professores do Programa de Mestrado em Inovação Tecnológica, pelos ensinamentos compartilhados, bem como ao Sr. Ênio, pela atenção e paciência no atendimento prestado.A todos, que mesmo não sendo citados, contribuíram de alguma forma para a concretização desta etapa tão importante da minha vida.\" Se enxerguei mais longe, foi porque me apoiei sobre os ombros de gigantes.\" (Isaac Newton) RESUMO O avanço tecnológico é uma importante estratégia para o desenvolvimento econômico e social mundial.Desta forma, foi realizada uma análise comparativa entre documentos de patentes sobre dengue e H1N1, no período de 2001 a 2016, utilizando como fonte de informação o banco de dados Derwent Innovations Index.Para tanto, foram analisados os seguintes fatores: distribuição geográfica dos depósitos; a tipologia; a classificação das patentes; o foco tecnológico e a evolução temporal dos pedidos de patentes no período da pesquisa.Ao utilizar a expressão \"dengue\", foram encontradas 2660 famílias de patentes, enquanto que, para \"H1N1\", foram encontradas 1103 famílias.Ao verificar a distribuição geográfica, verificou-se domínio dos Estados Unidos em ambas as patologias.Na categoria dos depositantes das patentes apresentou destaque para \"pessoa física\".Já para a tendência temática das inovações, a partir da CIP, verificou-se a predominância para a seção \"Necessidades Humanas\", com \"Ciência Médica ou Veterinária e Higiene\" no nível de classe e para subclasse, as mais predominantes foram \"Atividade terapêutica específica de compostos químicos ou preparações medicinais\" e \"Preparações para finalidades médicas, odontológicas ou higiênicas\".Analisando-se a evolução temporal anual, observa-se que a média para dengue foi de 177 patentes ao ano, com incremento de 22,43 e aceleração negativa, após 2007, de 1,40 anualmente.E para H1N1, a média anual foi de 88,57 patentes, incremento de 21,19 e aceleração negativa de 1,02 ao ano.O monitoramento por meio da análise do registro de patentes é de fundamental importância para tomada de decisões que geram impacto na situação da saúde pública mundial, tais como, o direito a saúde e acesso aos serviços, em especial nos países em desenvolvimento.",
+      "anotacao": "Resultado OpenAlex; verificar texto integral, método, amostra e validade antes de citar.",
+      "identificador": "https://doi.org/10.1056/nejmoa1506223"
+    },
+    {
+      "titulo": "Tecnologia Social: contribuições conceituais e metodológicas",
+      "autores": [
+        "Renato Dagnino"
+      ],
+      "ano": 2014,
+      "url": "https://doi.org/10.7476/9788578793272",
+      "fonte": "OpenAlex",
+      "tipo": "artigo/pesquisa",
+      "resumo": "Este segundo volume da Série Tecnologia Social deriva do interesse que o tema tem despertado em professores, estudantes, gestores públicos e participantes de movimentos sociais com quem seu autor vem dialogando. E de sua percepção de que a sociedade mais justa, igualitária e ambientalmente sustentável que desejam demanda uma aliança da comunidade de pesquisa que hegemoniza as políticas cognitivas (da Ciência e Tecnologia e do Ensino) e dos trabalhadores que intentam sair da informalidade para a Economia Solidária. Deter a exclusão que penaliza a maioria da população mundial e caminhar na direção de uma sociedade fundamentada numa outra tecnociência são a raiz dos argumentos sintetizados no conceito de Tecnologia Social. Nas palavras do autor, “o livro visa somar-se ao trabalho de um número crescente de latino-americanos que estão construindo a plataforma cognitiva de lançamento - a Tecnologia Social - de uma nova proposta societária - a Economia Solidária”.",
+      "anotacao": "Resultado OpenAlex; verificar texto integral, método, amostra e validade antes de citar.",
+      "identificador": "https://doi.org/10.7476/9788578793272"
+    },
+    {
+      "titulo": "Gênero: uma categoria útil de análise histórica",
+      "autores": [
+        "Joan W. Scott"
+      ],
+      "ano": 2012,
+      "url": "https://openalex.org/W1576431432",
+      "fonte": "OpenAlex",
+      "tipo": "artigo/pesquisa",
+      "resumo": "Gênero: uma categoria útil de análise histórica",
+      "anotacao": "Resultado OpenAlex; verificar texto integral, método, amostra e validade antes de citar.",
+      "identificador": "https://openalex.org/W1576431432"
+    },
+    {
+      "titulo": "Investigando portais de governo eletrônico de estados no Brasil: muita tecnologia, pouca democracia",
+      "autores": [
+        "José Antônio Gomes de Pinho"
+      ],
+      "ano": 2008,
+      "url": "https://doi.org/10.1590/s0034-76122008000300003",
+      "fonte": "OpenAlex",
+      "tipo": "artigo/pesquisa",
+      "resumo": "Este artigo investiga portais de governos estaduais no Brasil, para detectar os movimentos do governo eletrônico que pretendem aprofundar a democracia por meio de processos digitais. Procedeu-se à investigação de nove portais dos estados considerados mais desenvolvidos do país e do Distrito Federal. O modelo de análise contempla, por um lado, os aspectos mais tecnológicos dos portais e como estes disponibilizam informações para os cidadãos, de maneira a criar facilidades para as suas vidas. Por outro - e este é o aspecto mais importante -, os referentes a accountability e a participação popular, no sentido de verificar como os portais (e os governos considerados) têm se constituído em um experimento de aprofundamento da democracia no Brasil e de realização de um novo tipo de sociedade: a digital. O quadro teórico enfatiza as categorias de governo eletrônico, accountability e participação popular. Os resultados não são animadores, convergindo com a experiência internacional, e são atribuídos à trajetória conservadora e autoritária do Estado no Brasil. Pondera-se, também, que todos esses processos, tanto do ponto de vista da absorção dos parâmetros da sociedade digital quanto do desenvolvimento da democracia, ainda estão em construção na sociedade brasileira.",
+      "anotacao": "Resultado OpenAlex; verificar texto integral, método, amostra e validade antes de citar.",
+      "identificador": "https://doi.org/10.1590/s0034-76122008000300003"
+    },
+    {
+      "titulo": "The iron cage revisited institutional isomorphism and collective rationality in organizational fields",
+      "autores": [
+        "Paul DiMaggio",
+        "Walter W. Powell"
+      ],
+      "ano": 2004,
+      "url": "https://doi.org/10.1016/s0742-3322(00)17011-1",
+      "fonte": "OpenAlex",
+      "tipo": "artigo/pesquisa",
+      "resumo": "What makes organizations so similar? We contend that the engine of rationalization and bureaucratization has moved from the competitive marketplace to the state and the professions. Once a set of organizations emerges as a field, a paradox arises: rational actors make their organizations increasingly similar as they try to change them. We describe three isomorphic processes-coercive, mimetic, and normative—leading to this outcome. We then specify hypotheses about the impact of resource centralization and dependency, goal ambiguity and technical uncertainty, and professionalization and structuration on isomorphic change. Finally, we suggest implications for theories of organizations and social change.",
+      "anotacao": "Resultado OpenAlex; verificar texto integral, método, amostra e validade antes de citar.",
+      "identificador": "https://doi.org/10.1016/s0742-3322(00)17011-1"
+    },
+    {
+      "titulo": "Cultura e cotidiano escolar",
+      "autores": [
+        "Nilda Alves"
+      ],
+      "ano": 2003,
+      "url": "https://doi.org/10.1590/s1413-24782003000200005",
+      "fonte": "OpenAlex",
+      "tipo": "artigo/pesquisa",
+      "resumo": "Com base nas idéias de Michel de Certeau e Michel Foucault, busca indicar como se dá a \"trama da cultura\" nas múltiplas e diversas relações dos praticantes dos cotidianos através de acontecimentos culturais. Fazendo uso de imagens do contexto cotidiano de escolas e de outros contextos cotidianos, são desenvolvidas questões sobre as relações cultura e cotidianos educativos, em torno de um eixo que tem ocupado o centro dos estudos desenvolvidos pelo grupo de pesquisa \"Redes de conhecimentos em educação e comunicação: questão de cidadania: a tecnologia e os artefatos culturais\".",
+      "anotacao": "Resultado OpenAlex; verificar texto integral, método, amostra e validade antes de citar.",
+      "identificador": "https://doi.org/10.1590/s1413-24782003000200005"
+    },
+    {
+      "titulo": "APRENDIZAGEM MEDIADA PELA TECNOLOGIA",
+      "autores": [
+        "Vani Moreira Kenski"
+      ],
+      "ano": 2003,
+      "url": "https://doi.org/10.7213/rde.v4i10.6419",
+      "fonte": "OpenAlex",
+      "tipo": "artigo/pesquisa",
+      "resumo": "O texto analisa a relação entre tecnologia e aprendizagem. Inicia pela compreensão de que o uso das tecnologias disponíveis, em cada época da história da humanidade, transforma radicalmente a forma de organização social, comunicação, cultura e a aprendizagem. No atual estágio da civilização, as tecnologias digitais de comunicação e informação possibilitam novas formas de acesso à informação, novas possibilidades de interação e de comunicação e formas diferenciadas de se alcançar a aprendizagem. Essas tecnologias, no entanto, requerem um amplo conhecimento de suas especificidades para que possam ser utilizadas adequadamente em projetos sistemáticos de educação. Exigem também metodologias de ensino diferenciadas, uma nova pedagogia e a utilização ampla das capacidades humanas (muito além da cognição) em processos diferenciados de aprendizagem. Além disso, essas novas tecnologias possibilitam que a aprendizagem possa acontecer de forma coletiva, integrada, articulando informações e pessoas que estão em locais diferentes e que são de idade, sexo, condições físicas, áreas e níveis diferenciados de formação. O texto conclui que as atuais tecnologias digitais de comunicação e informação possibilitam o alcance de novas aprendizagens, que encaminham as pessoas para novos avanços, socialmente válidos, no atual estágio de desenvolvimento da humanidade.",
+      "anotacao": "Resultado OpenAlex; verificar texto integral, método, amostra e validade antes de citar.",
+      "identificador": "https://doi.org/10.7213/rde.v4i10.6419"
+    },
+    {
+      "titulo": "A Cultura Escolar como Objeto Histórico",
+      "autores": [
+        "Dominique Juliá"
+      ],
+      "ano": 2001,
+      "url": "https://openalex.org/W1575430836",
+      "fonte": "OpenAlex",
+      "tipo": "artigo/pesquisa",
+      "resumo": "O artigo tem como escopo a cultura escolar como objeto histórico. Demonstra que a cultura escolar não pode ser estudada sem o exame preciso das relações conflituosas ou pacíficas que ela mantém, a cada período de sua história, com o conjunto das culturas que lhe são contemporâneas. A cultura escolar é descrita como um conjunto de normas que definem conhecimentos a ensinar e condutas a inculcar, e um conjunto de práticas que permitem a transmissão desses conhecimentos e a incorporação desses comportamentos. O trabalho é circunscrito ao período moderno e contemporâneo, período compreendido entre os séculos XVI e XIX. O texto é desenvolvido segundo três eixos, perspectivas interessantes para se entender a cultura escolar como objeto histórico: interessar-se pelas normas e pelas finalidades que regem a escola; avaliar o papel desempenhado pela profissionalização do trabalho do educador; interessar-se pela análise dos conteúdos ensinados e das práticas escolares.",
+      "anotacao": "Resultado OpenAlex; verificar texto integral, método, amostra e validade antes de citar.",
+      "identificador": "https://openalex.org/W1575430836"
+    },
+    {
+      "titulo": "Avaliação de programas, serviços e tecnologias em saúde",
+      "autores": [
+        "Hillegonda Maria Dutilh Novaes"
+      ],
+      "ano": 2000,
+      "url": "https://doi.org/10.1590/s0034-89102000000500018",
+      "fonte": "OpenAlex",
+      "tipo": "artigo/pesquisa",
+      "resumo": "The field of program, services and technology evaluation in general, and in health care in particular, is going through an important growth and conceptual and methodological diversification. It is also the object of an increasing demand for its participation as an effective supportive instrument in the decision-making process, and a constant need in the dynamics of health systems and services. In this paper, based on literature review, nuclear criteria involved in the organization of all evaluation processes are identified, and articulated with the existing institutionalized evaluation practices in developed countries, that is, program evaluation, quality assessment and management and technology assessment. In conclusion, the incipient development of a methodological evaluation output in Brazil is analyzed.",
+      "anotacao": "Resultado OpenAlex; verificar texto integral, método, amostra e validade antes de citar.",
+      "identificador": "https://doi.org/10.1590/s0034-89102000000500018"
+    },
+    {
+      "titulo": "Análise qualitativa de dados de entrevista: uma proposta",
+      "autores": [
+        "Zélia M. M. Biasoli Alves",
+        "Maria Helena G. F. Dias da Silva"
+      ],
+      "ano": 1992,
+      "url": "https://doi.org/10.1590/s0103-863x1992000200007",
+      "fonte": "OpenAlex",
+      "tipo": "artigo/pesquisa",
+      "resumo": "A abordagem qualitativa em pesquisa nas áreas da Educação e Ciências Sociais tem representado um caminho alternativo à rigidez positivista. Entretanto, vem preocupando os pesquisadores brasileiros pela sua característica de não sistematização. Face a isso, o presente trabalho visa contribuir para uma discussão metodológica sobre análise qualitativa ao relatar um procedimento sequenciado, sistematizado e passível de ser aplicado a dados de entrevista semi-estruturada e livre, que compreende todos os passos, da construção do instrumento para coleta de dados à apreensão do significado das falas dos sujeitos, terminando numa redação precisa, dentro do enfoque teórico do pesquisador.",
+      "anotacao": "Resultado OpenAlex; verificar texto integral, método, amostra e validade antes de citar.",
+      "identificador": "https://doi.org/10.1590/s0103-863x1992000200007"
+    },
+    {
+      "titulo": "Protocolos e métodos de implementação do processo BIM",
+      "autores": [
+        "Lucimar  de Souza Paula",
+        "Cristiane Bueno"
+      ],
+      "ano": null,
+      "url": "https://doi.org/10.46421/sbtic.v5i00.7411",
+      "fonte": "Crossref",
+      "tipo": "proceedings-article",
+      "resumo": "Apesar da expansão do Building Information Modeling (BIM) desde os anos 2000, sua adoção ainda é considerada inovadora em países como Brasil e Índia, além de pequenas e médias empresas, que enfrentam barreiras técnicas e financeiras. Este estudo realizou uma análise bibliométrica sobre a implementação do BIM, com foco em protocolos e métodos, a partir de 8.512 publicações indexadas nas bases Scopus® e Web of Science™, entre 2004 e 2024, utilizando o software VOSviewer. Os resultados revelam crescimento contínuo nas publicações, com destaque para 2022 (WoS) e 2023 (Scopus). Estados Unidos (20,11%), China (20,74%) e Reino Unido (13,18%) lideram a produção científica, impulsionados por políticas públicas. Já o Brasil representa apenas 1,93%, indicando uma lacuna regional. Conclui-se a necessidade de maior internacionalização da pesquisa, além do desenvolvimento de diretrizes e protocolos adaptados a contextos locais, visando ampliar a adoção eficiente do BIM em diferentes realidades.",
+      "anotacao": "Registro Crossref; confirmar edição, revisão por pares e pertinência metodológica.",
+      "identificador": "10.46421/sbtic.v5i00.7411"
+    },
+    {
+      "titulo": "Paisagem cultural do alto Mondego: de núcleos industriais a parque patrimonial",
+      "autores": [
+        "Martins, Nuno",
+        "Costa, Cláudia",
+        "Leite, Vasco"
+      ],
+      "ano": null,
+      "url": "https://proa.ua.pt/index.php/rtd/article/view/12785",
+      "fonte": "DataCite",
+      "tipo": "Text",
+      "resumo": "Objectivos | Sondar e explorar o potencial turístico de diversos núcleos industriais abandonados relacionados com os lanifícios e situados em aldeias da encosta da Serra da Estrela e no vale do Mondego, nas imediações da cidade da Guarda, inserindo-os, como um novo pólo atractivo, o do Alto Mondego, no projecto em curso do Parque Patrimonial do Mondego. Revalorizar e revitalizar a paisagem cultural associada ao ciclo da lã, da pastorícia à transumância, da manufactura à indústria dos lanifícios, através da criação de um projecto que tem no património industrial e nos valores da cultura autóctone (arquitectónicos, ligados as tradições orais, etc.) o seu eixo temático central. Metodologia | Investigação bibliográfica e de sites da Internet. Entrevistas pessoais.Visitas de estudo e interpretação da paisagem. Desenho/projecto de roteiros. Tarefas principais: 1. Consulta bibliográfica. 2. Entrevistas a autarcas, a antigos industriais de lanifícios, a operários e pastores antigos. 3. Sinalização e levantamento fotográfico no terreno das antigas unidades industriais. 4. Identificação de unidades de paisagem usando como critérios os recursos patrimoniais ligados às tradições orais e ao ciclo da lã. 5. Arranque da construção de uma primeira etapa de um Sistema de Informação Geográfica do Parque Patrimonial do Mondego na região do Alto Mondego. 6. Desenho prévio do mapa do PPM para o Alto Mondego. Principais resultados e contributos | A investigação, em curso, para o Alto Mondego tem como um dos seus outputs um mapa-síntese com delimitação da área de intervenção, sinalização de um conjunto de recursos patrimoniais, proposta de centros de interpretação e desenho de roteiros pedagógicos, lúdicos e turísticos que ligam aos recursos aos centros, e estes a interfaces modais e portas de entrada do parque. Temáticas a abordar no projecto ou guião de análise do território do Alto Mondego: – Parques patrimoniais e o Parque Patrimonial do Mondego – objectivos, estratégias e acções. – Rotas do Parque Patrimonial do Alto Mondego – temas e métodos de concepção. – O Património Industrial no Alto Mondego – identificação de oportunidades para a valorização patrimonial. – Elaboração de Mapa de síntese de recursos patrimoniais e de roteiros pedagógicos e turísticos do Alto Mondego. Os resultados confirmam as hipóteses explicativas colocadas: − A relação evolutiva entre rio, populações e paisagem cultural como chave interpretativa das transformações da paisagem do Alto Mondego. − A persistência do rio como matriz geográfica e cultural que sintetiza a identidade do território, uma identidade calcada nas antigas actividades laborais. Esta identidade produtiva, constitui-se como o núcleo genético a partir da qual ganha forma uma alternativa ao actual território. O contributo da investigação reside, portanto, em conformar uma base cultural, ambiental, tecnológica, comunicacional, social e económica que permita relançar um território em franco declínio. A partir do estudo da história e da paisagem; o contacto com as comunidades locais e a selecção de recursos patrimoniais, de acordo com a reconstrução da narrativa histórica, seguida da proposta de parque patrimonial, assume-se o repto de combater os principais problemas que afectam o território: despovoamento, depressão social e económica, mitigação da identidade, esbatimento da memória colectiva. A análise espacial das paisagens rurais em estudo, apoiada em sistemas de informação geográfica, permite estabelecer unidades paisagísticas que respondem a critérios de presença de recursos patrimoniais diversos, tangíveis e intangíveis. O mapeamento destes recursos no quadro do território do Mondego constitui um passo obrigatório para a definição de um conjunto de centros de interpretação que correspondem, simultaneamente, a pólos do futuro Ecomuseu do Mondego, projecto em curso. Igualmente se identificam um conjunto de casas típicas devolutas ou sub-habitadas para conversão em casas de acolhimento de turistas. O sistema de informação geográfica do parque articula-se, através de dispositivos móveis, a um site com aplicações interactivas, tecnologia mobile, conexões wireless e sistema de navegação GPS, trabalho que corresponde a outra linha de desenvolvimento do projecto. O interface assim criado assegura ao visitante um apoio permanente, online, em directo em diferido, antes, durante e depois da visita. Limitações | Prendem-se com o acesso aos locais das antigas fábricas, bastante inacessíveis, e com a dificuldade de encontrar bibliografia sobre parques patrimoniais dada a escassez de experiências similares levadas a cabo em Portugal. Acresce ainda a distância, as dificuldades de encontrar registos sobre a abertura, funcionamento e fecho das fábricas. Conclusões | O conhecimento dos processos de transformação da paisagem cultural do Alto Mondego é o ponto de partida para o projecto de um parque patrimonial que repousa numa estratégia de desenvolvimento sustentável à escala regional. O interface de comunicação desenvolvido antecipa o enriquecimento da experiência turística. Por sua vez, o sistema de roteiros; o reforço da imagem do destino, a adaptabilidade da oferta, graças à diversidade da programação e à difusão dos serviços e do alojamento rural, contribuem, no seu conjunto, para um uso mais flexível, uma vivência mais dinâmica e mais próxima aos residentes, incrementando-se a partilha e o intercâmbio. Como veículo institucional, unificador de vontades e políticas, e sobretudo como instrumento de projecto e gestão de paisagens culturais, o parque patrimonial revela todo o seu potencial agregador de recursos e promotor de um turismo industrial assente nos pilares da sustentabilidade.",
+      "anotacao": "Registro DataCite; verificar licença, versão e relação entre dataset, software e publicação.",
+      "identificador": "10.34624/rtd.v3i13/14.12785"
+    },
+    {
+      "titulo": "Os institutos federais de educação, ciência e tecnologia na promoção de tecnologia social",
+      "autores": [
+        "Bruno Rafael Camargos de Oliveira"
+      ],
+      "ano": null,
+      "url": "https://doi.org/10.47749/t/unicamp.2023.1338801",
+      "fonte": "Crossref",
+      "tipo": "dissertation",
+      "resumo": null,
+      "anotacao": "Registro Crossref; confirmar edição, revisão por pares e pertinência metodológica.",
+      "identificador": "10.47749/t/unicamp.2023.1338801"
+    },
+    {
+      "titulo": "Métodos e possibilidades de integração BIM-ACV:",
+      "autores": [
+        "Thaina Queiroga",
+        "Cristiane Bueno"
+      ],
+      "ano": null,
+      "url": "https://doi.org/10.46421/entac.v19i1.2115",
+      "fonte": "Crossref",
+      "tipo": "proceedings-article",
+      "resumo": "O setor da Arquitetura, Engenharia e Construção é um dos principais agentes dos impactos ambientais. Dentro deste contexto, é necessário a adoção de estratégias inovadoras que tornem o setor mais sustentável. Sendo assim, a integração entre as metodologias de Avaliação do Ciclo de Vida (ACV) e Building Information Modelling (BIM) tem se mostrado promissora no apoio à tomada de decisão no desenvolvimento de projetos de menor impacto ambiental. Dessa forma, a presente pesquisa teve como objetivo realizar uma análise bibliométrica referente aos estudos dos diferentes métodos de integração BIM-ACV.",
+      "anotacao": "Registro Crossref; confirmar edição, revisão por pares e pertinência metodológica.",
+      "identificador": "10.46421/entac.v19i1.2115"
+    },
+    {
+      "titulo": "MÉTODOS DE ANÁLISE DA MORFODINÂMICA FLUVIAL: UMA COMPARAÇÃO ENTRE MÉTODOS DE ANÁLISE FLUVIOMÉTRICA E MÉTODOS DE ANÁLISE MULTITEMPORAL DE SENSORIAMENTO REMOTO",
+      "autores": [
+        "EVLYN M. L. NOVO"
+      ],
+      "ano": null,
+      "url": "https://doi.org/10.25249/0375-7536.1985207212",
+      "fonte": "Crossref",
+      "tipo": "journal-article",
+      "resumo": null,
+      "anotacao": "Registro Crossref; confirmar edição, revisão por pares e pertinência metodológica.",
+      "identificador": "10.25249/0375-7536.1985207212"
+    },
+    {
+      "titulo": "Inclusão, cidadania e cultura digital:",
+      "autores": [
+        "Renata de Araújo Viana Lima",
+        "Neiara de Morais Bezerra"
+      ],
+      "ano": null,
+      "url": "https://doi.org/10.47455/2675-0090.2024.6.14.15151",
+      "fonte": "Crossref",
+      "tipo": "journal-article",
+      "resumo": "O uso das novas tecnologias tornou-se uma exigência tão absoluta que, independentemente de idade, gênero ou classe social, é difícil imaginar um só aspecto de nossas vidas que dela escape. Concomitantemente, o acesso a essas tecnologias dá-se de maneira extremamente desigual, importando muito as condições socioeconômicas de cada um, de forma que, sem ação inclusiva promovida pelo poder público, a desigualdade de hoje será maior amanhã. Daí a relevância de investigar políticas públicas que considerem, por exemplo, a construção de novos cenários sociais, cidadania, inclusão e exclusão digitais, novas tecnologias e, é claro, o papel do poder público diante desse quadro. Desse modo, indagações se estabeleceram nesta análise sobre uma política desenvolvida na cidade de Fortaleza/CE, considerando a seguinte questão: que ideias de inclusão, cidadania e cultura digital fundamentaram o desenho da política desenvolvida na Casa de Cultura Digital de Fortaleza? Essa foi a pergunta que guiou e estruturou o desenvolvimento da pesquisa, tendo como objetivo identificar tais noções no desenho do projeto administrado pela Fundação de Ciência, Tecnologia e Inovação de Fortaleza (CITINOVA). Optou-se pela pesquisa qualitativa e exploratória, e como procedimentos metodológicos foram utilizadas a revisão bibliográfica, a entrevista e a análise documental, por meio da metodologia de análise do desenho da política, de acordo com categorias inspiradas na pesquisa de Lima, D'ascenzi e Aguiar (2020). Após a análise das categorias, os resultados apontam uma leitura conjunta como forma de explicitar a racionalidade percebida em seu desenho. Assim, o que se compreendeu sobre a inclusão, cidadania e cultura digital acaba sendo direcionado a uma política de construção de perfis de jovens empreendedores, com conhecimentos específicos e produtores de mídias digitais, criativas e inovadoras. Dessa forma, a presente pesquisa sinaliza a relevância de projetos que possam dialogar com grupos, não somente entre jovens empreendedores, mas entre todas as faixas etárias e níveis de aptidões relacionadas ao desenvolvimento tecnológico e digital na cidade de Fortaleza.",
+      "anotacao": "Registro Crossref; confirmar edição, revisão por pares e pertinência metodológica.",
+      "identificador": "10.47455/2675-0090.2024.6.14.15151"
+    },
+    {
+      "titulo": "EDITORIAL: Congresso Internacional da UI_IPS – Parte II",
+      "autores": [
+        "Samartinho, João Paulo",
+        "Potes Barbas, Maria",
+        "Santos Rocha, Rita",
+        "Leal, Susana"
+      ],
+      "ano": null,
+      "url": "https://revistas.rcaap.pt/uiips/article/view/19263",
+      "fonte": "DataCite",
+      "tipo": "Text",
+      "resumo": "O Congresso Internacional da Unidade de Investigação do Instituto Politécnico de Santarém, realizado a 1 e 2 de fevereiro de 2018, teve lugar na Escola Superior de Gestão e Tecnologia do Instituto Politécnico de Santarém, com a participação dos quatro domínios científicos que integram esta Unidade de Investigação: Ciências Naturais e Ambiente, Ciências Exatas e Engenharia, Ciências Sociais e Humanas e ainda o domínio científico da Ciências da Vida e da Saúde. A publicação dos artigos, resumos e posters apresentados neste congresso foi organizada em duas partes: a primeira parte ou Parte I, já publicada no Vol. 7, Nº2 (2019) da Revista da UIIPS, que integrou os os domínios científicos das Ciências Naturais e Ambiente e das Ciências Exatas e Engenharia; a segunda parte ou Parte II, corresponde à presente publicação, que integra os artigos, resumos e posters dos domínios científicos das Ciências Sociais e Humanas e das Ciências da Vida e da Saúde. A presente publicação apresenta um total de 40 artigos, resumos ou posters sendo trinta do domínio científico das Ciências Sociais e Humanas (seis artigos completos, nove resumos de comunicações orais e quinze resumos de posters) e 10 do domínio da Ciências da Vida e da Saúde (dez artigos completos). Os artigos completos na área das Ciências Sociais e Humanas são relacionados com: a educação de jovens com síndrome de Down (“The T21 project: a European initiative for young people with special educational needs”), a formação de adultos (“UPTAKE ICT2LIFE-CYCLE The solution to digital literacy and inclusion of learners with disadvantaged backgrounds”), a gestão de unidades de saúde (“Centralização: impacto organizacional no setor da saúde”), a gestão da qualidade em organizações da Economia Social (“Avaliação do impacto da implementação do referencial EQUASS na qualidade de vida dos clientes do centro de recuperação e integração Ouriense”), a viabilidade económica da energia fotovoltaica (“Avaliação da viabilidade económica da energia solar fotovoltaica: estudo de caso da Polícia de Segurança Pública”), e a importância do coaching na eficácia dos líderes (“Research Coaching: enhancing supervisor’s leader role efficacy”). Os resumos das comunicações orais na área das Ciências Sociais e Humanas abordam se seguinte temáticas: a escrita cursiva em crianças (“Effect of spatial constraints in cursive writing of first grade lefthanded children: a qualitative analysis”), as dinâmicas e práticas pedagógicas interdisciplinares em ciências e matemática (“CREATIVELAB_SCI&amp;MATH: dinâmicas de trabalho e práticas pedagógicas interdisciplinares em ciências e matemática”), a arte, a cultura e o pensamento nas primeiras idades (“educARTE- arte, cultura e pensamento nas primeiras idades”), a hiperatividade e o défice de atenção em estudantes do ensino básico (“Técnica de controlo respiratório e a hiperatividade e défice de atenção: um projeto numa escola do 2.º ciclo do ensino básico”), a investigação educacional (“Estudo de SDQ1 de Marsh: auto conceito verbal, matemático e de aparência física em adolescentes”), o sistema de custeio Time Driven Activity Based Costing (TDABC) (“Implementação do Time-Driven Activity Based Costing numa empresa prestadora de serviços”), a responsabilidade social de organizações de economia social (“A responsabilidade social e as emoções positivas explicando a satisfação no trabalho: um estudo aplicado a instituições particulares de solidariedade social”), a gestão do desporto e a previsão da prática desportiva (“Previsão prática desportiva recorrendo a séries temporais”) e o cicloturismo (“O valor económico do cicloturismo: revisão). Os resumos dos posters apresentados na conferência, na área das Ciências Sociais e Humanas, são subordinados aos temas: do ensino das ciências (“A importância da aprendizagem cooperativa no ensino das ciências”; “Conceções e práticas de educadores de infância e de professores do 1.º ciclo acerca do ensino das ciências”), dos hábitos de higiene de estudantes do ensino básico (“Hábitos de higiene de alunos do 6.º ano do 2.º CEB”), dos estudantes com necessidades educativas especiais (“Os desafios da inclusão de estudantes com necessidades educativas especiais no Instituto Politécnico de Santarém”), da animação sociocultural e desportiva (“Animação sociocultural e desportiva em contexto prisional”), dos novos métodos de ensino/aprendizagem (“Be.Safe”), do uso das novas tecnologias para o ensino da saúde (“E-(m)PACT), da educação pré-escolar (“Use of rod as instrument in 3 years old children: affordances and effectivities”; “Orienteering using realistic map (colored aerial photography) with kindergarten children”), dos estudos relacionados com as crianças (“Haptic perception in infants users of ergonomic pacifiers”; “Efeito da utilização de mochilas com diferentes pesos na aceleração do tronco em crianças: uma análise comportamental”), da gestão de instituições de ensino superior (“Práticas sustentáveis nas instituições de ensino superior: um estudo empírico aplicado às instituições públicas portuguesas”) da gestão de unidades de saúde (“Guide lines e formação nas organizações de saúde: o caso das IACS”; “Resistências aos antimicrobianos: flagelo socioeconómico do século XXI”; e “Health care systems and reform”). Finalmente, encerrando este número 2, volume 7 de 2019 da Revista da UI-IPSantarém, são apresentados os dez artigos do domínio da Ciências da Vida e da Saúde, trabalhos desenvolvidos especificamente na área das Ciências do Desporto. Os investigadores que apresentaram os trabalhos no congresso e produziram os estudos integrados na área das Ciências do Desporto são maioritariamente docentes e estudantes de mestrado da Escola Superior de Desporto de Rio Maior, contando com a colaboração de docentes de outros Institutos Politécnicos com formação inicial e avançada em Desporto, nomeadamente de Setúbal e Coimbra, refletindo as parcerias existentes no âmbito de projetos de investigação e o envolvimento efetivo de estudantes. São apresentadas abordagens distintas referentes aos contextos do Treino Desportivo e do Exercício e Saúde, como exemplos de ciências aplicadas ao desporto, desde a Pedagogia do Desporto (preferência dos idosos em aulas de hidroginástica, relativamente ao comportamento de feedback dos instrutores; perfil e perceção dos pais que frequentam aulas de natação para bebés; modelos de formação desportiva no taekwondo), a Biomecânica do Desporto (observação e análise técnica quantitativa e qualitativa da natação), a Metodologia do Treino no basquetebol, taekwondo e atletismo, a Psicologia do Desporto (atividade física e fibromialgia), e o Marketing do Desporto (identificação dos adeptos com a equipa desportiva e patrocinador e intenção de compra dos produtos do patrocinador). Com a publicação deste volume, Parte II do Congresso Internacional da UI-IPSantarém, encerra-se o ciclo de publicações iniciado com o Volume 7, número 1 (2019), que integraram um compêndio em dois volumes relativo aos artigos, resumos e posters apresentados no Congresso Internacional da Unidade de Investigação do Instituto Politécnico de Santarém, realizado a 1 e 2 de fevereiro de 2018. João Samartinho, Maria Barbas, Susana Leal e Rita Santos Rocha",
+      "anotacao": "Registro DataCite; verificar licença, versão e relação entre dataset, software e publicação.",
+      "identificador": "10.25746/ruiips.v7.i2.19263"
+    },
+    {
+      "titulo": "Dimensões para a análise e desenvolvimento de Tecnologia Social",
+      "autores": [
+        "Renato Dagnino"
+      ],
+      "ano": null,
+      "url": "https://doi.org/10.7476/9788578793272.0009",
+      "fonte": "Crossref",
+      "tipo": "book-chapter",
+      "resumo": null,
+      "anotacao": "Registro Crossref; confirmar edição, revisão por pares e pertinência metodológica.",
+      "identificador": "10.7476/9788578793272.0009"
+    },
+    {
+      "titulo": "DESIGN DE NEGÓCIOS CENTRADO NO CLIENTE: CULTURA, TECNOLOGIA E EXPERIÊNCIA. Uma análise qualitativa de modelos orientados ao cliente",
+      "autores": [
+        "Fábio Frescorato Ventura"
+      ],
+      "ano": null,
+      "url": "https://doi.org/10.29327/7639320",
+      "fonte": "Crossref",
+      "tipo": "posted-content",
+      "resumo": "O presente artigo investiga o Customer-Centric Business Design como modelo de negócios que coloca o cliente no centro das decisões organizacionais, promovendo personalização, engajamento e vantagem competitiva. O trabalho tem como objetivo analisar os elementos estruturais, culturais e tecnológicos essenciais à implementação de tais modelos, bem como suas implicações para a fidelização, experiência e desempenho organizacional. Realizou-se pesquisa qualitativa de natureza exploratória-descritiva, baseada em revisão bibliográfica de autores renomados nas áreas de experiência do cliente, marketing digital, UX e gestão financeira. Foram analisados conceitos de Lemon &amp; Verhoef (2016), Verhoef et al. (2009), Cruz et al. (2014), Roca &amp; Szabo (2015), Stati &amp; Sarmento (2021) e Bucar et al. (2022). Conclui-se que a eficácia do modelo centralizado no cliente depende de mudanças culturais profundas, análise de dados avançada, alinhamento estratégico interfuncional e métricas como CLV e NPS. O estudo contribui teoricamente ao integrar perspectivas diversas e oferece subsídios práticos para gestores que desejam transitar rumo a um design de negócio centrado no cliente.",
+      "anotacao": "Registro Crossref; confirmar edição, revisão por pares e pertinência metodológica.",
+      "identificador": "10.29327/7639320"
+    },
+    {
+      "titulo": "Centros de Inteligência Estratégica da Gestão Estadual do SUS (CIEGES/Conass): relato de experiência sobre modelo em rede, painéis hierarquizados e governança de dados para fortalecer a tomada de decisão no Sistema Único de Saúde",
+      "autores": [
+        "Terabe, Sandro",
+        "Alves, Juliane",
+        "Vinicius de Carvalho, Marcus"
+      ],
+      "ano": null,
+      "url": "https://anaisihmt.com/index.php/ihmt/article/view/567",
+      "fonte": "DataCite",
+      "tipo": "Text",
+      "resumo": " Introdução/Antecedentes: A gestão do Sistema Único de Saúde (SUS), orientada pelos princípios de universalidade, integralidade e equidade, constitui um campo de elevada complexidade, atravessado pelo federalismo sanitário, pela diversidade territorial, pela multiplicidade de atores institucionais e pela produção cotidiana de grandes volumes de dados administrativos, assistenciais, epidemiológicos e financeiros. A disponibilidade de sistemas de informação robustos, como e-SUS Atenção Primária, Sistema de Informações Ambulatoriais, Sistema de Informações Hospitalares, Sistema de Informações sobre Mortalidade, Sistema de Informação de Agravos de Notificação, Sistema de Informação do Programa Nacional de Imunizações, Cadastro Nacional de Estabelecimentos de Saúde e sistemas orçamentário-financeiros, não garante, isoladamente, uso efetivo, oportuno e seguro da informação na gestão. Persistem desafios relacionados à fragmentação, baixa interoperabilidade, heterogeneidade de padrões, qualidade dos dados, proteção de dados pessoais e limitada capacidade de tradução analítica para apoiar decisões. Nesse contexto, o Conselho Nacional de Secretários de Saúde (Conass) intensificou a indução de práticas inovadoras de governança de dados e inteligência estratégica para a gestão estadual do SUS.\n\r\nObjetivo: Descrever, como relato de experiência, a criação, o desenvolvimento e a consolidação dos Centros de Inteligência Estratégica da Gestão Estadual do SUS (CIEGES), coordenados pelo Conass, e discutir suas contribuições, limites e implicações para a qualificação da tomada de decisão e o fortalecimento da gestão estadual do SUS.\n\r\nMateriais e Métodos: Trata-se de relato de experiência técnico-institucional, de natureza descritiva e analítica, fundamentado em análise documental e sistematização de experiências desenvolvidas no âmbito do CIEGES/Conass e da Rede CIEGES no período de 2023 a 2025. Foram consideradas fontes normativas e institucionais relacionadas à Política Nacional de Informação e Informática em Saúde, à Estratégia de Saúde Digital para o Brasil, à Lei Geral de Proteção de Dados Pessoais, a documentos e materiais técnicos do Conass, a registros de reuniões, relatórios de acompanhamento, apresentações institucionais e produtos analíticos utilizados na implantação dos CIEGES estaduais. Os materiais foram selecionados por pertinência temática, vínculo com a implantação dos CIEGES e disponibilidade institucional. A sistematização combinou leitura dirigida, categorização temática, triangulação entre documentos, experiências relatadas pela rede e evidências de produtos desenvolvidos. As categorias de análise foram: governança de dados, interoperabilidade, organização dos painéis, tecnologia física e social, implantação federativa, usos decisórios e desafios de sustentabilidade.\n\r\nResultados: A experiência do Conass durante a pandemia de COVID-19, especialmente com painéis de monitoramento de casos, óbitos, excesso de mortalidade, leitos e insumos críticos, evidenciou a importância de informação confiável, tempestiva e acessível para gestores e sociedade. Em 2023, o CIEGES/Conass foi estruturado como apoio permanente à decisão, articulando dados, pessoas, processos e tecnologias, em alinhamento com a Política Nacional de Informação e Informática em Saúde e a Estratégia de Saúde Digital para o Brasil. O modelo conceitual foi organizado pela pirâmide da inteligência: dados brutos são qualificados e contextualizados para gerar informação; informações são analisadas criticamente para produzir conhecimento; e conhecimento é transformado em inteligência aplicada quando orienta decisões estratégicas, táticas e operacionais. A hierarquização dos produtos em painéis estratégicos, táticos e operacionais reduziu sobrecarga informacional e favoreceu o uso diferenciado por alta gestão, gestores intermediários e equipes técnicas. A implantação foi impulsionada por demanda e respaldo da alta gestão estadual, com adaptação às maturidades locais e preservação de coerência conceitual. Até 2025, registrou-se a implantação de 17 CIEGES estaduais e a consolidação da Rede CIEGES/Conass como espaço de compartilhamento metodológico, aprendizagem entre pares e disseminação de boas práticas. O CIEGES foi certificado pela Organização Mundial da Saúde/Organização Panamericana da Saude como Centro Colaborador – BRA-93, em sistemas de informação para criação de inteligencia gestora e saúde digital para os estados membros.\n\r\nConclusão: Os CIEGES configuram inovação institucional relevante na gestão pública em saúde ao estruturar capacidades para converter dados em informação qualificada, conhecimento e inteligência aplicada à decisão. A experiência sugere potencial para reduzir fragmentação informacional, fortalecer governança de dados e induzir cultura de gestão orientada por evidências. Sua consolidação, entretanto, depende do enfrentamento de desafios persistentes: qualidade e padronização dos dados, interoperabilidade semântica e tecnológica, proteção de dados pessoais, formação contínua de equipes, avaliação de impacto, sustentabilidade financeira e uso transparente, explicável e responsável de inteligência artificial.",
+      "anotacao": "Registro DataCite; verificar licença, versão e relação entre dataset, software e publicação.",
+      "identificador": "10.25761/anaisihmt.567"
+    },
+    {
+      "titulo": "Avaliação da implantação de modelo de capacitação em Ciência Aberta baseado em competências: projeto piloto para Pós-Graduação na Fiocruz",
+      "autores": [
+        "Elias, Flavia Tavares Silva",
+        "Rosa, Weverton Vieira da Silva",
+        "Akasha, Samyra Schernikau Soares",
+        "Motta, Marcia Luz",
+        "Pinto, Alexandro Rodrigues"
+      ],
+      "ano": null,
+      "url": "https://arcadados.fiocruz.br/citation?persistentId=doi:10.35078/6DHOAR",
+      "fonte": "DataCite",
+      "tipo": "Dataset",
+      "resumo": "O movimento, de alcance internacional, em favor da ciência aberta nasceu da convicção e argumentação consistente de uma gama de atores sociais de que os modos atuais de produção e divulgação científica se constituem em verdadeiras barreiras à livre circulação e avanço do conhecimento científico, da informação e da cultura. A ideia central é que o endurecimento dos dispositivos e do sistema de propriedade intelectual evidenciado nos últimos 40 anos vem comprometendo, de forma significativa, o impacto que esses achados poderiam ter na vida das pessoas. Coincidentemente, esse movimento emerge ao tempo em que o avanço tecnológico se constituiu em oportunidade para o desenvolvimento de plataformas digitais capazes de dar suporte a abertura e propagação do conhecimento de forma célere e com razoável grau de confiabilidade. A ciência aberta é um campo em expansão e possui muitos adeptos na área das ciências da saúde e de outros campos científicos que impactam a saúde. Cabe destacar, no entanto, que sua adoção e implementação, em especial no que tange a abertura, compartilhamento e gestão de dados científicos, exige a concepção e emprego de métodos, ferramentas e abordagens educacionais baseadas no desenvolvimento de competências capazes de promover uma aprendizagem crítica e problematizadora. A proposta aqui apresentada centra-se na concepção, aplicação e avaliação de modelo de capacitação por competências que possa ser aperfeiçoado, com base nessa experiência, para aplicação nos demais programas de pós-graduação da Fiocruz. O mestrado em políticas públicas de saúde (MPPS) da Escola Fiocruz de Governo da Fiocruz Brasília servirá de experiência piloto. O trabalho será realizado por equipe multidisciplinar e intersetorial, composta por pesquisadores que atuam em várias unidades da Fiocruz e do Departamento de Ciência e Tecnologia do Ministério da Saúde, e que integram o Grupo de Trabalho de Ciência Aberta da Fiocruz, vinculado a Vice-presidência de Educação e Comunicação. Abrange análise documental de cursos internacionais preexistentes (FOSTER, entre outros), levantamento do perfil de produção técnico-científica dos discentes das quatro edições anteriores do MPPS, desenho e modelagem da capacitação e avaliação ex-anti e ex-post realizada por especialistas em avaliação em saúde que compõem a equipe de pesquisa. O curso/disciplina será desenvolvido de forma modular, na modalidade hibrida, com atividades presenciais e à distância [pt] The movement, of international reach, in favor of open science was born from the conviction and consistent argumentation of a range of social actors that current modes of scientific production and dissemination constitute true barriers to the free circulation and advancement of scientific knowledge, information and culture. The central idea is that the tightening of devices and the intellectual property system evidenced in the last 40 years has significantly compromised the impact that these findings could have on people's lives. Coincidentally, this movement emerges at a time when technological advances constituted an opportunity for the development of digital platforms capable of supporting the opening and propagation of knowledge quickly and with a reasonable degree of reliability. Open science is an expanding field and has many adherents in the area of health sciences and other scientific fields that impact health. It is worth highlighting, however, that its adoption and implementation, especially with regard to the opening, sharing and management of scientific data, requires the design and use of educational methods, tools and approaches based on the development of skills capable of promoting critical learning and problematizing. The proposal presented here focuses on the design, application and evaluation of a competency-based training model that can be improved, based on this experience, for application in other Fiocruz postgraduate programs. The master's degree in public health policies (MPPS) at the Fiocruz School of Government of Fiocruz Brasília will serve as a pilot experience. The work will be carried out by a multidisciplinary and intersectoral team, made up of researchers who work in various units of Fiocruz and the Department of Science and Technology of the Ministry of Health, and who are part of the Fiocruz Open Science Working Group, linked to the Vice Presidency of Education and Communication. It covers documentary analysis of pre-existing international courses (FOSTER, among others), survey of the technical-scientific production profile of students from the four previous editions of the MPPS, design and modeling of training and ex-anti and ex-post evaluation carried out by evaluation specialists health professionals who make up the research team. The course/discipline will be developed in a modular way, in hybrid mode, with face-to-face and distance learning activities [en] El movimiento, de alcance internacional, a favor de la ciencia abierta nació de la convicción y argumentación consistente de un conjunto de actores sociales de que los modos actuales de producción y difusión científica constituyen verdaderas barreras a la libre circulación y avance del conocimiento, la información y la cultura científica. . La idea central es que el endurecimiento de los dispositivos y del sistema de propiedad intelectual evidenciado en los últimos 40 años ha comprometido significativamente el impacto que estos hallazgos podrían tener en la vida de las personas. Casualmente, este movimiento surge en un momento en que los avances tecnológicos constituyeron una oportunidad para el desarrollo de plataformas digitales capaces de soportar la apertura y propagación del conocimiento de manera rápida y con un grado razonable de confiabilidad. La ciencia abierta es un campo en expansión y tiene muchos adeptos en el área de las ciencias de la salud y otros campos científicos que impactan la salud. Cabe destacar, sin embargo, que su adopción e implementación, especialmente en lo que respecta a la apertura, intercambio y gestión de datos científicos, requiere el diseño y uso de métodos, herramientas y enfoques educativos basados en el desarrollo de habilidades capaces de promover el aprendizaje crítico. y problematizar. La propuesta aquí presentada se centra en el diseño, aplicación y evaluación de un modelo de formación basado en competencias que pueda mejorarse, a partir de esta experiencia, para su aplicación en otros programas de posgrado de Fiocruz. La maestría en políticas públicas de salud (MPPS) de la Escuela de Gobierno de Fiocruz Brasilia servirá como experiencia piloto. El trabajo será realizado por un equipo multidisciplinario e intersectorial, compuesto por investigadores que actúan en diversas unidades de Fiocruz y del Departamento de Ciencia y Tecnología del Ministerio de Salud, y que forman parte del Grupo de Trabajo de Ciencia Abierta de Fiocruz, vinculado a la Vicepresidencia de Educación y Comunicación. Abarca análisis documental de cursos internacionales preexistentes (FOSTER, entre otros), relevamiento del perfil de producción técnico-científica de los estudiantes de las cuatro ediciones anteriores del MPPS, diseño y modelación de capacitaciones y evaluación ex-anti y ex-post. realizado por profesionales de la salud especialistas en evaluación que integran el equipo de investigación. El curso/disciplina se desarrollará de forma modular, en modalidad híbrida, con actividades presenciales y a distancia [es]",
+      "anotacao": "Registro DataCite; verificar licença, versão e relação entre dataset, software e publicação.",
+      "identificador": "10.35078/6dhoar"
+    },
+    {
+      "titulo": "A relação entre cultura BPM e métodos BPM no desempenho de processos: análise quantitativa em centros de pesquisa clínica no Brasil",
+      "autores": [
+        "Julio Cesar Zambonini Gumiero"
+      ],
+      "ano": null,
+      "url": "https://doi.org/10.11606/d.96.2025.tde-02042025-113034",
+      "fonte": "Crossref",
+      "tipo": "dissertation",
+      "resumo": null,
+      "anotacao": "Registro Crossref; confirmar edição, revisão por pares e pertinência metodológica.",
+      "identificador": "10.11606/d.96.2025.tde-02042025-113034"
+    }
+  ],
+  "summary": {
+    "total": 22,
+    "artigos_pesquisas": 10,
+    "teses_dissertacoes": 2,
+    "fontes_consultadas": [
+      "Crossref",
+      "DataCite",
+      "OpenAlex"
+    ]
+  },
+  "errors": [],
+  "validation": "Referências candidatas; exigem leitura humana e validação de evidência antes de uso institucional."
+}

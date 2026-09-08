@@ -1,0 +1,11 @@
+{
+  "name": "Atlas Vivo MILK",
+  "short_name": "Atlas MILK",
+  "description": "Cartografia afetiva do folclore português — Atlas Vivo MILK",
+  "lang": "pt",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b0f14",
+  "theme_color": "#1e3a8a",
+  "icons": []
+}

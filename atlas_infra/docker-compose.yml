@@ -1,0 +1,38 @@
+# Atlas Vivo MILK — orquestração de desenvolvimento (sem nginx/TLS)
+# Levanta apenas PostgreSQL+pgvector e a API. Frontend serve por http-server.
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: atlas-db-dev
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-milk}
+      POSTGRES_DB: ${POSTGRES_DB:-atlas_vivo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-devpass}
+    ports: ["5433:5432"]
+    volumes:
+      - db-dev-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-milk}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: ./backend
+    container_name: atlas-api-dev
+    depends_on:
+      db: { condition: service_healthy }
+    env_file: .env
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-devpass}
+      NODE_ENV: development
+    ports: ["3000:3000"]
+    volumes:
+      - ./backend/src:/app/src
+      - uploads-dev:/data/uploads
+
+volumes:
+  db-dev-data:
+  uploads-dev:

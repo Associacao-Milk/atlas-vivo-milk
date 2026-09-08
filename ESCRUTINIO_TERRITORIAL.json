@@ -1,0 +1,1019 @@
+{
+  "gerado_em": "2026-09-08T19:40:38.548489",
+  "gazetteer": {
+    "distritos": 29,
+    "concelhos": 308,
+    "freguesias": 3092,
+    "curadas": 103
+  },
+  "classificacao": {
+    "alterados": 1451,
+    "novos_distritos": 0,
+    "novos_municipios": 562,
+    "novos_freguesias": 540
+  },
+  "cobertura": {
+    "None > None": {
+      "documentos": 8774,
+      "tipos": {
+        "codigo_fonte": 4383,
+        "dados_estruturados": 3638,
+        "documento_texto": 492,
+        "pagina_web": 167,
+        "documento_pdf": 33
+      }
+    },
+    "None > Guarda": {
+      "documentos": 299,
+      "tipos": {
+        "dados_estruturados": 142,
+        "codigo_fonte": 132,
+        "documento_texto": 13,
+        "pagina_web": 5,
+        "documento_pdf": 4
+      }
+    },
+    "Lisboa > Lisboa": {
+      "documentos": 163,
+      "tipos": {
+        "documento_texto": 59,
+        "documento_pdf": 26,
+        "planilha": 13,
+        "dados_estruturados": 11,
+        "codigo_fonte": 10
+      }
+    },
+    "None > Penalva do Castelo": {
+      "documentos": 119,
+      "tipos": {
+        "codigo_fonte": 52,
+        "dados_estruturados": 39,
+        "documento_texto": 21,
+        "relatorio": 3,
+        "legislacao": 3
+      }
+    },
+    "None > Cuba": {
+      "documentos": 86,
+      "tipos": {
+        "codigo_fonte": 44,
+        "dados_estruturados": 40,
+        "documento_texto": 2
+      }
+    },
+    "None > Gavião": {
+      "documentos": 64,
+      "tipos": {
+        "dados_estruturados": 28,
+        "codigo_fonte": 26,
+        "documento_texto": 7,
+        "pagina_web": 2,
+        "documento_pdf": 1
+      }
+    },
+    "None > Mora": {
+      "documentos": 58,
+      "tipos": {
+        "codigo_fonte": 28,
+        "dados_estruturados": 25,
+        "documento_texto": 3,
+        "documento_pdf": 2
+      }
+    },
+    "None > Castro Verde": {
+      "documentos": 57,
+      "tipos": {
+        "codigo_fonte": 22,
+        "documento_texto": 15,
+        "dados_estruturados": 12,
+        "planilha": 3,
+        "documento_pdf": 2
+      }
+    },
+    "None > Viseu": {
+      "documentos": 55,
+      "tipos": {
+        "codigo_fonte": 16,
+        "documento_texto": 14,
+        "dados_estruturados": 14,
+        "planilha": 3,
+        "documento_pdf": 2
+      }
+    },
+    "None > Santa Marta de Penaguião": {
+      "documentos": 50,
+      "tipos": {
+        "documento_texto": 24,
+        "codigo_fonte": 11,
+        "dados_estruturados": 7,
+        "relatorio": 4,
+        "legislacao": 1
+      }
+    },
+    "None > Arouca": {
+      "documentos": 50,
+      "tipos": {
+        "codigo_fonte": 15,
+        "dados_estruturados": 12,
+        "documento_texto": 12,
+        "relatorio": 5,
+        "documento_pdf": 2
+      }
+    },
+    "None > Chaves": {
+      "documentos": 46,
+      "tipos": {
+        "documento_texto": 21,
+        "codigo_fonte": 9,
+        "dados_estruturados": 4,
+        "manual": 3,
+        "documento_pdf": 3
+      }
+    },
+    "None > Loulé": {
+      "documentos": 42,
+      "tipos": {
+        "codigo_fonte": 22,
+        "dados_estruturados": 19,
+        "documento_pdf": 1
+      }
+    },
+    "None > Tomar": {
+      "documentos": 34,
+      "tipos": {
+        "documento_texto": 12,
+        "dados_estruturados": 11,
+        "codigo_fonte": 9,
+        "legislacao": 1,
+        "documento_pdf": 1
+      }
+    },
+    "None > Alter do Chão": {
+      "documentos": 31,
+      "tipos": {
+        "codigo_fonte": 16,
+        "dados_estruturados": 15
+      }
+    },
+    "Lisboa > Maia": {
+      "documentos": 27,
+      "tipos": {
+        "documento_pdf": 17,
+        "documento_texto": 4,
+        "apresentacao": 2,
+        "proposta": 1,
+        "codigo_fonte": 1
+      }
+    },
+    "None > Moura": {
+      "documentos": 25,
+      "tipos": {
+        "documento_texto": 10,
+        "codigo_fonte": 5,
+        "documento_pdf": 3,
+        "etnografia": 1,
+        "proposta": 1
+      }
+    },
+    "None > Lisboa": {
+      "documentos": 25,
+      "tipos": {
+        "documento_texto": 12,
+        "codigo_fonte": 4,
+        "dados_estruturados": 4,
+        "documento_pdf": 2,
+        "metodologia": 1
+      }
+    },
+    "Guarda > Guarda": {
+      "documentos": 23,
+      "tipos": {
+        "documento_texto": 7,
+        "codigo_fonte": 4,
+        "documento_pdf": 3,
+        "manual": 3,
+        "dados_estruturados": 3
+      }
+    },
+    "None > Aveiro": {
+      "documentos": 20,
+      "tipos": {
+        "relatorio": 10,
+        "documento_texto": 5,
+        "codigo_fonte": 2,
+        "pagina_web": 1,
+        "planilha": 1
+      }
+    },
+    "None > Caminha": {
+      "documentos": 19,
+      "tipos": {
+        "codigo_fonte": 9,
+        "dados_estruturados": 8,
+        "documento_texto": 1,
+        "documento_pdf": 1
+      }
+    },
+    "None > Odemira": {
+      "documentos": 17,
+      "tipos": {
+        "dados_estruturados": 10,
+        "codigo_fonte": 4,
+        "bibliografia": 1,
+        "geografico": 1,
+        "pagina_web": 1
+      }
+    },
+    "None > Barcelos": {
+      "documentos": 16,
+      "tipos": {
+        "dados_estruturados": 7,
+        "codigo_fonte": 5,
+        "documento_texto": 2,
+        "bibliografia": 1,
+        "documento_pdf": 1
+      }
+    },
+    "None > Castro Marim": {
+      "documentos": 16,
+      "tipos": {
+        "codigo_fonte": 5,
+        "dados_estruturados": 5,
+        "documento_texto": 5,
+        "documento_pdf": 1
+      }
+    },
+    "None > Vila Verde": {
+      "documentos": 15,
+      "tipos": {
+        "documento_texto": 7,
+        "codigo_fonte": 6,
+        "dados_estruturados": 2
+      }
+    },
+    "None > Guimarães": {
+      "documentos": 14,
+      "tipos": {
+        "codigo_fonte": 6,
+        "dados_estruturados": 5,
+        "documento_texto": 3
+      }
+    },
+    "None > Tabuaço": {
+      "documentos": 14,
+      "tipos": {
+        "codigo_fonte": 5,
+        "dados_estruturados": 4,
+        "documento_texto": 3,
+        "documento_pdf": 1,
+        "legislacao": 1
+      }
+    },
+    "Porto > Porto": {
+      "documentos": 13,
+      "tipos": {
+        "dados_estruturados": 3,
+        "codigo_fonte": 3,
+        "artigo_academico": 3,
+        "documento_pdf": 2,
+        "metodologia": 1
+      }
+    },
+    "None > Póvoa de Varzim": {
+      "documentos": 13,
+      "tipos": {
+        "codigo_fonte": 6,
+        "dados_estruturados": 6,
+        "documento_texto": 1
+      }
+    },
+    "None > Albufeira": {
+      "documentos": 13,
+      "tipos": {
+        "documento_texto": 5,
+        "manual": 3,
+        "planilha": 2,
+        "dados_estruturados": 1,
+        "estatuto": 1
+      }
+    },
+    "None > Alcácer do Sal": {
+      "documentos": 13,
+      "tipos": {
+        "codigo_fonte": 5,
+        "dados_estruturados": 4,
+        "documento_texto": 3,
+        "documento_pdf": 1
+      }
+    },
+    "None > Arcos de Valdevez": {
+      "documentos": 11,
+      "tipos": {
+        "codigo_fonte": 5,
+        "dados_estruturados": 5,
+        "manifesto": 1
+      }
+    },
+    "None > Alcobaça": {
+      "documentos": 11,
+      "tipos": {
+        "codigo_fonte": 6,
+        "dados_estruturados": 5
+      }
+    },
+    "Porto > Lisboa": {
+      "documentos": 10,
+      "tipos": {
+        "codigo_fonte": 4,
+        "documento_pdf": 2,
+        "documento_texto": 2,
+        "legislacao": 1,
+        "dados_estruturados": 1
+      }
+    },
+    "None > Mirandela": {
+      "documentos": 10,
+      "tipos": {
+        "documento_texto": 8,
+        "codigo_fonte": 1,
+        "pagina_web": 1
+      }
+    },
+    "None > Vila Nova de Famalicão": {
+      "documentos": 10,
+      "tipos": {
+        "documento_texto": 6,
+        "documento_pdf": 3,
+        "codigo_fonte": 1
+      }
+    },
+    "None > Ourém": {
+      "documentos": 9,
+      "tipos": {
+        "documento_texto": 4,
+        "codigo_fonte": 2,
+        "artigo_academico": 1,
+        "dados_estruturados": 1,
+        "documento_pdf": 1
+      }
+    },
+    "None > Paredes": {
+      "documentos": 8,
+      "tipos": {
+        "documento_pdf": 5,
+        "documento_texto": 2,
+        "etnografia": 1
+      }
+    },
+    "None > Montalegre": {
+      "documentos": 8,
+      "tipos": {
+        "dados_estruturados": 4,
+        "codigo_fonte": 3,
+        "documento_pdf": 1
+      }
+    },
+    "None > Amares": {
+      "documentos": 7,
+      "tipos": {
+        "documento_texto": 3,
+        "estatuto": 2,
+        "documento_pdf": 2
+      }
+    },
+    "None > Sernancelhe": {
+      "documentos": 7,
+      "tipos": {
+        "dados_estruturados": 4,
+        "codigo_fonte": 3
+      }
+    },
+    "None > Fronteira": {
+      "documentos": 7,
+      "tipos": {
+        "documento_pdf": 3,
+        "documento_texto": 3,
+        "codigo_fonte": 1
+      }
+    },
+    "None > Carregal do Sal": {
+      "documentos": 7,
+      "tipos": {
+        "documento_texto": 3,
+        "codigo_fonte": 2,
+        "dados_estruturados": 2
+      }
+    },
+    "None > Lajes do Pico": {
+      "documentos": 6,
+      "tipos": {
+        "dados_estruturados": 3,
+        "codigo_fonte": 3
+      }
+    },
+    "None > Leiria": {
+      "documentos": 6,
+      "tipos": {
+        "documento_texto": 4,
+        "curadoria": 1,
+        "dados_estruturados": 1
+      }
+    },
+    "None > Lousada": {
+      "documentos": 6,
+      "tipos": {
+        "documento_texto": 5,
+        "dados_estruturados": 1
+      }
+    },
+    "None > Macedo de Cavaleiros": {
+      "documentos": 6,
+      "tipos": {
+        "documento_texto": 4,
+        "documento_pdf": 1,
+        "dados_estruturados": 1
+      }
+    },
+    "None > Marco de Canaveses": {
+      "documentos": 5,
+      "tipos": {
+        "documento_texto": 4,
+        "relatorio": 1
+      }
+    },
+    "None > Ponte de Lima": {
+      "documentos": 5,
+      "tipos": {
+        "dados_estruturados": 1,
+        "planilha": 1,
+        "documento_pdf": 1,
+        "documento_texto": 1,
+        "codigo_fonte": 1
+      }
+    },
+    "None > Almeida": {
+      "documentos": 5,
+      "tipos": {
+        "artigo_academico": 2,
+        "legislacao": 1,
+        "documento_texto": 1,
+        "documento_pdf": 1
+      }
+    }
+  },
+  "gaps_cobertura": [
+    {
+      "territorio": "None > Seia",
+      "documentos": 2
+    },
+    {
+      "territorio": "Lisboa > Almeida",
+      "documentos": 2
+    },
+    {
+      "territorio": "None > Mafra",
+      "documentos": 2
+    },
+    {
+      "territorio": "Ponta Delgada > Lamego",
+      "documentos": 2
+    },
+    {
+      "territorio": "None > Nelas",
+      "documentos": 2
+    },
+    {
+      "territorio": "None > Mêda",
+      "documentos": 2
+    },
+    {
+      "territorio": "Coimbra > Lisboa",
+      "documentos": 2
+    },
+    {
+      "territorio": "Porto > Barcelos",
+      "documentos": 2
+    },
+    {
+      "territorio": "None > Vagos",
+      "documentos": 2
+    },
+    {
+      "territorio": "Guarda > Lisboa",
+      "documentos": 2
+    },
+    {
+      "territorio": "None > Velas",
+      "documentos": 2
+    },
+    {
+      "territorio": "None > Funchal",
+      "documentos": 2
+    },
+    {
+      "territorio": "None > Maia",
+      "documentos": 2
+    },
+    {
+      "territorio": "Funchal > Funchal",
+      "documentos": 2
+    },
+    {
+      "territorio": "None > Penamacor",
+      "documentos": 2
+    },
+    {
+      "territorio": "Porto > Chaves",
+      "documentos": 2
+    },
+    {
+      "territorio": "Guarda > Paredes",
+      "documentos": 2
+    },
+    {
+      "territorio": "None > Santarém",
+      "documentos": 2
+    },
+    {
+      "territorio": "None > Trancoso",
+      "documentos": 2
+    },
+    {
+      "territorio": "Coimbra > Coimbra",
+      "documentos": 2
+    },
+    {
+      "territorio": "None > Mesão Frio",
+      "documentos": 2
+    },
+    {
+      "territorio": "None > Vila de Rei",
+      "documentos": 2
+    },
+    {
+      "territorio": "None > Seixal",
+      "documentos": 2
+    },
+    {
+      "territorio": "None > Almada",
+      "documentos": 2
+    },
+    {
+      "territorio": "None > Penela",
+      "documentos": 1
+    },
+    {
+      "territorio": "Castelo Branco > Moura",
+      "documentos": 1
+    },
+    {
+      "territorio": "Faro > Viana do Castelo",
+      "documentos": 1
+    },
+    {
+      "territorio": "None > Fafe",
+      "documentos": 1
+    },
+    {
+      "territorio": "None > Vila Flor",
+      "documentos": 1
+    },
+    {
+      "territorio": "Beja > Lisboa",
+      "documentos": 1
+    },
+    {
+      "territorio": "Porto > Moura",
+      "documentos": 1
+    },
+    {
+      "territorio": "Aveiro > Lisboa",
+      "documentos": 1
+    },
+    {
+      "territorio": "Funchal > Lisboa",
+      "documentos": 1
+    },
+    {
+      "territorio": "Viana do Castelo > Moita",
+      "documentos": 1
+    },
+    {
+      "territorio": "None > Figueira da Foz",
+      "documentos": 1
+    },
+    {
+      "territorio": "None > Viana do Alentejo",
+      "documentos": 1
+    },
+    {
+      "territorio": "None > Miranda do Douro",
+      "documentos": 1
+    },
+    {
+      "territorio": "None > Machico",
+      "documentos": 1
+    },
+    {
+      "territorio": "None > Alcanena",
+      "documentos": 1
+    },
+    {
+      "territorio": "Horta > Almeida",
+      "documentos": 1
+    },
+    {
+      "territorio": "Horta > Guimaraes",
+      "documentos": 1
+    },
+    {
+      "territorio": "Porto > Moita",
+      "documentos": 1
+    },
+    {
+      "territorio": "None > Gouveia",
+      "documentos": 1
+    },
+    {
+      "territorio": "Guarda > Almeida",
+      "documentos": 1
+    },
+    {
+      "territorio": "Castelo Branco > Almeida",
+      "documentos": 1
+    },
+    {
+      "territorio": "None > Lagoa",
+      "documentos": 1
+    },
+    {
+      "territorio": "Coimbra > Avis",
+      "documentos": 1
+    },
+    {
+      "territorio": "Faro > Lisboa",
+      "documentos": 1
+    },
+    {
+      "territorio": "Porto > Lamego",
+      "documentos": 1
+    },
+    {
+      "territorio": "Aveiro > Coimbra",
+      "documentos": 1
+    },
+    {
+      "territorio": "None > Benavente",
+      "documentos": 1
+    },
+    {
+      "territorio": "Portalegre > Portalegre",
+      "documentos": 1
+    },
+    {
+      "territorio": "Vila Real > Lisboa",
+      "documentos": 1
+    },
+    {
+      "territorio": "Castelo Branco > Paredes",
+      "documentos": 1
+    },
+    {
+      "territorio": "Leiria > Leiria",
+      "documentos": 1
+    },
+    {
+      "territorio": "Guarda > Coimbra",
+      "documentos": 1
+    },
+    {
+      "territorio": "None > Melgaço",
+      "documentos": 1
+    },
+    {
+      "territorio": "Aveiro > Braga",
+      "documentos": 1
+    },
+    {
+      "territorio": "Guarda > Manteigas",
+      "documentos": 1
+    },
+    {
+      "territorio": "None > Évora",
+      "documentos": 1
+    },
+    {
+      "territorio": "Vila Real > Leiria",
+      "documentos": 1
+    },
+    {
+      "territorio": "None > Matosinhos",
+      "documentos": 1
+    },
+    {
+      "territorio": "None > Lamego",
+      "documentos": 1
+    },
+    {
+      "territorio": "Porto > Gondomar",
+      "documentos": 1
+    },
+    {
+      "territorio": "None > Portel",
+      "documentos": 1
+    },
+    {
+      "territorio": "Porto > Sines",
+      "documentos": 1
+    },
+    {
+      "territorio": "Braga > Barcelos",
+      "documentos": 1
+    },
+    {
+      "territorio": "None > Calheta",
+      "documentos": 1
+    },
+    {
+      "territorio": "Porto > Maia",
+      "documentos": 1
+    },
+    {
+      "territorio": "None > Monção",
+      "documentos": 1
+    },
+    {
+      "territorio": "None > Santana",
+      "documentos": 1
+    },
+    {
+      "territorio": "None > Boticas",
+      "documentos": 1
+    },
+    {
+      "territorio": "None > Corvo",
+      "documentos": 1
+    },
+    {
+      "territorio": "Guarda > Abrantes",
+      "documentos": 1
+    },
+    {
+      "territorio": "None > Almodôvar",
+      "documentos": 1
+    },
+    {
+      "territorio": "Lisboa > Mafra",
+      "documentos": 1
+    },
+    {
+      "territorio": "Guarda > Moura",
+      "documentos": 1
+    },
+    {
+      "territorio": "None > Redondo",
+      "documentos": 1
+    },
+    {
+      "territorio": "Beja > Beja",
+      "documentos": 1
+    },
+    {
+      "territorio": "None > Vila Nova de Gaia",
+      "documentos": 1
+    },
+    {
+      "territorio": "None > Albergaria-a-Velha",
+      "documentos": 1
+    },
+    {
+      "territorio": "Viana Do Castelo > Viana Do Castelo",
+      "documentos": 1
+    },
+    {
+      "territorio": "Braga > Moura",
+      "documentos": 1
+    },
+    {
+      "territorio": "Lisboa > Paredes",
+      "documentos": 1
+    },
+    {
+      "territorio": "Lisboa > Chaves",
+      "documentos": 1
+    },
+    {
+      "territorio": "Lisboa > Gouveia",
+      "documentos": 1
+    },
+    {
+      "territorio": "None > Moimenta da Beira",
+      "documentos": 1
+    },
+    {
+      "territorio": "None > Mértola",
+      "documentos": 1
+    },
+    {
+      "territorio": "Porto > Serpa",
+      "documentos": 1
+    }
+  ],
+  "municipios_sem_docs": [
+    "Aveiro > Águeda",
+    "Aveiro > Anadia",
+    "Aveiro > Castelo de Paiva",
+    "Aveiro > Estarreja",
+    "Aveiro > Santa Maria da Feira",
+    "Aveiro > Ílhavo",
+    "Aveiro > Mealhada",
+    "Aveiro > Murtosa",
+    "Aveiro > Oliveira de Azeméis",
+    "Aveiro > Oliveira do Bairro",
+    "Aveiro > Ovar",
+    "Aveiro > São João da Madeira",
+    "Aveiro > Sever do Vouga",
+    "Aveiro > Vale de Cambra",
+    "Beja > Aljustrel",
+    "Beja > Alvito",
+    "Beja > Barrancos",
+    "Beja > Ferreira do Alentejo",
+    "Beja > Vidigueira",
+    "Braga > Cabeceiras de Basto",
+    "Braga > Celorico de Basto",
+    "Braga > Esposende",
+    "Braga > Póvoa de Lanhoso",
+    "Braga > Terras de Bouro",
+    "Braga > Vieira do Minho",
+    "Braga > Vizela",
+    "Bragança > Alfândega da Fé",
+    "Bragança > Carrazeda de Ansiães",
+    "Bragança > Freixo de Espada à Cinta",
+    "Bragança > Torre de Moncorvo",
+    "Bragança > Vimioso",
+    "Bragança > Vinhais",
+    "Castelo Branco > Belmonte",
+    "Castelo Branco > Castelo Branco",
+    "Castelo Branco > Fundão",
+    "Castelo Branco > Idanha-a-Nova",
+    "Castelo Branco > Oleiros",
+    "Castelo Branco > Proença-a-Nova",
+    "Castelo Branco > Sertã",
+    "Castelo Branco > Vila Velha de Ródão",
+    "Coimbra > Arganil",
+    "Coimbra > Cantanhede",
+    "Coimbra > Condeixa-a-Nova",
+    "Coimbra > Góis",
+    "Coimbra > Lousã",
+    "Coimbra > Miranda do Corvo",
+    "Coimbra > Oliveira do Hospital",
+    "Coimbra > Pampilhosa da Serra",
+    "Coimbra > Penacova",
+    "Coimbra > Soure",
+    "Coimbra > Tábua",
+    "Coimbra > Vila Nova de Poiares",
+    "Évora > Alandroal",
+    "Évora > Arraiolos",
+    "Évora > Borba",
+    "Évora > Estremoz",
+    "Évora > Montemor-o-Novo",
+    "Évora > Mourão",
+    "Évora > Reguengos de Monsaraz",
+    "Évora > Vendas Novas",
+    "Évora > Vila Viçosa",
+    "Faro > Alcoutim",
+    "Faro > Aljezur",
+    "Faro > Lagos",
+    "Faro > Monchique",
+    "Faro > Olhão",
+    "Faro > Portimão",
+    "Faro > São Brás de Alportel",
+    "Faro > Silves",
+    "Faro > Tavira",
+    "Faro > Vila do Bispo",
+    "Faro > Vila Real de Santo António",
+    "Guarda > Aguiar da Beira",
+    "Guarda > Celorico da Beira",
+    "Guarda > Figueira de Castelo Rodrigo",
+    "Guarda > Fornos de Algodres",
+    "Guarda > Pinhel",
+    "Guarda > Sabugal",
+    "Guarda > Vila Nova de Foz Côa",
+    "Leiria > Alvaiázere",
+    "Leiria > Ansião",
+    "Leiria > Bombarral",
+    "Leiria > Caldas da Rainha",
+    "Leiria > Castanheira de Pêra",
+    "Leiria > Figueiró dos Vinhos",
+    "Leiria > Marinha Grande",
+    "Leiria > Nazaré",
+    "Leiria > Óbidos",
+    "Leiria > Peniche",
+    "Leiria > Pombal",
+    "Leiria > Porto de Mós",
+    "Lisboa > Alenquer",
+    "Lisboa > Arruda dos Vinhos",
+    "Lisboa > Azambuja",
+    "Lisboa > Cadaval",
+    "Lisboa > Cascais",
+    "Lisboa > Loures",
+    "Lisboa > Lourinhã",
+    "Lisboa > Oeiras",
+    "Lisboa > Sintra",
+    "Lisboa > Sobral de Monte Agraço",
+    "Lisboa > Torres Vedras",
+    "Lisboa > Vila Franca de Xira",
+    "Lisboa > Amadora",
+    "Lisboa > Odivelas",
+    "Portalegre > Arronches",
+    "Portalegre > Campo Maior",
+    "Portalegre > Castelo de Vide",
+    "Portalegre > Crato",
+    "Portalegre > Elvas",
+    "Portalegre > Marvão",
+    "Portalegre > Monforte",
+    "Portalegre > Nisa",
+    "Portalegre > Ponte de Sor",
+    "Portalegre > Sousel",
+    "Porto > Amarante",
+    "Porto > Baião",
+    "Porto > Felgueiras",
+    "Porto > Paços de Ferreira",
+    "Porto > Penafiel",
+    "Porto > Santo Tirso",
+    "Porto > Valongo",
+    "Porto > Trofa",
+    "Santarém > Almeirim",
+    "Santarém > Alpiarça",
+    "Santarém > Cartaxo",
+    "Santarém > Chamusca",
+    "Santarém > Constância",
+    "Santarém > Entroncamento",
+    "Santarém > Ferreira do Zêzere",
+    "Santarém > Golegã",
+    "Santarém > Mação",
+    "Santarém > Rio Maior",
+    "Santarém > Salvaterra de Magos",
+    "Santarém > Sardoal",
+    "Santarém > Torres Novas",
+    "Santarém > Vila Nova da Barquinha",
+    "Setúbal > Alcochete",
+    "Setúbal > Barreiro",
+    "Setúbal > Grândola",
+    "Setúbal > Montijo",
+    "Setúbal > Palmela",
+    "Setúbal > Santiago do Cacém",
+    "Setúbal > Sesimbra",
+    "Setúbal > Setúbal",
+    "Viana do Castelo > Paredes de Coura",
+    "Viana do Castelo > Ponte da Barca",
+    "Viana do Castelo > Valença",
+    "Viana do Castelo > Vila Nova de Cerveira",
+    "Vila Real > Alijó",
+    "Vila Real > Mondim de Basto",
+    "Vila Real > Murça",
+    "Vila Real > Peso da Régua",
+    "Vila Real > Ribeira de Pena",
+    "Vila Real > Sabrosa",
+    "Vila Real > Valpaços",
+    "Vila Real > Vila Pouca de Aguiar",
+    "Vila Real > Vila Real",
+    "Viseu > Armamar",
+    "Viseu > Castro Daire",
+    "Viseu > Cinfães",
+    "Viseu > Mangualde",
+    "Viseu > Mortágua",
+    "Viseu > Oliveira de Frades",
+    "Viseu > Penedono",
+    "Viseu > Santa Comba Dão",
+    "Viseu > São João da Pesqueira",
+    "Viseu > São Pedro do Sul",
+    "Viseu > Sátão",
+    "Viseu > Tarouca",
+    "Viseu > Tondela",
+    "Viseu > Vila Nova de Paiva",
+    "Viseu > Vouzela",
+    "Ilha da Madeira > Câmara de Lobos",
+    "Ilha da Madeira > Ponta do Sol",
+    "Ilha da Madeira > Porto Moniz",
+    "Ilha da Madeira > Ribeira Brava",
+    "Ilha da Madeira > Santa Cruz",
+    "Ilha da Madeira > São Vicente",
+    "Ilha de Porto Santo > Porto Santo",
+    "Ilha de Santa Maria > Vila do Porto",
+    "Ilha de São Miguel > Nordeste",
+    "Ilha de São Miguel > Ponta Delgada",
+    "Ilha de São Miguel > Povoação",
+    "Ilha de São Miguel > Ribeira Grande",
+    "Ilha de São Miguel > Vila Franca do Campo",
+    "Ilha Terceira > Angra do Heroísmo",
+    "Ilha Terceira > Vila da Praia da Vitória",
+    "Ilha Graciosa > Santa Cruz da Graciosa",
+    "Ilha do Pico > Madalena",
+    "Ilha do Pico > São Roque do Pico",
+    "Ilha do Faial > Horta",
+    "Ilha das Flores > Lajes das Flores",
+    "Ilha das Flores > Santa Cruz das Flores"
+  ],
+  "total_municipios_sem_docs": 194
+}

@@ -1,4 +1,4 @@
-# Sintese de Deliberacoes Publicas — Ciclo 1
+# Sintese de Deliberacoes Publicas — Ciclo 2
 
 Gerado por MILK IA Motor Multiaxial
 Autor: Eduardo Mauricio Vieira Cabral e Araujo (Eduardo Mauer)

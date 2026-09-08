@@ -1,0 +1,30 @@
+{
+  "metadata": {
+    "sha256": "e0b6a1cf9a26e220f5fe2d5e155ef8eaf47c8119207847c477dabc54dc3e7381",
+    "source_id": "sha256:e0b6a1cf9a26e220f5fe2d5e155ef8eaf47c8119207847c477dabc54dc3e7381",
+    "original_name": "sintese_territorial_ciclo_2.md",
+    "original_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\biblioteca\\sintese_territorial_ciclo_2.md",
+    "ingested_at": "2026-09-08T20:41:17.041318",
+    "author": "MILK IA (Eduardo Mauricio Vieira Cabral e Araujo)",
+    "responsible_entity": "Associacao MILK",
+    "document_type": "sintese_territorial",
+    "curatorial_device": "Atlas Vivo MILK",
+    "visibility": "interna",
+    "consent_status": "validado",
+    "rgpd_status": "validado",
+    "rights_status": "validado",
+    "epistemic_state": "curado",
+    "human_validated": true,
+    "validated_by": "MILK_IA_Motor_Multiaxial",
+    "notes": [
+      "Sintese automatica gerada no ciclo 2"
+    ]
+  },
+  "provenance_paths": [
+    "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\biblioteca\\sintese_territorial_ciclo_2.md"
+  ],
+  "text": "# Sintese Territorial — Ciclo 2\n\nGerado por MILK IA Motor Multiaxial\nAutor: Eduardo Mauricio Vieira Cabral e Araujo (Eduardo Mauer)\n\n## Top 10 territorios com mais documentacao\n\n- **Guarda > Guarda**: 309 documentos\n- **Penalva do Castelo > Real**: 118 documentos\n- **Lisboa > Lisboa**: 109 documentos\n- **Sé**: 75 documentos\n- **Real**: 65 documentos\n- **Castro Verde > Entradas**: 50 documentos\n- **Gavião > Comenda**: 47 documentos\n- **Santa Marta de Penaguião > Fontes**: 43 documentos\n- **Arouca > Chave**: 37 documentos\n- **Cuba**: 34 documentos\n\n## Gaps territoriais identificados\n\n- Sem territorio: 8624 documentos\n- Com territorio: 1914 documentos\n",
+  "chunks": [],
+  "generated_by": "MILK_IA_Motor_Multiaxial",
+  "generation_ciclo": 2
+}

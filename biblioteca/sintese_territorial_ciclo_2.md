@@ -1,4 +1,4 @@
-# Sintese Territorial — Ciclo 1
+# Sintese Territorial — Ciclo 2
 
 Gerado por MILK IA Motor Multiaxial
 Autor: Eduardo Mauricio Vieira Cabral e Araujo (Eduardo Mauer)

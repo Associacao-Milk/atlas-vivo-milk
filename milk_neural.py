@@ -46,7 +46,7 @@ EIXOS_P = {
 def relu(x): return np.maximum(0, x)
 def relu_g(x): return (x > 0).astype(np.float32)
 def sig(x): return 1.0 / (1.0 + np.exp(-np.clip(x, -500, 500)))
-def bce(p, t): return float(np.mean(t*np.log(p+1e-8) + (1-t)*np.log(1-p+1e-8)))
+def bce(p, t): return -float(np.mean(t*np.log(p+1e-8) + (1-t)*np.log(1-p+1e-8)))
 
 class MilkNet:
     """MLP 4 camadas: input -> H1 -> H2 -> H3 -> output. Backprop + Adam."""
@@ -99,7 +99,7 @@ class MilkNet:
     def backward(self, c, y):
         m = y.shape[0]
         gW = [None]*4; gb = [None]*4; gg = [None]*3; gbe = [None]*3
-        da = (c["o3"] - y) / m  # (batch, 11)
+        da = (c["o3"] - y) / y.size  # (batch, 11) — divide by total elements (batch * n_classes)
         for i in range(3, -1, -1):
             a_prev = c["x"] if i == 0 else c[f"a{i-1}"]
             gW[i] = a_prev.T @ da

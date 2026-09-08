@@ -1,0 +1,136 @@
+{
+  "timestamp": "2026-09-08T22:47:29.631750",
+  "passed": 25,
+  "failed": 0,
+  "results": [
+    {
+      "name": "bce_perfect_match",
+      "status": "PASS",
+      "detail": "val=0.105361 (should be positive = loss)"
+    },
+    {
+      "name": "bce_is_loss_not_entropy",
+      "status": "PASS",
+      "detail": "bce returns loss (positive) after fix."
+    },
+    {
+      "name": "bce_correct_positive",
+      "status": "PASS",
+      "detail": "correct val=0.105361 >= 0"
+    },
+    {
+      "name": "bce_worst_positive",
+      "status": "PASS",
+      "detail": "worst val=4.605169 (positive after fix)"
+    },
+    {
+      "name": "bce_worst_correct_positive",
+      "status": "PASS",
+      "detail": "correct worst=4.605169 > 1.0"
+    },
+    {
+      "name": "bce_no_nan",
+      "status": "PASS",
+      "detail": "val=18.420681 (epsilon prevents NaN)"
+    },
+    {
+      "name": "sigmoid_no_nan",
+      "status": "PASS",
+      "detail": "vals=[0.  0.  0.  0.5 1.  1.  1. ]"
+    },
+    {
+      "name": "sigmoid_no_inf",
+      "status": "PASS",
+      "detail": "vals=[0.  0.  0.  0.5 1.  1.  1. ]"
+    },
+    {
+      "name": "sigmoid_bounded",
+      "status": "PASS",
+      "detail": "0 <= sig <= 1"
+    },
+    {
+      "name": "sigmoid_clip_range",
+      "status": "PASS",
+      "detail": "extreme values saturate near 0/1"
+    },
+    {
+      "name": "sigmoid_stable_no_nan",
+      "status": "PASS",
+      "detail": "stable version no NaN"
+    },
+    {
+      "name": "sigmoid_stable_match",
+      "status": "PASS",
+      "detail": "stable matches current within clip range"
+    },
+    {
+      "name": "grad_check_W0",
+      "status": "PASS",
+      "detail": "max rel diff=0.000000"
+    },
+    {
+      "name": "gradient_correct_sign",
+      "status": "PASS",
+      "detail": "gradient matches numerical after BCE sign + normalization fix"
+    },
+    {
+      "name": "param_count",
+      "status": "PASS",
+      "detail": "params=2,727,947 expected=2,727,947"
+    },
+    {
+      "name": "save_load_roundtrip",
+      "status": "PASS",
+      "detail": "all weights match after save+load"
+    },
+    {
+      "name": "batchnorm_updates_running_mean",
+      "status": "PASS",
+      "detail": "running mean updated in train mode"
+    },
+    {
+      "name": "batchnorm_eval_no_update",
+      "status": "PASS",
+      "detail": "running mean NOT updated in eval mode"
+    },
+    {
+      "name": "dropout_train_vs_eval",
+      "status": "PASS",
+      "detail": "train and eval outputs differ (dropout active)"
+    },
+    {
+      "name": "dropout_inverted",
+      "status": "PASS",
+      "detail": "inverted dropout scaling"
+    },
+    {
+      "name": "adam_convergence",
+      "status": "PASS",
+      "detail": "loss 0.8175 -> 0.0369"
+    },
+    {
+      "name": "no_nan_zero_input",
+      "status": "PASS",
+      "detail": "no NaN with zero input"
+    },
+    {
+      "name": "no_inf_zero_input",
+      "status": "PASS",
+      "detail": "no Inf with zero input"
+    },
+    {
+      "name": "no_nan_large_input",
+      "status": "PASS",
+      "detail": "no NaN with large input"
+    },
+    {
+      "name": "no_inf_large_input",
+      "status": "PASS",
+      "detail": "no Inf with large input"
+    }
+  ],
+  "bce_issue": "bce() at line 49 returns entropy (negative), not loss (positive). Missing '-' prefix.",
+  "gradient_ok": true,
+  "sigmoid_issue": "Current sig() uses np.clip(x, -500, 500) which prevents overflow but is not optimal. Consider log-sum-exp formulation.",
+  "recommendation": "Fix bce() to return -np.mean(...) for correct positive loss. Sigmoid gradient in backward() is correct (uses pred-y which is BCE+sigmoid gradient)."
+}

@@ -1,0 +1,16 @@
+{
+  "timestamp": "2026-09-08T20:01:21.114242",
+  "total": 10538,
+  "com_sha256": 10538,
+  "com_texto": 10538,
+  "com_chunks": 10529,
+  "com_autor": 10535,
+  "com_document_type": 10535,
+  "corrompidos": 3,
+  "problemas": [
+    "Corrompido: 5decec4a30a1d326ba813f14a5594664b71510aa44cdd19864ae4f40f9df9616.json",
+    "Corrompido: d35f8d6e3ade063ff8dcc52b733f25597af1bd17463e783de3ebc13688528fa5.json",
+    "Corrompido: e6c39451a7fba310f9834bbd3a1890ff57fc3dc4c74ac8f6f2e52cad57478d83.json"
+  ],
+  "saude": "3 corrompidos"
+}

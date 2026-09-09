@@ -1,23 +1,26 @@
 {
   "schema": "ia_milk.execution_state.v1",
-  "updated_at": "2026-09-08T22:48:37.939651",
+  "updated_at": "2026-09-09T18:43:48.567441",
   "canonical_root": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO",
-  "git_head": "see git log",
-  "current_phase": "B_EVALUATION_DONE",
+  "git_head": "pending local commit",
+  "current_phase": "C_CONTROLLED_TRAINING_DONE",
   "phases_completed": [
     "INTEGRATION_A_B",
     "SNAPSHOT_PROTECTION",
     "GIT_CHECKPOINT",
     "A_NEURAL_CERTIFICATION",
-    "B_EVALUATION"
+    "B_EVALUATION",
+    "C_CONTROLLED_TRAINING"
   ],
-  "current_task": "C_CONTROLLED_TRAINING",
+  "current_task": "AWAITING_D_SEMANTIC_RETRIEVAL",
   "corpus_documents": 10538,
   "models": {
     "milk_neural.npz": {
       "loaded": true,
-      "params": 2859659,
-      "status": "loaded_read_only"
+      "params": 2727947,
+      "status": "promoted_C",
+      "sha": "9794d6092a9ec5a76215256e3eaebbc6cf00dab7f8c5c3d4808ee3d1e5e7c01a",
+      "architecture": "5000->512->256->128->11"
     },
     "milk_vec.pkl": {
       "loaded": true,
@@ -26,8 +29,8 @@
     },
     "milk_hist.json": {
       "loaded": true,
-      "cycles": 7,
-      "status": "loss_negative_issue"
+      "cycles": 8,
+      "status": "ok"
     }
   },
   "known_issues": [
@@ -60,8 +63,8 @@
     {
       "id": "MODEL_BIAS",
       "severity": "high",
-      "description": "Model only detects 3/11 classes (cultural, economica, tecnologica). Needs retraining with fixed BCE+gradient.",
-      "status": "PENDING_RETRAIN"
+      "description": "Resolved by C_CONTROLLED_TRAINING (from-scratch plain BCE + per-class threshold tuning). 3/11 -> 11/11 classes.",
+      "status": "FIXED_PROMOTED"
     }
   ],
   "stop_conditions": [
@@ -74,10 +77,48 @@
   ],
   "auto_proceed": true,
   "evaluation": {
-    "f1_macro": 0.2201,
-    "f1_micro": 0.5527,
-    "hamming_loss": 0.0376,
-    "classes_detected": 3,
-    "classes_total": 11
+    "f1_macro": 0.5566,
+    "f1_micro": 0.6397,
+    "hamming_loss": 0.0513,
+    "classes_detected": 11,
+    "classes_total": 11,
+    "phase": "C",
+    "previous_B_phase": {
+      "f1_macro": 0.2201,
+      "f1_micro": 0.5527,
+      "hamming_loss": 0.0376,
+      "classes_detected": 3
+    }
+  },
+  "controlled_training": {
+    "seed": 2026,
+    "epochs_run": 15,
+    "best_epoch": 14,
+    "winner": "A",
+    "method": "plain BCE from scratch + per-class threshold tuning on VAL",
+    "candidate_B": "pos_weight BCE (neg/pos) — underperformed (extreme weights destabilized, thresholds saturated)",
+    "thresholds": {
+      "humana": 0.3,
+      "social": 0.4,
+      "legal": 0.15,
+      "juridica": 0.15,
+      "cultural": 0.35,
+      "territorial": 0.15,
+      "existencial": 0.25,
+      "administrativa": 0.25,
+      "economica": 0.55,
+      "ambiental": 0.25,
+      "tecnologica": 0.15
+    },
+    "candidate_sha": "9794d6092a9ec5a76215256e3eaebbc6cf00dab7f8c5c3d4808ee3d1e5e7c01a",
+    "prev_retrain_sha": "0ba91981af4fa4df4274e2bbb3a496ac608e2e750ebd782a7645dcdf26b02df4",
+    "original_backup_sha": "7d8095f32bcee11f9fb547465903b6e02268a394c683a87abbe3b464673b0830",
+    "decision": "PROMOTE",
+    "hamming_note": "Hamming 0.0376->0.0513 (+0.0137) is the unavoidable cost of detecting 11 classes vs the reference's 3. The reference hamming was artificially low because the biased model predicted negative for 8 rare classes. +0.0137 absolute is minor and non-critical; F1 macro improved 0.22->0.56 and F1 micro improved 0.55->0.64. Promoted per 'melhoria global verificavel e nenhuma regressao critica'.",
+    "split": {
+      "train": 8379,
+      "val": 1102,
+      "test": 1057
+    }
   }
 }

@@ -96,10 +96,17 @@ class MilkNet:
             c[f"o{i}"] = a
         return a, c
 
-    def backward(self, c, y):
+    def backward(self, c, y, pos_weight=None):
         m = y.shape[0]
         gW = [None]*4; gb = [None]*4; gg = [None]*3; gbe = [None]*3
-        da = (c["o3"] - y) / y.size  # (batch, 11) — divide by total elements (batch * n_classes)
+        # dL/dz3 for BCE+sigmoid. Unweighted: (p - y). Weighted (pos_weight per class,
+        # computed from TRAIN only): (p - y) - (w-1)*y*(1-p). Default None = unweighted (no change).
+        if pos_weight is None:
+            da = (c["o3"] - y) / y.size  # (batch, 11) — divide by total elements (batch * n_classes)
+        else:
+            w = np.asarray(pos_weight, dtype=np.float32).reshape(1, -1)
+            p = c["o3"]
+            da = ((p - y) - (w - 1.0) * y * (1.0 - p)) / y.size
         for i in range(3, -1, -1):
             a_prev = c["x"] if i == 0 else c[f"a{i-1}"]
             gW[i] = a_prev.T @ da

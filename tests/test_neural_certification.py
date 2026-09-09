@@ -122,6 +122,43 @@ test("grad_check_W0", max_diff < 1e-3, f"max rel diff={max_diff:.6f}")
 # After fix: gradient should match numerical (backward now divides by y.size = m*n_classes)
 test("gradient_correct_sign", max_diff < 1e-3, "gradient matches numerical after BCE sign + normalization fix")
 
+# --- A3b: Weighted (pos_weight) BCE gradient check ---
+print("\n--- A3b: Weighted BCE gradient check (pos_weight) ---")
+np.random.seed(7)
+netw = MilkNet(dim_in=20)
+netw.W = [w.astype(np.float64) for w in netw.W]
+netw.b = [b.astype(np.float64) for b in netw.b]
+netw.g = [g.astype(np.float64) for g in netw.g]
+netw.be = [be.astype(np.float64) for be in netw.be]
+netw.rm = [rm.astype(np.float64) for rm in netw.rm]
+netw.rv = [rv.astype(np.float64) for rv in netw.rv]
+xw = np.random.randn(4, 20).astype(np.float64)
+yw = np.array([[1,0,1,0,1,0,0,1,0,1,0]], dtype=np.float64).repeat(4, axis=0)
+pw = np.array([3.0,1.0,5.0,1.0,2.0,1.0,1.0,4.0,1.0,2.0,1.0], dtype=np.float64)
+
+def wbce(p, t, w):
+    return -float(np.mean(w.reshape(1, -1) * t * np.log(p + 1e-8) + (1 - t) * np.log(1 - p + 1e-8)))
+
+predw, cachew = netw.forward(xw, train=False)
+gWw, gbw, ggw, gbew = netw.backward(cachew, yw, pos_weight=pw)
+max_diff_w = 0
+for idx in [(0, 0), (5, 3), (10, 7), (15, 15)]:
+    orig = netw.W[0][idx]
+    netw.W[0][idx] = orig + eps
+    lp = wbce(netw.forward(xw, train=False)[0], yw, pw)
+    netw.W[0][idx] = orig - eps
+    lm = wbce(netw.forward(xw, train=False)[0], yw, pw)
+    netw.W[0][idx] = orig
+    num = (lp - lm) / (2 * eps)
+    ana = gWw[0][idx]
+    max_diff_w = max(max_diff_w, abs(num - ana) / max(abs(num) + abs(ana), 1e-10))
+test("grad_check_pos_weight_W0", max_diff_w < 1e-3, f"max rel diff={max_diff_w:.6f}")
+
+# pos_weight=ones must equal unweighted (no change when all weights = 1)
+gWu, _, _, _ = netw.backward(cachew, yw)
+gW1, _, _, _ = netw.backward(cachew, yw, pos_weight=np.ones(11, dtype=np.float64))
+test("pos_weight_ones_equals_unweighted", np.allclose(gWu[0], gW1[0], atol=1e-12), "pos_weight=1 == unweighted (backward compatible)")
+
 # --- A4: Adam/BatchNorm/Dropout/save-load/params ---
 print("\n--- A4: Component verification ---")
 

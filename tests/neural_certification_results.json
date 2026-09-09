@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-09-08T22:47:29.631750",
-  "passed": 25,
+  "timestamp": "2026-09-09T18:36:14.598057",
+  "passed": 27,
   "failed": 0,
   "results": [
     {
@@ -72,6 +72,16 @@
       "name": "gradient_correct_sign",
       "status": "PASS",
       "detail": "gradient matches numerical after BCE sign + normalization fix"
+    },
+    {
+      "name": "grad_check_pos_weight_W0",
+      "status": "PASS",
+      "detail": "max rel diff=0.000000"
+    },
+    {
+      "name": "pos_weight_ones_equals_unweighted",
+      "status": "PASS",
+      "detail": "pos_weight=1 == unweighted (backward compatible)"
     },
     {
       "name": "param_count",

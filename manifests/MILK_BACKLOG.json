@@ -1,21 +1,225 @@
 {
   "schema": "ia_milk.backlog.v1",
-  "updated_at": "2026-09-08T22:45:00+00:00",
+  "updated_at": "2026-09-09T18:43:48.567441",
   "tasks": [
-    {"task_id": "A1", "priority": "A", "title": "Fix BCE sign in milk_neural.py:49", "dependency": null, "status": "pending", "risk": "low", "expected_gain": "correct loss", "estimated_cost": "1 edit + tests", "tests_required": ["unit_bce_positive", "unit_bce_zero", "unit_bce_nan"]},
-    {"task_id": "A2", "priority": "A", "title": "Stable sigmoid (log-sum-exp)", "dependency": "A1", "status": "pending", "risk": "low", "expected_gain": "no overflow", "estimated_cost": "1 edit + tests", "tests_required": ["unit_sigmoid_extreme", "unit_sigmoid_stable"]},
-    {"task_id": "A3", "priority": "A", "title": "Gradient check (numerical vs analytical)", "dependency": "A1", "status": "pending", "risk": "low", "expected_gain": "verify backprop", "estimated_cost": "1 script", "tests_required": ["grad_check_all_layers"]},
-    {"task_id": "A4", "priority": "A", "title": "Verify Adam/BatchNorm/Dropout/save-load/params", "dependency": "A1", "status": "pending", "risk": "low", "expected_gain": "certify components", "estimated_cost": "1 script", "tests_required": ["adam_convergence", "bn_forward_backward", "dropout_inverted", "save_load_roundtrip", "param_count"]},
-    {"task_id": "A5", "priority": "A", "title": "NaN/Inf/overflow audit", "dependency": "A2", "status": "pending", "risk": "low", "expected_gain": "robustness", "estimated_cost": "1 script", "tests_required": ["no_nan", "no_inf"]},
-    {"task_id": "B1", "priority": "B", "title": "TRAIN/VAL/TEST split with hash persistence", "dependency": "A5", "status": "pending", "risk": "low", "expected_gain": "real evaluation", "estimated_cost": "1 script", "tests_required": ["no_leakage", "hash_persistence"]},
-    {"task_id": "B2", "priority": "B", "title": "Per-class metrics + baselines", "dependency": "B1", "status": "pending", "risk": "low", "expected_gain": "real metrics", "estimated_cost": "1 script", "tests_required": ["metrics_vs_baseline"]},
-    {"task_id": "C1", "priority": "C", "title": "Controlled training with early stopping", "dependency": "B2", "status": "pending", "risk": "medium", "expected_gain": "promote if better", "estimated_cost": "1 script + run", "tests_required": ["before_after_benchmark"]},
-    {"task_id": "D1", "priority": "D", "title": "Sparse+dense fusion retrieval", "dependency": null, "status": "pending", "risk": "low", "expected_gain": "semantic search", "estimated_cost": "1 module", "tests_required": ["retrieval_recall"]},
-    {"task_id": "E1", "priority": "E", "title": "Expand atlas_graph to versioned entity-relation graph", "dependency": null, "status": "pending", "risk": "low", "expected_gain": "knowledge graph", "estimated_cost": "1 module", "tests_required": ["graph_query"]},
-    {"task_id": "F1", "priority": "F", "title": "Hermeneutic engine", "dependency": "D1", "status": "pending", "risk": "low", "expected_gain": "structured reasoning", "estimated_cost": "1 module", "tests_required": ["hermeneutic_pipeline"]},
-    {"task_id": "G1", "priority": "G", "title": "Scientific evidence classifier", "dependency": null, "status": "pending", "risk": "low", "expected_gain": "evidence levels", "estimated_cost": "1 module", "tests_required": ["classification_accuracy"]},
-    {"task_id": "H1", "priority": "H", "title": "Multimodal index (text+image+table+geo)", "dependency": null, "status": "pending", "risk": "low", "expected_gain": "multimodal", "estimated_cost": "1 module", "tests_required": ["multimodal_query"]},
-    {"task_id": "J1", "priority": "J", "title": "Hypothesis engine", "dependency": "E1", "status": "pending", "risk": "low", "expected_gain": "hypothesis generation", "estimated_cost": "1 module", "tests_required": ["hypothesis_structure"]},
-    {"task_id": "K1", "priority": "K", "title": "Solution engine", "dependency": "J1", "status": "pending", "risk": "low", "expected_gain": "evidence-to-solution", "estimated_cost": "1 module", "tests_required": ["solution_structure"]}
+    {
+      "task_id": "A1",
+      "priority": "A",
+      "title": "Fix BCE sign in milk_neural.py:49",
+      "dependency": null,
+      "status": "VALIDATED",
+      "risk": "low",
+      "expected_gain": "correct loss",
+      "estimated_cost": "1 edit + tests",
+      "tests_required": [
+        "unit_bce_positive",
+        "unit_bce_zero",
+        "unit_bce_nan"
+      ],
+      "evidence": "tests/neural_certification_results.json (27/27 PASS incl. weighted-grad)"
+    },
+    {
+      "task_id": "A2",
+      "priority": "A",
+      "title": "Stable sigmoid (log-sum-exp)",
+      "dependency": "A1",
+      "status": "VALIDATED",
+      "risk": "low",
+      "expected_gain": "no overflow",
+      "estimated_cost": "1 edit + tests",
+      "tests_required": [
+        "unit_sigmoid_extreme",
+        "unit_sigmoid_stable"
+      ],
+      "evidence": "tests/neural_certification_results.json (27/27 PASS incl. weighted-grad)"
+    },
+    {
+      "task_id": "A3",
+      "priority": "A",
+      "title": "Gradient check (numerical vs analytical)",
+      "dependency": "A1",
+      "status": "VALIDATED",
+      "risk": "low",
+      "expected_gain": "verify backprop",
+      "estimated_cost": "1 script",
+      "tests_required": [
+        "grad_check_all_layers"
+      ],
+      "evidence": "tests/neural_certification_results.json (27/27 PASS incl. weighted-grad)"
+    },
+    {
+      "task_id": "A4",
+      "priority": "A",
+      "title": "Verify Adam/BatchNorm/Dropout/save-load/params",
+      "dependency": "A1",
+      "status": "VALIDATED",
+      "risk": "low",
+      "expected_gain": "certify components",
+      "estimated_cost": "1 script",
+      "tests_required": [
+        "adam_convergence",
+        "bn_forward_backward",
+        "dropout_inverted",
+        "save_load_roundtrip",
+        "param_count"
+      ],
+      "evidence": "tests/neural_certification_results.json (27/27 PASS incl. weighted-grad)"
+    },
+    {
+      "task_id": "A5",
+      "priority": "A",
+      "title": "NaN/Inf/overflow audit",
+      "dependency": "A2",
+      "status": "VALIDATED",
+      "risk": "low",
+      "expected_gain": "robustness",
+      "estimated_cost": "1 script",
+      "tests_required": [
+        "no_nan",
+        "no_inf"
+      ],
+      "evidence": "tests/neural_certification_results.json (27/27 PASS incl. weighted-grad)"
+    },
+    {
+      "task_id": "B1",
+      "priority": "B",
+      "title": "TRAIN/VAL/TEST split with hash persistence",
+      "dependency": "A5",
+      "status": "pending",
+      "risk": "low",
+      "expected_gain": "real evaluation",
+      "estimated_cost": "1 script",
+      "tests_required": [
+        "no_leakage",
+        "hash_persistence"
+      ]
+    },
+    {
+      "task_id": "B2",
+      "priority": "B",
+      "title": "Per-class metrics + baselines",
+      "dependency": "B1",
+      "status": "pending",
+      "risk": "low",
+      "expected_gain": "real metrics",
+      "estimated_cost": "1 script",
+      "tests_required": [
+        "metrics_vs_baseline"
+      ]
+    },
+    {
+      "task_id": "C1",
+      "priority": "C",
+      "title": "Controlled training with early stopping",
+      "dependency": "B2",
+      "status": "DONE",
+      "risk": "medium",
+      "expected_gain": "promote if better",
+      "estimated_cost": "1 script + run",
+      "tests_required": [
+        "before_after_benchmark"
+      ],
+      "result": "PROMOTED — winner A (plain BCE from scratch + threshold tuning): TEST f1_macro 0.5566, 11/11 classes"
+    },
+    {
+      "task_id": "D1",
+      "priority": "D",
+      "title": "Sparse+dense fusion retrieval",
+      "dependency": null,
+      "status": "pending",
+      "risk": "low",
+      "expected_gain": "semantic search",
+      "estimated_cost": "1 module",
+      "tests_required": [
+        "retrieval_recall"
+      ]
+    },
+    {
+      "task_id": "E1",
+      "priority": "E",
+      "title": "Expand atlas_graph to versioned entity-relation graph",
+      "dependency": null,
+      "status": "pending",
+      "risk": "low",
+      "expected_gain": "knowledge graph",
+      "estimated_cost": "1 module",
+      "tests_required": [
+        "graph_query"
+      ]
+    },
+    {
+      "task_id": "F1",
+      "priority": "F",
+      "title": "Hermeneutic engine",
+      "dependency": "D1",
+      "status": "pending",
+      "risk": "low",
+      "expected_gain": "structured reasoning",
+      "estimated_cost": "1 module",
+      "tests_required": [
+        "hermeneutic_pipeline"
+      ]
+    },
+    {
+      "task_id": "G1",
+      "priority": "G",
+      "title": "Scientific evidence classifier",
+      "dependency": null,
+      "status": "pending",
+      "risk": "low",
+      "expected_gain": "evidence levels",
+      "estimated_cost": "1 module",
+      "tests_required": [
+        "classification_accuracy"
+      ]
+    },
+    {
+      "task_id": "H1",
+      "priority": "H",
+      "title": "Multimodal index (text+image+table+geo)",
+      "dependency": null,
+      "status": "pending",
+      "risk": "low",
+      "expected_gain": "multimodal",
+      "estimated_cost": "1 module",
+      "tests_required": [
+        "multimodal_query"
+      ]
+    },
+    {
+      "task_id": "J1",
+      "priority": "J",
+      "title": "Hypothesis engine",
+      "dependency": "E1",
+      "status": "pending",
+      "risk": "low",
+      "expected_gain": "hypothesis generation",
+      "estimated_cost": "1 module",
+      "tests_required": [
+        "hypothesis_structure"
+      ]
+    },
+    {
+      "task_id": "K1",
+      "priority": "K",
+      "title": "Solution engine",
+      "dependency": "J1",
+      "status": "pending",
+      "risk": "low",
+      "expected_gain": "evidence-to-solution",
+      "estimated_cost": "1 module",
+      "tests_required": [
+        "solution_structure"
+      ]
+    },
+    {
+      "task_id": "A3b",
+      "priority": "A",
+      "title": "Weighted (pos_weight) BCE gradient check",
+      "dependency": "A3",
+      "status": "VALIDATED",
+      "risk": "low",
+      "evidence": "tests/test_neural_certification.py (grad_check_pos_weight_W0 PASS)"
+    }
   ]
 }

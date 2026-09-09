@@ -1,10 +1,22 @@
 {
   "schema": "ia_milk.training_report.v1",
-  "baseline_val_f1": 0.2172,
-  "best_val_f1": 0.2307,
-  "best_epoch": 5,
+  "phase": "C_CONTROLLED_TRAINING",
+  "timestamp": "2026-09-09T18:43:48.566426",
+  "winner": "A",
+  "baseline_val_f1_macro": 0.4441,
+  "best_val_f1_macro": 0.5928,
+  "best_epoch": 14,
+  "epochs_run": 15,
   "promoted": true,
-  "epochs_run": 5,
   "train_size": 8379,
-  "val_size": 1102
+  "val_size": 1102,
+  "test_size": 1057,
+  "test_f1_macro": 0.5566,
+  "test_f1_micro": 0.6397,
+  "test_classes_detected": 11,
+  "test_hamming": 0.0513,
+  "candidate_sha": "9794d6092a9ec5a76215256e3eaebbc6cf00dab7f8c5c3d4808ee3d1e5e7c01a",
+  "prev_sha": "0ba91981af4fa4df4274e2bbb3a496ac608e2e750ebd782a7645dcdf26b02df4",
+  "candidate_B_val_f1_macro": 0.5443,
+  "seed": 2026
 }

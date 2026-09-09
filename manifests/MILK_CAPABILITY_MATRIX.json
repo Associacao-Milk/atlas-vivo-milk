@@ -1,6 +1,6 @@
 {
   "schema": "ia_milk.capability_matrix.v1",
-  "updated_at": "2026-09-09T19:42:25.734602+00:00",
+  "updated_at": "2026-09-09T20:52:13.916503+00:00",
   "capabilities": {
     "neural_classifier": {
       "status": "TESTED_PROMOTED_TORCH",
@@ -140,8 +140,8 @@
       "notes": "RTX 3080 10GB, torch 2.6.0+cu124, CUDA confirmed"
     },
     "gpt_oss": {
-      "status": "STARTING",
-      "notes": "llama.cpp server on :8009, gpt-oss-20b-GGUF downloading"
+      "status": "ONLINE",
+      "notes": "llama.cpp :8009, gpt-oss-20b-MXFP4, -ngl 10, health=200, local reasoning confirmed"
     },
     "retrieval_pipeline": {
       "status": "TESTED",
@@ -159,6 +159,22 @@
     "resource_orchestrator": {
       "status": "TESTED",
       "notes": "GPU/CPU/RAM/VRAM manager, priority queue, throughput tracking"
+    },
+    "bge_m3_embeddings": {
+      "status": "TESTED",
+      "notes": "BAAI/bge-m3 dim=1024 CPU, building dense index over 10538 docs"
+    },
+    "bge_reranker": {
+      "status": "TESTED",
+      "notes": "BAAI/bge-reranker-v2-m3 neural reranker, rerank_score=0.891 on proof query"
+    },
+    "full_corpus_index": {
+      "status": "TESTED",
+      "notes": "10538 docs sparse TF-IDF indexed, 30000 terms, dense building"
+    },
+    "cl_experiment": {
+      "status": "COMPLETED",
+      "notes": "EXPLICIT_EXPERIMENT: 5 epochs GPU training, best_val_f1=0.7863, checkpoint 0e4514f5"
     }
   }
 }

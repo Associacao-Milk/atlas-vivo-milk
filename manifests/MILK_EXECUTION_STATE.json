@@ -1,9 +1,9 @@
 {
   "schema": "ia_milk.execution_state.v1",
-  "updated_at": "2026-09-09T19:42:25.734602+00:00",
+  "updated_at": "2026-09-09T20:52:13.916503+00:00",
   "canonical_root": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO",
   "git_head": "pending local commit",
-  "current_phase": "LOCAL_INTELLIGENCE_FABRIC_ACTIVE",
+  "current_phase": "LOCAL_INTELLIGENCE_FABRIC_V2_FULL",
   "phases_completed": [
     "INTEGRATION_A_B",
     "SNAPSHOT_PROTECTION",
@@ -13,9 +13,12 @@
     "C_CONTROLLED_TRAINING",
     "SOVEREIGN_CORE_GATE",
     "TORCH_CONTROLLED_TRAINING",
-    "LOCAL_INTELLIGENCE_FABRIC"
+    "LOCAL_INTELLIGENCE_FABRIC",
+    "FABRIC_V2_FULL_INDEX",
+    "FABRIC_V2_DENSE_EMBEDDINGS",
+    "FABRIC_V2_CL_EXPERIMENT"
   ],
-  "current_task": "D_SEMANTIC_RETRIEVAL_ACTIVE",
+  "current_task": "D_SEMANTIC_RETRIEVAL_OPERATIONAL",
   "corpus_documents": 10538,
   "models": {
     "milk_neural.npz": {
@@ -276,5 +279,79 @@
       "/api/fabric/gptoss/chat?q=..."
     ],
     "semantic_memory": "Minimal Ontological Commitment + MLO + MIM + SEMIC + EIF/Mosaico/iAP + ENTI/ARPGU/CNMD + FIWARE/NGSI-LD + AI Act + ISO42001"
+  },
+  "fabric_v2": {
+    "status": "OPERATIONAL",
+    "url": "http://127.0.0.1:8766",
+    "pid": 12588,
+    "device": "cuda",
+    "cuda": true,
+    "gpu": "NVIDIA GeForce RTX 3080",
+    "vram_gb": 10.74,
+    "torch": "2.6.0+cu124 (Python 3.12)",
+    "python": "3.12",
+    "index": {
+      "sparse_docs": 10538,
+      "sparse_terms": 30000,
+      "dense_model": "BAAI/bge-m3 (CPU)",
+      "dense_dim": 1024,
+      "dense_status": "building"
+    },
+    "reranker": "BAAI/bge-reranker-v2-m3 (CPU, neural)",
+    "gpt_oss": {
+      "status": "online",
+      "health": 200,
+      "backend": "llama.cpp",
+      "port": 8009,
+      "model": "gpt-oss-20b-MXFP4.gguf",
+      "gpu_offload": 10
+    },
+    "cl": {
+      "active": true,
+      "mode": "event-driven",
+      "total": 1,
+      "processed": 1,
+      "events": [
+        {
+          "type": "EXPLICIT_EXPERIMENT",
+          "status": "COMPLETED",
+          "training": {
+            "epochs": 5,
+            "best_val_f1": 0.7863,
+            "checkpoint_sha": "0e4514f5a35c4e61"
+          }
+        }
+      ]
+    },
+    "tools_executed": [
+      "milk_query",
+      "milk_retrieve",
+      "milk_evidence",
+      "milk_training_status",
+      "milk_rerank"
+    ],
+    "agents": 8,
+    "agent_jobs": 0,
+    "real_query": {
+      "question": "folclore romaria tradicao Moura",
+      "top_hit": "A Moura Encantada",
+      "rerank_score": 0.891
+    },
+    "checkpoint": {
+      "sha": "0e4514f5a35c4e612b49c30be721a6db5e1f41d2811b5326cbb4d2b03302a3d8",
+      "path": "models/checkpoint_cl_experiment.npz"
+    },
+    "semantic_memory": "MOC+MLO+MIM/ITU-T Y.4505+SEMIC+EIF/Mosaico/iAP+ENTI/ARPGU/CNMD+FIWARE/NGSI-LD+AI Act+ISO42001",
+    "endpoints": [
+      "/milk-live",
+      "/api/fabric/status",
+      "/api/milk/status",
+      "/api/milk/training/status",
+      "/api/fabric/query?q=...",
+      "/api/fabric/gptoss/chat?q=...",
+      "/api/fabric/tools",
+      "/api/fabric/agents",
+      "/api/fabric/cl/events"
+    ]
   }
 }

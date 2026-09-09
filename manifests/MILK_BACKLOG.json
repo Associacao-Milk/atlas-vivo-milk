@@ -1,6 +1,6 @@
 {
   "schema": "ia_milk.backlog.v1",
-  "updated_at": "2026-09-09T19:42:25.734602+00:00",
+  "updated_at": "2026-09-09T20:52:13.916503+00:00",
   "tasks": [
     {
       "task_id": "A1",
@@ -126,14 +126,14 @@
       "priority": "D",
       "title": "Sparse+dense fusion retrieval",
       "dependency": null,
-      "status": "ACTIVE",
+      "status": "DONE",
       "risk": "low",
       "expected_gain": "semantic search",
       "estimated_cost": "1 module",
       "tests_required": [
         "retrieval_recall"
       ],
-      "result": "Retrieval pipeline operational: 5000-chunk index, avg 14.8ms, reranking, benchmark"
+      "result": "Full sparse+dense index, 10538 docs, bge-m3 embeddings, bge-reranker, RRF fusion"
     },
     {
       "task_id": "E1",
@@ -253,10 +253,19 @@
       "priority": "A",
       "title": "MILK Local Intelligence Fabric — GPU, gpt-oss, retrieval, tools, agents, CL",
       "dependency": "TORCH1",
-      "status": "ACTIVE",
+      "status": "DONE",
       "risk": "medium",
       "expected_gain": "local AI sovereignty, GPU compute, event-driven learning",
       "result": "OPERATIONAL on http://127.0.0.1:8766, CUDA RTX 3080, 12 tools, 8 agents, CL active, gpt-oss downloading"
+    },
+    {
+      "task_id": "FABRIC2",
+      "priority": "A",
+      "title": "Fabric v2 — full 10538 index, bge-m3 dense, bge-reranker, CL experiment with GPU training",
+      "dependency": "FABRIC1",
+      "status": "DONE",
+      "risk": "medium",
+      "result": "OPERATIONAL: 10538 docs indexed, GPT-OSS online, EXPLICIT_EXPERIMENT COMPLETED, checkpoint 0e4514f5, real query with evidence"
     }
   ]
 }

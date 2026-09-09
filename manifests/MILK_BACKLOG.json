@@ -1,6 +1,6 @@
 {
   "schema": "ia_milk.backlog.v1",
-  "updated_at": "2026-09-09T19:30:09.496859",
+  "updated_at": "2026-09-09T19:17:07.793426+00:00",
   "tasks": [
     {
       "task_id": "A1",
@@ -235,6 +235,17 @@
         "import_sovereignty"
       ],
       "result": "PASS — overall_ok=True, 5 citations offline, 0 forbidden modules, 4 compliance profiles, ontology v1.0.0, NGSI-LD+CIRMAE export OK"
+    },
+    {
+      "task_id": "TORCH1",
+      "priority": "A",
+      "title": "PyTorch controlled training with live monitoring",
+      "dependency": "C1",
+      "status": "DONE",
+      "risk": "medium",
+      "expected_gain": "real PyTorch training, GPU-ready, live monitor",
+      "estimated_cost": "milk_torch_train.py + milk_live_server.py",
+      "result": "PROMOTED — VAL F1 0.7304->0.7864, TEST F1 macro 0.716, micro 0.8218, 11/11 classes, hamming 0.0202"
     }
   ]
 }

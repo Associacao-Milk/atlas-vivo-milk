@@ -1,9 +1,9 @@
 {
   "schema": "ia_milk.execution_state.v1",
-  "updated_at": "2026-09-09T19:30:09.496859",
+  "updated_at": "2026-09-09T19:17:07.793426+00:00",
   "canonical_root": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO",
   "git_head": "pending local commit",
-  "current_phase": "SOVEREIGN_CORE_GATE_DONE",
+  "current_phase": "TORCH_TRAINING_DONE_PROMOTED",
   "phases_completed": [
     "INTEGRATION_A_B",
     "SNAPSHOT_PROTECTION",
@@ -11,7 +11,8 @@
     "A_NEURAL_CERTIFICATION",
     "B_EVALUATION",
     "C_CONTROLLED_TRAINING",
-    "SOVEREIGN_CORE_GATE"
+    "SOVEREIGN_CORE_GATE",
+    "TORCH_CONTROLLED_TRAINING"
   ],
   "current_task": "AWAITING_D_SEMANTIC_RETRIEVAL",
   "corpus_documents": 10538,
@@ -19,9 +20,10 @@
     "milk_neural.npz": {
       "loaded": true,
       "params": 2727947,
-      "status": "promoted_C",
-      "sha": "9794d6092a9ec5a76215256e3eaebbc6cf00dab7f8c5c3d4808ee3d1e5e7c01a",
-      "architecture": "5000->512->256->128->11"
+      "status": "promoted_torch",
+      "sha": "65c44a90cdeadd58037aacc571b51dbe432dcb85ace497776e75d6ddbd1f56db",
+      "architecture": "5000->512->256->128->11",
+      "framework": "PyTorch 2.14.0+cpu"
     },
     "milk_vec.pkl": {
       "loaded": true,
@@ -78,17 +80,17 @@
   ],
   "auto_proceed": true,
   "evaluation": {
-    "f1_macro": 0.5566,
-    "f1_micro": 0.6397,
-    "hamming_loss": 0.0513,
+    "f1_macro": 0.716,
+    "f1_micro": 0.8218,
+    "hamming_loss": 0.0202,
     "classes_detected": 11,
     "classes_total": 11,
-    "phase": "C",
-    "previous_B_phase": {
-      "f1_macro": 0.2201,
-      "f1_micro": 0.5527,
-      "hamming_loss": 0.0376,
-      "classes_detected": 3
+    "phase": "TORCH",
+    "previous_C_phase": {
+      "f1_macro": 0.5566,
+      "f1_micro": 0.6397,
+      "hamming_loss": 0.0513,
+      "classes_detected": 11
     }
   },
   "controlled_training": {
@@ -147,5 +149,54 @@
       "src/milk_ai/engine.py (ProviderAdapter)",
       "src/milk_ai/mistral.py (MistralAdapter)"
     ]
+  },
+  "torch_training": {
+    "seed": 2026,
+    "epochs_run": 20,
+    "best_epoch": 20,
+    "batch_size": 128,
+    "lr": 0.001,
+    "device": "cpu",
+    "cuda": false,
+    "hardware": {
+      "device": "cpu",
+      "cuda": false,
+      "torch_version": "2.14.0+cpu",
+      "gpu_name": "CPU",
+      "vram_total_gb": 0,
+      "cpu_count": 8,
+      "ram_gb": 16.74
+    },
+    "base_model_sha": "bcaaa17b2af0bc587c7e2734d81f42b1245ba09b24323f39bbe39a408bad884a",
+    "promoted_model_sha": "65c44a90cdeadd58037aacc571b51dbe432dcb85ace497776e75d6ddbd1f56db",
+    "promoted": true,
+    "val_f1_macro": 0.7864,
+    "val_f1_micro": 0.8552,
+    "test_f1_macro": 0.716,
+    "test_f1_micro": 0.8218,
+    "test_hamming": 0.0202,
+    "elapsed_s": 75.7,
+    "docs_processed": 167580,
+    "batches_processed": 1320,
+    "framework": "PyTorch 2.14.0+cpu (CPU), DataLoader, BCELoss, Adam, BatchNorm, Dropout, grad clip 5.0, early stopping patience 5, per-class threshold tuning",
+    "tensorboard": "state/tensorboard/metrics.jsonl",
+    "live_monitor": "http://127.0.0.1:8766/milk-live",
+    "endpoints": {
+      "/milk-live": "dashboard HTML",
+      "/api/milk/status": "status JSON",
+      "/api/milk/training/status": "training status JSON",
+      "/api/milk/training/events": "SSE stream"
+    },
+    "semantic_memory": "Minimal Ontological Commitment + MLO + MIM + EIF/Mosaico/iAP + ENTI/ARPGU/CNMD + FIWARE/NGSI-LD",
+    "ai_act_evidence": {
+      "risk_level": "limited",
+      "human_oversight": "required",
+      "transparency": "model_sha+provenance+split_hash"
+    },
+    "iso42001_evidence": {
+      "policy_ref": "MILK_ORCHESTRATION_CONTRACT.md",
+      "change_traceable": "git log + checkpoints",
+      "human_validated": "pending"
+    }
   }
 }

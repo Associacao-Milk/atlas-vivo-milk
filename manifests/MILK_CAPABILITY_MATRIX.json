@@ -1,18 +1,19 @@
 {
   "schema": "ia_milk.capability_matrix.v1",
-  "updated_at": "2026-09-09T19:30:09.496859",
+  "updated_at": "2026-09-09T19:17:07.793426+00:00",
   "capabilities": {
     "neural_classifier": {
-      "status": "TESTED_PROMOTED",
+      "status": "TESTED_PROMOTED_TORCH",
       "file": "milk_neural.py",
       "issues": [],
       "test_metrics": {
         "split": "test",
-        "f1_macro": 0.5566,
-        "f1_micro": 0.6397,
+        "f1_macro": 0.716,
+        "f1_micro": 0.8218,
         "classes_detected": "11/11",
-        "hamming_loss": 0.0513,
-        "note": "from-scratch plain BCE + per-class threshold tuning; 3/11 -> 11/11"
+        "hamming_loss": 0.0202,
+        "framework": "PyTorch 2.14.0+cpu",
+        "note": "warm-started from C-phase weights, 20 epochs, promoted"
       }
     },
     "semantic_retrieval": {
@@ -119,6 +120,16 @@
       "status": "TESTED",
       "file": "src/milk_ai/export_ngsi.py",
       "notes": "NGSI-LD + CNMD projection without mutating internal model"
+    },
+    "live_monitoring": {
+      "status": "TESTED",
+      "file": "milk_live_server.py",
+      "notes": "/milk-live dashboard, SSE, real-time training metrics"
+    },
+    "pytorch_training": {
+      "status": "TESTED",
+      "file": "milk_torch_train.py",
+      "notes": "DataLoader, AMP-ready, grad clip, early stopping, per-class thresholds, TensorBoard, checkpoints by epoch"
     }
   }
 }

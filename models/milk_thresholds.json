@@ -1,0 +1,13 @@
+{
+  "humana": 0.35,
+  "social": 0.7,
+  "legal": 0.3,
+  "juridica": 0.45,
+  "cultural": 0.6,
+  "territorial": 0.7,
+  "existencial": 0.85,
+  "administrativa": 0.65,
+  "economica": 0.65,
+  "ambiental": 0.55,
+  "tecnologica": 0.35
+}

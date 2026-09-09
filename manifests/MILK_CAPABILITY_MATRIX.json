@@ -1,6 +1,6 @@
 {
   "schema": "ia_milk.capability_matrix.v1",
-  "updated_at": "2026-09-09T20:52:13.916503+00:00",
+  "updated_at": "2026-09-09T23:55:31.024494+00:00",
   "capabilities": {
     "neural_classifier": {
       "status": "TESTED_PROMOTED_TORCH",
@@ -175,6 +175,18 @@
     "cl_experiment": {
       "status": "COMPLETED",
       "notes": "EXPLICIT_EXPERIMENT: 5 epochs GPU training, best_val_f1=0.7863, checkpoint 0e4514f5"
+    },
+    "full_chunk_index": {
+      "status": "TESTED",
+      "notes": "250887 chunks, 50000 sparse terms, bge-m3 1024-dim dense, caches reused"
+    },
+    "retrieval_benchmark": {
+      "status": "TESTED",
+      "notes": "WINNER=CHUNK nDCG@10=0.8291 MRR=1.0 citP=0.8 lat=83.7ms; bug fixed (rrf tuple unpacking)"
+    },
+    "canonical_retrieval": {
+      "status": "CHUNK",
+      "notes": "Chunk-level sparse+dense+RRF selected as canonical by benchmark"
     }
   }
 }

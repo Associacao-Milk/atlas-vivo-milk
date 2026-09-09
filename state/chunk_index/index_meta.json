@@ -1,0 +1,10 @@
+{
+  "total_chunks": 250887,
+  "total_docs": 10538,
+  "chunk_idf_terms": 50000,
+  "doc_idf_terms": 50000,
+  "dense_dim": 1024,
+  "winner": "CHUNK",
+  "built_at": "2026-09-09T23:55:20.240342+00:00",
+  "caches_reused": true
+}

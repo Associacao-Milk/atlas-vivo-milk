@@ -1,9 +1,9 @@
 {
   "schema": "ia_milk.execution_state.v1",
-  "updated_at": "2026-09-09T20:52:13.916503+00:00",
+  "updated_at": "2026-09-09T23:55:31.024494+00:00",
   "canonical_root": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO",
   "git_head": "pending local commit",
-  "current_phase": "LOCAL_INTELLIGENCE_FABRIC_V2_FULL",
+  "current_phase": "CHUNK_INDEX_BENCHMARK_DONE",
   "phases_completed": [
     "INTEGRATION_A_B",
     "SNAPSHOT_PROTECTION",
@@ -16,9 +16,11 @@
     "LOCAL_INTELLIGENCE_FABRIC",
     "FABRIC_V2_FULL_INDEX",
     "FABRIC_V2_DENSE_EMBEDDINGS",
-    "FABRIC_V2_CL_EXPERIMENT"
+    "FABRIC_V2_CL_EXPERIMENT",
+    "CHUNK_INDEX_250K",
+    "RETRIEVAL_BENCHMARK"
   ],
-  "current_task": "D_SEMANTIC_RETRIEVAL_OPERATIONAL",
+  "current_task": "PIPELINE_OPERATIONAL",
   "corpus_documents": 10538,
   "models": {
     "milk_neural.npz": {
@@ -353,5 +355,27 @@
       "/api/fabric/agents",
       "/api/fabric/cl/events"
     ]
+  },
+  "chunk_index": {
+    "status": "OPERATIONAL",
+    "total_chunks": 250887,
+    "total_docs": 10538,
+    "sparse_terms": 50000,
+    "dense_model": "BAAI/bge-m3",
+    "dense_dim": 1024,
+    "caches": [
+      "chunk_dense_cache.npz (997MB)",
+      "doc_dense_cache.npz (42MB)"
+    ],
+    "caches_reused": true,
+    "winner": "CHUNK",
+    "winner_metrics": {
+      "recall@10": 0.0302,
+      "mrr": 1.0,
+      "ndcg@10": 0.8291,
+      "citation_precision": 0.8,
+      "avg_latency_ms": 83.7
+    },
+    "bug_fix": "rrf_fusion returns (index:int, score:float) tuples; original code unpacked as (score, index) causing TypeError. Fixed with explicit int casts and assertions."
   }
 }

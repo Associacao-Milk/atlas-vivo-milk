@@ -1,6 +1,6 @@
 {
   "schema": "ia_milk.backlog.v1",
-  "updated_at": "2026-09-09T20:52:13.916503+00:00",
+  "updated_at": "2026-09-09T23:55:31.024494+00:00",
   "tasks": [
     {
       "task_id": "A1",
@@ -133,7 +133,7 @@
       "tests_required": [
         "retrieval_recall"
       ],
-      "result": "Full sparse+dense index, 10538 docs, bge-m3 embeddings, bge-reranker, RRF fusion"
+      "result": "250887-chunk index + benchmark: WINNER=CHUNK nDCG@10=0.8291 MRR=1.0"
     },
     {
       "task_id": "E1",
@@ -266,6 +266,22 @@
       "status": "DONE",
       "risk": "medium",
       "result": "OPERATIONAL: 10538 docs indexed, GPT-OSS online, EXPLICIT_EXPERIMENT COMPLETED, checkpoint 0e4514f5, real query with evidence"
+    },
+    {
+      "task_id": "BENCH1",
+      "priority": "A",
+      "title": "Retrieval benchmark DOCUMENT vs CHUNK vs HIERARCHICAL over 250887 chunks",
+      "dependency": "FABRIC2",
+      "status": "DONE",
+      "risk": "low",
+      "result": "WINNER=CHUNK nDCG@10=0.8291 MRR=1.0 citP=0.8 lat=83.7ms. Bug fixed: rrf tuple unpacking order.",
+      "metrics": {
+        "recall@10": 0.0302,
+        "mrr": 1.0,
+        "ndcg@10": 0.8291,
+        "citation_precision": 0.8,
+        "avg_latency_ms": 83.7
+      }
     }
   ]
 }

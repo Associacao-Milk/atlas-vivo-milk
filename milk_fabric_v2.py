@@ -51,13 +51,19 @@ GPU_NAME = torch.cuda.get_device_name(0) if CUDA else "CPU"
 VRAM_TOTAL = round(torch.cuda.get_device_properties(0).total_memory/1e9,2) if CUDA else 0
 START_TIME = time.time()
 
-# ---- bge-m3 embeddings (CPU to preserve VRAM for gpt-oss + training) ----
+# ---- bge-m3 embeddings (GPU when VRAM free, CPU fallback) ----
 _embed_model = None
 def get_embedder():
     global _embed_model
     if _embed_model is None:
         from sentence_transformers import SentenceTransformer
-        _embed_model = SentenceTransformer("BAAI/bge-m3", device="cpu")  # CPU to save VRAM
+        # Use GPU if enough free VRAM (>4GB free), else CPU
+        use_gpu = CUDA
+        if CUDA:
+            free_vram = (torch.cuda.get_device_properties(0).total_memory - torch.cuda.memory_allocated()) / 1e9
+            use_gpu = free_vram > 4.0
+        _embed_model = SentenceTransformer("BAAI/bge-m3", device="cuda" if use_gpu else "cpu")
+        print(f"  [bge-m3] loaded on {'cuda' if use_gpu else 'cpu'} (free VRAM was {free_vram:.1f}GB)" if CUDA else "  [bge-m3] loaded on cpu")
     return _embed_model
 
 # ---- bge-reranker-v2-m3 (CPU to preserve VRAM) ----
@@ -183,8 +189,10 @@ class FullIndex:
                 self.index_progress = 50.0 + 50.0 * (i+BATCH) / len(texts)
                 if (i+BATCH) % 1000 < BATCH:
                     print(f"    dense embeddings: {i+BATCH}/{len(texts)}")
-            self.dense_matrix = torch.cat(embs, dim=0)  # stays on CPU (bge-m3 on cpu)
-            print(f"  [Index] Dense matrix: {self.dense_matrix.shape} on {DEVICE}")
+            self.dense_matrix = torch.cat(embs, dim=0)  # on embedder device
+            if self.dense_matrix.device != torch.device("cpu"):
+                self.dense_matrix = self.dense_matrix.cpu()  # keep on CPU for search to save VRAM during training
+            print(f"  [Index] Dense matrix: {self.dense_matrix.shape} on CPU")
             self.indexing = False
         except Exception as e:
             print(f"  [Index] Dense build error: {e}")
@@ -208,7 +216,8 @@ class FullIndex:
         dense_scores = np.zeros(len(self.docs))
         if self.dense_matrix is not None:
             model = get_embedder()
-            q_emb = model.encode([query], convert_to_tensor=True, show_progress_bar=False)  # CPU
+            q_emb = model.encode([query], convert_to_tensor=True, show_progress_bar=False)
+            q_emb = q_emb.cpu()  # match dense_matrix on CPU
             sims = torch.cosine_similarity(q_emb, self.dense_matrix, dim=1)
             dense_scores = sims.cpu().numpy()
 
@@ -494,27 +503,54 @@ table{width:100%;border-collapse:collapse;font-size:.7em}td,th{padding:2px 5px;b
 <h1>MILK IA — Local Intelligence Fabric v2</h1><div id="c">Loading...</div>
 <script>
 async function p(){try{const r=await fetch('/api/fabric/status');const d=await r.json();
-let h='<h2>CORE</h2><div class="grid">';const R=(l,v,c)=>`<div class="card"><div class="label">${l}</div><div class="value ${c||''}">${v}</div></div>`;
-h+=R('HOST',d.host);h+=R('PID',d.pid);h+=R('UPTIME',d.uptime_s+'s');
-h+=R('DEVICE',d.resource.device);h+=R('GPU',d.resource.gpu,d.resource.cuda?'on':'');
-h+=R('CUDA',d.resource.cuda?'SIM':'NAO',d.resource.cuda?'on':'off');
-h+=R('VRAM',d.resource.vram_used+'/'+d.resource.vram_total+' GB');
-h+=R('VRAM FREE',d.resource.vram_free+' GB');h+=R('CPU',d.resource.cpu_pct+'%');h+=R('RAM',d.resource.ram_pct+'%');
-h+='</div><h2>MODELS</h2><table><tr><th>Name</th><th>Type</th><th>Backend</th><th>Status</th></tr>';
+let h='';const R=(l,v,c)=>`<div class="card"><div class="label">${l}</div><div class="value ${c||''}">${v}</div></div>`;
+// CURRENT_RUNTIME
+h+='<h2>CURRENT_RUNTIME</h2><div class="grid">';
+h+=R('PID',d.CURRENT_RUNTIME.pid);h+=R('UPTIME',d.CURRENT_RUNTIME.uptime_s+'s');
+h+=R('DEVICE',d.CURRENT_RUNTIME.device);h+=R('CUDA',d.CURRENT_RUNTIME.cuda?'SIM':'NAO',d.CURRENT_RUNTIME.cuda?'on':'off');
+h+=R('GPU',d.CURRENT_RUNTIME.gpu||'CPU',d.CURRENT_RUNTIME.cuda?'on':'');
+h+=R('VRAM',d.CURRENT_RUNTIME.vram_used_gb+'/'+d.CURRENT_RUNTIME.vram_total_gb+' GB');
+h+=R('VRAM FREE',d.CURRENT_RUNTIME.vram_free_gb+' GB');
+h+=R('CPU',d.CURRENT_RUNTIME.cpu_pct+'%');h+=R('RAM',d.CURRENT_RUNTIME.ram_pct+'%');
+h+=R('PYTHON','3.12');h+=R('TORCH','2.6.0+cu124');h+='</div>';
+// ACTIVE_JOB
+h+='<h2>ACTIVE_JOB</h2>';
+if(d.ACTIVE_JOB){h+=`<div class="card" style="border-color:#d29922"><div class="label">JOB</div><div class="value warn">${d.ACTIVE_JOB.type}: ${d.ACTIVE_JOB.detail}</div></div>`;}
+else{h+='<div class="card"><div class="label">JOB</div><div class="value on">IDLE — no active job</div></div>';}
+// LAST_COMPLETED_TRAINING
+h+='<h2>LAST_COMPLETED_TRAINING</h2>';
+if(d.LAST_COMPLETED_TRAINING){const t=d.LAST_COMPLETED_TRAINING;h+='<div class="grid">';
+h+=R('EVENT',t.event_type);h+=R('EPOCHS',t.epochs);h+=R('BEST F1',t.best_val_f1);
+h+=R('CHECKPOINT',t.checkpoint_sha);h+=R('DEVICE',t.device||'—');h+=R('PROMOTED',t.promoted?'YES':'NO',t.promoted?'on':'off');
+h+='</div>';}else{h+='<div class="card"><div class="label">TRAINING</div><div class="value">none yet</div></div>';}
+// CANONICAL_MODEL
+h+='<h2>CANONICAL_MODEL</h2><div class="grid">';
+h+=R('NAME',d.CANONICAL_MODEL.name);h+=R('SHA',d.CANONICAL_MODEL.sha);
+h+=R('STATUS',d.CANONICAL_MODEL.status,'on');
+h+=R('TEST F1 MACRO',d.CANONICAL_MODEL.test_f1_macro);h+=R('TEST F1 MICRO',d.CANONICAL_MODEL.test_f1_micro);
+h+=R('CLASSES',d.CANONICAL_MODEL.test_classes);h+='</div>';
+// CANDIDATE_MODEL
+h+='<h2>CANDIDATE_MODEL</h2>';
+if(d.CANDIDATE_MODEL){h+='<div class="grid">';
+h+=R('NAME',d.CANDIDATE_MODEL.name);h+=R('SHA',d.CANDIDATE_MODEL.sha,'warn');
+h+=R('STATUS',d.CANDIDATE_MODEL.status,'warn');h+=R('SOURCE',d.CANDIDATE_MODEL.source);h+='</div>';}
+else{h+='<div class="card"><div class="label">CANDIDATE</div><div class="value">none</div></div>';}
+// MODELS
+h+='<h2>MODELS</h2><table><tr><th>Name</th><th>Type</th><th>Backend</th><th>Status</th></tr>';
 for(const[n,m]of Object.entries(d.models))h+=`<tr><td>${n}</td><td>${m.type}</td><td>${m.backend||'—'}</td><td class="${m.status==='online'||m.status==='loaded'||m.status==='ready'?'on':'warn'}">${m.status}</td></tr>`;
 h+='</table><h2>RETRIEVAL</h2><div class="grid">';
-h+=R('INDEX',d.retrieval.indexed_docs);h+=R('QUERIES',d.retrieval.queries);
-h+=R('AVG LATENCY',d.retrieval.avg_latency_ms+'ms');h+=R('DENSE',d.retrieval.dense_ready?'YES':'building...');
+h+=R('SPARSE INDEX',d.retrieval.indexed_docs);h+=R('QUERIES',d.retrieval.queries);
+h+=R('AVG LATENCY',d.retrieval.avg_latency_ms+'ms');
+h+=R('DENSE INDEX',d.retrieval.dense_ready?'READY':'building',d.retrieval.dense_ready?'on':'warn');
+h+=R('DENSE %',d.retrieval.dense_progress_pct+'%');
 h+='</div><h2>CONTINUOUS LEARNING</h2><div class="grid">';
 h+=R('STATUS',d.cl.active?'ACTIVE':'OFF',d.cl.active?'on':'off');
-h+=R('TOTAL',d.cl.total);h+=R('PROCESSED',d.cl.processed);
-h+='</div>';
+h+=R('TOTAL',d.cl.total);h+=R('PROCESSED',d.cl.processed);h+='</div>';
 if(d.cl.events.length){h+='<table><tr><th>Type</th><th>Status</th><th>Time</th></tr>';
 for(const e of d.cl.events.slice(-5))h+=`<tr><td>${e.type}</td><td class="${e.status==='COMPLETED'?'on':'warn'}">${e.status}</td><td class="small">${(e.time||'').slice(11,19)}</td></tr>`;h+='</table>';}
 if(d.proof){h+='<h2>PROOF QUERY</h2><div class="grid">';
 h+=R('QUERY',d.proof.question);h+=R('RESULTS',d.proof.n_results);
-h+=R('LATENCY',d.proof.latency_ms+'ms');h+=R('TOP HIT',d.proof.top_citation||'—');
-h+='</div>';}
+h+=R('LATENCY',d.proof.latency_ms+'ms');h+=R('TOP HIT',d.proof.top_citation||'—');h+='</div>';}
 h+='<h2>AGENTS ('+d.agent_count+' active)</h2><table><tr><th>Agent</th><th>Role</th><th>Jobs</th></tr>';
 for(const[n,a]of Object.entries(d.agents))h+=`<tr><td>${n}</td><td>${a.role}</td><td>${d.agent_jobs_count}</td></tr>`;
 h+='</table><h2>TOOLS ('+d.tool_calls_count+' calls)</h2>';
@@ -543,9 +579,18 @@ class Handler(BaseHTTPRequestHandler):
         if route=="/milk-live":self._html(DASH);return
         if route=="/api/fabric/status":self._json(self._status(run_proof=False));return
         if route=="/api/milk/status":
-            d=self._status(run_proof=False);self._json({"status":"OPERATIONAL","pid":d["pid"],"uptime_s":d["uptime_s"],
+            d=self._status(run_proof=False);self._json({"status":"OPERATIONAL",
+                "CURRENT_RUNTIME":d["CURRENT_RUNTIME"],
+                "ACTIVE_JOB":d["ACTIVE_JOB"],
+                "CANONICAL_MODEL":d["CANONICAL_MODEL"],
+                "CANDIDATE_MODEL":d["CANDIDATE_MODEL"],
+                "pid":d["pid"],"uptime_s":d["uptime_s"],
                 "device":d["resource"]["device"],"gpu":d["resource"]["gpu"],"cuda":d["resource"]["cuda"],
                 "vram_used":d["resource"]["vram_used_gb"],"vram_free":d["resource"]["vram_free_gb"],
+                "gpt_oss_health":d["models"].get("gpt-oss-20b",{}).get("status"),
+                "dense_ready":d["retrieval"]["dense_ready"],
+                "dense_progress_pct":d["retrieval"]["dense_progress_pct"],
+                "cl_total":d["cl"]["total"],"cl_processed":d["cl"]["processed"],
                 "heartbeat":d["heartbeat"]});return
         if route=="/api/milk/training/status":
             lf=STATE/"training_live.json"
@@ -618,14 +663,71 @@ class Handler(BaseHTTPRequestHandler):
                 proof={"question":"folclore romaria tradicao Moura","n_results":len(rr),"latency_ms":round((time.time()-t0)*1000,1),
                        "top_citation":rr[0]["chunk_id"][:16] if rr else None,"classification":cls}
             except:pass
+        # Determine active job from CL events
+        active_job = None
+        for ev in reversed(cl_events):
+            if ev.get("status") == "PROCESSING":
+                active_job = {"type": ev["type"], "started": ev.get("time",""), "detail": "GPU training in progress" if ev["type"]=="EXPLICIT_EXPERIMENT" else "processing"}
+                break
+        # Last completed training
+        last_completed_training = None
+        for ev in reversed(cl_events):
+            if ev.get("status") == "COMPLETED" and "training_job" in ev:
+                tj = ev["training_job"]
+                last_completed_training = {
+                    "event_type": ev["type"],
+                    "completed_at": ev.get("processed_at",""),
+                    "epochs": tj["epochs"],
+                    "best_val_f1": tj["best_val_f1"],
+                    "checkpoint_sha": tj["checkpoint_sha"],
+                    "checkpoint_path": tj["checkpoint_path"],
+                    "promoted": tj.get("promoted", False),
+                    "device": tj.get("device",""),
+                    "history": tj.get("history",[]),
+                }
+                break
+        # Canonical model
+        canonical_model = {
+            "name": "milk_neural.npz",
+            "sha": base_model_sha,
+            "path": str(MODELS / "milk_neural.npz"),
+            "status": "promoted (torch training commit 1969faf)",
+            "architecture": "5000->512->256->128->11",
+            "test_f1_macro": 0.716,
+            "test_f1_micro": 0.8218,
+            "test_classes": "11/11",
+        }
+        # Candidate model
+        candidate_model = None
+        if (MODELS / "checkpoint_cl_experiment.npz").exists():
+            ckpt_sha = sha256_file(MODELS / "checkpoint_cl_experiment.npz")[:16]
+            candidate_model = {
+                "name": "checkpoint_cl_experiment.npz",
+                "sha": ckpt_sha,
+                "path": str(MODELS / "checkpoint_cl_experiment.npz"),
+                "status": "candidate (not promoted, validation gate pending)",
+                "source": "CL EXPLICIT_EXPERIMENT",
+            }
         return {"schema":"ia_milk.fabric_status.v2","host":os.environ.get("COMPUTERNAME","localhost"),
             "pid":os.getpid(),"uptime_s":round(time.time()-START_TIME,1),"heartbeat":now_iso(),
+            "CURRENT_RUNTIME":{
+                "pid":os.getpid(),"uptime_s":round(time.time()-START_TIME,1),
+                "device":str(DEVICE),"cuda":CUDA,"gpu":GPU_NAME,
+                "vram_total_gb":VRAM_TOTAL,"vram_used_gb":vram_used,"vram_free_gb":vram_free,
+                "cpu_pct":psutil.cpu_percent(),"ram_pct":psutil.virtual_memory().percent,
+                "python":"3.12","torch":"2.6.0+cu124",
+            },
+            "ACTIVE_JOB":active_job,
+            "LAST_COMPLETED_TRAINING":last_completed_training,
+            "CANONICAL_MODEL":canonical_model,
+            "CANDIDATE_MODEL":candidate_model,
             "resource":{"device":str(DEVICE),"cuda":CUDA,"gpu":GPU_NAME,"vram_total_gb":VRAM_TOTAL,
                 "vram_used_gb":vram_used,"vram_free_gb":vram_free,
                 "cpu_pct":psutil.cpu_percent(),"ram_pct":psutil.virtual_memory().percent},
             "models":self._models(),
             "retrieval":{"indexed_docs":index.indexed,"total_docs":index.total,"index_progress":round(index.index_progress,1),
-                "dense_ready":index.dense_matrix is not None,"queries":index.stats["queries"],
+                "dense_ready":index.dense_matrix is not None,"dense_progress_pct":round(index.index_progress,1) if index.indexing else (100.0 if index.dense_matrix is not None else 0.0),
+                "queries":index.stats["queries"],
                 "avg_latency_ms":index.stats["avg_latency_ms"]},
             "cl":{"active":cl_status["active"],"total":cl_status["total"],"processed":cl_status["processed"],"events":cl_events[-10:]},
             "agents":AGENTS,"agent_count":len(AGENTS),"agent_jobs_count":len(agent_jobs),

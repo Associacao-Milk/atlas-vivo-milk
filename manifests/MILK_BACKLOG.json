@@ -1,6 +1,6 @@
 {
   "schema": "ia_milk.backlog.v1",
-  "updated_at": "2026-09-09T18:43:48.567441",
+  "updated_at": "2026-09-09T19:30:09.496859",
   "tasks": [
     {
       "task_id": "A1",
@@ -220,6 +220,21 @@
       "status": "VALIDATED",
       "risk": "low",
       "evidence": "tests/test_neural_certification.py (grad_check_pos_weight_W0 PASS)"
+    },
+    {
+      "task_id": "GATE0",
+      "priority": "A",
+      "title": "SOVEREIGN_CORE_GATE — core independence from external providers",
+      "dependency": null,
+      "status": "DONE",
+      "risk": "low",
+      "expected_gain": "sovereignty, compliance, semantics",
+      "estimated_cost": "5 modules + 1 test + 1 modified",
+      "tests_required": [
+        "offline_query",
+        "import_sovereignty"
+      ],
+      "result": "PASS — overall_ok=True, 5 citations offline, 0 forbidden modules, 4 compliance profiles, ontology v1.0.0, NGSI-LD+CIRMAE export OK"
     }
   ]
 }

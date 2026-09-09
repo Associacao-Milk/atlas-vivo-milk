@@ -1,0 +1,44 @@
+{
+  "schema": "ia_milk.sovereign_gate.v1",
+  "import_sovereignty_ok": true,
+  "forbidden_modules": [],
+  "fallback_provider_ok": true,
+  "fallback_provider_name": "local-offline",
+  "offline_query_ok": true,
+  "offline_answer_citations": 5,
+  "compliance_profiles_count": 4,
+  "ontology_version": "1.0.0",
+  "ngsi_ld_export_ok": true,
+  "shacl_shapes_ok": true,
+  "details": {
+    "offline_query": {
+      "answer_text": "[soberano/offline] Evidencia local recuperada para: folclore romaria tradicao popular freguesia Moura. 5 fragmentos cita",
+      "citations": [
+        "sha256:f9a93b6baa6644881978174b36ff10b35f69f5c494beb633226e5428d07f52a6#chunk-00475-eb771574374b",
+        "sha256:44f1ffb6182047f4f80fed6161f421ae3d04a951b7978ea711681e075dbeabdb#chunk-00593-d3679120c0f6",
+        "sha256:46fe54f3b2c324a37ad4ef8600b5a1d2aae750683cf8c462282b65be1a81b7c2#chunk-00635-c7e8e5761a2e",
+        "sha256:5aa6018069beeeb8383e662f80cd9c77db9bdf48bbff639fae17e04c19ff5c70#chunk-00291-359b8f887410",
+        "sha256:e09c2137f06034d97e7477d40e007db525802929433d11f16a6a77f8c8e53f28#chunk-00125-099ebfcfaf96"
+      ],
+      "confidence": "nao_calculada",
+      "warnings": [
+        "modo soberano/offline: sem LLM externo, sintese deterministica"
+      ],
+      "model": "local-offline"
+    },
+    "compliance_profiles": [
+      "eif-mosaico-rnid-iap",
+      "enti-arpgu-cnmd-fiware",
+      "ai-act",
+      "iso-42001"
+    ],
+    "ngsi_sample_id": "urn:milk:Source:gate-smoke"
+  },
+  "overall_ok": true,
+  "offline_query_answer": {
+    "text": "[soberano/offline] Evidencia local recuperada para: folclore romaria tradicao popular freguesia Moura. 5 fragmentos citados. Sintese deterministica sem LLM externo.",
+    "citations_count": 5,
+    "facts_count": 5,
+    "model": "local-offline"
+  }
+}

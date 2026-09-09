@@ -115,3 +115,30 @@ class MistralClient:
         allowed_citations = {item["citation"] for item in evidence}
         result["citations"] = [c for c in result.get("citations", []) if c in allowed_citations]
         return result
+
+
+@dataclass(slots=True)
+class MistralAdapter:
+    """ProviderAdapter wrapper around MistralClient.
+
+    Lives OUTSIDE the sovereign core import boundary: the core only sees the
+    ``ProviderAdapter`` protocol. This adapter is only imported when a remote
+    Mistral provider is explicitly requested.
+    """
+
+    client: MistralClient
+    name: str = "mistral"
+    is_local: bool = False
+
+    @property
+    def chat_model(self) -> str:
+        return self.client.chat_model
+
+    def available(self) -> bool:
+        return bool(getattr(self.client, "api_key", "").strip())
+
+    def embeddings(self, texts: list[str]) -> list[list[float]]:
+        return self.client.embeddings(texts)
+
+    def grounded_answer(self, question: str, contexts: list[dict[str, Any]]) -> dict[str, Any]:
+        return self.client.grounded_answer(question, contexts)

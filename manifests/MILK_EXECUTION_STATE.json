@@ -1,16 +1,17 @@
 {
   "schema": "ia_milk.execution_state.v1",
-  "updated_at": "2026-09-09T18:43:48.567441",
+  "updated_at": "2026-09-09T19:30:09.496859",
   "canonical_root": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO",
   "git_head": "pending local commit",
-  "current_phase": "C_CONTROLLED_TRAINING_DONE",
+  "current_phase": "SOVEREIGN_CORE_GATE_DONE",
   "phases_completed": [
     "INTEGRATION_A_B",
     "SNAPSHOT_PROTECTION",
     "GIT_CHECKPOINT",
     "A_NEURAL_CERTIFICATION",
     "B_EVALUATION",
-    "C_CONTROLLED_TRAINING"
+    "C_CONTROLLED_TRAINING",
+    "SOVEREIGN_CORE_GATE"
   ],
   "current_task": "AWAITING_D_SEMANTIC_RETRIEVAL",
   "corpus_documents": 10538,
@@ -120,5 +121,31 @@
       "val": 1102,
       "test": 1057
     }
+  },
+  "sovereign_gate": {
+    "overall_ok": true,
+    "import_sovereignty_ok": true,
+    "forbidden_modules": [],
+    "fallback_provider": "local-offline",
+    "offline_query_ok": true,
+    "offline_citations": 5,
+    "compliance_profiles": 4,
+    "ontology_version": "1.0.0",
+    "ngsi_ld_export_ok": true,
+    "shacl_shapes_ok": true,
+    "report": "state/sovereign_core_gate_report.json",
+    "core_contract": "ProviderAdapter abstraction; LocalAdapter offline fallback; no vendor SDK in core",
+    "new_modules": [
+      "src/milk_ai/provider_adapter.py",
+      "src/milk_ai/compliance.py",
+      "src/milk_ai/ontology.py",
+      "src/milk_ai/export_ngsi.py",
+      "src/milk_ai/sovereign_gate.py",
+      "tests/test_sovereign_core_gate.py"
+    ],
+    "modified": [
+      "src/milk_ai/engine.py (ProviderAdapter)",
+      "src/milk_ai/mistral.py (MistralAdapter)"
+    ]
   }
 }

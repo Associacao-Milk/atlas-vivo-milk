@@ -4,29 +4,42 @@ from pathlib import Path
 from typing import Any
 
 from .ingest import CorpusStore
-from .mistral import MistralClient
+from .mistral import MistralClient, MistralAdapter
 from .models import Answer, Visibility
 from .policies import truth_claim_warnings
+from .provider_adapter import LocalAdapter, ProviderAdapter, select_provider
 from .retrieval import HybridRetriever
 
 
 class MilkAI:
+    """Sovereign core: works offline with LocalAdapter; uses a ProviderAdapter
+    (MistralAdapter, future OpenAI/Anthropic adapters) only when available.
+
+    The core never imports a vendor SDK directly — it depends on the
+    ``ProviderAdapter`` abstraction. ``mistral`` is accepted for backward
+    compatibility and wrapped in ``MistralAdapter``.
+    """
+
     def __init__(
         self,
         state_dir: Path,
         *,
+        provider: ProviderAdapter | None = None,
         mistral: MistralClient | None = None,
         semantic: bool = False,
         remote_allowed_layers: set[str] | None = None,
     ):
         self.store = CorpusStore(state_dir / "corpus")
-        self.mistral = mistral
+        # Backward compat: a raw MistralClient is wrapped into the adapter.
+        if provider is None and mistral is not None:
+            provider = MistralAdapter(mistral)
+        self.provider = select_provider(provider)
         self.remote_allowed_layers = remote_allowed_layers or {"publica", "licenciavel"}
-        embed = mistral.embeddings if mistral and semantic else None
+        embed = self.provider.embeddings if self.provider.available() and not self.provider.is_local and semantic else None
         self.retriever = HybridRetriever(self.store.chunks(), embed=embed)
 
     def refresh(self, semantic: bool = False) -> None:
-        embed = self.mistral.embeddings if self.mistral and semantic else None
+        embed = self.provider.embeddings if self.provider.available() and not self.provider.is_local and semantic else None
         self.retriever = HybridRetriever(self.store.chunks(), embed=embed)
 
     def ingest(
@@ -54,15 +67,24 @@ class MilkAI:
                 confidence="baixa",
                 citations=[], facts=[], inferences=[], unknowns=[question], warnings=[],
             )
-        if not self.mistral:
-            return Answer(
-                text="Foram recuperadas evidências locais; a síntese Mistral não foi executada.",
-                state="analisado",
-                confidence="não_calculada",
-                citations=[hit.chunk_id for hit in hits],
-                facts=[], inferences=[], unknowns=[],
-                warnings=["MISTRAL_API_KEY ausente ou modo local seleccionado"],
+        if self.provider.is_local:
+            # Sovereign offline path: deterministic synthesis, no external LLM.
+            payload = self.provider.grounded_answer(
+                question, [hit.to_dict() for hit in hits]
             )
+            answer = Answer(
+                text=str(payload.get("text", "")),
+                state="analisado",
+                confidence=str(payload.get("confidence", "não_calculada")),
+                citations=list(payload.get("citations", [])),
+                facts=list(payload.get("facts", [])),
+                inferences=list(payload.get("inferences", [])),
+                unknowns=list(payload.get("unknowns", [])),
+                warnings=list(payload.get("warnings", [])),
+                model=self.provider.name,
+            )
+            answer.warnings.extend(truth_claim_warnings(answer.text))
+            return answer
 
         remotely_allowed = [
             hit for hit in hits
@@ -77,7 +99,7 @@ class MilkAI:
                 citations=[hit.chunk_id for hit in hits], facts=[], inferences=[], unknowns=[],
                 warnings=["camada não autorizada ou RGPD por validar: síntese remota bloqueada"],
             )
-        payload = self.mistral.grounded_answer(question, [hit.to_dict() for hit in remotely_allowed])
+        payload = self.provider.grounded_answer(question, [hit.to_dict() for hit in remotely_allowed])
         answer = Answer(
             text=str(payload.get("text", "")),
             state="inferido",
@@ -87,7 +109,7 @@ class MilkAI:
             inferences=list(payload.get("inferences", [])),
             unknowns=list(payload.get("unknowns", [])),
             warnings=list(payload.get("warnings", [])),
-            model=self.mistral.chat_model,
+            model=getattr(self.provider, "chat_model", self.provider.name),
         )
         answer.warnings.extend(truth_claim_warnings(answer.text))
         return answer

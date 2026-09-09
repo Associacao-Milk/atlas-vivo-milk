@@ -1,6 +1,6 @@
 {
   "schema": "ia_milk.capability_matrix.v1",
-  "updated_at": "2026-09-09T18:43:48.567441",
+  "updated_at": "2026-09-09T19:30:09.496859",
   "capabilities": {
     "neural_classifier": {
       "status": "TESTED_PROMOTED",
@@ -94,6 +94,31 @@
       "status": "TESTED",
       "file": "tests/test_neural_certification.py (backward pos_weight) + scratchpad milk_c_train.py",
       "notes": "early stopping, grad clip, per-class threshold tuning, sealed TEST one-shot, promote/restore gate"
+    },
+    "sovereign_core_gate": {
+      "status": "TESTED",
+      "file": "tests/test_sovereign_core_gate.py",
+      "notes": "overall_ok=True; offline query with network blocked; 0 forbidden modules"
+    },
+    "provider_abstraction": {
+      "status": "TESTED",
+      "file": "src/milk_ai/provider_adapter.py",
+      "notes": "ProviderAdapter Protocol + LocalAdapter fallback; MistralAdapter wraps vendor client outside core"
+    },
+    "compliance_profiles": {
+      "status": "TESTED",
+      "file": "src/milk_ai/compliance.py",
+      "notes": "4 profiles: EIF/Mosaico-RNID/iAP, ENTI/ARPGU/CNMD/FIWARE, AI Act, ISO42001"
+    },
+    "ontology": {
+      "status": "TESTED",
+      "file": "src/milk_ai/ontology.py",
+      "notes": "JSON-LD context + RDF/Turtle + SHACL, version 1.0.0"
+    },
+    "ngsi_ld_export": {
+      "status": "TESTED",
+      "file": "src/milk_ai/export_ngsi.py",
+      "notes": "NGSI-LD + CNMD projection without mutating internal model"
     }
   }
 }

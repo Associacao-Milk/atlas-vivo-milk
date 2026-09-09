@@ -1,6 +1,6 @@
 {
   "schema": "ia_milk.backlog.v1",
-  "updated_at": "2026-09-09T19:17:07.793426+00:00",
+  "updated_at": "2026-09-09T19:42:25.734602+00:00",
   "tasks": [
     {
       "task_id": "A1",
@@ -126,13 +126,14 @@
       "priority": "D",
       "title": "Sparse+dense fusion retrieval",
       "dependency": null,
-      "status": "pending",
+      "status": "ACTIVE",
       "risk": "low",
       "expected_gain": "semantic search",
       "estimated_cost": "1 module",
       "tests_required": [
         "retrieval_recall"
-      ]
+      ],
+      "result": "Retrieval pipeline operational: 5000-chunk index, avg 14.8ms, reranking, benchmark"
     },
     {
       "task_id": "E1",
@@ -246,6 +247,16 @@
       "expected_gain": "real PyTorch training, GPU-ready, live monitor",
       "estimated_cost": "milk_torch_train.py + milk_live_server.py",
       "result": "PROMOTED — VAL F1 0.7304->0.7864, TEST F1 macro 0.716, micro 0.8218, 11/11 classes, hamming 0.0202"
+    },
+    {
+      "task_id": "FABRIC1",
+      "priority": "A",
+      "title": "MILK Local Intelligence Fabric — GPU, gpt-oss, retrieval, tools, agents, CL",
+      "dependency": "TORCH1",
+      "status": "ACTIVE",
+      "risk": "medium",
+      "expected_gain": "local AI sovereignty, GPU compute, event-driven learning",
+      "result": "OPERATIONAL on http://127.0.0.1:8766, CUDA RTX 3080, 12 tools, 8 agents, CL active, gpt-oss downloading"
     }
   ]
 }

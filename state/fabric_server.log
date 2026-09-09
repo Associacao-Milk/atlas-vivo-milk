@@ -1,0 +1,418 @@
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 49761)
+Traceback (most recent call last):
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 424, in handle_one_request
+    method()
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 618, in do_GET
+    self._json(self._fabric_status()); return
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 598, in _json
+    self.wfile.write(body)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 845, in write
+    self._sock.sendall(b)
+ConnectionAbortedError: [WinError 10053] Uma ligação estabelecida foi anulada pelo software no computador anfitrião
+----------------------------------------
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 57691)
+Traceback (most recent call last):
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 424, in handle_one_request
+    method()
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 618, in do_GET
+    self._json(self._fabric_status()); return
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 598, in _json
+    self.wfile.write(body)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 845, in write
+    self._sock.sendall(b)
+ConnectionAbortedError: [WinError 10053] Uma ligação estabelecida foi anulada pelo software no computador anfitrião
+----------------------------------------
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 53060)
+Traceback (most recent call last):
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 424, in handle_one_request
+    method()
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 618, in do_GET
+    self._json(self._fabric_status()); return
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 598, in _json
+    self.wfile.write(body)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 845, in write
+    self._sock.sendall(b)
+ConnectionAbortedError: [WinError 10053] Uma ligação estabelecida foi anulada pelo software no computador anfitrião
+----------------------------------------
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 52347)
+Traceback (most recent call last):
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 424, in handle_one_request
+    method()
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 618, in do_GET
+    self._json(self._fabric_status()); return
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 598, in _json
+    self.wfile.write(body)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 845, in write
+    self._sock.sendall(b)
+ConnectionAbortedError: [WinError 10053] Uma ligação estabelecida foi anulada pelo software no computador anfitrião
+----------------------------------------
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 53556)
+Traceback (most recent call last):
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 424, in handle_one_request
+    method()
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 618, in do_GET
+    self._json(self._fabric_status()); return
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 598, in _json
+    self.wfile.write(body)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 845, in write
+    self._sock.sendall(b)
+ConnectionAbortedError: [WinError 10053] Uma ligação estabelecida foi anulada pelo software no computador anfitrião
+----------------------------------------
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 52997)
+Traceback (most recent call last):
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 424, in handle_one_request
+    method()
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 618, in do_GET
+    self._json(self._fabric_status()); return
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 598, in _json
+    self.wfile.write(body)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 845, in write
+    self._sock.sendall(b)
+ConnectionAbortedError: [WinError 10053] Uma ligação estabelecida foi anulada pelo software no computador anfitrião
+----------------------------------------
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 65293)
+Traceback (most recent call last):
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 424, in handle_one_request
+    method()
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 618, in do_GET
+    self._json(self._fabric_status()); return
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 598, in _json
+    self.wfile.write(body)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 845, in write
+    self._sock.sendall(b)
+ConnectionAbortedError: [WinError 10053] Uma ligação estabelecida foi anulada pelo software no computador anfitrião
+----------------------------------------
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 59362)
+Traceback (most recent call last):
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 424, in handle_one_request
+    method()
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 618, in do_GET
+    self._json(self._fabric_status()); return
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 598, in _json
+    self.wfile.write(body)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 845, in write
+    self._sock.sendall(b)
+ConnectionAbortedError: [WinError 10053] Uma ligação estabelecida foi anulada pelo software no computador anfitrião
+----------------------------------------
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 59769)
+Traceback (most recent call last):
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 424, in handle_one_request
+    method()
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 618, in do_GET
+    self._json(self._fabric_status()); return
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 598, in _json
+    self.wfile.write(body)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 845, in write
+    self._sock.sendall(b)
+ConnectionAbortedError: [WinError 10053] Uma ligação estabelecida foi anulada pelo software no computador anfitrião
+----------------------------------------
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 60383)
+Traceback (most recent call last):
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 424, in handle_one_request
+    method()
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 618, in do_GET
+    self._json(self._fabric_status()); return
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 598, in _json
+    self.wfile.write(body)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 845, in write
+    self._sock.sendall(b)
+ConnectionAbortedError: [WinError 10053] Uma ligação estabelecida foi anulada pelo software no computador anfitrião
+----------------------------------------
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 56637)
+Traceback (most recent call last):
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 424, in handle_one_request
+    method()
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 618, in do_GET
+    self._json(self._fabric_status()); return
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 598, in _json
+    self.wfile.write(body)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 845, in write
+    self._sock.sendall(b)
+ConnectionAbortedError: [WinError 10053] Uma ligação estabelecida foi anulada pelo software no computador anfitrião
+----------------------------------------
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 57805)
+Traceback (most recent call last):
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 424, in handle_one_request
+    method()
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 618, in do_GET
+    self._json(self._fabric_status()); return
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 598, in _json
+    self.wfile.write(body)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 845, in write
+    self._sock.sendall(b)
+ConnectionAbortedError: [WinError 10053] Uma ligação estabelecida foi anulada pelo software no computador anfitrião
+----------------------------------------
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 58393)
+Traceback (most recent call last):
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 424, in handle_one_request
+    method()
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 618, in do_GET
+    self._json(self._fabric_status()); return
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 598, in _json
+    self.wfile.write(body)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 845, in write
+    self._sock.sendall(b)
+ConnectionAbortedError: [WinError 10053] Uma ligação estabelecida foi anulada pelo software no computador anfitrião
+----------------------------------------
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 64414)
+Traceback (most recent call last):
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 424, in handle_one_request
+    method()
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 618, in do_GET
+    self._json(self._fabric_status()); return
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 598, in _json
+    self.wfile.write(body)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 845, in write
+    self._sock.sendall(b)
+ConnectionAbortedError: [WinError 10053] Uma ligação estabelecida foi anulada pelo software no computador anfitrião
+----------------------------------------
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 51997)
+Traceback (most recent call last):
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 424, in handle_one_request
+    method()
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 618, in do_GET
+    self._json(self._fabric_status()); return
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 598, in _json
+    self.wfile.write(body)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 845, in write
+    self._sock.sendall(b)
+ConnectionAbortedError: [WinError 10053] Uma ligação estabelecida foi anulada pelo software no computador anfitrião
+----------------------------------------
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 59197)
+Traceback (most recent call last):
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 424, in handle_one_request
+    method()
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 618, in do_GET
+    self._json(self._fabric_status()); return
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 598, in _json
+    self.wfile.write(body)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 845, in write
+    self._sock.sendall(b)
+ConnectionAbortedError: [WinError 10053] Uma ligação estabelecida foi anulada pelo software no computador anfitrião
+----------------------------------------
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 59143)
+Traceback (most recent call last):
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 424, in handle_one_request
+    method()
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 618, in do_GET
+    self._json(self._fabric_status()); return
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 598, in _json
+    self.wfile.write(body)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 845, in write
+    self._sock.sendall(b)
+ConnectionAbortedError: [WinError 10053] Uma ligação estabelecida foi anulada pelo software no computador anfitrião
+----------------------------------------
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 56079)
+Traceback (most recent call last):
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 424, in handle_one_request
+    method()
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 618, in do_GET
+    self._json(self._fabric_status()); return
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 598, in _json
+    self.wfile.write(body)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 845, in write
+    self._sock.sendall(b)
+ConnectionAbortedError: [WinError 10053] Uma ligação estabelecida foi anulada pelo software no computador anfitrião
+----------------------------------------
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 63315)
+Traceback (most recent call last):
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 697, in process_request_thread
+    self.finish_request(request, client_address)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 424, in handle_one_request
+    method()
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 618, in do_GET
+    self._json(self._fabric_status()); return
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Utilizador\MILK_AI_STATE_CANONICO\milk_fabric.py", line 598, in _json
+    self.wfile.write(body)
+  File "C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 845, in write
+    self._sock.sendall(b)
+ConnectionAbortedError: [WinError 10053] Uma ligação estabelecida foi anulada pelo software no computador anfitrião
+----------------------------------------

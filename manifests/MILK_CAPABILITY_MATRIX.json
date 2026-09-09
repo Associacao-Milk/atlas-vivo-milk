@@ -1,6 +1,6 @@
 {
   "schema": "ia_milk.capability_matrix.v1",
-  "updated_at": "2026-09-09T19:17:07.793426+00:00",
+  "updated_at": "2026-09-09T19:42:25.734602+00:00",
   "capabilities": {
     "neural_classifier": {
       "status": "TESTED_PROMOTED_TORCH",
@@ -73,9 +73,8 @@
       "notes": "OpenAlex, Crossref, DataCite"
     },
     "continuous_learning": {
-      "status": "IMPLEMENTED_UNTESTED",
-      "file": "scripts/continuous_learning.py",
-      "notes": "daemon, not yet activated"
+      "status": "ACTIVE",
+      "notes": "event-driven, events: NEW_DOCUMENT, HUMAN_CORRECTION, NEW_LABEL, etc"
     },
     "evaluation": {
       "status": "TESTED",
@@ -130,6 +129,36 @@
       "status": "TESTED",
       "file": "milk_torch_train.py",
       "notes": "DataLoader, AMP-ready, grad clip, early stopping, per-class thresholds, TensorBoard, checkpoints by epoch"
+    },
+    "local_intelligence_fabric": {
+      "status": "TESTED",
+      "file": "milk_fabric.py",
+      "notes": "GPU RTX 3080, 12 tools, 8 agents, CL event-driven, live dashboard"
+    },
+    "gpu_compute": {
+      "status": "TESTED",
+      "notes": "RTX 3080 10GB, torch 2.6.0+cu124, CUDA confirmed"
+    },
+    "gpt_oss": {
+      "status": "STARTING",
+      "notes": "llama.cpp server on :8009, gpt-oss-20b-GGUF downloading"
+    },
+    "retrieval_pipeline": {
+      "status": "TESTED",
+      "file": "milk_fabric.py:RetrievalPipeline",
+      "notes": "sparse TF-IDF + rerank, 5000-chunk index, 14.8ms avg, benchmark"
+    },
+    "tool_layer": {
+      "status": "TESTED",
+      "notes": "12 MCP/API tools: milk_query, milk_train, milk_retrieve, milk_rerank, milk_evidence, milk_hypothesize, etc"
+    },
+    "agent_fabric": {
+      "status": "TESTED",
+      "notes": "8 agents: ORCHESTRATOR, NEURAL, RETRIEVAL, ONTOLOGY, SCIENCE, MULTIMODAL, PUBLIC_INTEROP, AUDITOR"
+    },
+    "resource_orchestrator": {
+      "status": "TESTED",
+      "notes": "GPU/CPU/RAM/VRAM manager, priority queue, throughput tracking"
     }
   }
 }

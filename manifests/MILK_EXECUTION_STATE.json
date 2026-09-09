@@ -1,9 +1,9 @@
 {
   "schema": "ia_milk.execution_state.v1",
-  "updated_at": "2026-09-09T19:17:07.793426+00:00",
+  "updated_at": "2026-09-09T19:42:25.734602+00:00",
   "canonical_root": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO",
   "git_head": "pending local commit",
-  "current_phase": "TORCH_TRAINING_DONE_PROMOTED",
+  "current_phase": "LOCAL_INTELLIGENCE_FABRIC_ACTIVE",
   "phases_completed": [
     "INTEGRATION_A_B",
     "SNAPSHOT_PROTECTION",
@@ -12,9 +12,10 @@
     "B_EVALUATION",
     "C_CONTROLLED_TRAINING",
     "SOVEREIGN_CORE_GATE",
-    "TORCH_CONTROLLED_TRAINING"
+    "TORCH_CONTROLLED_TRAINING",
+    "LOCAL_INTELLIGENCE_FABRIC"
   ],
-  "current_task": "AWAITING_D_SEMANTIC_RETRIEVAL",
+  "current_task": "D_SEMANTIC_RETRIEVAL_ACTIVE",
   "corpus_documents": 10538,
   "models": {
     "milk_neural.npz": {
@@ -198,5 +199,82 @@
       "change_traceable": "git log + checkpoints",
       "human_validated": "pending"
     }
+  },
+  "local_intelligence_fabric": {
+    "status": "OPERATIONAL",
+    "url": "http://127.0.0.1:8766",
+    "pid": 21380,
+    "device": "cuda",
+    "cuda": true,
+    "gpu": "NVIDIA GeForce RTX 3080",
+    "vram_gb": 10.74,
+    "torch_cuda": "2.6.0+cu124 (Python 3.12)",
+    "gpt_oss": {
+      "status": "downloading",
+      "backend": "llama.cpp",
+      "port": 8009,
+      "model": "gpt-oss-20b-GGUF"
+    },
+    "retrieval": {
+      "index_size": 5000,
+      "avg_latency_ms": 14.8,
+      "idf_terms": 20000,
+      "benchmark": {
+        "queries": 5,
+        "avg_mrr": 1.0,
+        "avg_latency_ms": 14.8
+      }
+    },
+    "tools": [
+      "milk_query",
+      "milk_train",
+      "milk_training_status",
+      "milk_retrieve",
+      "milk_rerank",
+      "milk_evidence",
+      "milk_hypothesize",
+      "milk_test_hypothesis",
+      "milk_ontology_validate",
+      "milk_compliance_check",
+      "milk_export_ngsi",
+      "milk_model_compare"
+    ],
+    "agents": [
+      "MILK_ORCHESTRATOR",
+      "MILK_NEURAL",
+      "MILK_RETRIEVAL",
+      "MILK_ONTOLOGY",
+      "MILK_SCIENCE",
+      "MILK_MULTIMODAL",
+      "MILK_PUBLIC_INTEROP",
+      "MILK_AUDITOR"
+    ],
+    "continuous_learning": {
+      "status": "ACTIVE",
+      "mode": "event-driven",
+      "events": [
+        "NEW_DOCUMENT",
+        "HUMAN_CORRECTION",
+        "NEW_LABEL",
+        "NEW_EVIDENCE",
+        "INDEX_INVALIDATION",
+        "MODEL_REGRESSION",
+        "EXPLICIT_EXPERIMENT"
+      ]
+    },
+    "endpoints": [
+      "/milk-live",
+      "/api/fabric/status",
+      "/api/milk/status",
+      "/api/milk/training/status",
+      "/api/milk/training/events",
+      "/api/fabric/tools",
+      "/api/fabric/agents",
+      "/api/fabric/models",
+      "/api/fabric/retrieval/benchmark",
+      "/api/fabric/query?q=...",
+      "/api/fabric/gptoss/chat?q=..."
+    ],
+    "semantic_memory": "Minimal Ontological Commitment + MLO + MIM + SEMIC + EIF/Mosaico/iAP + ENTI/ARPGU/CNMD + FIWARE/NGSI-LD + AI Act + ISO42001"
   }
 }

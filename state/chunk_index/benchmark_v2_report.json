@@ -1,0 +1,263 @@
+{
+  "schema": "ia_milk.retrieval_benchmark_v2.v1",
+  "timestamp": "2026-09-10T00:35:37.240154+00:00",
+  "total_chunks": 250887,
+  "total_docs": 10538,
+  "sample_size": 5000,
+  "num_queries": 52,
+  "query_categories": [
+    "territorial",
+    "contradictory",
+    "ambiguous",
+    "no_evidence",
+    "lexical",
+    "temporal",
+    "semantic",
+    "multi_doc"
+  ],
+  "device": "cuda",
+  "cuda": true,
+  "dense_model": "BAAI/bge-m3",
+  "reranker": "BAAI/bge-reranker-v2-m3",
+  "caches_reused": true,
+  "rrf_contract_verified": true,
+  "reproducibility_verified": true,
+  "smoke_result": {
+    "ndcg@10": 0.5542,
+    "recall@5": 0.0177,
+    "recall@10": 0.0305,
+    "mrr": 0.95,
+    "citation_precision": 0.81
+  },
+  "strategies": {
+    "A_TFIDF_BGE_RRF": {
+      "avg": {
+        "ndcg@10": 0.2376,
+        "recall@5": 0.0078,
+        "recall@10": 0.0128,
+        "mrr": 0.7255,
+        "citation_precision": 0.5231,
+        "latency_p50_ms": 5310.2,
+        "latency_p95_ms": 8364.8,
+        "vram_gb": 2.28
+      },
+      "by_category": {
+        "territorial": {
+          "ndcg@10": 0.3161,
+          "mrr": 0.75,
+          "count": 8
+        },
+        "contradictory": {
+          "ndcg@10": 0.125,
+          "mrr": 0.9,
+          "count": 5
+        },
+        "ambiguous": {
+          "ndcg@10": 0.108,
+          "mrr": 0.7,
+          "count": 5
+        },
+        "no_evidence": {
+          "ndcg@10": 0.0,
+          "mrr": 0.0,
+          "count": 5
+        },
+        "lexical": {
+          "ndcg@10": 0.5542,
+          "mrr": 0.95,
+          "count": 10
+        },
+        "temporal": {
+          "ndcg@10": 0.14,
+          "mrr": 0.6667,
+          "count": 5
+        },
+        "semantic": {
+          "ndcg@10": 0.1698,
+          "mrr": 0.7366,
+          "count": 8
+        },
+        "multi_doc": {
+          "ndcg@10": 0.1772,
+          "mrr": 0.8333,
+          "count": 6
+        }
+      }
+    },
+    "B_BGE_SPARSE_DENSE_RRF": {
+      "avg": {
+        "ndcg@10": 0.2042,
+        "recall@5": 0.0074,
+        "recall@10": 0.0118,
+        "mrr": 0.6945,
+        "citation_precision": 0.5115,
+        "latency_p50_ms": 5788.4,
+        "latency_p95_ms": 9427.4,
+        "vram_gb": 2.28
+      },
+      "by_category": {
+        "territorial": {
+          "ndcg@10": 0.2613,
+          "mrr": 0.8095,
+          "count": 8
+        },
+        "contradictory": {
+          "ndcg@10": 0.1461,
+          "mrr": 0.9,
+          "count": 5
+        },
+        "ambiguous": {
+          "ndcg@10": 0.0998,
+          "mrr": 0.4486,
+          "count": 5
+        },
+        "no_evidence": {
+          "ndcg@10": 0.0,
+          "mrr": 0.0,
+          "count": 5
+        },
+        "lexical": {
+          "ndcg@10": 0.3691,
+          "mrr": 0.8667,
+          "count": 10
+        },
+        "temporal": {
+          "ndcg@10": 0.1362,
+          "mrr": 0.6167,
+          "count": 5
+        },
+        "semantic": {
+          "ndcg@10": 0.2051,
+          "mrr": 0.7679,
+          "count": 8
+        },
+        "multi_doc": {
+          "ndcg@10": 0.2146,
+          "mrr": 0.8333,
+          "count": 6
+        }
+      }
+    },
+    "C_BGE_MULTI_VECTOR": {
+      "avg": {
+        "ndcg@10": 0.194,
+        "recall@5": 0.0064,
+        "recall@10": 0.0113,
+        "mrr": 0.6651,
+        "citation_precision": 0.5192,
+        "latency_p50_ms": 6152.2,
+        "latency_p95_ms": 9882.1,
+        "vram_gb": 2.28
+      },
+      "by_category": {
+        "territorial": {
+          "ndcg@10": 0.2686,
+          "mrr": 0.875,
+          "count": 8
+        },
+        "contradictory": {
+          "ndcg@10": 0.112,
+          "mrr": 0.8667,
+          "count": 5
+        },
+        "ambiguous": {
+          "ndcg@10": 0.0887,
+          "mrr": 0.325,
+          "count": 5
+        },
+        "no_evidence": {
+          "ndcg@10": 0.0,
+          "mrr": 0.0,
+          "count": 5
+        },
+        "lexical": {
+          "ndcg@10": 0.3072,
+          "mrr": 0.75,
+          "count": 10
+        },
+        "temporal": {
+          "ndcg@10": 0.1646,
+          "mrr": 0.6333,
+          "count": 5
+        },
+        "semantic": {
+          "ndcg@10": 0.1944,
+          "mrr": 0.6823,
+          "count": 8
+        },
+        "multi_doc": {
+          "ndcg@10": 0.2474,
+          "mrr": 0.9167,
+          "count": 6
+        }
+      }
+    },
+    "D_HIERARCHICAL": {
+      "avg": {
+        "ndcg@10": 0.2359,
+        "recall@5": 0.008,
+        "recall@10": 0.0131,
+        "mrr": 0.7351,
+        "citation_precision": 0.5327,
+        "latency_p50_ms": 5550.3,
+        "latency_p95_ms": 9034.8,
+        "vram_gb": 2.28
+      },
+      "by_category": {
+        "territorial": {
+          "ndcg@10": 0.2973,
+          "mrr": 0.75,
+          "count": 8
+        },
+        "contradictory": {
+          "ndcg@10": 0.1107,
+          "mrr": 0.8667,
+          "count": 5
+        },
+        "ambiguous": {
+          "ndcg@10": 0.1041,
+          "mrr": 0.7,
+          "count": 5
+        },
+        "no_evidence": {
+          "ndcg@10": 0.0,
+          "mrr": 0.0,
+          "count": 5
+        },
+        "lexical": {
+          "ndcg@10": 0.5668,
+          "mrr": 0.95,
+          "count": 10
+        },
+        "temporal": {
+          "ndcg@10": 0.1435,
+          "mrr": 0.7,
+          "count": 5
+        },
+        "semantic": {
+          "ndcg@10": 0.1649,
+          "mrr": 0.7366,
+          "count": 8
+        },
+        "multi_doc": {
+          "ndcg@10": 0.1854,
+          "mrr": 0.9167,
+          "count": 6
+        }
+      }
+    }
+  },
+  "winner": "A_TFIDF_BGE_RRF",
+  "winner_metrics": {
+    "ndcg@10": 0.2376,
+    "recall@5": 0.0078,
+    "recall@10": 0.0128,
+    "mrr": 0.7255,
+    "citation_precision": 0.5231,
+    "latency_p50_ms": 5310.2,
+    "latency_p95_ms": 8364.8,
+    "vram_gb": 2.28
+  },
+  "qrels_size": 23757,
+  "elapsed_s": 1398.2
+}

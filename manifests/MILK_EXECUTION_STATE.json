@@ -1,9 +1,9 @@
 {
   "schema": "ia_milk.execution_state.v1",
-  "updated_at": "2026-09-09T23:55:31.024494+00:00",
+  "updated_at": "2026-09-10T00:41:41.869806+00:00",
   "canonical_root": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO",
   "git_head": "pending local commit",
-  "current_phase": "CHUNK_INDEX_BENCHMARK_DONE",
+  "current_phase": "RETRIEVAL_BENCHMARK_V2_DONE",
   "phases_completed": [
     "INTEGRATION_A_B",
     "SNAPSHOT_PROTECTION",
@@ -18,7 +18,8 @@
     "FABRIC_V2_DENSE_EMBEDDINGS",
     "FABRIC_V2_CL_EXPERIMENT",
     "CHUNK_INDEX_250K",
-    "RETRIEVAL_BENCHMARK"
+    "RETRIEVAL_BENCHMARK",
+    "RETRIEVAL_BENCHMARK_V2"
   ],
   "current_task": "PIPELINE_OPERATIONAL",
   "corpus_documents": 10538,
@@ -377,5 +378,37 @@
       "avg_latency_ms": 83.7
     },
     "bug_fix": "rrf_fusion returns (index:int, score:float) tuples; original code unpacked as (score, index) causing TypeError. Fixed with explicit int casts and assertions."
+  },
+  "canonical_retrieval": {
+    "strategy": "A_TFIDF_BGE_RRF",
+    "metrics": {
+      "ndcg@10": 0.2376,
+      "recall@5": 0.0078,
+      "recall@10": 0.0128,
+      "mrr": 0.7255,
+      "citation_precision": 0.5231,
+      "latency_p50_ms": 5310.2,
+      "latency_p95_ms": 8364.8,
+      "vram_gb": 2.28
+    },
+    "benchmark": "52 stratified queries (lexical, semantic, territorial, temporal, multi_doc, contradictory, ambiguous, no_evidence)",
+    "qrels_size": 23757,
+    "caches_reused": true,
+    "rrf_contract_verified": true,
+    "reproducibility_verified": true,
+    "smoke_result": {
+      "ndcg@10": 0.5542,
+      "recall@5": 0.0177,
+      "recall@10": 0.0305,
+      "mrr": 0.95,
+      "citation_precision": 0.81
+    },
+    "strategies_compared": [
+      "A_TFIDF_BGE_RRF",
+      "B_BGE_SPARSE_DENSE_RRF",
+      "C_BGE_MULTI_VECTOR",
+      "D_HIERARCHICAL"
+    ],
+    "previous_smoke_winner": "CHUNK (10 queries, superseded by 52-query benchmark)"
   }
 }

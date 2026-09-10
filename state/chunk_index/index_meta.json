@@ -6,5 +6,8 @@
   "dense_dim": 1024,
   "winner": "CHUNK",
   "built_at": "2026-09-09T23:55:20.240342+00:00",
-  "caches_reused": true
+  "caches_reused": true,
+  "benchmark_v2_winner": "A_TFIDF_BGE_RRF",
+  "benchmark_v2_queries": 52,
+  "benchmark_v2_at": "2026-09-10T00:35:37.318240+00:00"
 }

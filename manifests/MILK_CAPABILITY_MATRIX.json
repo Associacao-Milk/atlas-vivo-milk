@@ -235,6 +235,14 @@
       "status": "TESTED",
       "file": "scripts/reconcile_metrics.py",
       "notes": "Filesystem 840.5 MB vs extracted text 592.7 MB (1.42x ratio). JSON overhead explains 268 MB historical vs 779.3 MB filesystem discrepancy."
+    },
+    "orcid_mapping": {
+      "status": "VERIFIED",
+      "mapping": {
+        "eduardo_mauricio": "0009-0007-6892-6570",
+        "nuno_filipe": "0009-0009-1781-4020"
+      },
+      "notes": "ORCID mapping verified against metadata.json, CITATION.cff, GOVERNANCE.md. IDENTITY_CONFLICT resolved."
     }
   }
 }

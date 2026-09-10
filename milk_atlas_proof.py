@@ -111,7 +111,7 @@ def main():
 
             elif name == "orcid":
                 # Real: validate ORCID via public API
-                orcid_id = "0009-0009-1781-4020"
+                orcid_id = "0009-0007-6892-6570"  # Eduardo's ORCID
                 orcid_read = adapter.read_resource(orcid_id)
                 if "error" not in orcid_read:
                     meta = orcid_read.get("metadata", {})
@@ -186,12 +186,12 @@ def main():
 
     # Evidence 3: ORCID
     orc = adapters["orcid"]
-    orc_read = orc.read_resource("0009-0009-1781-4020")
+    orc_read = orc.read_resource("0009-0007-6892-6570")
     if "content_hash" in orc_read:
         provenance_chain.append({
             "step": 3,
             "source": "orcid",
-            "source_id": "0009-0009-1781-4020",
+            "source_id": "0009-0007-6892-6570",
             "evidence_hash": orc_read["content_hash"][:16],
             "retrieved_at": orc_read["retrieved_at"],
             "provenance": orc_read["provenance"],

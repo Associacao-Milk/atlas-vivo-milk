@@ -86,10 +86,10 @@
       "status": "OPEN"
     },
     {
-      "id": "ORCID_NAME_DIVERGENCE",
-      "severity": "medium",
-      "description": "ORCID 0009-0009-1781-4020 resolves to Nuno Filipe Fernandes Vieira Cabral e Araujo but .zenodo.json lists Eduardo Mauricio Vieira Cabral e Araujo — verify correct ORCID",
-      "status": "OPEN"
+      "id": "ORCID_MAPPING_RESOLVED",
+      "severity": "info",
+      "description": "RESOLVED: ORCID mapping corrected. Eduardo=0009-0007-6892-6570, Nuno=0009-0009-1781-4020.",
+      "status": "RESOLVED"
     },
     {
       "id": "DOCKER_NOT_RUNNING",

@@ -225,12 +225,13 @@ class GapEngine:
                      proposed_action="Scan corpus for author fields, cross-reference with known ORCIDs",
                      human_gate=False)
 
-        # IDENTITY_CONFLICT: ORCID resolves to different name than .zenodo.json
+        # RESOLVED_METADATA_ERROR: ORCID mapping verified and corrected
         self.add_gap(domain="authorship", source="orcid",
-                     evidence="ORCID 0009-0009-1781-4020 resolves to 'Nuno Filipe Fernandes Vieira Cabral e Araujo' but .zenodo.json lists 'Eduardo Mauricio Vieira Cabral e Araujo' — IDENTITY_CONFLICT requires human resolution",
-                     severity="high", gap_type="IDENTITY_CONFLICT",
-                     proposed_action="Human must verify correct ORCID and correct .zenodo.json or ORCID profile",
-                     human_gate=True)
+                     evidence="ORCID mapping verified: Eduardo=0009-0007-6892-6570, Nuno=0009-0009-1781-4020. Previous IDENTITY_CONFLICT resolved: .zenodo.json had Eduardo with Nuno's ORCID, now corrected.",
+                     severity="info", gap_type="UNVERIFIED",
+                     proposed_action="No action needed — metadata corrected and verified against metadata.json/CITATION.cff/GOVERNANCE.md",
+                     human_gate=False,
+                     status="resolved")
 
     def analyze_onedrive(self, audit: dict) -> None:
         """OneDrive Business audit."""

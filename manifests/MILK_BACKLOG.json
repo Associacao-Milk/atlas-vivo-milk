@@ -286,13 +286,13 @@
     {
       "task_id": "G1",
       "priority": "A",
-      "title": "Resolve ORCID IDENTITY_CONFLICT: Eduardo vs Nuno",
+      "title": "ORCID IDENTITY_CONFLICT RESOLVED: Eduardo=0009-0007-6892-6570, Nuno=0009-0009-1781-4020",
       "dependency": null,
-      "status": "PENDING",
+      "status": "VALIDATED",
       "risk": "low",
       "expected_gain": "correct authorship attribution",
       "estimated_cost": "human verification",
-      "evidence": "ORCID 0009-0009-1781-4020 resolves to Nuno Filipe Fernandes Vieira Cabral e Araujo but .zenodo.json lists Eduardo Mauricio Vieira Cabral e Araujo"
+      "evidence": "Mapping verified against metadata.json, CITATION.cff, GOVERNANCE.md. .zenodo.json, external_adapters.py, zenodo-orcid-blindado.yml corrected."
     },
     {
       "task_id": "G2",

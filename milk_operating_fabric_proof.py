@@ -88,10 +88,10 @@ def main():
 
     # ORCID evidence
     orc = adapters["orcid"]
-    orc_read = orc.read_resource("0009-0009-1781-4020")
+    orc_read = orc.read_resource("0009-0007-6892-6570")
     if "content_hash" in orc_read:
         provenance_chain.append({
-            "step": 5, "source": "orcid", "source_id": "0009-0009-1781-4020",
+            "step": 5, "source": "orcid", "source_id": "0009-0007-6892-6570",
             "hash": orc_read["content_hash"][:16], "retrieved_at": orc_read["retrieved_at"],
             "summary": f"ORCID: {orc_read['metadata'].get('full_name', '?')}, works={orc_read['metadata'].get('works_count', '?')}"
         })
@@ -149,7 +149,7 @@ def main():
                                     "remote_records": r.get("remote_records_found", 0)}
                 print(f"  {name}: OK (local .zenodo.json={r.get('local_zenodo_json')}, remote={r.get('remote_records_found', 0)})")
             elif name == "orcid":
-                r = adapter.read_resource("0009-0009-1781-4020")
+                r = adapter.read_resource("0009-0007-6892-6570")
                 real_reads[name] = {"status": "ok" if "content_hash" in r else "error",
                                     "name": r.get("metadata", {}).get("full_name", "?")}
                 print(f"  {name}: OK ({r.get('metadata', {}).get('full_name', '?')})")

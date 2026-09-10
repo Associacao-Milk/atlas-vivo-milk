@@ -160,3 +160,82 @@ class TestRelationalEngine:
         assert "image" in MODALITIES
         assert "body" in MODALITIES
         assert "territory" in MODALITIES
+
+
+class TestExtendedFramework:
+    def test_camadas_arquitetura(self):
+        engine = MultimodalRelationalEngine()
+        camadas = engine.nodes_by_type("camada_arquitetura")
+        assert len(camadas) >= 7  # 7 camadas arquitecturais
+
+    def test_dispositivos_interacao(self):
+        engine = MultimodalRelationalEngine()
+        dispositivos = engine.nodes_by_type("dispositivo_interacao")
+        assert len(dispositivos) >= 5
+        nomes = {d["nome"] for d in dispositivos}
+        assert "Ouvido Pensante" in nomes
+        assert "Espect-Ator" in nomes
+        assert "Vazio de Ressonância" in nomes
+
+    def test_protocolos_confiabilidade(self):
+        engine = MultimodalRelationalEngine()
+        protos = engine.nodes_by_type("protocolo")
+        assert len(protos) >= 3
+
+    def test_governanca_camadas(self):
+        engine = MultimodalRelationalEngine()
+        gov = engine.nodes_by_type("camada_governanca")
+        assert len(gov) >= 7  # Fonte, Evidência, Interpretação, Hipótese, Proposta, Decisão, Publicação
+
+    def test_opera_neon_node(self):
+        engine = MultimodalRelationalEngine()
+        portals = engine.nodes_by_type("portal_navegacao")
+        assert len(portals) >= 1
+        assert "Ópera Néon" in portals[0]["nome"]
+
+    def test_tecnicas_multimodais(self):
+        engine = MultimodalRelationalEngine()
+        tecnicas = engine.nodes_by_type("tecnica_multimodal")
+        assert len(tecnicas) >= 9
+
+    def test_gestao_estrategica(self):
+        engine = MultimodalRelationalEngine()
+        modulos = engine.nodes_by_type("modulo_estrategico")
+        assert len(modulos) >= 3  # NDIF, LCAFC, DCAN
+
+    def test_adorno_node(self):
+        engine = MultimodalRelationalEngine()
+        nb = engine.neighbors("adorno")
+        assert len(nb) >= 1  # should connect to foucault and marcuse
+
+    def test_boal_node(self):
+        engine = MultimodalRelationalEngine()
+        nb = engine.neighbors("boal")
+        assert len(nb) >= 2  # connects to habermas and campo_possivel
+
+    def test_extended_graph_size(self):
+        engine = MultimodalRelationalEngine()
+        assert engine.node_count >= 60  # significantly larger after extension
+        assert engine.edge_count >= 50
+
+    def test_framework_has_camadas(self):
+        fw = load_framework()
+        assert "camadas_arquitetura" in fw
+        assert len(fw["camadas_arquitetura"]) == 7
+
+    def test_framework_has_memoria_relacional(self):
+        fw = load_framework()
+        assert "memoria_relacional" in fw
+        assert "Alfama" in fw["memoria_relacional"]["exemplo_cadeia"]
+
+    def test_framework_has_cronologia(self):
+        fw = load_framework()
+        assert "cronologia_handover" in fw
+        assert len(fw["cronologia_handover"]) >= 7
+
+    def test_framework_has_gestao_estrategica(self):
+        fw = load_framework()
+        assert "gestao_estrategica" in fw
+        assert "ndif" in fw["gestao_estrategica"]
+        assert "lcafc" in fw["gestao_estrategica"]
+        assert "dcan" in fw["gestao_estrategica"]

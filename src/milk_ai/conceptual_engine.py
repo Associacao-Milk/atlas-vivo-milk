@@ -204,6 +204,62 @@ class MultimodalRelationalEngine:
                 self._add_edge(did, "manifesta_se_como", f"mod:{mod}",
                                modality=mod)
 
+        # --- 7 camadas arquitecturais ---
+        for camada in fw.get("camadas_arquitetura", []):
+            cid = f"camada:{camada['nome']}"
+            self._add_node(cid, "camada_arquitetura",
+                           nome=camada["nome"], funcao=camada.get("funcao", ""))
+            self._add_edge(cid, "afinidade_estrutural", "camada:publica")
+
+        # --- Dispositivos de interacção ---
+        for disp in fw.get("dispositivos_interacao", []):
+            did = f"dinter:{disp['id']}"
+            self._add_node(did, "dispositivo_interacao",
+                           nome=disp["nome"], inspiracao=disp.get("inspiracao", ""),
+                           modalidade=disp.get("modalidade", ""))
+            self._add_edge(did, "manifesta_se_como",
+                           f"mod:{disp.get('modalidade', 'text')}",
+                           modality=disp.get("modalidade", "text"))
+
+        # --- Protocolos de confiabilidade ---
+        prot = fw.get("protocolos_confiabilidade", {})
+        for key, desc in prot.items():
+            if isinstance(desc, str):
+                self._add_node(f"proto:{key}", "protocolo", nome=key, descricao=desc)
+            elif isinstance(desc, list):
+                for item in desc:
+                    self._add_node(f"proto:{key}:{item[:20]}", "protocolo", nome=item)
+
+        # --- Governança interpretativa ---
+        gov = fw.get("governanca_interpretativa", {})
+        for camada in gov.get("camadas", []):
+            gid = f"gov:{camada['nome']}"
+            self._add_node(gid, "camada_governanca",
+                           nome=camada["nome"], descricao=camada.get("descricao", ""))
+
+        # --- Ópera Néon ---
+        opera = fw.get("opera_neon", {})
+        if opera:
+            self._add_node("portal:opera_neon", "portal_navegacao",
+                           nome="Ópera Néon", funcao=opera.get("funcao", ""))
+            self._add_edge("portal:opera_neon", "afinidade_estrutural",
+                           "camada:publica")
+
+        # --- Técnicas multimodais ---
+        for tec in fw.get("tecnicas_multimodais", []):
+            tid = f"tec:{tec['tecnica'][:30]}"
+            self._add_node(tid, "tecnica_multimodal",
+                           nome=tec["tecnica"], aplicacao=tec.get("aplicacao", ""),
+                           modalidade=tec.get("modalidade", "text"))
+            self._add_edge(tid, "manifesta_se_como",
+                           f"mod:{tec.get('modalidade', 'text')}",
+                           modality=tec.get("modalidade", "text"))
+
+        # --- Gestão estratégica (NDIF, LCAFC, DCAN) ---
+        for key, val in fw.get("gestao_estrategica", {}).items():
+            self._add_node(f"gest:{key}", "modulo_estrategico",
+                           nome=val.get("nome", key), funcao=val.get("funcao", ""))
+
     # --- Queries relacionais ---
 
     def nodes_by_type(self, node_type: str) -> list[dict[str, Any]]:

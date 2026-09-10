@@ -368,3 +368,64 @@ class TestFALArte:
         fw = load_framework()
         assert "falarte_codigo" in fw
         assert fw["falarte_codigo"]["ficheiro_destino"] == "deploy/atlas-public/falarte.html"
+
+
+class TestOperacionalIntegration:
+    def test_metodologias_aplicadas(self):
+        fw = load_framework()
+        assert "metodologias_aplicadas" in fw
+        assert len(fw["metodologias_aplicadas"]) >= 10
+
+    def test_proveniencia_jsonld(self):
+        fw = load_framework()
+        assert "proveniencia_jsonld" in fw
+        assert "exemplo_guia_queer" in fw["proveniencia_jsonld"]
+        assert "0009-0009-1781-4020" in str(fw["proveniencia_jsonld"]["exemplo_guia_queer"])
+
+    def test_plano_operacional(self):
+        fw = load_framework()
+        assert "plano_operacional" in fw
+        assert len(fw["plano_operacional"]) == 5
+
+    def test_riscos_mitigacoes(self):
+        fw = load_framework()
+        assert "riscos_mitigacoes" in fw
+        assert "socioculturais" in fw["riscos_mitigacoes"]
+        assert "legais" in fw["riscos_mitigacoes"]
+
+    def test_metricas_sucesso(self):
+        fw = load_framework()
+        assert "metricas_sucesso" in fw
+        assert len(fw["metricas_sucesso"]) >= 4
+
+    def test_documento_integracao(self):
+        fw = load_framework()
+        assert "documento_integracao_operacional" in fw
+        assert "0009-0007-6892-6570" in str(fw["documento_integracao_operacional"])
+
+    def test_bourriaud_node(self):
+        engine = MultimodalRelationalEngine()
+        nb = engine.neighbors("bourriaud")
+        assert len(nb) >= 1
+
+    def test_oiticica_node(self):
+        engine = MultimodalRelationalEngine()
+        nb = engine.neighbors("oiticica")
+        assert len(nb) >= 1
+
+    def test_data_sarcophagus_node(self):
+        engine = MultimodalRelationalEngine()
+        ds = engine._nodes.get("data_sarcophagus")
+        assert ds is not None
+        edges = [e for e in engine._edges if "data_sarcophagus" in e.get("source", "") or "data_sarcophagus" in e.get("target", "")]
+        assert len(edges) >= 1
+
+    def test_lorenz_node(self):
+        engine = MultimodalRelationalEngine()
+        nb = engine.neighbors("lorenz_caos")
+        assert len(nb) >= 1
+
+    def test_final_graph_size(self):
+        engine = MultimodalRelationalEngine()
+        assert engine.node_count >= 100
+        assert engine.edge_count >= 80

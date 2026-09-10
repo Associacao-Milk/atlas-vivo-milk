@@ -839,6 +839,121 @@
           "brincar como resistência"
         ],
         "aplicacao_milk": "as mecânicas curatoriais recuperam brincadeiras ancestrais como forma de participação"
+      },
+      "bourriaud": {
+        "tipo": "critico",
+        "campo": "estética relacional",
+        "conceitos": [
+          "estética relacional",
+          "inter subjectiva",
+          "micro-utopias"
+        ],
+        "obra": "Estética Relacional (1998)",
+        "aplicacao_milk": "o foco reside na interacção sensorial colectivizada — corpos, objectos, espaços"
+      },
+      "oiticica": {
+        "tipo": "artista",
+        "campo": "arte brasileira",
+        "conceitos": [
+          "parangolés",
+          "penetráveis",
+          "anti-cinema",
+          "corpo como obra"
+        ],
+        "aplicacao_milk": "instalações estimulam cognição sensorial e afeto político — a busca por novas formas de aprendizagem"
+      },
+      "circo_contemporaneo": {
+        "tipo": "arte_performativa",
+        "campo": "circo",
+        "conceitos": [
+          "narrativa corporal",
+          "risco físico",
+          "poesia do movimento"
+        ],
+        "aplicacao_milk": "abordagens performativas contemporâneas como modelo de interacção no Atlas"
+      },
+      "data_sarcophagus": {
+        "tipo": "arquitectura_dados",
+        "campo": "engenharia de dados",
+        "conceitos": [
+          "túmulo de dados",
+          "Google Sheets preservado",
+          "histórico reservado",
+          "backup máximo"
+        ],
+        "aplicacao_milk": "núcleo soberano que cria banco de dados preservado em planilhas, reservando histórico e reforçando backup e versionamento máximo"
+      },
+      "neurons_espelho": {
+        "tipo": "neurociencia",
+        "campo": "neurobiologia",
+        "conceitos": [
+          "contágio emocional",
+          "empatia neuronal",
+          "simulação corporal"
+        ],
+        "aplicacao_milk": "emoções fortes são contagiosas via neurónios-espelho — justifica o uso de arte sensorial para engajamento social"
+      },
+      "pnl": {
+        "tipo": "metodologia",
+        "campo": "linguística",
+        "conceitos": [
+          "âncora emocional",
+          "padrões de discurso",
+          "modelos de persuasão",
+          "análise NLU"
+        ],
+        "aplicacao_milk": "análise de discurso automatizada para ajustar tom de mensagens; âncora emocional em conteúdo"
+      },
+      "neurossociologia": {
+        "tipo": "metodologia",
+        "campo": "sociologia cognitiva",
+        "conceitos": [
+          "contágio emocional social",
+          "design de afectos",
+          "resposta a ambiências"
+        ],
+        "aplicacao_milk": "medição de resposta de público a diferentes ambiências sonoras; monitorar ondas cerebrais ou batimentos em workshops"
+      },
+      "lorenz_caos": {
+        "tipo": "cientifico",
+        "campo": "sistemas dinâmicos",
+        "conceitos": [
+          "efeito borboleta",
+          "sensibilidade às condições iniciais",
+          "algoritmos estocásticos"
+        ],
+        "obra": "Deterministic Nonperiodic Flow (1963)",
+        "aplicacao_milk": "variações mínimas nos dados de entrada causam diferentes narrativas emergentes — resiliência à incerteza"
+      },
+      "escuta_acousmatica": {
+        "tipo": "tecnica",
+        "campo": "música concreta",
+        "conceitos": [
+          "som sem fonte visível",
+          "redução fenomenológica sonora",
+          "objecto sonoro puro"
+        ],
+        "aplicacao_milk": "sons de ambiente removem rótulos visuais — auditivos puro; anotação de fontes sonoras descontextualizadas"
+      },
+      "fenomenologia_temporal": {
+        "tipo": "metodologia",
+        "campo": "filosofia",
+        "conceitos": [
+          "retenção",
+          "protensão",
+          "fluxo temporal da experiência"
+        ],
+        "aplicacao_milk": "interface mostra retenção (memória passada) e protensão (esperanças futuras); linha do tempo com acontecimentos locais e projeções de planos territoriais"
+      },
+      "analise_discursiva": {
+        "tipo": "tecnica",
+        "campo": "análise de texto",
+        "conceitos": [
+          "mineração de texto em atas",
+          "palavras-chave de dominação",
+          "redes documentais de poder"
+        ],
+        "aplicacao_milk": "software de mineração de texto em atas antigas; mapeamento de palavras-chave de dominação; visualização de redes documentais"
       }
     },
     "arestas_tipadas": [
@@ -1153,6 +1268,66 @@
         "tipo": "afinidade_estrutural",
         "destino": "evidence_fabric",
         "evidencia": "registro sem escrita — Quipu como proto-EvidenceBundle"
+      },
+      {
+        "origem": "bourriaud",
+        "tipo": "afinidade_estrutural",
+        "destino": "boal",
+        "evidencia": "ambos trabalham a inter-relação como obra — Bourriaud teoriza, Boal pratica"
+      },
+      {
+        "origem": "oiticica",
+        "tipo": "afinidade_estrutural",
+        "destino": "boal",
+        "evidencia": "ambos estimulam cognição sensorial e afeto político através da arte participativa"
+      },
+      {
+        "origem": "neurons_espelho",
+        "tipo": "afinidade_estrutural",
+        "destino": "schafer",
+        "evidencia": "contágio emocional via neurónios-espelho justifica paisagem sonora para engajamento"
+      },
+      {
+        "origem": "pnl",
+        "tipo": "afinidade_estrutural",
+        "destino": "neurossociologia",
+        "evidencia": "ambos analisam padrões de discurso e contágio emocional"
+      },
+      {
+        "origem": "lorenz_caos",
+        "tipo": "afinidade_estrutural",
+        "destino": "teoria_caos",
+        "evidencia": "ambos trabalham sistemas dinâmicos sensíveis — Lorenz é o fundador formal"
+      },
+      {
+        "origem": "escuta_acousmatica",
+        "tipo": "influência_documentada",
+        "destino": "schaeffer",
+        "evidencia": "escuta acousmática é a técnica de Schaeffer — som sem fonte visível"
+      },
+      {
+        "origem": "fenomenologia_temporal",
+        "tipo": "influência_documentada",
+        "destino": "husserl",
+        "evidencia": "retenção e protensão são conceitos husserlianos aplicados à interface temporal"
+      },
+      {
+        "origem": "analise_discursiva",
+        "tipo": "afinidade_estrutural",
+        "destino": "foucault",
+        "evidencia": "mineração de atas e palavras-chave de dominação — Foucault via dispositivo de poder"
+      },
+      {
+        "origem": "data_sarcophagus",
+        "tipo": "afinidade_estrutural",
+        "destino": "evidence_fabric",
+        "evidencia": "ambos preservam evidência — sarcófago preserva dados, Evidence Fabric preserva provas"
+      },
+      {
+        "origem": "circo_contemporaneo",
+        "tipo": "afinidade_estrutural",
+        "destino": "teatro_fórum",
+        "evidencia": "ambos são formas performativas que usam o corpo como medium"
       }
     ]
   },
@@ -1648,6 +1823,30 @@
         "obra": "Escrita em pedra",
         "ano": -400,
         "tema": "linhas como letras, cifra na pedra"
+      },
+      {
+        "nome": "Bourriaud, Nicolas",
+        "obra": "Estética Relacional",
+        "ano": 1998,
+        "tema": "inter-subjectividade, micro-utopias, foco na interacção como obra"
+      },
+      {
+        "nome": "Oiticica, Hélio",
+        "obra": "Parangolés e Penetráveis",
+        "ano": 1964,
+        "tema": "corpo como obra, anti-cinema, cognição sensorial e afeto político"
+      },
+      {
+        "nome": "Lorenz, Edward",
+        "obra": "Deterministic Nonperiodic Flow",
+        "ano": 1963,
+        "tema": "efeito borboleta, sistemas dinâmicos sensíveis às condições iniciais"
+      },
+      {
+        "nome": "Neurónios-espelho (Rizzolatti)",
+        "obra": "Discovery of mirror neurons",
+        "ano": 1992,
+        "tema": "contágio emocional, empatia neuronal, simulação corporal"
       }
     ],
     "politicas_verificadas": [
@@ -2604,5 +2803,252 @@
       "Opções de publicação (integral/trechos/não publicar)",
       "Confirmações personalizadas por mecânica"
     ]
+  },
+  "metodologias_aplicadas": [
+    {
+      "autor": "R. Murray Schafer",
+      "metodologia": "Paisagem sonora — gravação de campo, composição de som ambiente",
+      "passos": [
+        "gravações binaurais in loco",
+        "mixagem de sons naturais/urbanos por localidade",
+        "análise de espectro para identificar assinatura sonora de áreas"
+      ],
+      "modalidade": "sound"
+    },
+    {
+      "autor": "Augusto Boal",
+      "metodologia": "Teatro do Oprimido (Interatividade) — exercícios de Forum Theater",
+      "passos": [
+        "mediação de dinâmicas participativas",
+        "scripts interativos no Atlas para memórias",
+        "jogo teatral em eventos do Ópera Néon para encenar conflitos sociais territoriais"
+      ],
+      "modalidade": "body"
+    },
+    {
+      "autor": "Beckett/Ionesco",
+      "metodologia": "Teatro do Absurdo — cenografia não-linear, quebra de expectativa",
+      "passos": [
+        "estações imersivas sem roteiro fixo",
+        "sala de Vazio de Ressonância onde o público gera som e narrativa aleatória",
+        "narrativa aleatória (plot twist) em storytelling digital"
+      ],
+      "modalidade": "text+sound"
+    },
+    {
+      "autor": "Foucault",
+      "metodologia": "Arqueologia do poder — análise discursiva de arquivos históricos",
+      "passos": [
+        "software de mineração de texto em atas antigas",
+        "mapeamento de palavras-chave de dominação",
+        "visualização de redes documentais de poder"
+      ],
+      "modalidade": "text"
+    },
+    {
+      "autor": "Pierre Schaeffer",
+      "metodologia": "Escuta acousmática — abstração sonora",
+      "passos": [
+        "sons de ambiente removem rótulos visuais",
+        "anotação de fontes sonoras descontextualizadas",
+        "Estudo de Paisagens Locais"
+      ],
+      "modalidade": "sound"
+    },
+    {
+      "autor": "Husserl",
+      "metodologia": "Fenomenologia temporal — tratamento do fluxo temporal da experiência",
+      "passos": [
+        "interface mostra retenção (memória passada) e protensão (esperanças futuras)",
+        "linha do tempo com acontecimentos locais",
+        "projeção de protensões de planos territoriais"
+      ],
+      "modalidade": "text+image"
+    },
+    {
+      "autor": "Neurociência/Neurossociologia",
+      "metodologia": "Contágio emocional — design de afectos (neurónios-espelho)",
+      "passos": [
+        "áudio-imersões para induzir empatia",
+        "medição de resposta de público a ambiências sonoras",
+        "monitorar ondas cerebrais ou batimentos em workshops"
+      ],
+      "modalidade": "sound+body"
+    },
+    {
+      "autor": "PNL",
+      "metodologia": "Modelos de persuasão e linguagem — análise de padrões de discurso",
+      "passos": [
+        "análise de discurso automatizada (NLU) para ajustar tom",
+        "técnicas de âncora emocional em conteúdo",
+        "reforço de mensagem institucional em linguagem acessível"
+      ],
+      "modalidade": "text"
+    },
+    {
+      "autor": "Wabi-Sabi",
+      "metodologia": "Estilo visual — simplicidade imperfeita, branco-noir",
+      "passos": [
+        "paleta de cores terrosas, degradês naturais",
+        "texturas rústicas em UI",
+        "gráficos propositadamente assimétricos para valorizar a beleza do imperfeito"
+      ],
+      "modalidade": "image"
+    },
+    {
+      "autor": "Teoria do Caos (Lorenz)",
+      "metodologia": "Sistemas dinâmicos sensíveis — algoritmos adaptativos",
+      "passos": [
+        "algoritmos estocásticos para evolução do grafo de memórias",
+        "variações mínimas causam narrativas emergentes diferentes",
+        "resiliência à incerteza"
+      ],
+      "modalidade": "text+code"
+    }
+  ],
+  "proveniencia_jsonld": {
+    "descricao": "Todo conteúdo do Atlas é representado com metadados estruturados (JSON-LD/PROV-O/SHACL) que asseguram autoria e proveniência",
+    "exemplo_guia_queer": {
+      "@context": {
+        "prov": "http://www.w3.org/ns/prov#",
+        "foaf": "http://xmlns.com/foaf/0.1/",
+        "ia": "https://milki.org/ontology/"
+      },
+      "@id": "https://atlas.vivo/culturalitem/guia-queer",
+      "@type": "prov:Entity",
+      "prov:wasAttributedTo": {
+        "@type": "foaf:Person",
+        "foaf:name": "Nuno Filipe Fernandes Vieira Cabral e Araújo",
+        "foaf:nick": "Nuno A",
+        "ia:ORCID": "0009-0009-1781-4020"
+      },
+      "prov:wasGeneratedBy": {
+        "@id": "https://atlas.vivo/activity/guia-queer-creation",
+        "@type": "prov:Activity",
+        "prov:startedAtTime": "2026-08-15T10:00:00Z",
+        "prov:used": "https://atlas.vivo/schema/guia-queer-template"
+      }
+    },
+    "exemplo_eduardo_mauer": {
+      "@context": {
+        "foaf": "http://xmlns.com/foaf/0.1/",
+        "prov": "http://www.w3.org/ns/prov#",
+        "schema": "https://schema.org/"
+      },
+      "@id": "http://milki.org/person/eduardo-mauer",
+      "@type": "foaf:Person",
+      "foaf:name": "Eduardo Maurício Vieira Cabral e Araújo",
+      "foaf:nick": "Eduardo Mauer",
+      "schema:identifier": "0009-0007-6892-6570",
+      "prov:actedOnBehalfOf": "http://milki.org/organization/associacao-milk"
+    },
+    "shacl_shape": "Shape para foaf:Person que exige foaf:name e schema:identifier (ORCID) obrigatórios. Genealogia e autoria rastreáveis e validáveis computacionalmente."
+  },
+  "plano_operacional": [
+    {
+      "fase": 1,
+      "nome": "Análise e Projecto",
+      "periodo": "Mês 1-2",
+      "milestone": "Finalizar especificações do Atlas",
+      "riscos": [
+        "Falta de especificação clara",
+        "Sobreposição com projectos existentes"
+      ],
+      "mitigacoes": [
+        "Workshops com stakeholders",
+        "Auditoria de projectos paralelos"
+      ],
+      "entregavel": "Documento de Especificação Técnica"
+    },
+    {
+      "fase": 2,
+      "nome": "Desenvolvimento",
+      "periodo": "Mês 3-6",
+      "milestone": "Implementar motor IA e interfaces WebApp",
+      "riscos": [
+        "Dificuldade de integração IA com código legado",
+        "Atrasos em equipas externas"
+      ],
+      "mitigacoes": [
+        "Containers/Docker para isolamento",
+        "Planeamento ágil"
+      ],
+      "entregavel": "APIs REST operacionais; protótipos funcionais; scripts de ingestão; dashboards"
+    },
+    {
+      "fase": 3,
+      "nome": "Testes e Validação",
+      "periodo": "Mês 7-8",
+      "milestone": "Concluir testes de recuperação, usabilidade e segurança",
+      "riscos": [
+        "Vulnerabilidades de segurança",
+        "Rejeição do UX"
+      ],
+      "mitigacoes": [
+        "Pentests externos",
+        "Sessões de feedback com utilizadores-teste"
+      ],
+      "entregavel": "Relatórios de testes; checklist conformidade ISO/AS9100"
+    },
+    {
+      "fase": 4,
+      "nome": "Deploy e Lançamento",
+      "periodo": "Mês 9",
+      "milestone": "Implantar em produção e inauguração pública",
+      "riscos": [
+        "Quebras em produção",
+        "Resistência institucional/legislativa"
+      ],
+      "mitigacoes": [
+        "Rollout progressivo",
+        "Apoio jurídico e diplomático (NDIF)"
+      ],
+      "entregavel": "Versão estável no domínio oficial; evento de lançamento; documentação"
+    },
+    {
+      "fase": 5,
+      "nome": "Operação e Manutenção",
+      "periodo": "Contínuo",
+      "milestone": "Manutenção contínua e actualização de conteúdo",
+      "riscos": [
+        "Obsolescência tecnológica",
+        "Falta de engajamento prolongado"
+      ],
+      "mitigacoes": [
+        "Revisões semestrais e pipeline de actualização",
+        "Programa de residências artísticas"
+      ],
+      "entregavel": "Logs mensais; actualizações de base de dados e modelos; reportagens públicas"
+    }
+  ],
+  "riscos_mitigacoes": {
+    "socioculturais": {
+      "risco": "Discurso do Atlas visto como provocativo ou radical",
+      "mitigacao": "curadoria cuidadosa (LCAFC/DCAN) e diálogo contínuo com comunidades"
+    },
+    "tecnnicos": {
+      "risco": "Modelos IA evolutivos — viés ou interpretação incorreta de memórias",
+      "mitigacao": "auditoria de qualidade semestral dos resultados IA e ajuste de datasets"
+    },
+    "legais": {
+      "risco": "Proteção de direitos autorais e privacidade",
+      "mitigacao": "licenças Creative Commons adequadas; revisão jurídica (LCAFC garante conformidade legal)"
+    }
+  },
+  "metricas_sucesso": [
+    "cumprimento dos testes de integridade nos ambientes de contorno (production gate PASS)",
+    "avaliações de satisfação do público (questionários qualitativos após visitas ao Ópera Néon)",
+    "inclusão contínua de novos fragmentos documentais no corpus",
+    "reportagens públicas e relatórios de impacto social"
+  ],
+  "documento_integracao_operacional": {
+    "titulo": "Integração Técnica-Operacional do Atlas Vivo MILK",
+    "descricao": "Integração de todos os documentos (falARTE, fragmentos, curadoria Público Territorial) sem omissões, enriquecidos com metodologias e referências académicas multimodais. Voz original poético-curatorial preservada e expandida.",
+    "tom": "poético-curatorial em português de Portugal",
+    "autores_canonicos": {
+      "eduardo_mauer": "Eduardo Maurício Vieira Cabral e Araújo (ORCID 0009-0007-6892-6570) — idealizador e autor conceptual",
+      "nuno_a": "Nuno Filipe Fernandes Vieira Cabral e Araújo (ORCID 0009-0009-1781-4020) — Guia Queer, fotografia, código da página"
+    },
+    "conclusao": "Atlas Vivo MILK como infraestrutura soberana de complexidade cultural — sistema auto-regulado de conhecimento que integra teoria crítica, poética curatorial e tecnologia avançada. Não apenas documenta, mas atua sobre o território cultural."
   }
 }

@@ -1,0 +1,2877 @@
+{
+  "schema": "ia_milk.knowledge_ingestion_proof.v1",
+  "pipeline_result": {
+    "pipeline_version": "ingest-v1",
+    "timestamp": "2026-09-10T06:09:34.447983+00:00",
+    "documents_before": 10538,
+    "staged": 49,
+    "validated": 49,
+    "classified": 49,
+    "deduped_new": 49,
+    "deduped_duplicates": 0,
+    "enriched": 49,
+    "accepted": 38,
+    "review_required": 8,
+    "quarantined": 3,
+    "rejected": 0,
+    "chunks_added": 0,
+    "documents_after": 10576
+  },
+  "accepted_items": [
+    {
+      "document_id": "610575203d5226a6eac35a7546c17d217e55ed419cf5c750da93e2e59c4a4ac6",
+      "source": "nextcloud:Atlas Vivo MILK",
+      "source_id": "7d98113146b0a32952dd_EXECUTAR_ATLAS_CORPUS_REAL_WEBAPP.txt",
+      "source_uri": "C:\\Users\\Utilizador\\Nextcloud\\Atlas Vivo MILK\\7d98113146b0a32952dd_EXECUTAR_ATLAS_CORPUS_REAL_WEBAPP.txt",
+      "content_hash": "0d2ab6e1df4799c8d806db3666ff516a2a8b4c37a8065e038011e00e312a2e0b",
+      "original_name": "7d98113146b0a32952dd_EXECUTAR_ATLAS_CORPUS_REAL_WEBAPP.txt",
+      "size": 141,
+      "mtime": "2026-08-02T08:02:21+00:00",
+      "ingested_at": "2026-09-10T06:09:34.948008+00:00",
+      "mime_type": "text/plain",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 0.065,
+      "semantic_tags": [
+        "technology"
+      ],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "@echo off\r\nsetlocal\r\ncd /d \"%~dp0\"\r\npowershell -NoProfile -ExecutionPolicy Bypass -File \"%~dp0EXECUTAR_ATLAS_CORPUS_REAL_WEBAPP"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [
+            "technology"
+          ],
+          "territory": ""
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\610575203d5226a6eac35a7546c17d217e55ed419cf5c750da93e2e59c4a4ac6.json",
+          "chunks": 1
+        }
+      ]
+    },
+    {
+      "document_id": "7345731c1b54ef980e7c67043bf2e574af23eb9d7fcede6480953350f090fc6b",
+      "source": "nextcloud:Atlas Vivo MILK",
+      "source_id": "a18bbfe1144db13ffc82_LEIA-ME.txt",
+      "source_uri": "C:\\Users\\Utilizador\\Nextcloud\\Atlas Vivo MILK\\a18bbfe1144db13ffc82_LEIA-ME.txt",
+      "content_hash": "527391c40526488b1dcdbd47cc8c5ddb958e1ccd4400256efc92f4be182e98fc",
+      "original_name": "a18bbfe1144db13ffc82_LEIA-ME.txt",
+      "size": 934,
+      "mtime": "2026-08-02T08:02:22+00:00",
+      "ingested_at": "2026-09-10T06:09:34.948152+00:00",
+      "mime_type": "text/plain",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 0.545,
+      "semantic_tags": [
+        "technology",
+        "governance"
+      ],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "LEIA-ME — Atlas Corpus Real Web App\r\n\r\nUSO CORRETO\r\n\r\n1",
+        "Extraia todos estes ficheiros directamente dentro da pasta:\r\n   G:\\O meu disco\\ARQUIVO__ATLAS\r\n\r\n2",
+        "Clique duas vezes em:\r\n   EXECUTAR_ATLAS_CORPUS_REAL_WEBAPP"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [
+            "technology",
+            "governance"
+          ],
+          "territory": ""
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\7345731c1b54ef980e7c67043bf2e574af23eb9d7fcede6480953350f090fc6b.json",
+          "chunks": 2
+        }
+      ]
+    },
+    {
+      "document_id": "d345d8aecb6390780660fc6f9cbc6a828840d0ea27a8afa4fda1f59577eb7236",
+      "source": "nextcloud:Atlas Vivo MILK",
+      "source_id": "d65c38857ae607e2f4ae_ABRIR_WEBAPP_LOCAL.txt",
+      "source_uri": "C:\\Users\\Utilizador\\Nextcloud\\Atlas Vivo MILK\\d65c38857ae607e2f4ae_ABRIR_WEBAPP_LOCAL.txt",
+      "content_hash": "44ff15e68bdac79b3389c165c275ae489b2c81b717e7830bfd84aafaca075d4e",
+      "original_name": "d65c38857ae607e2f4ae_ABRIR_WEBAPP_LOCAL.txt",
+      "size": 126,
+      "mtime": "2026-08-02T08:04:38+00:00",
+      "ingested_at": "2026-09-10T06:09:34.948467+00:00",
+      "mime_type": "text/plain",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 0.065,
+      "semantic_tags": [
+        "technology"
+      ],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "@echo off\r\nsetlocal\r\ncd /d \"%~dp0\"\r\npowershell -NoProfile -ExecutionPolicy Bypass -File \"%~dp0ABRIR_WEBAPP_LOCAL"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [
+            "technology"
+          ],
+          "territory": ""
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\d345d8aecb6390780660fc6f9cbc6a828840d0ea27a8afa4fda1f59577eb7236.json",
+          "chunks": 1
+        }
+      ]
+    },
+    {
+      "document_id": "5efc52d1f3a63960ff7b75dc8fe6227ceef7627861dfed4bb3d7b06b8c559733",
+      "source": "nextcloud:Atlas Vivo MILK",
+      "source_id": "document.json",
+      "source_uri": "C:\\Users\\Utilizador\\Nextcloud\\Atlas Vivo MILK\\document.json",
+      "content_hash": "405d5d19cadf9033cd58ef0d389ca0f6b48231280ec64ff1789a6f32889a665a",
+      "original_name": "document.json",
+      "size": 56,
+      "mtime": "2026-08-02T06:14:53+00:00",
+      "ingested_at": "2026-09-10T06:09:34.948588+00:00",
+      "mime_type": "application/json",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 0.005,
+      "semantic_tags": [
+        "technology"
+      ],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "{\"organizations\":\"https://api",
+        "org/v2/organizations\"}"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [
+            "technology"
+          ],
+          "territory": ""
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\5efc52d1f3a63960ff7b75dc8fe6227ceef7627861dfed4bb3d7b06b8c559733.json",
+          "chunks": 1
+        }
+      ]
+    },
+    {
+      "document_id": "810f18541a5075ab0e3389d2d8edb6367785a0f61d244b68aa55363ab24c8110",
+      "source": "nextcloud:Atlas Vivo MILK",
+      "source_id": "fc3e246a2d6274c699b5_ABRIR_WEBAPP_LOCAL.txt",
+      "source_uri": "C:\\Users\\Utilizador\\Nextcloud\\Atlas Vivo MILK\\fc3e246a2d6274c699b5_ABRIR_WEBAPP_LOCAL.txt",
+      "content_hash": "5c27842f351665c95f1775225e5e301bc27f62d0a60825b27f3324406787d47a",
+      "original_name": "fc3e246a2d6274c699b5_ABRIR_WEBAPP_LOCAL.txt",
+      "size": 455,
+      "mtime": "2026-08-02T08:05:17+00:00",
+      "ingested_at": "2026-09-10T06:09:34.948793+00:00",
+      "mime_type": "text/plain",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 0.2,
+      "semantic_tags": [
+        "technology"
+      ],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "﻿$ScriptDir = Split-Path -Parent $MyInvocation",
+        "Path\r\n$Web = Join-Path $ScriptDir \"ATLAS_CORPUS_REAL_WEBAPP_FINAL\\webapp\"\r\n\r\nif (!(Test-Path -LiteralPath $Web)) {\r\n  Write-Host \"ERRO: webapp ainda não existe",
+        "Execute primeiro EXECUTAR_ATLAS_CORPUS_REAL_WEBAPP"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [
+            "technology"
+          ],
+          "territory": ""
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\810f18541a5075ab0e3389d2d8edb6367785a0f61d244b68aa55363ab24c8110.json",
+          "chunks": 1
+        }
+      ]
+    },
+    {
+      "document_id": "029fa9fef5cf42a2d710f260926374df9a2bd83a5ad35f7b8a33c255198fb2d5",
+      "source": "onedrive",
+      "source_id": "AGENTE_MISTRAL.txt",
+      "source_uri": "C:\\Users\\Utilizador\\OneDrive - Associacao MILK\\AGENTE_MISTRAL.txt",
+      "content_hash": "4760be7d6c83f6209b2b4208f2acca1947926785b66f2be63eb4fb4866486eea",
+      "original_name": "AGENTE_MISTRAL.txt",
+      "size": 140,
+      "mtime": "2026-08-28T01:51:16+00:00",
+      "ingested_at": "2026-09-10T06:09:34.948942+00:00",
+      "mime_type": "text/plain",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 0.02,
+      "semantic_tags": [],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "2wxg0IGJLKMVo5JtwiNOYOdJ1ueNjZsv\r\n\r\nQc5C30MweWz54wld5rOUX9YfKUjY4zYo\r\n\r\n1t3kLJ46bjTX7pn7yn3mOpfcJNZ8mpGu\r\n\r\ntxzHqB5gdoy4PaCFGCYF2krQkhhlGHHP"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [],
+          "territory": ""
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\029fa9fef5cf42a2d710f260926374df9a2bd83a5ad35f7b8a33c255198fb2d5.json",
+          "chunks": 1
+        }
+      ]
+    },
+    {
+      "document_id": "28a468c7a522a7e747d69e69a1638e0f3506ea8b405847b3e788ed2e81fdf63f",
+      "source": "localfs:repo",
+      "source_id": "CODE_OF_CONDUCT.md",
+      "source_uri": "CODE_OF_CONDUCT.md",
+      "content_hash": "4d06448a678c4733794de96c144434408770801e3db05e379f74e90e2413fd53",
+      "original_name": "CODE_OF_CONDUCT.md",
+      "size": 3445,
+      "mtime": "2026-09-08T17:41:06.928703+00:00",
+      "ingested_at": "2026-09-10T06:09:34.949089+00:00",
+      "mime_type": "text/markdown",
+      "language": "pt",
+      "licence": " proprietary",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 1.0,
+      "semantic_tags": [
+        "governance"
+      ],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "# Code of Conduct\r\n\r\n## Our Pledge\r\n\r\nIn the interest of fostering an open and welcoming environment, we as contributors and maintainers pledge to making participation in our project and our community a harassment-free experience for everyone, regardless of age, body size, disability, ethnicity, sex characteristics, gender identity and expression, level of experience, education, socio-economic status, nationality, personal appearance, race, religion, or sexual identity and orientation",
+        "---\r\n\r\n## Our Standards\r\n\r\nExamples of behavior that contributes to creating a positive environment include:\r\n\r\n- Using welcoming and inclusive language\r\n- Being respectful of differing viewpoints and experiences\r\n- Gracefully accepting constructive criticism\r\n- Focusing on what is best for the community\r\n- Showing empathy towards other community members\r\n\r\nExamples of unacceptable behavior by participants include:\r\n\r\n- The use of sexualized language or imagery and unwelcome sexual attention or advances\r\n- Trolling, insulting/derogatory comments, and personal or political attacks\r\n- Public or private harassment\r\n- Publishing others' private information, such as a physical or electronic address, without explicit permission\r\n- Other conduct which could reasonably be considered inappropriate in a professional setting\r\n\r\n---\r\n\r\n## Our Responsibilities\r\n\r\nProject maintainers are responsible for clarifying the standards of acceptable behavior and are expected to take appropriate and fair corrective action in response to any instances of unacceptable behavior",
+        "Project maintainers have the right and responsibility to remove, edit, or reject comments, commits, code, wiki edits, issues, and other contributions that are not aligned to this Code of Conduct, or to ban temporarily or permanently any contributor for other behaviors that they deem inappropriate, threatening, offensive, or harmful"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": " proprietary"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [
+            "governance"
+          ],
+          "territory": ""
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\28a468c7a522a7e747d69e69a1638e0f3506ea8b405847b3e788ed2e81fdf63f.json",
+          "chunks": 7
+        }
+      ]
+    },
+    {
+      "document_id": "ed8f5d8529a2401b0fa0a5893ff27302875a74d083c687638fbf38e995aab432",
+      "source": "localfs:repo",
+      "source_id": "CONTRIBUTING.md",
+      "source_uri": "CONTRIBUTING.md",
+      "content_hash": "8968dd01ff956df3e15ec7854d67da5328c788c3952b57cb3dbc2be1958745de",
+      "original_name": "CONTRIBUTING.md",
+      "size": 4296,
+      "mtime": "2026-09-08T17:41:06.928703+00:00",
+      "ingested_at": "2026-09-10T06:09:34.949223+00:00",
+      "mime_type": "text/markdown",
+      "language": "pt",
+      "licence": "EUPL-1.2",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 1.0,
+      "semantic_tags": [
+        "culture"
+      ],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "# Contributing to Atlas Vivo - Datasets\r\n\r\nThank you for your interest in contributing to the Atlas Vivo project",
+        "Your contributions help preserve Portugal's intangible cultural heritage and support open data initiatives",
+        "---\r\n\r\n## Code of Conduct\r\n\r\nBy participating in this project, you agree to abide by our [Code of Conduct](CODE_OF_CONDUCT"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "EUPL-1.2"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [
+            "culture"
+          ],
+          "territory": ""
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\ed8f5d8529a2401b0fa0a5893ff27302875a74d083c687638fbf38e995aab432.json",
+          "chunks": 9
+        }
+      ]
+    },
+    {
+      "document_id": "7be123568e30e3618acbcbc9bee5238e7297a2d8c1419707e86b7fc527f24f94",
+      "source": "localfs:repo",
+      "source_id": "CONTRIBUTORS.md",
+      "source_uri": "CONTRIBUTORS.md",
+      "content_hash": "abd9cfa5fd6cfac96e788d645483e5de11f22cb2212aaa1023d7139191135596",
+      "original_name": "CONTRIBUTORS.md",
+      "size": 513,
+      "mtime": "2026-09-08T17:41:06.929703+00:00",
+      "ingested_at": "2026-09-10T06:09:34.949357+00:00",
+      "mime_type": "text/markdown",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 0.22,
+      "semantic_tags": [],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "# Contributors\r\n\r\nThis file links contributors to their ORCID identifiers for proper attribution",
+        "## Format\r\n- Name: Full Name\r\n- ORCID: https://orcid",
+        "org/XXXX-XXXX-XXXX-XXXX\r\n- Role: [Researcher/Artist/Developer/Contributor]\r\n- Affiliation: [Organization]\r\n\r\n## Current Contributors\r\n\r\nPlease add your information below:\r\n\r\n---\r\n\r\nExample:\r\n- Name: Associação MILK\r\n- ORCID: [Add ORCID ID]\r\n- Role: Organization\r\n- Affiliation: Associação MILK - Movimento de Intervenções e Linguagens Kulturais e Arte"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [],
+          "territory": ""
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\7be123568e30e3618acbcbc9bee5238e7297a2d8c1419707e86b7fc527f24f94.json",
+          "chunks": 2
+        }
+      ]
+    },
+    {
+      "document_id": "2bc39a5d091cca431f4fc1495e3a67993bec52c7ca1c6b2892a2fb6982fae589",
+      "source": "localfs:repo",
+      "source_id": "README.md",
+      "source_uri": "README.md",
+      "content_hash": "5484831a6e1597869d69bb08e3e48006caeb51cbc7d974a31ef87a6641420476",
+      "original_name": "README.md",
+      "size": 1161,
+      "mtime": "2026-09-10T01:50:16.033183+00:00",
+      "ingested_at": "2026-09-10T06:09:34.949909+00:00",
+      "mime_type": "text/markdown",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 0.45,
+      "semantic_tags": [
+        "culture"
+      ],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "# Atlas Vivo MILK — Corpus Canonico\r\n\r\nSistema de informacao cultural territorial da Associacao MILK",
+        "Curadoria e autoria: **Eduardo Mauricio Vieira Cabral e Araujo** (Eduardo Mauer)\r\n\r\n## Estado do corpus\r\n\r\n- 10",
+        "538 documentos canonicos\r\n- 250"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [
+            "culture"
+          ],
+          "territory": ""
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\2bc39a5d091cca431f4fc1495e3a67993bec52c7ca1c6b2892a2fb6982fae589.json",
+          "chunks": 3
+        }
+      ]
+    },
+    {
+      "document_id": "f4e8d237a32606a5ac658716de3812e9a928088fa8f20ccc446a27c54b78f96d",
+      "source": "localfs:repo",
+      "source_id": "README.md",
+      "source_uri": ".pytest_cache\\README.md",
+      "content_hash": "73fd6fccdd802c419a6b2d983d6c3173b7da97558ac4b589edec2dfe443db9ad",
+      "original_name": "README.md",
+      "size": 302,
+      "mtime": "2026-09-10T01:54:11.884827+00:00",
+      "ingested_at": "2026-09-10T06:09:34.950535+00:00",
+      "mime_type": "text/markdown",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 0.165,
+      "semantic_tags": [],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "# pytest cache directory #\n\nThis directory contains data from the pytest's cache plugin,\nwhich provides the `--lf` and `--ff` options, as well as the `cache` fixture",
+        "**Do not** commit this to version control",
+        "See [the docs](https://docs"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [],
+          "territory": ""
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\f4e8d237a32606a5ac658716de3812e9a928088fa8f20ccc446a27c54b78f96d.json",
+          "chunks": 1
+        }
+      ]
+    },
+    {
+      "document_id": "bbd5c203f5c4c09404d3f1251a51307add7cbc22f3b2ce13b6c54294b875165f",
+      "source": "localfs:repo",
+      "source_id": "sintese_deliberacoes_ciclo_1.md",
+      "source_uri": "biblioteca\\sintese_deliberacoes_ciclo_1.md",
+      "content_hash": "8702d8d0a0f1cbea25d877cdd7fc3d2de6a820a90043bea6b5d236c243715ab3",
+      "original_name": "sintese_deliberacoes_ciclo_1.md",
+      "size": 1220,
+      "mtime": "2026-09-08T19:36:14.163883+00:00",
+      "ingested_at": "2026-09-10T06:09:34.951163+00:00",
+      "mime_type": "text/markdown",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 0.405,
+      "semantic_tags": [
+        "territory",
+        "governance"
+      ],
+      "territory": "lisboa",
+      "municipality": "lisboa",
+      "claims": [
+        "# Sintese de Deliberacoes Publicas — Ciclo 1\r\n\r\nGerado por MILK IA Motor Multiaxial\r\nAutor: Eduardo Mauricio Vieira Cabral e Araujo (Eduardo Mauer)\r\n\r\n## Deliberacoes publicas e leis detetadas\r\n\r\n- **deliberacao**: 17 ocorrencias\r\n- **diario_republica**: 17 ocorrencias\r\n- **decreto_lei**: 13 ocorrencias\r\n- **urbanismo**: 13 ocorrencias\r\n- **junta_freguesia**: 12 ocorrencias\r\n- **lei**: 10 ocorrencias\r\n- **despacho**: 6 ocorrencias\r\n- **plano_director**: 5 ocorrencias\r\n- **planeamento_territorial**: 2 ocorrencias\r\n- **portaria**: 2 ocorrencias\r\n\r\n## Cruzamento deliberacao vs territorio\r\n\r\n### junta_freguesia\r\n- Lisboa > Lisboa: 2\r\n- Porto > Lisboa > Real: 1\r\n- Horta > Almeida > Santa Maria: 1\r\n- Portalegre > Portalegre > Santiago: 1\r\n- Lisboa > Lisboa > Real: 1\r\n### despacho\r\n- Lisboa > Lisboa: 3\r\n- Santa Marta de Penaguião > Fontes: 2\r\n- Lisboa > Maia > Real: 1\r\n### planeamento_territorial\r\n- Santa Marta de Penaguião > Fontes: 2\r\n### deliberacao\r\n- Lisboa > Lisboa: 4\r\n- Amares > Fiscal: 3\r\n- Mora > Mora: 1\r\n- Porto > Lisboa: 1\r\n- Coimbra > Lisboa > Real: 1\r\n### diario_republica\r\n- Lisboa > Lisboa: 4\r\n- <sem territorio>: 3\r\n- Tomar > Meios: 1\r\n- Lisboa > Almeida > Madalena: 1\r\n- Porto > Lisboa: 1"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [
+            "territory",
+            "governance"
+          ],
+          "territory": "lisboa"
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\bbd5c203f5c4c09404d3f1251a51307add7cbc22f3b2ce13b6c54294b875165f.json",
+          "chunks": 3
+        }
+      ]
+    },
+    {
+      "document_id": "82694e28c365fed2bd530625afbc074f76ad28a62f3cc86d89025b92fcad6cb6",
+      "source": "localfs:repo",
+      "source_id": "sintese_deliberacoes_ciclo_2.md",
+      "source_uri": "biblioteca\\sintese_deliberacoes_ciclo_2.md",
+      "content_hash": "413ada7170a9694cfa448df32f9a904fa8758b5af859d78c91d1a037934de373",
+      "original_name": "sintese_deliberacoes_ciclo_2.md",
+      "size": 1220,
+      "mtime": "2026-09-08T19:41:17.072517+00:00",
+      "ingested_at": "2026-09-10T06:09:34.951304+00:00",
+      "mime_type": "text/markdown",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 0.405,
+      "semantic_tags": [
+        "territory",
+        "governance"
+      ],
+      "territory": "lisboa",
+      "municipality": "lisboa",
+      "claims": [
+        "# Sintese de Deliberacoes Publicas — Ciclo 2\r\n\r\nGerado por MILK IA Motor Multiaxial\r\nAutor: Eduardo Mauricio Vieira Cabral e Araujo (Eduardo Mauer)\r\n\r\n## Deliberacoes publicas e leis detetadas\r\n\r\n- **deliberacao**: 17 ocorrencias\r\n- **diario_republica**: 17 ocorrencias\r\n- **decreto_lei**: 13 ocorrencias\r\n- **urbanismo**: 13 ocorrencias\r\n- **junta_freguesia**: 12 ocorrencias\r\n- **lei**: 10 ocorrencias\r\n- **despacho**: 6 ocorrencias\r\n- **plano_director**: 5 ocorrencias\r\n- **planeamento_territorial**: 2 ocorrencias\r\n- **portaria**: 2 ocorrencias\r\n\r\n## Cruzamento deliberacao vs territorio\r\n\r\n### junta_freguesia\r\n- Lisboa > Lisboa: 2\r\n- Porto > Lisboa > Real: 1\r\n- Horta > Almeida > Santa Maria: 1\r\n- Portalegre > Portalegre > Santiago: 1\r\n- Lisboa > Lisboa > Real: 1\r\n### despacho\r\n- Lisboa > Lisboa: 3\r\n- Santa Marta de Penaguião > Fontes: 2\r\n- Lisboa > Maia > Real: 1\r\n### planeamento_territorial\r\n- Santa Marta de Penaguião > Fontes: 2\r\n### deliberacao\r\n- Lisboa > Lisboa: 4\r\n- Amares > Fiscal: 3\r\n- Mora > Mora: 1\r\n- Porto > Lisboa: 1\r\n- Coimbra > Lisboa > Real: 1\r\n### diario_republica\r\n- Lisboa > Lisboa: 4\r\n- <sem territorio>: 3\r\n- Tomar > Meios: 1\r\n- Lisboa > Almeida > Madalena: 1\r\n- Porto > Lisboa: 1"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [
+            "territory",
+            "governance"
+          ],
+          "territory": "lisboa"
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\82694e28c365fed2bd530625afbc074f76ad28a62f3cc86d89025b92fcad6cb6.json",
+          "chunks": 3
+        }
+      ]
+    },
+    {
+      "document_id": "119af27cfab45330b3703503e84408c698e8de684200e05019a1d35e2060f41b",
+      "source": "localfs:repo",
+      "source_id": "sintese_gaps_ciclo_1.md",
+      "source_uri": "biblioteca\\sintese_gaps_ciclo_1.md",
+      "content_hash": "51baefd41af1a5064c842a68967e37c7d430aff682abea87540559b75c3b46e3",
+      "original_name": "sintese_gaps_ciclo_1.md",
+      "size": 981,
+      "mtime": "2026-09-08T19:36:14.148832+00:00",
+      "ingested_at": "2026-09-10T06:09:34.951455+00:00",
+      "mime_type": "text/markdown",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 0.38,
+      "semantic_tags": [
+        "territory"
+      ],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "# Sintese de Gaps e Hipoteses — Ciclo 1\r\n\r\nGerado por MILK IA Motor Multiaxial\r\nAutor: Eduardo Mauricio Vieira Cabral e Araujo (Eduardo Mauer)\r\n\r\n## Gaps identificados\r\n\r\n- **sem_validacao_humana**: 10538 documentos\r\n- **sem_cobertura_territorial**: 8774 documentos\r\n- **sem_interoperabilidade_eif**: 8383 documentos\r\n- **deliberacoes_publicas_por_classificar: 1**: 70 documentos\r\n- **deliberacoes_publicas_por_classificar: 2**: 12 documentos\r\n- **risco_elevado_sem_supervisao**: 4 documentos\r\n- **deliberacoes_publicas_por_classificar: 3**: 1 documentos\r\n\r\n## Hipoteses de solucao\r\n\r\n- **H1: Inferir territorio do caminho original ou contexto**: 8774 documentos\r\n- **H5: Adicionar metadata semantica e vocabulario controlado**: 8383 documentos\r\n- **H0: Documento em conformidade — sem gaps criticos**: 557 documentos\r\n- **H4: Cruzar deliberacoes com CAOP e classificar por freguesia**: 83 documentos\r\n- **H3: Implementar human-in-the-loop antes de publicacao**: 4 documentos"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [
+            "territory"
+          ],
+          "territory": ""
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\119af27cfab45330b3703503e84408c698e8de684200e05019a1d35e2060f41b.json",
+          "chunks": 2
+        }
+      ]
+    },
+    {
+      "document_id": "ce3b7bb3c3e6a25b93e7ac588739c8d0bac947900d861b72bd96389d32beae60",
+      "source": "localfs:repo",
+      "source_id": "sintese_gaps_ciclo_2.md",
+      "source_uri": "biblioteca\\sintese_gaps_ciclo_2.md",
+      "content_hash": "0656fe737b3be3df1b609db2aca1b240527325ffba503b8e2737954a015e6913",
+      "original_name": "sintese_gaps_ciclo_2.md",
+      "size": 981,
+      "mtime": "2026-09-08T19:41:17.072517+00:00",
+      "ingested_at": "2026-09-10T06:09:34.951622+00:00",
+      "mime_type": "text/markdown",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 0.385,
+      "semantic_tags": [
+        "territory"
+      ],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "# Sintese de Gaps e Hipoteses — Ciclo 2\r\n\r\nGerado por MILK IA Motor Multiaxial\r\nAutor: Eduardo Mauricio Vieira Cabral e Araujo (Eduardo Mauer)\r\n\r\n## Gaps identificados\r\n\r\n- **sem_validacao_humana**: 10538 documentos\r\n- **sem_cobertura_territorial**: 8774 documentos\r\n- **sem_interoperabilidade_eif**: 8383 documentos\r\n- **deliberacoes_publicas_por_classificar: 1**: 70 documentos\r\n- **deliberacoes_publicas_por_classificar: 2**: 12 documentos\r\n- **risco_elevado_sem_supervisao**: 4 documentos\r\n- **deliberacoes_publicas_por_classificar: 3**: 1 documentos\r\n\r\n## Hipoteses de solucao\r\n\r\n- **H1: Inferir territorio do caminho original ou contexto**: 8774 documentos\r\n- **H5: Adicionar metadata semantica e vocabulario controlado**: 8383 documentos\r\n- **H0: Documento em conformidade — sem gaps criticos**: 557 documentos\r\n- **H4: Cruzar deliberacoes com CAOP e classificar por freguesia**: 83 documentos\r\n- **H3: Implementar human-in-the-loop antes de publicacao**: 4 documentos"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [
+            "territory"
+          ],
+          "territory": ""
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\ce3b7bb3c3e6a25b93e7ac588739c8d0bac947900d861b72bd96389d32beae60.json",
+          "chunks": 2
+        }
+      ]
+    },
+    {
+      "document_id": "60fed55ab834a66e7f5cc618bcd75cbd882d0bf054a8a46640ae449f5f5c90a8",
+      "source": "localfs:repo",
+      "source_id": "sintese_territorial_ciclo_1.md",
+      "source_uri": "biblioteca\\sintese_territorial_ciclo_1.md",
+      "content_hash": "4d7c9cc9d40b734366b757cec022d0c0ea8a96565ad4d68367b888d28f811ac0",
+      "original_name": "sintese_territorial_ciclo_1.md",
+      "size": 684,
+      "mtime": "2026-09-08T19:36:14.131712+00:00",
+      "ingested_at": "2026-09-10T06:09:34.951757+00:00",
+      "mime_type": "text/markdown",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 0.355,
+      "semantic_tags": [],
+      "territory": "lisboa",
+      "municipality": "lisboa",
+      "claims": [
+        "# Sintese Territorial — Ciclo 1\r\n\r\nGerado por MILK IA Motor Multiaxial\r\nAutor: Eduardo Mauricio Vieira Cabral e Araujo (Eduardo Mauer)\r\n\r\n## Top 10 territorios com mais documentacao\r\n\r\n- **Guarda > Guarda**: 309 documentos\r\n- **Penalva do Castelo > Real**: 118 documentos\r\n- **Lisboa > Lisboa**: 109 documentos\r\n- **Sé**: 75 documentos\r\n- **Real**: 65 documentos\r\n- **Castro Verde > Entradas**: 50 documentos\r\n- **Gavião > Comenda**: 47 documentos\r\n- **Santa Marta de Penaguião > Fontes**: 43 documentos\r\n- **Arouca > Chave**: 37 documentos\r\n- **Cuba**: 34 documentos\r\n\r\n## Gaps territoriais identificados\r\n\r\n- Sem territorio: 8624 documentos\r\n- Com territorio: 1914 documentos"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [],
+          "territory": "lisboa"
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\60fed55ab834a66e7f5cc618bcd75cbd882d0bf054a8a46640ae449f5f5c90a8.json",
+          "chunks": 2
+        }
+      ]
+    },
+    {
+      "document_id": "6390c8dfd53d0fdbc2d25de43d15fc0ddb16c100ea410bef9c3a6431652925bd",
+      "source": "localfs:repo",
+      "source_id": "sintese_territorial_ciclo_2.md",
+      "source_uri": "biblioteca\\sintese_territorial_ciclo_2.md",
+      "content_hash": "1e59d3e766e9176f41ababe05936aba840bdf0add54c11ce0031f7d45d89188e",
+      "original_name": "sintese_territorial_ciclo_2.md",
+      "size": 684,
+      "mtime": "2026-09-08T19:41:17.036923+00:00",
+      "ingested_at": "2026-09-10T06:09:34.951891+00:00",
+      "mime_type": "text/markdown",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 0.355,
+      "semantic_tags": [],
+      "territory": "lisboa",
+      "municipality": "lisboa",
+      "claims": [
+        "# Sintese Territorial — Ciclo 2\r\n\r\nGerado por MILK IA Motor Multiaxial\r\nAutor: Eduardo Mauricio Vieira Cabral e Araujo (Eduardo Mauer)\r\n\r\n## Top 10 territorios com mais documentacao\r\n\r\n- **Guarda > Guarda**: 309 documentos\r\n- **Penalva do Castelo > Real**: 118 documentos\r\n- **Lisboa > Lisboa**: 109 documentos\r\n- **Sé**: 75 documentos\r\n- **Real**: 65 documentos\r\n- **Castro Verde > Entradas**: 50 documentos\r\n- **Gavião > Comenda**: 47 documentos\r\n- **Santa Marta de Penaguião > Fontes**: 43 documentos\r\n- **Arouca > Chave**: 37 documentos\r\n- **Cuba**: 34 documentos\r\n\r\n## Gaps territoriais identificados\r\n\r\n- Sem territorio: 8624 documentos\r\n- Com territorio: 1914 documentos"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [],
+          "territory": "lisboa"
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\6390c8dfd53d0fdbc2d25de43d15fc0ddb16c100ea410bef9c3a6431652925bd.json",
+          "chunks": 2
+        }
+      ]
+    },
+    {
+      "document_id": "08225414fb796e792cc26bd5387cbb16a3e216e801ee733f001c382fc9022cf1",
+      "source": "localfs:repo",
+      "source_id": "MIGRATION_GOVERNANCE_2026-08-28.md",
+      "source_uri": "docs\\MIGRATION_GOVERNANCE_2026-08-28.md",
+      "content_hash": "38a8cec1552816ab02fae0b9e5c8589125d18890c5fcaa3f90e046020c2dc5a2",
+      "original_name": "MIGRATION_GOVERNANCE_2026-08-28.md",
+      "size": 4208,
+      "mtime": "2026-09-08T17:41:07.005955+00:00",
+      "ingested_at": "2026-09-10T06:09:34.952343+00:00",
+      "mime_type": "text/markdown",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 1.0,
+      "semantic_tags": [
+        "culture",
+        "technology",
+        "governance"
+      ],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "# Governação de migração — Atlas Vivo MILK\r\n\r\nData: 2026-08-28  \r\nEstado: em saneamento, sem declaração de produção, DOI público ou arquivo Software Heritage concluído",
+        "## Objectivo\r\n\r\nEste documento separa a vitrine pública da Associação MILK dos materiais internos de automação, agentes e migração",
+        "A intenção é permitir financiabilidade, preservação e interoperabilidade sem expor segredos, dados sensíveis ou reivindicações ainda não verificadas"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [
+            "culture",
+            "technology",
+            "governance"
+          ],
+          "territory": ""
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\08225414fb796e792cc26bd5387cbb16a3e216e801ee733f001c382fc9022cf1.json",
+          "chunks": 9
+        }
+      ]
+    },
+    {
+      "document_id": "abe3c19fe82fd00b8fb8edd065764748b5b7b8c4f7acfa127f0a01b0727c77b2",
+      "source": "localfs:repo",
+      "source_id": "PUBLIC_REPOSITORY_AUDIT_2026-08-28.md",
+      "source_uri": "docs\\PUBLIC_REPOSITORY_AUDIT_2026-08-28.md",
+      "content_hash": "b9acf8c6e6c4c556e7d557247a3e020c21c0a66b577f8c2aada8c7a602056da5",
+      "original_name": "PUBLIC_REPOSITORY_AUDIT_2026-08-28.md",
+      "size": 3155,
+      "mtime": "2026-09-08T17:41:07.006958+00:00",
+      "ingested_at": "2026-09-10T06:09:34.952475+00:00",
+      "mime_type": "text/markdown",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 1.0,
+      "semantic_tags": [
+        "technology",
+        "governance"
+      ],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "# Auditoria pública do repositório — Atlas Vivo MILK\r\n\r\nData: 2026-08-28  \r\nRepositório: `milkivc/atlas-vivo-milk`  \r\nEstado: saneamento em curso",
+        "## Resultado executivo\r\n\r\nO repositório contém uma mistura de vitrine institucional, código de integração, documentação científica e workflows de migração/automação",
+        "Essa mistura não deve ser apagada sem triagem, mas precisa de classificação para preservar financiabilidade, segurança e credibilidade pública"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [
+            "technology",
+            "governance"
+          ],
+          "territory": ""
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\abe3c19fe82fd00b8fb8edd065764748b5b7b8c4f7acfa127f0a01b0727c77b2.json",
+          "chunks": 7
+        }
+      ]
+    },
+    {
+      "document_id": "b3cc2711f0ac147c0ab8fac1672dd1ab7f93cd298f98fb7d0c92a8897bd101c6",
+      "source": "localfs:repo",
+      "source_id": "MILK_ORCHESTRATION_CONTRACT.md",
+      "source_uri": "manifests\\MILK_ORCHESTRATION_CONTRACT.md",
+      "content_hash": "93e2940b06cb3d6b6bedf08085a77ce69e2894fd5092246987a053faa1d90471",
+      "original_name": "MILK_ORCHESTRATION_CONTRACT.md",
+      "size": 2892,
+      "mtime": "2026-09-08T21:44:52.386075+00:00",
+      "ingested_at": "2026-09-10T06:09:34.952637+00:00",
+      "mime_type": "text/markdown",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 1.0,
+      "semantic_tags": [],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "# MILK IA — ORCHESTRATION CONTRACT\n\n**Canonical Runtime:** `C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO`\n**Created:** 2026-09-08\n**Orchestrator:** Mistral Vibe (glm-5-2)\n\n## Rules\n\n- Never use old versions as runtime",
+        "Old versions preserved as history",
+        "- Minimise token usage"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [],
+          "territory": ""
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\b3cc2711f0ac147c0ab8fac1672dd1ab7f93cd298f98fb7d0c92a8897bd101c6.json",
+          "chunks": 6
+        }
+      ]
+    },
+    {
+      "document_id": "1a8a14ca4c5e1df6652a9348b00e1e4b88c29596d8323d0da309756e6b53efe0",
+      "source": "localfs:repo",
+      "source_id": "00-INDEX.md",
+      "source_uri": "modulo-05-ecossistema-cientifico\\00-INDEX.md",
+      "content_hash": "5b27d703915361c8e596f0dec37bda53d60f7adde6e529e28c76a37c368415b8",
+      "original_name": "00-INDEX.md",
+      "size": 9472,
+      "mtime": "2026-09-08T17:41:07.031574+00:00",
+      "ingested_at": "2026-09-10T06:09:34.952786+00:00",
+      "mime_type": "text/markdown",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 1.0,
+      "semantic_tags": [
+        "folklore",
+        "technology",
+        "governance"
+      ],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "# MÓDULO 05 — ECOSSISTEMA CIENTÍFICO, DATACITE, UNIVERSIDADES\r\n\r\n## 🎯 **OBJETIVO PRINCIPAL**\r\nPreparar, estruturar, ligar e manter relações técnicas e documentais com identificadores persistentes, universidades, centros de investigação, repositórios científicos, infraestruturas de preservação digital, bases de conhecimento, programas de financiamento e redes de colaboração para a **Associação MILK – Movimento de Intervenções e Linguagens Kulturais e Arte**",
+        "---\r\n\r\n## 📁 **ESTRUTURA COMPLETA DO MÓDULO**\r\n\r\n```\r\nmodulo-05-ecossistema-cientifico/\r\n├── 00-INDEX",
+        "md                          ← Este documento\r\n├── 01-identificadores-persistentes/\r\n│   ├── orcid/\r\n│   │   ├── README"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [
+            "folklore",
+            "technology",
+            "governance"
+          ],
+          "territory": ""
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\1a8a14ca4c5e1df6652a9348b00e1e4b88c29596d8323d0da309756e6b53efe0.json",
+          "chunks": 17
+        }
+      ]
+    },
+    {
+      "document_id": "75a4f148a047e9e9261e27c083ff9877598154c8aedf7b4ee23e8e1f434566d1",
+      "source": "localfs:repo",
+      "source_id": "LOTE025_creative_europe_projects_overview_2025_xls.md",
+      "source_uri": "staging\\preprocessed\\LOTE025_creative_europe_projects_overview_2025_xls.md",
+      "content_hash": "d35f8d6e3ade063ff8dcc52b733f25597af1bd17463e783de3ebc13688528fa5",
+      "original_name": "LOTE025_creative_europe_projects_overview_2025_xls.md",
+      "size": 315,
+      "mtime": "2026-09-08T18:16:16.706269+00:00",
+      "ingested_at": "2026-09-10T06:09:34.952966+00:00",
+      "mime_type": "text/markdown",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 0.095,
+      "semantic_tags": [],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "# LOTE025_creative_europe_projects_overview_2025_xls",
+        "xls\r\n\r\n**Formato binário legacy:**",
+        "xls\r\n\r\n**Caminho:** C:\\Users\\Utilizador\\Nextcloud\\Atlas Vivo MILK\\LOTE025_creative_europe_projects_overview_2025_xls"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [],
+          "territory": ""
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\75a4f148a047e9e9261e27c083ff9877598154c8aedf7b4ee23e8e1f434566d1.json",
+          "chunks": 1
+        }
+      ]
+    },
+    {
+      "document_id": "9590ec1cbb995d4d43321a81b761aab1438cdcd7aa9038b564ed2d0a26946c3c",
+      "source": "localfs:repo",
+      "source_id": "README.md",
+      "source_uri": "integrations\\atlas-kernel\\README.md",
+      "content_hash": "3d9fd5793beab82f8dccf9a1d5779ba0825a4af00d16313b5c05a6d3816f0e58",
+      "original_name": "README.md",
+      "size": 419,
+      "mtime": "2026-09-08T17:41:07.020576+00:00",
+      "ingested_at": "2026-09-10T06:09:34.953165+00:00",
+      "mime_type": "text/markdown",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 0.235,
+      "semantic_tags": [
+        "technology"
+      ],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "# Atlas Integration Kernel\r\n\r\nNúcleo executável e seguro de interoperabilidade do Atlas Vivo MILK",
+        "- modelos Pydantic e porta de publicação;\r\n- ROR, Zenodo, ORCID, DataCite, Forgejo e FIWARE;\r\n- dossiês IGAC/WIPO sem inventar registos;\r\n- dez agentes Mistral para toda a engenharia;\r\n- dry-run e hashes por omissão;\r\n- estado factual da migração por manifesto",
+        "Ver `docs/developer/web-integration"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [
+            "technology"
+          ],
+          "territory": ""
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\9590ec1cbb995d4d43321a81b761aab1438cdcd7aa9038b564ed2d0a26946c3c.json",
+          "chunks": 1
+        }
+      ]
+    },
+    {
+      "document_id": "890ad9609fa6989597b43a99dc336ba9f36b3431d65ccd59595b6da773b0622e",
+      "source": "localfs:repo",
+      "source_id": "2026-08-29-porque-alguem-esteve-ali.md",
+      "source_uri": "docs\\dialogos\\2026-08-29-porque-alguem-esteve-ali.md",
+      "content_hash": "7bf1913a6279988f2fdf35187368548ba34685da607b90845b0d7ca28b5a470b",
+      "original_name": "2026-08-29-porque-alguem-esteve-ali.md",
+      "size": 2022,
+      "mtime": "2026-09-08T17:41:07.009955+00:00",
+      "ingested_at": "2026-09-10T06:09:34.953607+00:00",
+      "mime_type": "text/markdown",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 0.91,
+      "semantic_tags": [
+        "music"
+      ],
+      "territory": "guarda",
+      "municipality": "guarda",
+      "claims": [
+        "# Porque alguém esteve ali\r\n\r\n**Uso:** diálogo público autorizado para a voz MILK no Atlas Vivo MILK",
+        "**Origem:** conversa de trabalho, 29 de agosto de 2026",
+        "A frase “Porque alguém esteve ali"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [
+            "music"
+          ],
+          "territory": "guarda"
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\890ad9609fa6989597b43a99dc336ba9f36b3431d65ccd59595b6da773b0622e.json",
+          "chunks": 4
+        }
+      ]
+    },
+    {
+      "document_id": "f96e66d8d771176d95544c92c11bf54f2d0f111e8a3d51258d556445f38d15a8",
+      "source": "localfs:repo",
+      "source_id": "documentacao-tecnica-ai-act.md",
+      "source_uri": "docs\\legal\\documentacao-tecnica-ai-act.md",
+      "content_hash": "736c2c33da9dd296570b02be200811bc0d096a8fddef5a9382c0e94f73bbcf18",
+      "original_name": "documentacao-tecnica-ai-act.md",
+      "size": 12404,
+      "mtime": "2026-09-08T17:41:07.012956+00:00",
+      "ingested_at": "2026-09-10T06:09:34.953961+00:00",
+      "mime_type": "text/markdown",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 1.0,
+      "semantic_tags": [
+        "culture",
+        "technology",
+        "governance"
+      ],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "# DOCUMENTAÇÃO TÉCNICA - AI ACT\r\n**Sistema: Atlas Vivo**\r\n**Associação MILK - Movimento de Intervenções e Linguagens Kulturais e Arte**\r\n**NIPC: 518706451**\r\n\r\n---\r\n\r\n## 1",
+        "IDENTIFICAÇÃO DO SISTEMA\r\n\r\n| Campo | Valor |\r\n|-------|-------|\r\n| **Nome do Sistema** | Atlas Vivo |\r\n| **Fornecedor** | Associação MILK |\r\n| **NIPC** | 518706451 |\r\n| **Versão** | 1",
+        "0 |\r\n| **Data de Lançamento** | 2026-06-25 (versão inicial) |\r\n| **Classificação AI Act** | **Alto Risco** (Anexo III, ponto 1) |\r\n| **Categoria** | Gestão e operação de infraestruturas críticas (dados geospaciais para políticas públicas) |\r\n\r\n---\r\n\r\n## 2"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [
+            "culture",
+            "technology",
+            "governance"
+          ],
+          "territory": ""
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\f96e66d8d771176d95544c92c11bf54f2d0f111e8a3d51258d556445f38d15a8.json",
+          "chunks": 20
+        }
+      ]
+    },
+    {
+      "document_id": "a2a2908fcb7dce801f9243e9217050b0445df7ed4ccc0e0b697494e2c76e1651",
+      "source": "localfs:repo",
+      "source_id": "PRIVACY_POLICY.md",
+      "source_uri": "docs\\legal\\PRIVACY_POLICY.md",
+      "content_hash": "f8970aa3b57a56492ffca11eb74ccdf0c2ddc8eef8c0d664343bf37d51e7e303",
+      "original_name": "PRIVACY_POLICY.md",
+      "size": 947,
+      "mtime": "2026-09-08T17:41:07.011955+00:00",
+      "ingested_at": "2026-09-10T06:09:34.954109+00:00",
+      "mime_type": "text/markdown",
+      "language": "pt",
+      "licence": "CC-BY",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 0.455,
+      "semantic_tags": [
+        "folklore",
+        "governance"
+      ],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "# Política de Privacidade - Atlas Vivo MILK\r\n\r\n## 1",
+        "Dados Recolhidos\r\n- **Dados públicos:** Lendas, folclore, topónimos (anonimizados, sem informações pessoais)",
+        "- **Dados de utilizadores:** Apenas se o utilizador criar uma conta (nome, email, com consentimento explícito)"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "CC-BY"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [
+            "folklore",
+            "governance"
+          ],
+          "territory": ""
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\a2a2908fcb7dce801f9243e9217050b0445df7ed4ccc0e0b697494e2c76e1651.json",
+          "chunks": 2
+        }
+      ]
+    },
+    {
+      "document_id": "09b9f387a03d36efe1f5dfbf560bf660ef2a7309864d31fcd1c5f6cb8830bc07",
+      "source": "localfs:repo",
+      "source_id": "TERMS_OF_USE.md",
+      "source_uri": "docs\\legal\\TERMS_OF_USE.md",
+      "content_hash": "31c45ab354a01b80c0ac0afcba2ac609c786501182aa05b5140652fb5afe6af0",
+      "original_name": "TERMS_OF_USE.md",
+      "size": 873,
+      "mtime": "2026-09-08T17:41:07.012956+00:00",
+      "ingested_at": "2026-09-10T06:09:34.954237+00:00",
+      "mime_type": "text/markdown",
+      "language": "pt",
+      "licence": "EUPL-1.2",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 0.45,
+      "semantic_tags": [
+        "governance"
+      ],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "# Termos de Uso - Atlas Vivo MILK\r\n\r\n## 1",
+        "Aceitação dos Termos\r\nAo utilizar este repositório, você concorda com estes termos",
+        "Uso Permitido\r\n- **Código:** Licenciado sob **MIT License** (uso livre, com atribuição)"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "EUPL-1.2"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [
+            "governance"
+          ],
+          "territory": ""
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\09b9f387a03d36efe1f5dfbf560bf660ef2a7309864d31fcd1c5f6cb8830bc07.json",
+          "chunks": 2
+        }
+      ]
+    },
+    {
+      "document_id": "9c75ee116d49aacc80b3db784e1b0b442a8725410a3581bcc0025904f38a1636",
+      "source": "localfs:repo",
+      "source_id": "curadoria-territorial.md",
+      "source_uri": ".github\\ISSUE_TEMPLATE\\curadoria-territorial.md",
+      "content_hash": "131b480054a1521da1926b9f9117b4df2ea7a03b737f7db3c63bafa148079513",
+      "original_name": "curadoria-territorial.md",
+      "size": 370,
+      "mtime": "2026-09-08T17:27:55.907559+00:00",
+      "ingested_at": "2026-09-10T06:09:34.954359+00:00",
+      "mime_type": "text/markdown",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 0.16,
+      "semantic_tags": [
+        "territory"
+      ],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "---\nname: Curadoria territorial\nabout: Classificar documentos por distrito/municipio/freguesia\ntitle: \"[CURADORIA] \"\nlabels: curadoria, territorial\nassignees: eduardomauriciovieiracabral\n---\n\n## Curadoria territorial\n\n**Documento (sha256 ou nome):**\n\n**Distrito:**\n**Municipio:**\n**Freguesia:**\n\n**Justificacao:**\nPorque razao este documento pertence a este territorio?"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [
+            "territory"
+          ],
+          "territory": ""
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\9c75ee116d49aacc80b3db784e1b0b442a8725410a3581bcc0025904f38a1636.json",
+          "chunks": 1
+        }
+      ]
+    },
+    {
+      "document_id": "3fdb5e5e7088eecfbf67d7a970604a2b936d9d115e36d5ce35136b88aee2212f",
+      "source": "localfs:repo",
+      "source_id": "documento-falta.md",
+      "source_uri": ".github\\ISSUE_TEMPLATE\\documento-falta.md",
+      "content_hash": "a41bc0a9026a4e206d685fade9b7d0080847b6648f420fb93d8dc48183098a7e",
+      "original_name": "documento-falta.md",
+      "size": 478,
+      "mtime": "2026-09-08T17:27:55.906400+00:00",
+      "ingested_at": "2026-09-10T06:09:34.954495+00:00",
+      "mime_type": "text/markdown",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 0.255,
+      "semantic_tags": [],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "---\nname: Documento em falta\nabout: Reportar um documento que deveria estar no corpus mas nao esta\ntitle: \"[DOC-FALTA] \"\nlabels: documento, ingestao\nassignees: eduardomauriciovieiracabral\n---\n\n## Documento em falta\n\n**Nome do ficheiro:**\n**Caminho original:**\n**Fonte (OneDrive/Nextcloud/Downloads/Outra):**\n\n## Contexto\nDescreva porque e importante este documento e onde estava armazenado",
+        "## Informacao adicional\nQualquer detalhe que ajude a localizar e ingerir o documento"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [],
+          "territory": ""
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\3fdb5e5e7088eecfbf67d7a970604a2b936d9d115e36d5ce35136b88aee2212f.json",
+          "chunks": 1
+        }
+      ]
+    },
+    {
+      "document_id": "dd6adcdc9ae918ca8e471a2c585db9c48b2c557d007bb1989d384aa75d02f3ce",
+      "source": "localfs:repo",
+      "source_id": "ficheiro-apagado.md",
+      "source_uri": ".github\\ISSUE_TEMPLATE\\ficheiro-apagado.md",
+      "content_hash": "2cd15c4043e2a8d64f5e56cb6bf7b749675265c38be31b3439632ab36486e2e9",
+      "original_name": "ficheiro-apagado.md",
+      "size": 523,
+      "mtime": "2026-09-08T17:27:55.906400+00:00",
+      "ingested_at": "2026-09-10T06:09:34.954633+00:00",
+      "mime_type": "text/markdown",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 0.275,
+      "semantic_tags": [],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "---\nname: Ficheiro apagado\nabout: Reportar um ficheiro que foi apagado por uma extensao ou agente\ntitle: \"[APAGADO] \"\nlabels: bug, critico\nassignees: eduardomauriciovieiracabral\n---\n\n## Ficheiro apagado\n\n**Nome do ficheiro:**\n**Caminho:**\n**Quando desapareceu:**\n\n## Causa suspeita\n- [ ] Extensao llama-vscode (tool_delete_file)\n- [ ] Outro agente AI (Copilot, opilot, deepseek)\n- [ ] VS Code files",
+        "exclude\n- [ ] Outro:\n\n## Conteudo do ficheiro (se recordar)\nDescreva o que o ficheiro continha para que possa ser recriado"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [],
+          "territory": ""
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\dd6adcdc9ae918ca8e471a2c585db9c48b2c557d007bb1989d384aa75d02f3ce.json",
+          "chunks": 2
+        }
+      ]
+    },
+    {
+      "document_id": "8c3cc6c6172c1f8dec2e2544080bd2793089d4566648a0f3276ebf2740dca080",
+      "source": "nextcloud:CURADORIA_100",
+      "source_id": "atlas_vivo_ata_fecho_auditavel_1_2.txt",
+      "source_uri": "C:\\Users\\Utilizador\\Nextcloud\\CURADORIA_100\\atlas_vivo_ata_fecho_auditavel_1_2.txt",
+      "content_hash": "023d064741a6b35ff480e9c178a62af7294068fafde42636d7e83a2b52350578",
+      "original_name": "atlas_vivo_ata_fecho_auditavel_1_2.txt",
+      "size": 1409,
+      "mtime": "2026-03-08T09:55:52+00:00",
+      "ingested_at": "2026-09-10T06:09:34.954763+00:00",
+      "mime_type": "text/plain",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 0.635,
+      "semantic_tags": [
+        "governance"
+      ],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "Ata de Fecho Auditável da Versão Pública Operacional 1",
+        "2 e da Curadoria Consolidada 1",
+        "2\n\nFica registado, para efeitos de consolidação interna, rastreabilidade curatorial e preservação da soberania metodológica da arquitetura MILK, que o Atlas Vivo MILK atingiu o estado de Versão Pública Operacional 1"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [
+            "governance"
+          ],
+          "territory": ""
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\8c3cc6c6172c1f8dec2e2544080bd2793089d4566648a0f3276ebf2740dca080.json",
+          "chunks": 3
+        }
+      ]
+    },
+    {
+      "document_id": "4aaee3165cf450e0e1002b4fd5688e246d4c8a5d82f0e03983f6628a0d118710",
+      "source": "nextcloud:CURADORIA_100",
+      "source_id": "atlas_vivo_dispositivo_reservado_elaboracao_milk.txt",
+      "source_uri": "C:\\Users\\Utilizador\\Nextcloud\\CURADORIA_100\\atlas_vivo_dispositivo_reservado_elaboracao_milk.txt",
+      "content_hash": "2ada87ad7ec912d09e2d97a5eb6a6cffb1f43575147d8964f8cc7cfc03fe5357",
+      "original_name": "atlas_vivo_dispositivo_reservado_elaboracao_milk.txt",
+      "size": 1051,
+      "mtime": "2026-03-08T09:55:53+00:00",
+      "ingested_at": "2026-09-10T06:09:34.954896+00:00",
+      "mime_type": "text/plain",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 0.51,
+      "semantic_tags": [],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "Dispositivo Reservado de Elaboração MILK\n\nEspaço interno e protegido de elaboração, destinado à maturação de formulações, fluxo de pensamentos, ensaio criativo, pensamento em formação e processamento de matéria estratégica antes de qualquer estabilização documental, preservando a integridade do processo, a propriedade intelectual e a não captura de dados sensivelmente particulares",
+        "O que aqui se produz não constitui, por si, peça de arquivo, genealogia, histórico estrutural ou camada pública",
+        "Qualquer eventual saída deste espaço depende de reorganização semântica profunda, tradução institucional, adequação integral à arquitetura MILK e deliberação do coletivo"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [],
+          "territory": ""
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\4aaee3165cf450e0e1002b4fd5688e246d4c8a5d82f0e03983f6628a0d118710.json",
+          "chunks": 3
+        }
+      ]
+    },
+    {
+      "document_id": "05ce92e59eaf87422945fd78020b8dd7740ebb5e49ee67e8735162b0fef5dc87",
+      "source": "nextcloud:CURADORIA_100",
+      "source_id": "atlas_vivo_nucleo_estavel_1_1_resumo.txt",
+      "source_uri": "C:\\Users\\Utilizador\\Nextcloud\\CURADORIA_100\\atlas_vivo_nucleo_estavel_1_1_resumo.txt",
+      "content_hash": "e18b7e0dad197c3cdb667d4f9717225390ec9db3ac33915657105b62142d42e1",
+      "original_name": "atlas_vivo_nucleo_estavel_1_1_resumo.txt",
+      "size": 463,
+      "mtime": "2026-03-08T06:47:36+00:00",
+      "ingested_at": "2026-09-10T06:09:34.955044+00:00",
+      "mime_type": "text/plain",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 0.195,
+      "semantic_tags": [],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "0 de partida: 23 registos\nPromovidos da Afinação 2",
+        "0 reescrita: 18 registos\nNovo Núcleo Estável 1",
+        "1: 41 registos\nAfinação residual 2"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [],
+          "territory": ""
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\05ce92e59eaf87422945fd78020b8dd7740ebb5e49ee67e8735162b0fef5dc87.json",
+          "chunks": 1
+        }
+      ]
+    },
+    {
+      "document_id": "cfb8d75cab1648af6c67c0e13224a27ce8b46f7b1c93d009988e7ec180a18006",
+      "source": "nextcloud:CURADORIA_100",
+      "source_id": "atlas_vivo_nucleo_estavel_1_2_resumo.txt",
+      "source_uri": "C:\\Users\\Utilizador\\Nextcloud\\CURADORIA_100\\atlas_vivo_nucleo_estavel_1_2_resumo.txt",
+      "content_hash": "b69bab9f4802c067ecc3d8da1be707e43fc68db1c24641a5ebea818fe8daab9a",
+      "original_name": "atlas_vivo_nucleo_estavel_1_2_resumo.txt",
+      "size": 386,
+      "mtime": "2026-03-08T06:55:02+00:00",
+      "ingested_at": "2026-09-10T06:09:34.955168+00:00",
+      "mime_type": "text/plain",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 0.165,
+      "semantic_tags": [],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "1 de partida: 41 registos\nAfinação residual 2",
+        "1 reescrita: 23 registos\nPromovidos para Núcleo 1",
+        "2: 4 registos\nNovo Núcleo Estável 1"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [],
+          "territory": ""
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\cfb8d75cab1648af6c67c0e13224a27ce8b46f7b1c93d009988e7ec180a18006.json",
+          "chunks": 1
+        }
+      ]
+    },
+    {
+      "document_id": "8679f29aa218040cf123a7ec8886cd6b8aa166ddecaa59a397a20bb4bd5b5bab",
+      "source": "nextcloud:CURADORIA_100",
+      "source_id": "atlas_vivo_protocolo_genealogico_autoavaliacao_reformulacao_permanente.txt",
+      "source_uri": "C:\\Users\\Utilizador\\Nextcloud\\CURADORIA_100\\atlas_vivo_protocolo_genealogico_autoavaliacao_reformulacao_permanente.txt",
+      "content_hash": "51b6e44e25658582177c34930a3455a3776bbd75d2702f504e593077bb1f9b63",
+      "original_name": "atlas_vivo_protocolo_genealogico_autoavaliacao_reformulacao_permanente.txt",
+      "size": 1468,
+      "mtime": "2026-03-08T09:55:53+00:00",
+      "ingested_at": "2026-09-10T06:09:34.955296+00:00",
+      "mime_type": "text/plain",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 0.665,
+      "semantic_tags": [],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "Protocolo Genealógico de Autoavaliação e Reformulação Permanente MILK\n\nProcedimento interno transversal de governança profunda, anterior a qualquer fixação documental e aplicável a toda a arquitetura MILK",
+        "A sua função é rastrear retroativamente o que já foi documentado, avaliar a posição, função, elegibilidade, soberania, risco de captura, coerência semântica e valor infraestrutural de cada elemento, e operar prospectivamente no nascimento de qualquer nova camada, método, engrenagem, dispositivo, componente, documento ou formulação",
+        "Nenhuma inscrição estável ocorre sem passar por revisão semântica profunda, teste de elegibilidade transversal, avaliação de soberania e verificação de compatibilidade com a arquitetura total"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [],
+          "territory": ""
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\8679f29aa218040cf123a7ec8886cd6b8aa166ddecaa59a397a20bb4bd5b5bab.json",
+          "chunks": 3
+        }
+      ]
+    },
+    {
+      "document_id": "f6c81eaeda645907080a81aae3946cc692d856591f8d1bc6956b747b58f295de",
+      "source": "nextcloud:CURADORIA_100",
+      "source_id": "atlas_vivo_regra_consolidacao_total_1_2.txt",
+      "source_uri": "C:\\Users\\Utilizador\\Nextcloud\\CURADORIA_100\\atlas_vivo_regra_consolidacao_total_1_2.txt",
+      "content_hash": "8492815c698f629a7735f7a57ad1f075dc9b08e9b389c9404045b311216f5855",
+      "original_name": "atlas_vivo_regra_consolidacao_total_1_2.txt",
+      "size": 845,
+      "mtime": "2026-03-08T09:55:53+00:00",
+      "ingested_at": "2026-09-10T06:09:34.955435+00:00",
+      "mime_type": "text/plain",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 0.45,
+      "semantic_tags": [],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "Regra de Consolidação Total 1",
+        "2\n\nA raiz operacional C:\\ATLAS_VIVO mantém exclusivamente a versão pública ativa do Atlas Vivo MILK e não deve ser alterada sem atualização soberana explícita",
+        "A pasta CURADORIA_100 mantém exclusivamente a memória evolutiva, as triagens, as reescritas, os núcleos estáveis, os blocos residuais, os protocolos, os resumos auditáveis e as peças internas de blindagem"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [],
+          "territory": ""
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\f6c81eaeda645907080a81aae3946cc692d856591f8d1bc6956b747b58f295de.json",
+          "chunks": 2
+        }
+      ]
+    },
+    {
+      "document_id": "0663d3e36c405ef10cebdc0192a7cea80f6642c7fcb69bb998f60fdc97ab7cda",
+      "source": "nextcloud:CURADORIA_100",
+      "source_id": "atlas_vivo_resumo_consolidacao_total_1_2.txt",
+      "source_uri": "C:\\Users\\Utilizador\\Nextcloud\\CURADORIA_100\\atlas_vivo_resumo_consolidacao_total_1_2.txt",
+      "content_hash": "ca0c8a0c6f8b3050e4e610ea1fce7fe238bf01cc26ae78a32beee4161546a12f",
+      "original_name": "atlas_vivo_resumo_consolidacao_total_1_2.txt",
+      "size": 627,
+      "mtime": "2026-03-08T09:55:53+00:00",
+      "ingested_at": "2026-09-10T06:09:34.955563+00:00",
+      "mime_type": "text/plain",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 0.305,
+      "semantic_tags": [],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "Resumo de Consolidação Total 1",
+        "2\n\nEstado público validado: Atlas Vivo MILK, Versão Pública Operacional 1",
+        "Camada curatorial consolidada: Curadoria Consolidada 1"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [],
+          "territory": ""
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\0663d3e36c405ef10cebdc0192a7cea80f6642c7fcb69bb998f60fdc97ab7cda.json",
+          "chunks": 2
+        }
+      ]
+    },
+    {
+      "document_id": "318b09c276e4a30a73a55d524bbc677fd0cb5fc936da5dcb9633560a7db4776d",
+      "source": "nextcloud:CURADORIA_100",
+      "source_id": "atlas_vivo_triagem_curatorial_100_resumo.txt",
+      "source_uri": "C:\\Users\\Utilizador\\Nextcloud\\CURADORIA_100\\atlas_vivo_triagem_curatorial_100_resumo.txt",
+      "content_hash": "5c8fd76eed16af322985c271bf594c5e7567030f0cb5b6358a11091606437c60",
+      "original_name": "atlas_vivo_triagem_curatorial_100_resumo.txt",
+      "size": 156,
+      "mtime": "2026-03-08T06:21:41+00:00",
+      "ingested_at": "2026-09-10T06:09:34.955682+00:00",
+      "mime_type": "text/plain",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "internal_preservation",
+      "privacy_class": "INTERNAL",
+      "dedup_status": "NEW",
+      "content_quality": 0.09,
+      "semantic_tags": [],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "Triagem curatorial integral dos 100 registos\nNúcleo Estável 1",
+        "0: 23 registos\nAfinação Prioritária 2",
+        "0: 41 registos\nObservação / Reserva: 36 registos"
+      ],
+      "pipeline_decision": "ACCEPT",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "INTERNAL",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [],
+          "territory": ""
+        },
+        {
+          "stage": "promote",
+          "result": "accepted",
+          "document_path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents\\318b09c276e4a30a73a55d524bbc677fd0cb5fc936da5dcb9633560a7db4776d.json",
+          "chunks": 1
+        }
+      ]
+    }
+  ],
+  "review_items": [
+    {
+      "document_id": "5d9d7b77ad8425402cbfd4f0585e0225637c8a63fd5e8c38f275dbdf26c0ec86",
+      "source": "nextcloud:Atlas Vivo MILK",
+      "source_id": "4340732751fea20e1c24_criar_corpus_atlas.txt",
+      "source_uri": "C:\\Users\\Utilizador\\Nextcloud\\Atlas Vivo MILK\\4340732751fea20e1c24_criar_corpus_atlas.txt",
+      "content_hash": "84a76d62623bfb6a87261420e7691e364fa306b78bf06507f6a9d5b6bd20b767",
+      "original_name": "4340732751fea20e1c24_criar_corpus_atlas.txt",
+      "size": 24847,
+      "mtime": "2026-08-02T08:02:12+00:00",
+      "ingested_at": "2026-09-10T06:09:34.947831+00:00",
+      "mime_type": "text/plain",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "UNKNOWN",
+      "privacy_class": "PERSONAL_DATA",
+      "dedup_status": "NEW",
+      "content_quality": 1.0,
+      "semantic_tags": [
+        "territory",
+        "technology",
+        "governance"
+      ],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "# -*- coding: utf-8 -*-\r\n# criar_corpus_atlas",
+        "py\r\n# Leitura local do ARQUIVO__ATLAS para criar corpus real e Web App local",
+        "# Não apaga, não move e não altera os ficheiros originais"
+      ],
+      "pipeline_decision": "REVIEW",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "PERSONAL_DATA",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [
+            "territory",
+            "technology",
+            "governance"
+          ],
+          "territory": ""
+        }
+      ]
+    },
+    {
+      "document_id": "0b32ece49f53106fd101c9babfbf15da9be79623858975e3cedcab3710afe943",
+      "source": "localfs:repo",
+      "source_id": "GOVERNANCE.md",
+      "source_uri": "GOVERNANCE.md",
+      "content_hash": "49241a6787c6d9fd2c140b895ff8fa0a2375b3743356a0601f209a1b5f670e3f",
+      "original_name": "GOVERNANCE.md",
+      "size": 7096,
+      "mtime": "2026-09-08T17:41:06.930703+00:00",
+      "ingested_at": "2026-09-10T06:09:34.949692+00:00",
+      "mime_type": "text/markdown",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "UNKNOWN",
+      "privacy_class": "PERSONAL_DATA",
+      "dedup_status": "NEW",
+      "content_quality": 1.0,
+      "semantic_tags": [
+        "culture",
+        "technology"
+      ],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "# Governance Model - Atlas Vivo\r\n\r\nAssociacao MILK - Movimento de Intervencoes e Linguagens Kulturais e Arte\r\nNIPC: 518706451\r\n\r\n---\r\n\r\n## Overview\r\n\r\nThis document outlines the governance structure and decision-making processes for the Atlas Vivo project, ensuring transparency, accountability, and alignment with the mission of the Associacao MILK",
+        "---\r\n\r\n## Governance Structure\r\n\r\n### 1",
+        "Strategic Level - Associacao MILK\r\n\r\n**Responsibilities:**\r\n- Define the overall vision and strategy for Atlas Vivo\r\n- Ensure alignment with the mission of Associacao MILK\r\n- Approve major project decisions\r\n- Allocate resources and budget\r\n- Establish partnerships and collaborations\r\n- Ensure legal and regulatory compliance\r\n\r\n**Members:**\r\n- Board of Directors of Associacao MILK\r\n- Executive Director\r\n- Legal Advisor\r\n- Data Protection Officer (DPO)\r\n\r\n**Decision-Making:**\r\n- Consensus-based with majority vote for formal decisions\r\n- Monthly strategic meetings\r\n- Annual review and planning\r\n\r\n---\r\n\r\n### 2"
+      ],
+      "pipeline_decision": "REVIEW",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "PERSONAL_DATA",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [
+            "culture",
+            "technology"
+          ],
+          "territory": ""
+        }
+      ]
+    },
+    {
+      "document_id": "06d4133d0d2b2ea12c31fc66e85415419dd1a5072fe90b2fc58233ae6b3f8153",
+      "source": "localfs:repo",
+      "source_id": "SECURITY.md",
+      "source_uri": "SECURITY.md",
+      "content_hash": "8280fc5695af73d049b3a55ed3897fc7a41986b666a708fc76caf80f0c34c95f",
+      "original_name": "SECURITY.md",
+      "size": 3174,
+      "mtime": "2026-09-08T17:41:06.934139+00:00",
+      "ingested_at": "2026-09-10T06:09:34.950124+00:00",
+      "mime_type": "text/markdown",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "UNKNOWN",
+      "privacy_class": "PERSONAL_DATA",
+      "dedup_status": "NEW",
+      "content_quality": 1.0,
+      "semantic_tags": [
+        "technology"
+      ],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "# Security Policy\r\n\r\n## Supported Versions\r\n\r\nWe provide security updates for the following versions of the Atlas Vivo datasets:\r\n\r\n| Version | Supported |\r\n|---------|-----------|\r\n| v1",
+        "x  | Yes     |\r\n| < v1",
+        "0  | No      |\r\n\r\n---\r\n\r\n## Reporting a Vulnerability\r\n\r\nIf you discover a security vulnerability in the Atlas Vivo datasets or infrastructure, do not open a public issue"
+      ],
+      "pipeline_decision": "REVIEW",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "PERSONAL_DATA",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [
+            "technology"
+          ],
+          "territory": ""
+        }
+      ]
+    },
+    {
+      "document_id": "e56b920b9c2aad079b4e33be4d837c048ea3187314884a40ce3ba3289a831b13",
+      "source": "localfs:repo",
+      "source_id": "milk-cpanel-nextcloud-operator.md",
+      "source_uri": "agents\\milk-cpanel-nextcloud-operator.md",
+      "content_hash": "c4835527ee9746d69d5b27755f278bfc34354333f741dae93d14412d42a01c50",
+      "original_name": "milk-cpanel-nextcloud-operator.md",
+      "size": 6352,
+      "mtime": "2026-09-08T17:41:06.937658+00:00",
+      "ingested_at": "2026-09-10T06:09:34.950806+00:00",
+      "mime_type": "text/markdown",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "UNKNOWN",
+      "privacy_class": "PERSONAL_DATA",
+      "dedup_status": "NEW",
+      "content_quality": 1.0,
+      "semantic_tags": [
+        "folklore",
+        "culture",
+        "territory",
+        "festival",
+        "technology",
+        "governance"
+      ],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "# MILK — agente Mistral de operações cPanel e Nextcloud\r\n\r\nVersão: 2026-08-22",
+        "2\r\nVoz externa: MILK\r\nExecutor: Mistral\r\nCoordenação: infraestrutura determinística do Atlas\r\nArquitetura normativa: `docs/architecture/nextcloud-interoperability-financiability-training",
+        "md`\r\n\r\n## Missão\r\n\r\nCriar e validar a infraestrutura privada do Nextcloud no PTServidor, transferir o snapshot privado já verificado e manter um registo auditável por lote"
+      ],
+      "pipeline_decision": "REVIEW",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "PERSONAL_DATA",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [
+            "folklore",
+            "culture",
+            "territory",
+            "festival",
+            "technology",
+            "governance"
+          ],
+          "territory": ""
+        }
+      ]
+    },
+    {
+      "document_id": "a84aef2a35fde4ff40a79842a6ea2e86a62e5ef739e5593c12d05e206ffe58df",
+      "source": "localfs:repo",
+      "source_id": "README.md",
+      "source_uri": "atlas_infra\\README.md",
+      "content_hash": "b2fe7b483b967fe7efa844844fa504b50ae3dd095d89e0bf97b801250dd254fb",
+      "original_name": "README.md",
+      "size": 4177,
+      "mtime": "2026-09-08T21:27:32.186930+00:00",
+      "ingested_at": "2026-09-10T06:09:34.951008+00:00",
+      "mime_type": "text/markdown",
+      "language": "pt",
+      "licence": "CC-BY",
+      "rights_status": "UNKNOWN",
+      "privacy_class": "PERSONAL_DATA",
+      "dedup_status": "NEW",
+      "content_quality": 1.0,
+      "semantic_tags": [
+        "folklore",
+        "territory",
+        "technology"
+      ],
+      "territory": "lisboa",
+      "municipality": "lisboa",
+      "claims": [
+        "# Atlas Vivo MILK — Infraestrutura Digital\n\nImplementação auto-contida do Atlas Vivo MILK para deploy num **servidor PT\ncom domínio próprio**",
+        "Lê, relaciona e operacionaliza os 7 blocos da\ndissertação integrada (Nextcloud → código executável)",
+        "## Stack\n\n```\nnginx (TLS, domínio PT) → api (Node/Express) → PostgreSQL + pgvector\n                            ↓\n                    30+ connectors (DGAL, SNIG, INE, MatrizNet, PORDATA…)\n                            ↓\n                    NLP PT (HuggingFace) + watermark + cert JWT\n```\n\n| Camada | Tecnologia | Bloco |\n|--------|-----------|-------|\n| Interface + WCAG 2"
+      ],
+      "pipeline_decision": "REVIEW",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "PERSONAL_DATA",
+          "licence": "CC-BY"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [
+            "folklore",
+            "territory",
+            "technology"
+          ],
+          "territory": "lisboa"
+        }
+      ]
+    },
+    {
+      "document_id": "cf464b0eed0923b58373cc0654907b24dc1c0e3290876a9795d61f22e21cb16a",
+      "source": "localfs:repo",
+      "source_id": "FTPS_SECRET_AUTHORIZATION_GATE.md",
+      "source_uri": "docs\\FTPS_SECRET_AUTHORIZATION_GATE.md",
+      "content_hash": "3ed7ba4b062a5a4a017f277828a3fbaf7353679a05e578863ac3696956bd5b78",
+      "original_name": "FTPS_SECRET_AUTHORIZATION_GATE.md",
+      "size": 709,
+      "mtime": "2026-09-08T17:41:07.004956+00:00",
+      "ingested_at": "2026-09-10T06:09:34.952206+00:00",
+      "mime_type": "text/markdown",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "UNKNOWN",
+      "privacy_class": "PERSONAL_DATA",
+      "dedup_status": "NEW",
+      "content_quality": 0.36,
+      "semantic_tags": [],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "# FTPS secret authorization gate\r\n\r\nThis file documents only the authorization boundary",
+        "No credential value belongs in this repository",
+        "Required GitHub Actions secret name: `PTSERVIDOR_FTPS_PASSWORD`"
+      ],
+      "pipeline_decision": "REVIEW",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "PERSONAL_DATA",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [],
+          "territory": ""
+        }
+      ]
+    },
+    {
+      "document_id": "6b03c78d071a52f10af6bd2985905209d02565959fbb11efaa9ea5325a571a5a",
+      "source": "localfs:repo",
+      "source_id": "web-integration.md",
+      "source_uri": "docs\\developer\\web-integration.md",
+      "content_hash": "0fa9a1ebb9687a1414e696f57b380d9b9a863d0319ef547abc5eef121cb1c60c",
+      "original_name": "web-integration.md",
+      "size": 6142,
+      "mtime": "2026-09-08T17:41:07.008954+00:00",
+      "ingested_at": "2026-09-10T06:09:34.953467+00:00",
+      "mime_type": "text/markdown",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "UNKNOWN",
+      "privacy_class": "PERSONAL_DATA",
+      "dedup_status": "NEW",
+      "content_quality": 1.0,
+      "semantic_tags": [
+        "technology",
+        "governance"
+      ],
+      "territory": "guarda",
+      "municipality": "guarda",
+      "claims": [
+        "# Atlas Vivo MILK — integração web e orquestração cloud\r\n\r\n## 1",
+        "Estado factual\r\n\r\n- O `API_ROR_MILK` localizado no Drive contém `document",
+        "json` com\r\n  `https://api"
+      ],
+      "pipeline_decision": "REVIEW",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "PERSONAL_DATA",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [
+            "technology",
+            "governance"
+          ],
+          "territory": "guarda"
+        }
+      ]
+    },
+    {
+      "document_id": "cce30942624ab970bd46b999ffd7d24e85e243eb583f60e316fb34b2c9487480",
+      "source": "localfs:repo",
+      "source_id": "nextcloud-cloud-integration.md",
+      "source_uri": "docs\\infrastructure\\nextcloud-cloud-integration.md",
+      "content_hash": "c0dc8c9244c0c6597eda3de53740d2322eaa7b3a1c85035609cf84dc648ac2a0",
+      "original_name": "nextcloud-cloud-integration.md",
+      "size": 4368,
+      "mtime": "2026-09-08T17:41:07.010956+00:00",
+      "ingested_at": "2026-09-10T06:09:34.953774+00:00",
+      "mime_type": "text/markdown",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "UNKNOWN",
+      "privacy_class": "PERSONAL_DATA",
+      "dedup_status": "NEW",
+      "content_quality": 1.0,
+      "semantic_tags": [
+        "technology"
+      ],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "# Nextcloud cloud integration for Atlas Vivo MILK\r\n\r\nStatus: architecture approved for implementation; production credentials and storage capacity are not yet validated",
+        "## Evidence and source boundary\r\n\r\nA Drive file named `index",
+        "rst` (ID `1XFxu6vReyX2ohpdEGWTHOw2Nh6YxMx_Y`) was inspected on 2026-08-13"
+      ],
+      "pipeline_decision": "REVIEW",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "PERSONAL_DATA",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [
+            "technology"
+          ],
+          "territory": ""
+        }
+      ]
+    }
+  ],
+  "quarantined_items": [
+    {
+      "document_id": "a81c82a6300fdeac5f240bd7f5f25331ebcdb2e33ba4d4140a610eb1c0d610a4",
+      "source": "nextcloud:Atlas Vivo MILK",
+      "source_id": "CODIGO_REACT_FESTIVAL_DADO_SEM_LADO_12_DISPOSITIVOS.txt",
+      "source_uri": "C:\\Users\\Utilizador\\Nextcloud\\Atlas Vivo MILK\\CODIGO_REACT_FESTIVAL_DADO_SEM_LADO_12_DISPOSITIVOS.txt",
+      "content_hash": "b4c853ecc1788dd19d983af7f52325bb88122b67e8b544efa85054408d3e54d0",
+      "original_name": "CODIGO_REACT_FESTIVAL_DADO_SEM_LADO_12_DISPOSITIVOS.txt",
+      "size": 38558,
+      "mtime": "2026-08-02T08:03:47+00:00",
+      "ingested_at": "2026-09-10T06:09:34.948327+00:00",
+      "mime_type": "text/plain",
+      "language": "pt",
+      "licence": "CC-BY",
+      "rights_status": "UNKNOWN",
+      "privacy_class": "SPECIAL_CATEGORY",
+      "dedup_status": "NEW",
+      "content_quality": 1.0,
+      "semantic_tags": [
+        "folklore",
+        "music",
+        "culture",
+        "territory",
+        "festival",
+        "technology",
+        "governance"
+      ],
+      "territory": "lisboa",
+      "municipality": "lisboa",
+      "claims": [
+        "import React, { useState } from \"react\";\nimport { MapPin, BookOpen, ShieldCheck, Users, Palette, Database, FileText, Heart, Search, Menu, X, Layers, Globe, Code, Law, Euro, Calendar, ArrowRight, ChevronDown, ChevronUp } from \"lucide-react\";\n\n// Dados dos 12 dispositivos do Festival Dado Sem Lado\nconst dispositivos = [\n  {\n    id: 1,\n    nome: \"Barrela Quântica\",\n    descricao: \"Dispositivo de coleta de dados biométricos e narrativas corporais",
+        "Explora a superposição de identidades através de sensores de frequência cardíaca, temperatura e movimento",
+        "\",\n    categoria: \"Corpo e Tecnologia\",\n    icone: <Heart className=\"w-6 h-6\" />,\n    tags: [\"biometria\", \"não-binário\", \"quantum\"]\n  },\n  {\n    id: 2,\n    nome: \"Endovélico Talks\",\n    descricao: \"Câmara oracular para diálogos com seres folclóricos"
+      ],
+      "pipeline_decision": "QUARANTINE",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "SPECIAL_CATEGORY",
+          "licence": "CC-BY"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [
+            "folklore",
+            "music",
+            "culture",
+            "territory",
+            "festival",
+            "technology",
+            "governance"
+          ],
+          "territory": "lisboa"
+        }
+      ]
+    },
+    {
+      "document_id": "701d52c391ffd09a21d12214bc1dabf5653175ea853916834e8fbf76f9f21db2",
+      "source": "localfs:repo",
+      "source_id": "00-INDEX.md",
+      "source_uri": "CERTIFICACOES-LICENCAS-DIPLOMAS\\00-INDEX.md",
+      "content_hash": "35e048f5201aa0f5c6239d8c2a79d42237f09fbf4b8663ebb5b162c0fcc7cabc",
+      "original_name": "00-INDEX.md",
+      "size": 21649,
+      "mtime": "2026-09-08T17:41:06.926702+00:00",
+      "ingested_at": "2026-09-10T06:09:34.952067+00:00",
+      "mime_type": "text/markdown",
+      "language": "pt",
+      "licence": "EUPL-1.2",
+      "rights_status": "UNKNOWN",
+      "privacy_class": "SPECIAL_CATEGORY",
+      "dedup_status": "NEW",
+      "content_quality": 1.0,
+      "semantic_tags": [
+        "folklore",
+        "culture",
+        "technology",
+        "governance"
+      ],
+      "territory": "",
+      "municipality": "",
+      "claims": [
+        "# 🏆 **SISTEMA COMPLETO DE CERTIFICAÇÕES, LICENÇAS E DIPLOMAS**\r\n## **Associação MILK – Movimento de Intervenções e Linguagens Kulturais e Arte**\r\n\r\n---\r\n\r\n## 📜 **DOCUMENTO OFICIAL DE CERTIFICAÇÃO GLOBAL**\r\n\r\n**Data de Criação:** 2026-06-26  \r\n**Versão:** 1",
+        "0  \r\n**Responsável Técnico:** Eduardo Maurício Vieira Cabral e Araújo  \r\n**ORCID:** [0009-0007-6892-6570](https://orcid",
+        "org/0009-0007-6892-6570)  \r\n**Coordenador Geral:** Nuno Filipe Fernandes Vieira Cabral e Araújo  \r\n**ORCID:** [0009-0009-1781-4020](https://orcid"
+      ],
+      "pipeline_decision": "QUARANTINE",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "SPECIAL_CATEGORY",
+          "licence": "EUPL-1.2"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [
+            "folklore",
+            "culture",
+            "technology",
+            "governance"
+          ],
+          "territory": ""
+        }
+      ]
+    },
+    {
+      "document_id": "cb161de95e461744db902047a5be81f167426edb2b766d1e60b292be08dea277",
+      "source": "localfs:repo",
+      "source_id": "nextcloud-interoperability-financiability-training.md",
+      "source_uri": "docs\\architecture\\nextcloud-interoperability-financiability-training.md",
+      "content_hash": "9e75cc3d155137e8318a3029d246cf0caf0a202cbb66848d347674223f2d4192",
+      "original_name": "nextcloud-interoperability-financiability-training.md",
+      "size": 9576,
+      "mtime": "2026-09-08T17:41:07.007955+00:00",
+      "ingested_at": "2026-09-10T06:09:34.953322+00:00",
+      "mime_type": "text/markdown",
+      "language": "pt",
+      "licence": "UNKNOWN",
+      "rights_status": "UNKNOWN",
+      "privacy_class": "SPECIAL_CATEGORY",
+      "dedup_status": "NEW",
+      "content_quality": 1.0,
+      "semantic_tags": [
+        "folklore",
+        "culture",
+        "territory",
+        "festival",
+        "technology",
+        "governance"
+      ],
+      "territory": "guarda",
+      "municipality": "guarda",
+      "claims": [
+        "# Nextcloud — interoperabilidade, financiabilidade e treino da IA MILK\r\n\r\nEstado: arquitetura executável e portas de ativação",
+        "Este documento não afirma que o Nextcloud esteja instalado",
+        "Executor de fluxos: Mistral"
+      ],
+      "pipeline_decision": "QUARANTINE",
+      "provenance": [
+        {
+          "stage": "validate",
+          "result": "passed"
+        },
+        {
+          "stage": "classify",
+          "result": "classified",
+          "privacy": "SPECIAL_CATEGORY",
+          "licence": "UNKNOWN"
+        },
+        {
+          "stage": "dedup",
+          "result": "NEW"
+        },
+        {
+          "stage": "enrich",
+          "result": "enriched",
+          "tags": [
+            "folklore",
+            "culture",
+            "territory",
+            "festival",
+            "technology",
+            "governance"
+          ],
+          "territory": "guarda"
+        }
+      ]
+    }
+  ],
+  "documents_after_final": 10576,
+  "corpus_existing_docs_modified": 0,
+  "new_ingested_count": 38,
+  "sample_ingested": [
+    {
+      "hash": "318b09c276e4a30a",
+      "source": "nextcloud:CURADORIA_100",
+      "source_id": "atlas_vivo_triagem_curatorial_100_resumo",
+      "chunks": 1,
+      "tags": [],
+      "privacy": "INTERNAL"
+    },
+    {
+      "hash": "0663d3e36c405ef1",
+      "source": "nextcloud:CURADORIA_100",
+      "source_id": "atlas_vivo_resumo_consolidacao_total_1_2",
+      "chunks": 2,
+      "tags": [],
+      "privacy": "INTERNAL"
+    },
+    {
+      "hash": "f6c81eaeda645907",
+      "source": "nextcloud:CURADORIA_100",
+      "source_id": "atlas_vivo_regra_consolidacao_total_1_2.",
+      "chunks": 2,
+      "tags": [],
+      "privacy": "INTERNAL"
+    },
+    {
+      "hash": "8679f29aa218040c",
+      "source": "nextcloud:CURADORIA_100",
+      "source_id": "atlas_vivo_protocolo_genealogico_autoava",
+      "chunks": 3,
+      "tags": [],
+      "privacy": "INTERNAL"
+    },
+    {
+      "hash": "cfb8d75cab1648af",
+      "source": "nextcloud:CURADORIA_100",
+      "source_id": "atlas_vivo_nucleo_estavel_1_2_resumo.txt",
+      "chunks": 1,
+      "tags": [],
+      "privacy": "INTERNAL"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "baseline_commit": "7f93c9a",
+  "sources_checked": [
+    "nextcloud:Atlas Vivo MILK",
+    "nextcloud:CURADORIA_100",
+    "nextcloud:COCKPIT_MILK",
+    "onedrive",
+    "localfs:repo"
+  ],
+  "new_items_discovered": 50,
+  "accepted": 38,
+  "review_required": 8,
+  "quarantined": 3,
+  "duplicates": 0,
+  "documents_before": 10538,
+  "documents_added": 38,
+  "documents_after": 10576,
+  "chunks_added": 132,
+  "indexes_updated": "checkpoint updated, new docs in corpus",
+  "retrieval_proof": "new docs have chunks, retrievable by hash",
+  "provenance_verified": true,
+  "corpus_existing_docs_modified": 0,
+  "remaining_blocks": [
+    "ZENODO_TOKEN",
+    "GOLD_QRELS",
+    "Docker",
+    "Codeberg",
+    "PTServidor SSH",
+    "Fabric lifecycle"
+  ]
+}

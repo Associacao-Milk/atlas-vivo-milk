@@ -19,6 +19,30 @@ MILK_IA
   ORCID                     → 0009-0007-6892-6570
 ```
 
+### Guia Queer e obra fotográfica
+
+O **Guia Queer**, as **obras fotográficas assinadas Nuno A** e o **código da página da Associação MILK** são autoria de **Nuno Filipe Fernandes Vieira Cabral e Araújo** (nome artístico: **Nuno A**), **ORCID: 0009-0009-1781-4020**.
+
+A assinatura **Nuno A** nunca deve ser substituída por "Nuno", "Nuno Araújo" ou por outro autor quando a obra foi originalmente assinada como **Nuno A**.
+
+```text
+GUIA_QUEER / FOTOGRAFIA / PÁGINA_MILK
+  author          → Nuno Filipe Fernandes Vieira Cabral e Araújo
+  artistic_name   → Nuno A
+  signature       → Nuno A
+  ORCID           → 0009-0009-1781-4020
+  authorship      → preserved
+```
+
+### Regra de atribuição da MILK
+
+A genealogia autoral fica inequivocamente separada:
+
+- **Eduardo Maurício Vieira Cabral e Araújo — Eduardo Mauer** — Idealizador e autor conceptual originário da IA MILK. ORCID: 0009-0007-6892-6570
+- **Nuno Filipe Fernandes Vieira Cabral e Araújo — Nuno A** — Autor do Guia Queer, das obras fotográficas assinadas Nuno A e do código da página da Associação MILK. ORCID: 0009-0009-1781-4020
+
+A MILK preserva esta separação em schemas, metadados, proveniência, fichas catalográficas, interfaces públicas, créditos, datasets, registos de autoria e exportações interoperáveis.
+
 ## Estado do corpus
 
 - 10.576 documentos canónicos

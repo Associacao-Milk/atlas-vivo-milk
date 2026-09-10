@@ -30,14 +30,67 @@ CANONICAL_AUTHOR: dict[str, str] = {
     "curatorial_device": "Atlas Vivo MILK",
 }
 
+# ---------------------------------------------------------------------------
+# Segunda identidade canónica — Nuno Filipe Fernandes Vieira Cabral e Araújo
+# ---------------------------------------------------------------------------
+# O Guia Queer, as obras fotográficas assinadas "Nuno A" e o código da página
+# da Associação MILK são autoria de Nuno Filipe Fernandes Vieira Cabral e
+# Araújo (artisticamente Nuno A). A genealogia autoral é inequivocamente
+# separada: Eduardo idealizou a IA MILK; Nuno é autor do Guia Queer, das
+# fotografias e do código da página.
+
+CANONICAL_AUTHOR_NUNO: dict[str, str] = {
+    "author": "Nuno Filipe Fernandes Vieira Cabral e Araújo",
+    "artistic_name": "Nuno A",
+    "signature": "Nuno A",
+    "orcid": "0009-0009-1781-4020",
+    "email": "nuno@associacaomilk.pt",
+    "role": "curatorial_lead",
+    "works": [
+        "Guia Queer",
+        "obra fotográfica assinada Nuno A",
+        "código da página da Associação MILK",
+    ],
+}
+
+# Genealogia autoral canónica — separação inequívoca
+CANONICAL_AUTHORS: dict[str, dict[str, str]] = {
+    "eduardo_mauer": CANONICAL_AUTHOR,
+    "nuno_a": CANONICAL_AUTHOR_NUNO,
+}
+
 
 def canonical_author_identity() -> dict[str, str]:
-    """Return the canonical authorship identity record.
+    """Return the canonical MILK IA author identity (Eduardo Mauer).
 
     This is the single authoritative source for the MILK IA author identity.
     All provenance, genealogy, and attribution records must reference this.
     """
     return dict(CANONICAL_AUTHOR)
+
+
+def canonical_nuno_identity() -> dict[str, str]:
+    """Return the canonical Nuno A author identity (Guia Queer + photos + site code).
+
+    The genealogical separation between Eduardo (IA MILK idealizer) and Nuno
+    (Guia Queer / photography / site code author) must be preserved in all
+    schemas, metadata, provenance, catalog records, public interfaces,
+    credits, datasets, and interoperable exports.
+    """
+    return dict(CANONICAL_AUTHOR_NUNO)
+
+
+def all_canonical_authors() -> dict[str, dict[str, str]]:
+    """Return all canonical author identities, keyed by artistic name slug."""
+    return {k: dict(v) for k, v in CANONICAL_AUTHORS.items()}
+
+
+def resolve_author_by_orcid(orcid: str) -> dict[str, str] | None:
+    """Resolve an ORCID to its canonical author identity, or None."""
+    for author in CANONICAL_AUTHORS.values():
+        if author.get("orcid") == orcid:
+            return dict(author)
+    return None
 
 
 def utc_now() -> str:

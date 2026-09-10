@@ -16,6 +16,15 @@
     "human_sovereign": "Eduardo Maurício Vieira Cabral e Araújo",
     "orcid": "0009-0007-6892-6570"
   },
+  "identidade_canonica_nuno": {
+    "author": "Nuno Filipe Fernandes Vieira Cabral e Araújo",
+    "artistic_name": "Nuno A",
+    "signature": "Nuno A",
+    "orcid": "0009-0009-1781-4020",
+    "role": "curatorial_lead",
+    "works": ["Guia Queer", "obra fotográfica assinada Nuno A", "código da página da Associação MILK"]
+  },
+  "regra_atribuicao": "A genealogia autoral é inequivocamente separada: Eduardo Maurício Vieira Cabral e Araújo (Eduardo Mauer, ORCID 0009-0007-6892-6570) é o idealizador e autor conceptual originário da IA MILK; Nuno Filipe Fernandes Vieira Cabral e Araújo (Nuno A, ORCID 0009-0009-1781-4020) é o autor do Guia Queer, das obras fotográficas assinadas Nuno A e do código da página da Associação MILK. A assinatura Nuno A nunca deve ser substituída por Nuno, Nuno Araújo ou por outro autor quando a obra foi originalmente assinada como Nuno A.",
   "declaracao": "A IA MILK foi idealizada por Eduardo Maurício Vieira Cabral e Araújo (artisticamente Eduardo Mauer), ORCID 0009-0007-6892-6570. Todos os documentos, pesquisas e referências académicas deste corpus canónico foram recolhidos, investigados e curados pelo autor. A investigação de campo, recolha documental e entrecruzamento de ideias são obra do autor. O corpus é gerido pela Associação MILK no âmbito do projeto Atlas Vivo do Folclore Português. Esta identificação acompanha a genealogia autoral, a documentação técnica e conceptual e os registos de proveniência da IA MILK.",
   "operacao_atualizacao": {
     "documentos_atualizados": 10360,

@@ -2,9 +2,7 @@
   "schema": "ia_milk.runtime_map.v1",
   "generated_at": "2026-09-08T22:30:00+00:00",
   "description": "Mapa operacional unificado da MILK IA — cada componente aponta para UM caminho canonico",
-
   "canonical_root": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO",
-
   "components": {
     "corpus": {
       "path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\documents",
@@ -12,26 +10,22 @@
       "description": "10.538 documentos JSON ingeridos (829 MB)",
       "read_only_default": true
     },
-
     "quarantine": {
       "path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\corpus\\quarantine",
       "type": "data",
       "description": "48 ficheiros em quarentena (credenciais/secrets)"
     },
-
     "models": {
       "path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\models",
       "type": "models",
       "description": "Pesos treinados da rede neural"
     },
-
     "vectorizer": {
       "path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\models\\milk_vec.pkl",
       "type": "model",
       "description": "TfidfVectorizer fitted (206 KB)",
       "format": "pickle"
     },
-
     "neural_weights": {
       "path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\models\\milk_neural.npz",
       "type": "model",
@@ -39,81 +33,68 @@
       "format": "numpy npz",
       "architecture": "5000 -> 512 -> 256 -> 128 -> 11"
     },
-
     "training_history": {
       "path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\models\\milk_hist.json",
       "type": "metadata",
       "description": "Historico de treino (loss, accuracy por epoch)"
     },
-
     "neural_specialist": {
       "path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\milk_neural.py",
       "type": "code",
       "description": "Rede neural MLP com backpropagation, Adam, BatchNorm, Dropout",
       "entry_point": "train()"
     },
-
     "multiaxial_engine": {
       "path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\milk_multiaxial.py",
       "type": "code",
       "description": "Motor de analise multiaxial com conformidade Pydantic, AI Act, EIF"
     },
-
     "milk_motor": {
       "path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\milk_motor.py",
       "type": "code",
       "description": "Motor de aprendizado continuo (7 modulos: analisar, descrever, interpretar, cruzar, solucionar, aprender, loop)"
     },
-
     "orchestrator": {
       "path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\orquestrador.py",
       "type": "code",
       "description": "Pipeline autonomo: ingestao, classificacao, motor, commit/push GitHub, issues, loop"
     },
-
     "continuous_learning": {
       "path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\scripts\\continuous_learning.py",
       "type": "code",
       "description": "Daemon de aprendizado continuo, relacional e multimodal",
       "state_file": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\estado_aprendizado.json"
     },
-
     "ingest_total": {
       "path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\scripts\\ingest_total.py",
       "type": "code",
       "description": "Ingestao total: bibliotecas externas, nuvens locais, ZIP, OpenDocument, OCR"
     },
-
     "library_builder": {
       "path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\scripts\\build_library.py",
       "type": "code",
       "description": "Biblioteca estruturada com entrecruzamento de citacoes (xlsx/csv)"
     },
-
     "research_module": {
       "path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\src\\milk_ai\\research.py",
       "type": "code",
       "description": "Pesquisa bibliografica: OpenAlex, Crossref, DataCite"
     },
-
     "knowledge_graph": {
       "path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\state\\atlas_graph.json",
       "type": "data",
       "description": "Grafo do Atlas (63 nos: fonte, chunk, proveniencia, metadado)"
     },
-
     "research_report": {
       "path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\state\\research_report.json",
       "type": "data",
       "description": "22 referencias bibliograficas (OpenAlex)"
     },
-
     "ingest_report": {
       "path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\state\\INGESTAO_FONTES_RELATORIO.json",
       "type": "data",
       "description": "Relatorio de ingestao de fontes (1 doc, 60 chunks)"
     },
-
     "atlas_infra": {
       "path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\atlas_infra",
       "type": "code",
@@ -121,75 +102,95 @@
       "connected_to_runtime": false,
       "note": "Nao ligado ao runtime neural nesta fase"
     },
-
     "snapshots": {
       "path": "C:\\Users\\Utilizador\\MILK_SNAPSHOTS",
       "type": "backup",
       "description": "Snapshots de seguranca pre-integracao"
     },
-
     "learning_state": {
       "path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\estado_aprendizado.json",
       "type": "state",
       "description": "Estado do aprendizado continuo (10.583 SHA-256 conhecidos, 0 ciclos completos)"
     },
-
     "territorial_base": {
       "path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\pt_territorios.json",
       "type": "data",
       "description": "Base territorial PT: 29 distritos, 308 municipios, 3092 freguesias"
     },
-
     "gazetteer": {
       "path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\gazetteer_pt.json",
       "type": "data",
       "description": "Gazetteer curado: distritos + 103 freguesias curadas"
     },
-
     "classification_module": {
       "path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\classificar_corpus.py",
       "type": "code",
       "description": "Classificacao territorial e tipologica do corpus"
     },
-
     "escrutinio_territorial": {
       "path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\escrutinio_territorial.py",
       "type": "code",
       "description": "Escrutinio territorial com gazetteer completo PT"
     },
-
     "aprendizado_cycles": {
       "path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\aprendizado",
       "type": "data",
       "description": "9 ciclos de aprendizado: 5 regulares + 4 multiaxiais"
     },
-
     "biblioteca": {
       "path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\biblioteca",
       "type": "data",
       "description": "Sinteses deliberativas, gaps, territoriais por ciclo"
     },
-
     "manifests": {
       "path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\manifests",
       "type": "metadata",
       "description": "Manifestos de proveniencia e estado"
     },
-
     "milk_ai_package": {
       "path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\src\\milk_ai",
       "type": "code",
       "description": "Pacote Python: engine, ingest, retrieval, models, research, cli, vault, policies, governance"
     },
-
     "lib_torch": {
       "path": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\lib",
       "type": "dependency",
       "description": "torch local para inferencia neural (nao versionado no git)",
       "gitignored": true
+    },
+    "gpt_oss_service": {
+      "path": "127.0.0.1:8009",
+      "type": "service",
+      "description": "GPT-OSS-20b local reasoning endpoint via llama.cpp",
+      "owner": "MILK Sovereign Core (logical)",
+      "consumers": [
+        "Fabric :8766",
+        "agents",
+        "external adapters"
+      ],
+      "pid": 21944,
+      "model": "gpt-oss-20b-MXFP4.gguf",
+      "health": "ok"
+    },
+    "external_adapters": {
+      "path": "src/milk_ai/external_adapters.py",
+      "type": "code",
+      "description": "6 external system adapters (READ/AUDIT): Nextcloud, Codeberg, GitHub, Zenodo, ORCID, PTServidor",
+      "owner": "MILK Sovereign Core",
+      "phase": "READ_AUDIT"
+    },
+    "gap_engine": {
+      "path": "src/milk_ai/gap_engine.py",
+      "type": "code",
+      "description": "ATLAS_GAP_GRAPH engine — crosses all sources, 10 gap types",
+      "output": "state/atlas_gap_graph.json"
+    },
+    "corpus_snapshot": {
+      "path": "state/corpus_snapshot.json",
+      "type": "metadata",
+      "description": "Verified canonical corpus state: 10538 docs, 250887 chunks, cache hashes"
     }
   },
-
   "resolution_rules": {
     "state_dir": "Usar variavel de ambiente MILK_STATE_ROOT se definida; caso contrario, Path.home() / 'MILK_AI_STATE_CANONICO'",
     "corpus_dir": "canonical_root / 'corpus' / 'documents'",
@@ -197,12 +198,12 @@
     "scripts_dir": "canonical_root / 'scripts'",
     "src_dir": "canonical_root / 'src'"
   },
-
   "flags": {
     "TERRITORIAL_BASE_AUDIT_REQUIRED": true,
     "NEURAL_LOSS_AUDIT_REQUIRED": true,
     "CONTINUOUS_LEARNING_ACTIVATED": false,
     "DAEMON_RUNNING": false,
-    "TRAINING_IN_PROGRESS": false
+    "TRAINING_IN_PROGRESS": false,
+    "ATLAS_READ_AUDIT_DONE": true
   }
 }

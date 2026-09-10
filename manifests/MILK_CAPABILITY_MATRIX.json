@@ -1,6 +1,6 @@
 {
   "schema": "ia_milk.capability_matrix.v1",
-  "updated_at": "2026-09-10T01:31:13.390502+00:00",
+  "updated_at": "2026-09-10T03:00:00+00:00",
   "capabilities": {
     "neural_classifier": {
       "status": "TESTED_PROMOTED_TORCH",
@@ -200,6 +200,21 @@
     "gold_qrels": {
       "status": "CREATED",
       "notes": "591 pooled items for human validation, 52 queries, pseudo_qrels separated"
+    },
+    "atlas_external_adapters": {
+      "status": "TESTED",
+      "file": "src/milk_ai/external_adapters.py",
+      "notes": "6 adapters: Nextcloud, Codeberg, GitHub, Zenodo, ORCID, PTServidor. READ/AUDIT phase. 41 tests pass."
+    },
+    "atlas_gap_engine": {
+      "status": "TESTED",
+      "file": "src/milk_ai/gap_engine.py",
+      "notes": "22 gaps across 10 types: MISSING, STALE, DIVERGENT, UNVERIFIED, UNPUBLISHED, UNDEPLOYED, METADATA_GAP, PROVENANCE_GAP, INTEROP_GAP, AUTH_BLOCKED"
+    },
+    "atlas_operational_proof": {
+      "status": "TESTED",
+      "file": "milk_atlas_proof.py",
+      "notes": "6 real reads executed, 4-source provenance chain, end-to-end provenance confirmed"
     }
   }
 }

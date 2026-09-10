@@ -1,0 +1,60 @@
+{
+  "schema": "ia_milk.corpus_snapshot.v1",
+  "generated_at": "2026-09-10T02:45:00+00:00",
+  "method": "direct filesystem count + cache hash verification",
+  "canonical_root": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO",
+  "corpus": {
+    "path": "corpus/documents",
+    "doc_count": 10538,
+    "doc_count_method": "ls corpus/documents/*.json | wc -l",
+    "quarantine_count": 48,
+    "nested_subdirs": ["documents (41 entries)", "quarantine (12 entries)"],
+    "nested_subdirs_note": "accidental nested copies inside corpus/documents, not counted in canonical doc_count"
+  },
+  "chunks": {
+    "total": 250887,
+    "source": "pre-chunked in document JSON field 'chunks'",
+    "chunker_version": "ingest_pipeline_v1 (chunks stored in document.chunks[])",
+    "fallback": "if no chunks field, full text[:500] becomes 1 chunk"
+  },
+  "discrepancy_resolution": {
+    "readme_stale": {"docs": 10535, "chunks": 250833},
+    "runtime_verified": {"docs": 10538, "chunks": 250887},
+    "delta": {"docs": 3, "chunks": 54},
+    "cause": "3 documents added to corpus after README was last updated; 3 docs contain 54 chunks total (~18 chunks/doc average). Matches known_issue CORPUS_3_NEW.",
+    "authority": "runtime artifacts (index_meta.json, cache shapes, filesystem count) are canonical; README is derived documentation, now corrected."
+  },
+  "caches": {
+    "chunk_dense_cache": {
+      "path": "state/chunk_index/chunk_dense_cache.npz",
+      "shape": "250887 x 1024",
+      "size_mb": 997,
+      "sha256_prefix": "f8f8447b3cf850445c0bc2b7cfc1fb08",
+      "model": "BAAI/bge-m3",
+      "device": "cuda"
+    },
+    "doc_dense_cache": {
+      "path": "state/chunk_index/doc_dense_cache.npz",
+      "shape": "10538 x 1024",
+      "size_mb": 42,
+      "sha256_prefix": "a5245f723307d29d9735c19231616209",
+      "model": "BAAI/bge-m3",
+      "device": "cuda"
+    },
+    "sparse": {
+      "chunk_idf_terms": 50000,
+      "doc_idf_terms": 50000,
+      "method": "TF-IDF with bigram features"
+    }
+  },
+  "retrieval_status": {
+    "canonical": "CANDIDATE_CANONICAL",
+    "strategies": ["A_TFIDF_BGE_RRF", "D_HIERARCHICAL"],
+    "decision": "NO_SIGNIFICANT_DIFFERENCE (Wilcoxon p=0.9914, CI includes zero)",
+    "gold_qrels": "CREATED (591 pooled items, human validation PENDING)"
+  },
+  "git": {
+    "head": "de3a979",
+    "branch": "master"
+  }
+}

@@ -3,7 +3,7 @@
   "updated_at": "2026-09-10T01:31:13.390502+00:00",
   "canonical_root": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO",
   "git_head": "pending local commit",
-  "current_phase": "RETRIEVAL_VALIDATION_FINAL_DONE",
+  "current_phase": "ATLAS_OPERATIONAL_READ_AUDIT",
   "phases_completed": [
     "INTEGRATION_A_B",
     "SNAPSHOT_PROTECTION",
@@ -20,9 +20,10 @@
     "CHUNK_INDEX_250K",
     "RETRIEVAL_BENCHMARK",
     "RETRIEVAL_BENCHMARK_V2",
-    "RETRIEVAL_VALIDATION_FINAL"
+    "RETRIEVAL_VALIDATION_FINAL",
+    "ATLAS_OPERATIONAL_READ_AUDIT"
   ],
-  "current_task": "PIPELINE_OPERATIONAL",
+  "current_task": "HUMAN_VALIDATION_GOLD_QRELS",
   "corpus_documents": 10538,
   "models": {
     "milk_neural.npz": {
@@ -61,8 +62,8 @@
     {
       "id": "CORPUS_3_NEW",
       "severity": "low",
-      "description": "3 new docs since last training not yet in estado_aprendizado",
-      "status": "DEFERRED"
+      "description": "3 new docs reconciled: README updated 10535->10538, chunks 250833->250887. Verified by filesystem count.",
+      "status": "RECONCILED"
     },
     {
       "id": "GRADIENT_NORM",
@@ -76,6 +77,18 @@
       "severity": "high",
       "description": "Resolved by C_CONTROLLED_TRAINING (from-scratch plain BCE + per-class threshold tuning). 3/11 -> 11/11 classes.",
       "status": "FIXED_PROMOTED"
+    },
+    {
+      "id": "ATLAS_GAP_GRAPH",
+      "severity": "info",
+      "description": "22 gaps identified across 6 external systems: 3 high, 13 medium, 5 low, 1 info",
+      "status": "OPEN"
+    },
+    {
+      "id": "ORCID_NAME_DIVERGENCE",
+      "severity": "medium",
+      "description": "ORCID 0009-0009-1781-4020 resolves to Nuno Filipe Fernandes Vieira Cabral e Araujo but .zenodo.json lists Eduardo Mauricio Vieira Cabral e Araujo — verify correct ORCID",
+      "status": "OPEN"
     }
   ],
   "stop_conditions": [

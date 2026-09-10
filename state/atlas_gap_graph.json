@@ -1,0 +1,586 @@
+{
+  "schema": "ia_milk.atlas_gap_graph.v1",
+  "generated_at": "2026-09-10T01:54:01.721849+00:00",
+  "total_gaps": 22,
+  "by_severity": {
+    "critical": 0,
+    "high": 3,
+    "medium": 13,
+    "low": 5,
+    "info": 1
+  },
+  "by_type": {
+    "MISSING": 1,
+    "DIVERGENT": 4,
+    "UNVERIFIED": 7,
+    "UNPUBLISHED": 2,
+    "METADATA_GAP": 1,
+    "PROVENANCE_GAP": 1,
+    "INTEROP_GAP": 2,
+    "AUTH_BLOCKED": 4
+  },
+  "gaps": [
+    {
+      "gap_id": "GAP-0012",
+      "domain": "publication",
+      "source": "zenodo",
+      "gap_type": "UNPUBLISHED",
+      "evidence": "No Zenodo records found for community 'milkivc'",
+      "severity": "high",
+      "dependency": null,
+      "proposed_action": "Create first Zenodo deposition from .zenodo.json when ready",
+      "reversibility": "reversible",
+      "human_gate": true,
+      "status": "open",
+      "created_at": "2026-09-10T01:54:01.720528+00:00"
+    },
+    {
+      "gap_id": "GAP-0017",
+      "domain": "deployment",
+      "source": "ptservidor",
+      "gap_type": "DIVERGENT",
+      "evidence": "atlas.associacaomilk.pt responds (HTTP 200) — verify deployed version vs local canonical",
+      "severity": "high",
+      "dependency": null,
+      "proposed_action": "Compare deployed webapp version with local atlas_infra canonical version; create STAGING_DEPLOY_PLAN",
+      "reversibility": "reversible",
+      "human_gate": true,
+      "status": "open",
+      "created_at": "2026-09-10T01:54:01.720579+00:00"
+    },
+    {
+      "gap_id": "GAP-0019",
+      "domain": "deployment",
+      "source": "ptservidor",
+      "gap_type": "INTEROP_GAP",
+      "evidence": "Local atlas_infra webapp not connected to neural runtime / fabric — deployed version may lack retrieval pipeline",
+      "severity": "high",
+      "dependency": null,
+      "proposed_action": "Integrate fabric/retrieval into atlas_infra backend before next deploy",
+      "reversibility": "reversible",
+      "human_gate": true,
+      "status": "open",
+      "created_at": "2026-09-10T01:54:01.720595+00:00"
+    },
+    {
+      "gap_id": "GAP-0001",
+      "domain": "corpus_sync",
+      "source": "nextcloud",
+      "gap_type": "UNVERIFIED",
+      "evidence": "Nextcloud folder 'Associação MILK' may contain source materials not yet ingested into corpus",
+      "severity": "medium",
+      "dependency": null,
+      "proposed_action": "Audit Nextcloud/Associação MILK for documents missing from corpus/documents",
+      "reversibility": "reversible",
+      "human_gate": true,
+      "status": "open",
+      "created_at": "2026-09-10T01:54:01.720410+00:00"
+    },
+    {
+      "gap_id": "GAP-0002",
+      "domain": "corpus_sync",
+      "source": "nextcloud",
+      "gap_type": "UNVERIFIED",
+      "evidence": "Nextcloud folder 'Atlas Vivo MILK' may contain source materials not yet ingested into corpus",
+      "severity": "medium",
+      "dependency": null,
+      "proposed_action": "Audit Nextcloud/Atlas Vivo MILK for documents missing from corpus/documents",
+      "reversibility": "reversible",
+      "human_gate": true,
+      "status": "open",
+      "created_at": "2026-09-10T01:54:01.720436+00:00"
+    },
+    {
+      "gap_id": "GAP-0003",
+      "domain": "corpus_sync",
+      "source": "nextcloud",
+      "gap_type": "UNVERIFIED",
+      "evidence": "Nextcloud folder 'ATLAS_MILK_MISTRAGA' may contain source materials not yet ingested into corpus",
+      "severity": "medium",
+      "dependency": null,
+      "proposed_action": "Audit Nextcloud/ATLAS_MILK_MISTRAGA for documents missing from corpus/documents",
+      "reversibility": "reversible",
+      "human_gate": true,
+      "status": "open",
+      "created_at": "2026-09-10T01:54:01.720445+00:00"
+    },
+    {
+      "gap_id": "GAP-0004",
+      "domain": "corpus_sync",
+      "source": "nextcloud",
+      "gap_type": "UNVERIFIED",
+      "evidence": "Nextcloud folder 'COCKPIT_MILK' may contain source materials not yet ingested into corpus",
+      "severity": "medium",
+      "dependency": null,
+      "proposed_action": "Audit Nextcloud/COCKPIT_MILK for documents missing from corpus/documents",
+      "reversibility": "reversible",
+      "human_gate": true,
+      "status": "open",
+      "created_at": "2026-09-10T01:54:01.720453+00:00"
+    },
+    {
+      "gap_id": "GAP-0005",
+      "domain": "corpus_sync",
+      "source": "nextcloud",
+      "gap_type": "UNVERIFIED",
+      "evidence": "Nextcloud folder 'CURADORIA_100' may contain source materials not yet ingested into corpus",
+      "severity": "medium",
+      "dependency": null,
+      "proposed_action": "Audit Nextcloud/CURADORIA_100 for documents missing from corpus/documents",
+      "reversibility": "reversible",
+      "human_gate": true,
+      "status": "open",
+      "created_at": "2026-09-10T01:54:01.720460+00:00"
+    },
+    {
+      "gap_id": "GAP-0007",
+      "domain": "source_control",
+      "source": "codeberg",
+      "gap_type": "MISSING",
+      "evidence": "No MILK repo found on Codeberg (owner=milkivc)",
+      "severity": "medium",
+      "dependency": null,
+      "proposed_action": "Create atlas-vivo-milk repo on Codeberg as EU-sovereign mirror",
+      "reversibility": "reversible",
+      "human_gate": true,
+      "status": "open",
+      "created_at": "2026-09-10T01:54:01.720479+00:00"
+    },
+    {
+      "gap_id": "GAP-0009",
+      "domain": "source_control",
+      "source": "codeberg",
+      "gap_type": "INTEROP_GAP",
+      "evidence": "Local git has no Codeberg remote — only GitHub origin",
+      "severity": "medium",
+      "dependency": null,
+      "proposed_action": "Add Codeberg as second remote for EU-sovereign redundancy",
+      "reversibility": "reversible",
+      "human_gate": true,
+      "status": "open",
+      "created_at": "2026-09-10T01:54:01.720495+00:00"
+    },
+    {
+      "gap_id": "GAP-0010",
+      "domain": "source_control",
+      "source": "github",
+      "gap_type": "DIVERGENT",
+      "evidence": "GitHub is configured as mirror — local HEAD de3a979 may be ahead of remote (unpushed commits)",
+      "severity": "medium",
+      "dependency": null,
+      "proposed_action": "Verify git log origin/master vs local master; push when authorized",
+      "reversibility": "reversible",
+      "human_gate": true,
+      "status": "open",
+      "created_at": "2026-09-10T01:54:01.720506+00:00"
+    },
+    {
+      "gap_id": "GAP-0014",
+      "domain": "authorship",
+      "source": "orcid",
+      "gap_type": "UNVERIFIED",
+      "evidence": "Known ORCIDs: ['0009-0009-1781-4020'] — public validation pending",
+      "severity": "medium",
+      "dependency": null,
+      "proposed_action": "Validate ORCID 0009-0009-1781-4020 via public API and map to corpus authorship",
+      "reversibility": "reversible",
+      "human_gate": false,
+      "status": "open",
+      "created_at": "2026-09-10T01:54:01.720552+00:00"
+    },
+    {
+      "gap_id": "GAP-0016",
+      "domain": "authorship",
+      "source": "orcid",
+      "gap_type": "METADATA_GAP",
+      "evidence": "Corpus documents may not all have ORCID in metadata — creator↔ORCID↔artefact map incomplete",
+      "severity": "medium",
+      "dependency": null,
+      "proposed_action": "Scan corpus for author fields, cross-reference with known ORCIDs",
+      "reversibility": "reversible",
+      "human_gate": false,
+      "status": "open",
+      "created_at": "2026-09-10T01:54:01.720568+00:00"
+    },
+    {
+      "gap_id": "GAP-0018",
+      "domain": "deployment",
+      "source": "ptservidor",
+      "gap_type": "AUTH_BLOCKED",
+      "evidence": "No SSH/deploy credentials for PT server — cannot verify runtime/webroot/repo path",
+      "severity": "medium",
+      "dependency": null,
+      "proposed_action": "Obtain SSH key or deploy token from hosting provider",
+      "reversibility": "reversible",
+      "human_gate": true,
+      "status": "open",
+      "created_at": "2026-09-10T01:54:01.720587+00:00"
+    },
+    {
+      "gap_id": "GAP-0020",
+      "domain": "corpus_integrity",
+      "source": "local",
+      "gap_type": "DIVERGENT",
+      "evidence": "Nested corpus/documents/documents/ has 41 entries — accidental copy, may cause duplication",
+      "severity": "medium",
+      "dependency": null,
+      "proposed_action": "Investigate and remove nested duplicate directories after verification",
+      "reversibility": "reversible",
+      "human_gate": true,
+      "status": "open",
+      "created_at": "2026-09-10T01:54:01.721397+00:00"
+    },
+    {
+      "gap_id": "GAP-0022",
+      "domain": "retrieval",
+      "source": "local",
+      "gap_type": "UNVERIFIED",
+      "evidence": "GOLD_QRELS created (591 items) but human validation PENDING — canonical retrieval cannot be promoted",
+      "severity": "medium",
+      "dependency": null,
+      "proposed_action": "Human expert grades GOLD_QRELS; then promote winning retrieval strategy to CANONICAL_RETRIEVAL",
+      "reversibility": "reversible",
+      "human_gate": true,
+      "status": "open",
+      "created_at": "2026-09-10T01:54:01.721817+00:00"
+    },
+    {
+      "gap_id": "GAP-0006",
+      "domain": "provenance",
+      "source": "nextcloud",
+      "gap_type": "PROVENANCE_GAP",
+      "evidence": "auditor_fantasma folder exists — provenance of audit materials unverified",
+      "severity": "low",
+      "dependency": null,
+      "proposed_action": "Map auditor_fantasma contents to corpus provenance chain",
+      "reversibility": "reversible",
+      "human_gate": false,
+      "status": "open",
+      "created_at": "2026-09-10T01:54:01.720469+00:00"
+    },
+    {
+      "gap_id": "GAP-0008",
+      "domain": "source_control",
+      "source": "codeberg",
+      "gap_type": "AUTH_BLOCKED",
+      "evidence": "CODEBERG_TOKEN not configured — cannot read private repos or write",
+      "severity": "low",
+      "dependency": "codeberg account",
+      "proposed_action": "Create Forgejo API token at codeberg.org/user/settings/applications",
+      "reversibility": "reversible",
+      "human_gate": true,
+      "status": "open",
+      "created_at": "2026-09-10T01:54:01.720487+00:00"
+    },
+    {
+      "gap_id": "GAP-0011",
+      "domain": "release",
+      "source": "github",
+      "gap_type": "UNPUBLISHED",
+      "evidence": "No GitHub releases detected for atlas-vivo-milk",
+      "severity": "low",
+      "dependency": null,
+      "proposed_action": "Create first GitHub release tag after Atlas integration is stable",
+      "reversibility": "reversible",
+      "human_gate": true,
+      "status": "open",
+      "created_at": "2026-09-10T01:54:01.720513+00:00"
+    },
+    {
+      "gap_id": "GAP-0013",
+      "domain": "publication",
+      "source": "zenodo",
+      "gap_type": "AUTH_BLOCKED",
+      "evidence": "ZENODO_TOKEN not configured — cannot create depositions or read private records",
+      "severity": "low",
+      "dependency": null,
+      "proposed_action": "Create Zenodo API token at zenodo.org/account/settings/applications",
+      "reversibility": "reversible",
+      "human_gate": true,
+      "status": "open",
+      "created_at": "2026-09-10T01:54:01.720535+00:00"
+    },
+    {
+      "gap_id": "GAP-0021",
+      "domain": "corpus_integrity",
+      "source": "local",
+      "gap_type": "DIVERGENT",
+      "evidence": "Nested corpus/documents/quarantine/ has 12 entries — accidental nested quarantine",
+      "severity": "low",
+      "dependency": null,
+      "proposed_action": "Remove nested quarantine directory after verifying contents match root quarantine",
+      "reversibility": "reversible",
+      "human_gate": true,
+      "status": "open",
+      "created_at": "2026-09-10T01:54:01.721739+00:00"
+    },
+    {
+      "gap_id": "GAP-0015",
+      "domain": "authorship",
+      "source": "orcid",
+      "gap_type": "AUTH_BLOCKED",
+      "evidence": "ORCID Member API not configured — cannot add works to ORCID profile or read limited-access data",
+      "severity": "info",
+      "dependency": null,
+      "proposed_action": "Obtain ORCID Member API credentials if institutional integration needed",
+      "reversibility": "reversible",
+      "human_gate": true,
+      "status": "open",
+      "created_at": "2026-09-10T01:54:01.720560+00:00"
+    }
+  ],
+  "audit_report": {
+    "nextcloud": {
+      "discover": {
+        "found": true,
+        "sync_dir": "C:\\Users\\Utilizador\\Nextcloud",
+        "top_level_folders": [
+          "apiS",
+          "Associação MILK",
+          "Atlas Vivo MILK",
+          "ATLAS_MILK_MISTRAGA",
+          "auditor_fantasma",
+          "COCKPIT_MILK",
+          "CURADORIA_100",
+          "html",
+          "Nextcloud Docs",
+          "Nova pasta",
+          "Photos"
+        ],
+        "method": "filesystem (Nextcloud desktop sync client)"
+      },
+      "auth_status": {
+        "authenticated": true,
+        "credential_type": "nextcloud_desktop_sync (OS-level)",
+        "note": "Auth delegated to Nextcloud desktop client. MILK uses filesystem read only."
+      },
+      "health": {
+        "healthy": true,
+        "name": "nextcloud"
+      },
+      "capabilities": {
+        "read": true,
+        "write": false,
+        "audit": true,
+        "delete": false,
+        "publish": false,
+        "note": "READ/AUDIT phase — filesystem only"
+      },
+      "provenance": {
+        "adapter": "nextcloud",
+        "version": "1.0",
+        "access": "filesystem",
+        "owner": "MILK Sovereign Core",
+        "client_role": "sync_client_delegated"
+      }
+    },
+    "codeberg": {
+      "discover": {
+        "found": true,
+        "api": "https://codeberg.org/api/v1",
+        "owner": "milkivc",
+        "status_code": 404,
+        "has_remote_repo": false
+      },
+      "auth_status": {
+        "authenticated": false,
+        "credential_type": "CODEBERG_TOKEN (Forgejo API token)",
+        "status": "missing",
+        "where_to_configure": "https://codeberg.org/user/settings/applications",
+        "blocked_operation": "private_repo_read"
+      },
+      "health": {
+        "healthy": true,
+        "name": "codeberg",
+        "status_code": 404
+      },
+      "capabilities": {
+        "read": true,
+        "write": false,
+        "audit": true,
+        "delete": false,
+        "publish": false
+      },
+      "provenance": {
+        "adapter": "codeberg",
+        "version": "1.0",
+        "access": "forgejo_api",
+        "owner": "MILK Sovereign Core",
+        "client_role": "api_consumer"
+      }
+    },
+    "github": {
+      "discover": {
+        "found": true,
+        "repo": "milkivc/atlas-vivo-milk",
+        "local_remotes": "origin\thttps://github.com/milkivc/atlas-vivo-milk.git (fetch)\norigin\thttps://github.com/milkivc/atlas-vivo-milk.git (push)",
+        "api_status": 200,
+        "role": "mirror_interop (NOT canonical authority)"
+      },
+      "auth_status": {
+        "authenticated": true,
+        "credential_type": "GITHUB_TOKEN or Git Credential Manager",
+        "status": "git credential manager (OS-level)",
+        "where_to_configure": "https://github.com/settings/tokens",
+        "blocked_operation": null
+      },
+      "health": {
+        "healthy": true,
+        "name": "github",
+        "status_code": 200
+      },
+      "capabilities": {
+        "read": true,
+        "write": false,
+        "audit": true,
+        "delete": false,
+        "publish": false,
+        "note": "mirror/interop only — canonical authority is local MILK repo"
+      },
+      "provenance": {
+        "adapter": "github",
+        "version": "1.0",
+        "access": "github_api+git_cli",
+        "owner": "MILK Sovereign Core",
+        "client_role": "api_consumer",
+        "canonical_role": "mirror (NOT authority)"
+      }
+    },
+    "zenodo": {
+      "discover": {
+        "local_zenodo_json": true,
+        "community": "milkivc",
+        "local_metadata_keys": [
+          "title",
+          "upload_type",
+          "description",
+          "creators",
+          "license",
+          "version",
+          "keywords",
+          "notes",
+          "related_identifiers",
+          "communities",
+          "access_right",
+          "conformity"
+        ],
+        "remote_records_found": 0,
+        "remote_records": []
+      },
+      "auth_status": {
+        "authenticated": false,
+        "credential_type": "ZENODO_TOKEN (Zenodo API deposit token)",
+        "status": "missing",
+        "where_to_configure": "https://zenodo.org/account/settings/applications",
+        "blocked_operation": "deposition_write/private_read",
+        "public_read_available": true
+      },
+      "health": {
+        "healthy": true,
+        "name": "zenodo",
+        "status_code": 200
+      },
+      "capabilities": {
+        "read": true,
+        "write": false,
+        "audit": true,
+        "delete": false,
+        "publish": false,
+        "note": "corrections prepared as proposals only"
+      },
+      "provenance": {
+        "adapter": "zenodo",
+        "version": "1.0",
+        "access": "zenodo_api",
+        "owner": "MILK Sovereign Core",
+        "client_role": "api_consumer",
+        "local_metadata": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO\\.zenodo.json"
+      }
+    },
+    "orcid": {
+      "discover": {
+        "known_orcids": {
+          "eduardo_mauricio": "0009-0009-1781-4020"
+        },
+        "api": "public_v3",
+        "note": "Public API needs no auth. Member API requires institutional authorization."
+      },
+      "auth_status": {
+        "authenticated": false,
+        "credential_type": "ORCID Member API token (NOT configured)",
+        "status": "not needed for public reads",
+        "where_to_configure": "https://orcid.org/developer-tools (Member API only)",
+        "blocked_operation": "limited_access_works, member_write",
+        "public_read_available": true
+      },
+      "health": {
+        "healthy": true,
+        "name": "orcid"
+      },
+      "capabilities": {
+        "read": true,
+        "write": false,
+        "audit": true,
+        "delete": false,
+        "publish": false,
+        "public_api": true,
+        "member_api": false
+      },
+      "provenance": {
+        "adapter": "orcid",
+        "version": "1.0",
+        "access": "orcid_public_api",
+        "owner": "MILK Sovereign Core",
+        "client_role": "api_consumer"
+      }
+    },
+    "ptservidor": {
+      "discover": {
+        "domain": "atlas.associacaomilk.pt",
+        "atlas_infra_files": [
+          ".env.example",
+          "docker-compose.prod.yml",
+          "docker-compose.yml",
+          "preview_atlas.py",
+          "README.md",
+          "VER_ATLAS.ps1"
+        ],
+        "has_env_example": true,
+        "http_status": 200,
+        "reachable": true,
+        "local_repo_root": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO"
+      },
+      "auth_status": {
+        "authenticated": false,
+        "credential_type": "SSH key or deploy token (NOT configured in env)",
+        "status": "missing",
+        "where_to_configure": "server SSH config or deploy key from hosting provider",
+        "blocked_operation": "ssh_access, deploy",
+        "http_read_available": true
+      },
+      "health": {
+        "healthy": true,
+        "name": "ptservidor",
+        "domain": "atlas.associacaomilk.pt",
+        "http_status": 200
+      },
+      "capabilities": {
+        "read": true,
+        "write": false,
+        "audit": true,
+        "delete": false,
+        "publish": false,
+        "deploy": false,
+        "note": "STAGING_DEPLOY_PLAN only — no production deploy this phase"
+      },
+      "provenance": {
+        "adapter": "ptservidor",
+        "version": "1.0",
+        "access": "http_probe",
+        "owner": "MILK Sovereign Core",
+        "client_role": "auditor",
+        "note": "read-only HTTP probe, no SSH access assumed"
+      }
+    }
+  }
+}

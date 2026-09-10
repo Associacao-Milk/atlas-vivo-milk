@@ -167,7 +167,7 @@ class KnowledgeIngestionPipeline:
                 ch = doc.get("content_hash", "")
                 if ch:
                     hashes.add(ch)
-            except:
+            except Exception:
                 pass
         self._existing_hashes = hashes
         return hashes
@@ -224,7 +224,7 @@ class KnowledgeIngestionPipeline:
         """Detect UTF-8/mojibake issues in content."""
         try:
             text = item.content.decode("utf-8", errors="replace")
-        except:
+        except Exception:
             text = ""
 
         mojibake_patterns = ["Ã", "â€", "ï¿½", "Ã©", "Ã³", "Ã¡", "Ã§"]
@@ -243,7 +243,7 @@ class KnowledgeIngestionPipeline:
                 fixed = item.content.decode("latin-1").encode("utf-8").decode("utf-8", errors="replace")
                 if fixed and not any(p in fixed for p in mojibake_patterns):
                     item.normalized_text = fixed[:10000]
-            except:
+            except Exception:
                 pass
         else:
             item.encoding_ok = True
@@ -268,7 +268,7 @@ class KnowledgeIngestionPipeline:
                     item.pipeline_decision = "QUARANTINE"
                     item.provenance.append({"stage": "validate", "result": "prompt_injection_detected"})
                     return False
-        except:
+        except Exception:
             pass
 
         # Size limit: 100KB
@@ -286,7 +286,7 @@ class KnowledgeIngestionPipeline:
         """Classify privacy, licence, and legal status."""
         try:
             text = item.content.decode("utf-8", errors="replace").lower()
-        except:
+        except Exception:
             text = ""
 
         # Privacy classification
@@ -349,14 +349,14 @@ class KnowledgeIngestionPipeline:
         # Near-duplicate: check first 100 chars overlap
         try:
             text = item.content.decode("utf-8", errors="replace")[:200]
-        except:
+        except Exception:
             text = ""
         for other in all_staged:
             if other is item:
                 continue
             try:
                 other_text = other.content.decode("utf-8", errors="replace")[:200]
-            except:
+            except Exception:
                 continue
             if text[:100] == other_text[:100] and item.content_hash != other.content_hash:
                 item.dedup_status = "NEAR_DUPLICATE"
@@ -372,7 +372,7 @@ class KnowledgeIngestionPipeline:
         """Extract metadata, territory, semantic tags."""
         try:
             text = item.content.decode("utf-8", errors="replace")
-        except:
+        except Exception:
             text = ""
 
         # Territory extraction (Portuguese municipalities)
@@ -571,7 +571,7 @@ class KnowledgeIngestionPipeline:
                 try:
                     doc = json.loads((self.corpus / f"{item.document_id}.json").read_text(encoding="utf-8"))
                     results["chunks_added"] += len(doc.get("chunks", []))
-                except:
+                except Exception:
                     pass
             elif item.pipeline_decision == "REVIEW":
                 results["review_required"] += 1

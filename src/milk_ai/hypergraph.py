@@ -24,15 +24,11 @@ provenance, evidence_bundles, retrieval, ontology, export_ngsi.
 """
 from __future__ import annotations
 
-import json
 import hashlib
 import time
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from pathlib import Path
 from typing import Any
-
-_ROOT = Path(__file__).resolve().parents[1]
 
 # ---------------------------------------------------------------------------
 # Hypergraph node and edge types (from directive)

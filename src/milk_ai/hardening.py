@@ -299,7 +299,7 @@ class AtomicFileWriter:
         except Exception:
             try:
                 os.unlink(tmp_path)
-            except:
+            except Exception:
                 pass
             return False
 
@@ -1115,7 +1115,7 @@ def generate_sbom(project_root: Path | None = None) -> dict:
             pkg = json.loads(pkg_path.read_text(encoding="utf-8"))
             for name, version in pkg.get("dependencies", {}).items():
                 components.append({"name": name, "version": version, "type": "npm"})
-        except:
+        except Exception:
             pass
 
     # Known local components

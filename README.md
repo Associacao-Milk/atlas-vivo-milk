@@ -55,7 +55,7 @@ A MILK preserva esta separação em schemas, metadados, proveniência, fichas ca
 ```
 MILK_AI_STATE_CANONICO/
 ├── corpus/
-│   ├── documents/     # 10.538 registos JSON (gitignored)
+│   ├── documents/     # 10.576 registos JSON (gitignored)
 │   └── quarantine/    # 48 ficheiros em quarentena (gitignored)
 ├── .github/
 │   └── ISSUE_TEMPLATE/  # Templates para reportar problemas
@@ -68,6 +68,6 @@ MILK_AI_STATE_CANONICO/
 
 ## Issue Templates
 
-- **Dohttps://chatgpt.com/plugins/plugin_asdk_app_695bfc98071c8191bac7bc479aa27de7?plugin_detail_origin=inline_selection_pillcumento em falta** — para reportar documentos que deviam estar no corpus
+- **Documento em falta** — para reportar documentos que deviam estar no corpus
 - **Ficheiro apagado** — para reportar ficheiros apagados por extensoes/agentes
 - **Curadoria territorial** — para classificar documentos por territorio

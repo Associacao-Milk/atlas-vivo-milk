@@ -1,0 +1,130 @@
+{
+  "schema": "ia_milk.evidence_bundle.v1",
+  "task_id": "5d47d440510e4d258c6dc5fce1c366aa",
+  "trace_id": "9f6ed7f8c2b54f0ebd8c83d00ec31015",
+  "created_at": "2026-09-10T04:22:48.723367+00:00",
+  "hash_chain": "97565cb7ba6ff5948d1ebd46a7ec8f1553d584b6369c904d3c0245392efce178",
+  "items": [
+    {
+      "source": "retrieval:corpus",
+      "source_uri": "local:corpus",
+      "content": "Retrieved for: What cultural materials about Portuguese folklore exist across local corpus and external sources?",
+      "content_hash": "ddabe39d50df8988d2f409ab7a6c806f01c303f1cb1a37ba48f87f4a6f9058f8",
+      "retrieval_method": "candidate_canonical",
+      "reranking": "bge-reranker-v2-m3",
+      "transform": "",
+      "retrieved_at": "2026-09-10T04:22:48.723386+00:00",
+      "metadata": {
+        "strategy": "A_TFIDF_BGE_RRF"
+      }
+    },
+    {
+      "source": "localfs",
+      "source_uri": "{'id': '__init__.py', 'type': 'file', 'size': 371}",
+      "content": "# ATLAS VIVO - Integration APIs\r\n# ============================\r\n# \r\n# This package contains all integration APIs for ATLAS VIVO automation system\r\n# \r\n# APIs included:\r\n# - Zenodo API Client\r\n# - ORCID API Client  \r\n# - GitHub API Client\r\n# - Codeberg API Client\r\n# - Funding Compliance API\r\n# - Platform Sync API\r\n# - Legal Compliance API\r\n# - Unified Integration API\r\n",
+      "content_hash": "06e359f5ce60ebfbeae9686487e3503d4aca5e2fe7a412648cfc91c606068278",
+      "retrieval_method": "adapter_read",
+      "reranking": "",
+      "transform": "",
+      "retrieved_at": "2026-09-10T04:22:48.896740+00:00",
+      "metadata": {}
+    }
+  ],
+  "inferences": [
+    {
+      "inference_id": "99ef63b460414872855be6287efbc466",
+      "model": "heuristic",
+      "model_version": "local-v1",
+      "output": "Heuristic synthesis for 'What cultural materials about Portuguese folklore exist acro': based on 484 chars of evidence. (GPT-OSS fallback: timed out)",
+      "output_hash": "6e435f04d5aa5e7dc8d8fa5442c5bcc213df131de36f31ec2e4400daeb78aeae",
+      "timestamp": "2026-09-10T04:23:18.944573+00:00",
+      "method": "heuristic_fallback"
+    }
+  ],
+  "decisions": [
+    {
+      "decision_id": "ef6ec27d5a0d4db8ae0017cfb4ad9466",
+      "decision": "evidence_based_answer",
+      "rationale": "Based on 2 evidence items and 1 inferences",
+      "timestamp": "2026-09-10T04:23:18.944636+00:00"
+    }
+  ],
+  "gate_decisions": [
+    {
+      "action_id": "ACT-0007",
+      "actor": "cognitive_control_plane",
+      "action": "stage_derived",
+      "tier": "WRITE_REVERSIBLE",
+      "source": "5d47d440510e4d258c6dc5fce1c366aa",
+      "target": "task:5d47d440510e4d258c6dc5fce1c366aa",
+      "timestamp": "2026-09-10T04:23:18.944868+00:00",
+      "evidence": "",
+      "before_hash": "994acb9dd3c444f8ebd0a15cacdaa9065bda9d245a66c9871156740e31f43466",
+      "after_hash": "",
+      "reversible": true,
+      "rollback": "revert task:5d47d440510e4d258c6dc5fce1c366aa to before_hash=994acb9dd3c444f8",
+      "human_gate": false,
+      "status": "executed"
+    }
+  ],
+  "actions": [
+    {
+      "action_id": "63e6cb342db54405a277ef6e6869ed79",
+      "action": "stage_derived",
+      "timestamp": "2026-09-10T04:23:18.947468+00:00",
+      "receipt_id": "ACT-0007",
+      "target": "task:5d47d440510e4d258c6dc5fce1c366aa"
+    }
+  ],
+  "outcomes": [
+    {
+      "outcome_id": "50cda621969c48809331df1dcb6ca27c",
+      "outcome": "task_complete",
+      "timestamp": "2026-09-10T04:23:18.947599+00:00",
+      "task_id": "5d47d440510e4d258c6dc5fce1c366aa",
+      "success": false,
+      "quality": "medium",
+      "evidence_count": 2,
+      "inference_count": 1,
+      "decision_count": 1,
+      "gate_approved": 1,
+      "gate_proposed": 0,
+      "hash_chain": "3a3418e98c7d1777c2a3d3eb1e380d69942ec491b3c241a6af607399789171e5",
+      "evaluated_at": "2026-09-10T04:23:18.947571+00:00"
+    }
+  ],
+  "prov_o_export": {
+    "@context": {
+      "prov": "http://www.w3.org/ns/prov#"
+    },
+    "entities": [
+      {
+        "@id": "evidence:retrieval:corpus:ddabe39d50df",
+        "@type": "prov:Entity",
+        "prov:value": "Retrieved for: What cultural materials about Portuguese folklore exist across local corpus and external sources?",
+        "prov:wasGeneratedBy": "retrieval:corpus"
+      },
+      {
+        "@id": "evidence:localfs:06e359f5ce60",
+        "@type": "prov:Entity",
+        "prov:value": "# ATLAS VIVO - Integration APIs\r\n# ============================\r\n# \r\n# This package contains all integration APIs for ATLAS VIVO automation system\r\n# \r\n# APIs included:\r\n# - Zenodo API Client\r\n# - ORC",
+        "prov:wasGeneratedBy": "localfs"
+      }
+    ],
+    "activities": [
+      {
+        "@id": "inference:99ef63b46041",
+        "@type": "prov:Activity",
+        "prov:used": "heuristic",
+        "prov:startedAtTime": "2026-09-10T04:23:18.944573+00:00"
+      }
+    ],
+    "agents": [
+      {
+        "@id": "milk:sovereign_core",
+        "@type": "prov:Agent",
+        "prov:actedOnBehalfOf": "milk:sovereign_core"
+      }
+    ]
+  }
+}

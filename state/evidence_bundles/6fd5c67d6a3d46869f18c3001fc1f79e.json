@@ -1,0 +1,129 @@
+{
+  "schema": "ia_milk.evidence_bundle.v1",
+  "task_id": "6fd5c67d6a3d46869f18c3001fc1f79e",
+  "trace_id": "2f51b4827a3c4ae2a7bca35a36111692",
+  "created_at": "2026-09-10T04:23:18.953215+00:00",
+  "hash_chain": "16d207a9cf58043f2272033b980876d7e48d7e56a25c8b2b4834c622ccb6d3a2",
+  "items": [
+    {
+      "source": "gap_engine",
+      "source_uri": "gap:GAP-0012",
+      "content": "{\"gap_id\": \"GAP-0012\", \"domain\": \"publication\", \"source\": \"zenodo\", \"gap_type\": \"UNPUBLISHED\", \"evidence\": \"No Zenodo records found for community 'milkivc'\", \"severity\": \"high\", \"dependency\": null, \"proposed_action\": \"Create first Zenodo deposition from .zenodo.json when ready\", \"reversibility\": \"reversible\", \"human_gate\": true, \"status\": \"open\", \"created_at\": \"2026-09-10T03:11:42.353573+00:00\"}",
+      "content_hash": "365278bbb03a8c1ce95cea632e4cae63586b865c31f660300727a0f9f36358cc",
+      "retrieval_method": "gap_engine",
+      "reranking": "",
+      "transform": "",
+      "retrieved_at": "2026-09-10T04:23:18.954791+00:00",
+      "metadata": {}
+    },
+    {
+      "source": "localfs",
+      "source_uri": "{'id': '__init__.py', 'type': 'file', 'size': 371}",
+      "content": "# ATLAS VIVO - Integration APIs\r\n# ============================\r\n# \r\n# This package contains all integration APIs for ATLAS VIVO automation system\r\n# \r\n# APIs included:\r\n# - Zenodo API Client\r\n# - ORCID API Client  \r\n# - GitHub API Client\r\n# - Codeberg API Client\r\n# - Funding Compliance API\r\n# - Platform Sync API\r\n# - Legal Compliance API\r\n# - Unified Integration API\r\n",
+      "content_hash": "06e359f5ce60ebfbeae9686487e3503d4aca5e2fe7a412648cfc91c606068278",
+      "retrieval_method": "adapter_read",
+      "reranking": "",
+      "transform": "",
+      "retrieved_at": "2026-09-10T04:23:19.124921+00:00",
+      "metadata": {}
+    }
+  ],
+  "inferences": [
+    {
+      "inference_id": "3aad22d6c3974223a64351ca358eedf7",
+      "model": "gpt-oss-20b",
+      "model_version": "local",
+      "output": "<|channel|>analysis<|message|>We need to respond to the query. It's a Gap: No Zenodo records found for community 'milkivc'. They propose action: create first Zenodo deposition from .zenodo.json when ready. We need to provide a brief answer. Probably acknowledging the gap, suggesting steps, maybe mention that we need to verify .zenodo.json, ensure community exists, create deposition, etc. Provide a concise answer.<|end|>**Gap Summary**  \nNo Zenodo deposition exists for the `milkivc` community. This prevents the community’s publications from being indexed and cited via Zenodo.\n\n**Suggested Next Steps**  \n1. **Validate the `.zenodo.json` file** – ensure it contains correct metadata, community ID, and is placed in the repository root.  \n2. **Create the first deposition** – use the Zenodo API client (or the Zenodo web UI) to submit the file.  \n3. **Verify the deposition** –",
+      "output_hash": "bd0fac929e7be7ca89cb04cf73f3b3f4d9c4c131fd1551a89136a76939c9db42",
+      "timestamp": "2026-09-10T04:23:48.292978+00:00",
+      "method": "gpt_oss_api"
+    }
+  ],
+  "decisions": [
+    {
+      "decision_id": "59d1218e6b78429fabbe922ec737f827",
+      "decision": "propose_reversible_action",
+      "rationale": "Based on 2 evidence items and inference",
+      "timestamp": "2026-09-10T04:23:48.293024+00:00",
+      "gap_id": "GAP-0012"
+    }
+  ],
+  "gate_decisions": [
+    {
+      "action_id": "ACT-0008",
+      "actor": "cognitive_control_plane",
+      "action": "create_proposal",
+      "tier": "WRITE_REVERSIBLE",
+      "source": "6fd5c67d6a3d46869f18c3001fc1f79e",
+      "target": "GAP-0012",
+      "timestamp": "2026-09-10T04:23:48.293218+00:00",
+      "evidence": "",
+      "before_hash": "2a31e194762cdfb604b38442b18dd417517886ec63fff3cf37951717249f3252",
+      "after_hash": "",
+      "reversible": true,
+      "rollback": "revert GAP-0012 to before_hash=2a31e194762cdfb6",
+      "human_gate": false,
+      "status": "executed"
+    }
+  ],
+  "actions": [
+    {
+      "action_id": "d171a0296e2547b8ade019eb43170513",
+      "action": "create_proposal",
+      "timestamp": "2026-09-10T04:23:48.295427+00:00",
+      "receipt_id": "ACT-0008",
+      "target": "GAP-0012"
+    }
+  ],
+  "outcomes": [
+    {
+      "outcome_id": "8ca1fb72476c464792cb1575e0fd77f1",
+      "outcome": "bounded_loop_complete",
+      "timestamp": "2026-09-10T04:23:48.295520+00:00",
+      "task_id": "6fd5c67d6a3d46869f18c3001fc1f79e",
+      "success": false,
+      "quality": "medium",
+      "evidence_count": 2,
+      "inference_count": 1,
+      "decision_count": 1,
+      "gate_approved": 1,
+      "gate_proposed": 0,
+      "hash_chain": "108be6a8c4042be9ed1d7618e53da3e03926b3212fad7303284aef41c710f32d",
+      "evaluated_at": "2026-09-10T04:23:48.295501+00:00"
+    }
+  ],
+  "prov_o_export": {
+    "@context": {
+      "prov": "http://www.w3.org/ns/prov#"
+    },
+    "entities": [
+      {
+        "@id": "evidence:gap_engine:365278bbb03a",
+        "@type": "prov:Entity",
+        "prov:value": "{\"gap_id\": \"GAP-0012\", \"domain\": \"publication\", \"source\": \"zenodo\", \"gap_type\": \"UNPUBLISHED\", \"evidence\": \"No Zenodo records found for community 'milkivc'\", \"severity\": \"high\", \"dependency\": null, \"p",
+        "prov:wasGeneratedBy": "gap_engine"
+      },
+      {
+        "@id": "evidence:localfs:06e359f5ce60",
+        "@type": "prov:Entity",
+        "prov:value": "# ATLAS VIVO - Integration APIs\r\n# ============================\r\n# \r\n# This package contains all integration APIs for ATLAS VIVO automation system\r\n# \r\n# APIs included:\r\n# - Zenodo API Client\r\n# - ORC",
+        "prov:wasGeneratedBy": "localfs"
+      }
+    ],
+    "activities": [
+      {
+        "@id": "inference:3aad22d6c397",
+        "@type": "prov:Activity",
+        "prov:used": "gpt-oss-20b",
+        "prov:startedAtTime": "2026-09-10T04:23:48.292978+00:00"
+      }
+    ],
+    "agents": [
+      {
+        "@id": "milk:sovereign_core",
+        "@type": "prov:Agent",
+        "prov:actedOnBehalfOf": "milk:sovereign_core"
+      }
+    ]
+  }
+}

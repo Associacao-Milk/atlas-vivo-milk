@@ -1,0 +1,77 @@
+{
+  "schema": "ia_milk.ccp_manifest.v1",
+  "generated_at": "2026-09-10T04:30:00+00:00",
+  "factual_state_before": {
+    "git_head_before": "7acabd0",
+    "corpus_docs": 10538,
+    "corpus_chunks": 250887,
+    "quarantine": 48,
+    "gpt_oss": "healthy :8009",
+    "fabric": "healthy :8766",
+    "tests_before": "69/69 pass",
+    "retrieval_status": "CANDIDATE_CANONICAL (A/D not promoted)",
+    "gold_qrels": "PENDING human validation",
+    "orcid_mapping": "RESOLVED (Eduardo=0009-0007-6892-6570, Nuno=0009-0009-1781-4020)"
+  },
+  "files_changed": [
+    "src/milk_ai/cognitive_control_plane.py (NEW — 600+ lines)",
+    "tests/test_cognitive_control_plane.py (NEW — 35 tests)",
+    "milk_ccp_e2e_proof.py (NEW — end-to-end proof script)",
+    "state/evidence_bundles/*.json (NEW — evidence bundles)",
+    "state/operational_memory/memory_index.jsonl (NEW — append-only op memory)",
+    "state/operational_memory/learning_events.jsonl (NEW — learning events)",
+    "state/ccp_e2e_proof.json (NEW — proof results)",
+    "state/action_receipts.json (UPDATED — new receipts from CCP)"
+  ],
+  "capabilities_added": [
+    "TaskEnvelope: unit of work with task_id/trace_id/constraints",
+    "Planner: decomposes task into ordered steps by intent",
+    "CapabilityRouter: discovers from Resource Registry, scores by capability_match/sovereignty/privacy/quality/latency/evidence, selects with fallback",
+    "EvidenceBundle: per-execution evidence fabric with task_id/trace_id, hash chain, PROV-O export",
+    "ReasoningWorker: calls GPT-OSS as worker (never orchestrator), heuristic fallback",
+    "Executor: passes actions through Sovereign Action Gate with receipts",
+    "OutcomeEvaluator: evaluates task success/quality by evidence/inference counts",
+    "OperationalMemory: append-only JSONL, separate from corpus, stores task/episode/decision/evidence/failure/feedback/experiment/outcome",
+    "SelfObservability: local health/capabilities/GPU/gaps/memory snapshot, no cloud telemetry",
+    "BoundedOperatingLoop: gap->research->hypothesis->proposal->gate->action->measure->learn with step/time limits",
+    "CognitiveControlPlane: orchestrates full pipeline, reconstructs provenance chain"
+  ],
+  "runtime_evidence": {
+    "task_executed": true,
+    "task_status": "done",
+    "evidence_items": 2,
+    "inferences": 1,
+    "decisions": 1,
+    "gate_decisions": 1,
+    "bounded_loop_completed": true,
+    "bounded_loop_steps": 3,
+    "chain_reconstructable": true,
+    "chain_length": 8,
+    "prov_o_export": true,
+    "operational_memory_records": 4,
+    "feedback_recorded": true,
+    "gpt_oss_role": "worker (not orchestrator)",
+    "no_source_documents_altered": true,
+    "corpus_unchanged": "10538 docs"
+  },
+  "tests": {
+    "new_tests": 35,
+    "new_tests_passed": 35,
+    "existing_tests": 69,
+    "existing_tests_passed": 69,
+    "total": 104,
+    "total_passed": 104,
+    "regressions": 0
+  },
+  "end_to_end_trace_id": "9f6ed7f8c2b54f0ebd8c83d00ec31015",
+  "evidence_bundle_path": "state/evidence_bundles/5d47d440510e4d258c6dc5fce1c366aa.json",
+  "operational_memory_path": "state/operational_memory/memory_index.jsonl",
+  "unresolved_real_gaps": [
+    "ZENODO_TOKEN not available locally — depositions blocked (GAP-0012 still open)",
+    "GOLD_QRELS human validation still pending — retrieval not promoted to CANONICAL",
+    "Docker Desktop not running — atlas_infra services unavailable",
+    "Codeberg repo not created — no CODEBERG_TOKEN configured",
+    "PTServidor SSH access not configured — cannot verify deployed version"
+  ],
+  "git_diff_summary": "4 new files + 2 state files updated. No existing code modified except action_receipts.json (append). Zero regressions."
+}

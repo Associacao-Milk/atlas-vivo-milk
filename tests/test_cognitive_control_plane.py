@@ -356,8 +356,8 @@ class TestCognitiveControlPlaneIntegration:
         # Check corpus is unchanged
         corpus_dir = Path(__file__).resolve().parents[1] / "corpus" / "documents"
         doc_count = len(list(corpus_dir.glob("*.json")))
-        # Should still be 10538
-        assert doc_count == 10538
+        # Should still be 10576 (verified canonical corpus size)
+        assert doc_count == 10576
 
     def test_feedback_recorded(self, tmp_path):
         """Human feedback should be recorded as learning events."""

@@ -442,14 +442,14 @@ class ReasoningWorker:
         body = json.dumps({
             "model": "gpt-oss-20b",
             "messages": [{"role": "user", "content": prompt}],
-            "max_tokens": 200,
+            "max_tokens": 64,
         }).encode("utf-8")
         req = urllib.request.Request(
             f"{self.endpoint}/v1/chat/completions",
             data=body,
             headers={"Content-Type": "application/json"},
         )
-        with urllib.request.urlopen(req, timeout=30) as resp:
+        with urllib.request.urlopen(req, timeout=10) as resp:
             data = json.loads(resp.read())
             output = data.get("choices", [{}])[0].get("message", {}).get("content", "")
         return {

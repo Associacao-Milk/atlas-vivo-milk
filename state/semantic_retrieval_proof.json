@@ -3,52 +3,66 @@
     {
       "query": "nucleo estavel consolidacao curatorial atlas vivo",
       "rank": 1,
-      "chunk_id": "6bd66f86d13f755c",
-      "document_id": "0663d3e36c405ef1",
-      "retrieval_score": 0.648425,
-      "rerank_raw_score": 0.937074,
-      "rerank_normalized_score": 0.718508
+      "chunk_id": "sha256:024405d6e8de40d03b066c89b5ac01871f0866ac10ec1f3339358563c41f6b4d#chunk-00000-e93ec8a5b847",
+      "document_id": "024405d6e8de40d03b066c89b5ac01871f0866ac10ec1f3339358563c41f6b4d",
+      "retrieval_score": 0.626304,
+      "rerank_raw_score": 0.280687,
+      "rerank_normalized_score": 1.0,
+      "evidence_hash_chain": "05810b45d5bc9bcfa5d28c2246c9003a2d6e6afd3083b1001855d6007c342f9d",
+      "evidence_items": 1
     },
     {
       "query": "resumo consolidacao total versao publica operacional",
       "rank": 1,
-      "chunk_id": "6bd66f86d13f755c",
-      "document_id": "0663d3e36c405ef1",
-      "retrieval_score": 0.558,
-      "rerank_raw_score": 0.921517,
-      "rerank_normalized_score": 0.715351
+      "chunk_id": "sha256:023d064741a6b35ff480e9c178a62af7294068fafde42636d7e83a2b52350578#chunk-00000-5dba66cf6df7",
+      "document_id": "023d064741a6b35ff480e9c178a62af7294068fafde42636d7e83a2b52350578",
+      "retrieval_score": 0.542466,
+      "rerank_raw_score": 0.379939,
+      "rerank_normalized_score": 1.0,
+      "evidence_hash_chain": "678b726887c3062d8be9da661262e1f0b8c291fdfaf29a73c680274edf0a38a7",
+      "evidence_items": 1
     },
     {
       "query": "governacao migracao atlas vivo milk",
       "rank": 1,
-      "chunk_id": "5f2add759a81b854",
-      "document_id": "08225414fb796e79",
+      "chunk_id": "sha256:55b7464ba9760d31eb2d6ae5a6bc89c508f2816b2550f5655968f2a2ce92a0ee#chunk-00027-c17b7cdd1286",
+      "document_id": "55b7464ba9760d31eb2d6ae5a6bc89c508f2816b2550f5655968f2a2ce92a0ee",
       "retrieval_score": 0.650204,
-      "rerank_raw_score": 0.942074,
-      "rerank_normalized_score": 0.719519
+      "rerank_raw_score": 0.023798,
+      "rerank_normalized_score": 1.0,
+      "evidence_hash_chain": "5434828cf7c018ae9919e081d520b7d6b8cc734e6f0774253f786578ed6ce5cb",
+      "evidence_items": 1
     },
     {
       "query": "protocolo genealogico autoavaliacao curatorial",
       "rank": 1,
-      "chunk_id": "5b447d12ea045cc2",
-      "document_id": "8679f29aa218040c",
-      "retrieval_score": 0.548436,
-      "rerank_raw_score": 0.933414,
-      "rerank_normalized_score": 0.717767
+      "chunk_id": "sha256:1b25a68d2ac2696cefa3c38a172d62f030efeb339338d9ed4bb767d188812e80#chunk-00009-87683e4078ad",
+      "document_id": "1b25a68d2ac2696cefa3c38a172d62f030efeb339338d9ed4bb767d188812e80",
+      "retrieval_score": 0.547039,
+      "rerank_raw_score": 0.000154,
+      "rerank_normalized_score": 1.0,
+      "evidence_hash_chain": "06ef6710c561865ca4c7f5537b8ada8f0ee7e5b3d6086559cda1bf57c20028f4",
+      "evidence_items": 1
     },
     {
       "query": "regra consolidacao total nucleo estavel",
       "rank": 1,
-      "chunk_id": "6bd66f86d13f755c",
-      "document_id": "0663d3e36c405ef1",
-      "retrieval_score": 0.596184,
-      "rerank_raw_score": 0.945414,
-      "rerank_normalized_score": 0.720192
+      "chunk_id": "sha256:be1921c23f22f55af5a6b3ee4ffaa5e81de3c92b58a5734d440674fcebc7cd98#chunk-00012-364068b98778",
+      "document_id": "be1921c23f22f55af5a6b3ee4ffaa5e81de3c92b58a5734d440674fcebc7cd98",
+      "retrieval_score": 0.513856,
+      "rerank_raw_score": 0.00051,
+      "rerank_normalized_score": 1.0,
+      "evidence_hash_chain": "fa5915b4cc785eef05a121b5c4a4d5e23f2901ca0a727aea3dcef64b7c5b31ac",
+      "evidence_items": 1
     }
   ],
   "retrieval_success": "5/5",
   "evidence_success": "5/5",
   "retrieval_type": "DENSE+RERANKER",
   "bge": "BAAI/bge-m3",
-  "reranker": "BAAI/bge-reranker-v2-m3"
+  "bge_dim": 1024,
+  "bge_device": "cuda",
+  "reranker": "BAAI/bge-reranker-v2-m3",
+  "reranker_device": "cpu",
+  "index_vectors": 251018
 }

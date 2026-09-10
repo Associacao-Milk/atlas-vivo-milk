@@ -1,0 +1,21 @@
+{
+  "schema": "ia_milk.tombstone.v1",
+  "action": "prune_sourceless_orphan_vectors",
+  "tombstoned_count": 4,
+  "tombstoned_hashes": [
+    "b020b0830c21c4d33b0a1e8e43975599ee740b52aba9e211b368da56d240d6e5",
+    "4514484f435e5bda2e613586eac25b05480416ca9bfcd6e1bf421dfd48b1ab9d",
+    "3f6e09e11da4521eb9d73a791df656ffb708fc897c4b4a9d2290d2993bd2f222",
+    "71c602b587e469b10878f9567b9dc519dbe0ae4f46830c2c9bf0b38d63eeb0b3"
+  ],
+  "tombstoned_row_indices": [
+    5807,
+    5830,
+    72194,
+    92914
+  ],
+  "reason": "embedding vectors for content fully deleted from corpus; unrecoverable without reembedding; tombstoned from active index",
+  "before_vectors": 251018,
+  "after_vectors": 251014,
+  "original_artifact_unchanged": "original_embeddings.npz kept at 250887 rows as historical provenance source"
+}

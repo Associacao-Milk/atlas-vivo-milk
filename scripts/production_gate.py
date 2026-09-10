@@ -107,7 +107,8 @@ def main():
     #    under concurrent load can transiently fail the first attempt).
     print("\n[6] BGE-M3 / CUDA")
     bge_env = {**os.environ, "PYTHONPATH": str(ROOT / "src"),
-               "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"}
+               "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True",
+               "HF_HUB_OFFLINE": "1"}
     bge_script = """
 import torch
 from sentence_transformers import SentenceTransformer

@@ -8,7 +8,7 @@
       "retrieval_score": 0.626304,
       "rerank_raw_score": 0.280687,
       "rerank_normalized_score": 1.0,
-      "evidence_hash_chain": "05810b45d5bc9bcfa5d28c2246c9003a2d6e6afd3083b1001855d6007c342f9d",
+      "evidence_hash_chain": "0ab1c3c6d4c0696b2f878fd846381c486bc7861795c8ecb1cdaba5e8856d0058",
       "evidence_items": 1
     },
     {
@@ -19,7 +19,7 @@
       "retrieval_score": 0.542466,
       "rerank_raw_score": 0.379939,
       "rerank_normalized_score": 1.0,
-      "evidence_hash_chain": "678b726887c3062d8be9da661262e1f0b8c291fdfaf29a73c680274edf0a38a7",
+      "evidence_hash_chain": "f9943e45994c62e3741691028c3332ddf083162030e00e95306e7258cf8166b6",
       "evidence_items": 1
     },
     {
@@ -30,7 +30,7 @@
       "retrieval_score": 0.650204,
       "rerank_raw_score": 0.023798,
       "rerank_normalized_score": 1.0,
-      "evidence_hash_chain": "5434828cf7c018ae9919e081d520b7d6b8cc734e6f0774253f786578ed6ce5cb",
+      "evidence_hash_chain": "7711587c8491d52bd92c158174a87a9427883283d1c53b1e174babac1c4f19b0",
       "evidence_items": 1
     },
     {
@@ -41,7 +41,7 @@
       "retrieval_score": 0.547039,
       "rerank_raw_score": 0.000154,
       "rerank_normalized_score": 1.0,
-      "evidence_hash_chain": "06ef6710c561865ca4c7f5537b8ada8f0ee7e5b3d6086559cda1bf57c20028f4",
+      "evidence_hash_chain": "8dd05917563a8c3117bb95034289b656beccfa5e876ac171a2543956f48843da",
       "evidence_items": 1
     },
     {
@@ -52,7 +52,7 @@
       "retrieval_score": 0.513856,
       "rerank_raw_score": 0.00051,
       "rerank_normalized_score": 1.0,
-      "evidence_hash_chain": "fa5915b4cc785eef05a121b5c4a4d5e23f2901ca0a727aea3dcef64b7c5b31ac",
+      "evidence_hash_chain": "320682b0293bbc786edc7c8863b56c6244a839863b53d13d291af62ab70a7075",
       "evidence_items": 1
     }
   ],
@@ -61,8 +61,8 @@
   "retrieval_type": "DENSE+RERANKER",
   "bge": "BAAI/bge-m3",
   "bge_dim": 1024,
-  "bge_device": "cuda",
+  "bge_device": "cpu",
   "reranker": "BAAI/bge-reranker-v2-m3",
   "reranker_device": "cpu",
-  "index_vectors": 251018
+  "index_vectors": 251014
 }

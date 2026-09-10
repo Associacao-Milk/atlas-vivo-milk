@@ -60,7 +60,9 @@ m=SentenceTransformer('BAAI/bge-m3',device=dev)
 e=m.encode(['t'],normalize_embeddings=True,convert_to_numpy=True)
 print(f'BGE_OK dim={e.shape[1]} device={dev} cuda={torch.cuda.is_available()} gpu={torch.cuda.get_device_name(0) if torch.cuda.is_available() else \"none\"}')
 """], capture_output=True, text=True, cwd=str(ROOT), timeout=120,
-                            env={**os.environ, "PYTHONPATH": str(ROOT / "src")})
+                            env={**os.environ, "PYTHONPATH": str(ROOT / "src"),
+                                 "HF_HUB_OFFLINE": "1",
+                                 "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"})
         line = [l for l in (r.stdout or "").splitlines() if l.startswith("BGE_OK")]
         if line:
             parts = dict(p.split("=", 1) for p in line[0][7:].split() if "=" in p)

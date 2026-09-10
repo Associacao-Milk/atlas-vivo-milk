@@ -95,10 +95,35 @@ def verify():
     C["combined_embedding_rows"] = int(cache_embs.shape[0])
     C["combined_hash_entries"] = len(cache_hashes)
 
-    # PROVE the evidence chain: cache prefix == original embeddings (exact).
-    n = int(orig_embs.shape[0])
-    prefix_match = cache_embs.shape[0] >= n and bool(np.array_equal(orig_embs, cache_embs[:n]))
+    # Load the tombstone manifest (reconciliation of sourceless orphan vectors
+    # pruned from the active index). original_embeddings.npz is the unchanged
+    # 250887-row historical artifact; the active cache removed the tombstoned
+    # rows from its original portion.
+    tomb_path = CACHE / "tombstoned_vectors.json"
+    tombstone = {}
+    if tomb_path.exists():
+        try:
+            tombstone = json.loads(tomb_path.read_text(encoding="utf-8"))
+        except Exception:
+            tombstone = {}
+    tomb_idx = sorted(tombstone.get("tombstoned_row_indices", []))
+    C["original_tombstoned"] = len(tomb_idx)
+
+    # PROVE the evidence chain on the reconciled active index:
+    #   cache[:n_active] == original_embeddings with tombstoned rows removed.
+    n_artifact = int(orig_embs.shape[0])
+    if tomb_idx:
+        keep_mask = np.ones(n_artifact, dtype=bool)
+        keep_mask[tomb_idx] = False
+        orig_reconciled = orig_embs[keep_mask]
+    else:
+        orig_reconciled = orig_embs
+    n_active = int(orig_reconciled.shape[0])
+    prefix_match = (cache_embs.shape[0] >= n_active
+                    and bool(np.array_equal(orig_reconciled, cache_embs[:n_active])))
     C["original_cache_prefix_match"] = prefix_match
+    C["original_artifact_rows"] = n_artifact
+    C["original_active_vectors"] = n_active
 
     if not prefix_match:
         out["index_alignment"] = "UNKNOWN"
@@ -111,7 +136,7 @@ def verify():
         out["delta_orphan_vectors"] = "UNKNOWN"
         return out
 
-    original_hashes = cache_hashes[:n]
+    original_hashes = cache_hashes[:n_active]
     C["original_hash_entries"] = len(original_hashes)
     uniq = set(original_hashes)
     C["original_unique_hashes"] = len(uniq)
@@ -145,24 +170,26 @@ def verify():
     C["corpus_chunks_eligible"] = cstats["eligible"]
     C["pipeline_versions"] = cstats["pipeline_versions"]
 
-    # --- Orphan classification (original) ---
-    orig_orphan_hashes = [h for h in original_hashes if h not in corpus_chunk_hashes]
-    doc_level_verified = []
-    true_sourceless = []
-    for h in set(orig_orphan_hashes):
-        doc_file = CORPUS / (h + ".json")
-        if doc_file.exists() and _sha256_text(doc_text_by_stem.get(h, "")) == h:
-            doc_level_verified.append(h)
-        else:
-            true_sourceless.append(h)
+    # --- Orphan classification (original, content-aware) ---
+    # A vector is an orphan only if its hash is backed by NEITHER a corpus chunk
+    # sha256 NOR a content-verified document text (sha256). Document-level
+    # embeddings (hash == sha256(doc.text)) are backed by real content and are
+    # NOT orphans; they are reported separately as doc_level_content_verified.
+    doc_text_hashes = {_sha256_text(t) for t in doc_text_by_stem.values() if t}
+    chunk_hash_mismatches = [h for h in original_hashes if h not in corpus_chunk_hashes]
+    doc_level_verified = [h for h in chunk_hash_mismatches if h in doc_text_hashes]
+    true_sourceless = [h for h in chunk_hash_mismatches if h not in doc_text_hashes]
 
-    C["original_orphan_hash_entries"] = len(orig_orphan_hashes)
-    C["original_orphan_vectors"] = len(orig_orphan_hashes)
+    C["original_chunk_hash_mismatches"] = len(chunk_hash_mismatches)
     C["original_doc_level_content_verified"] = len(doc_level_verified)
     C["original_true_sourceless_orphans"] = len(true_sourceless)
+    # The gate-relevant orphan metric: vectors with no backing content.
+    C["original_orphan_hash_entries"] = len(true_sourceless)
+    C["original_orphan_vectors"] = len(true_sourceless)
 
     # --- Orphan classification (delta) ---
-    delta_orphan_hashes = [h for h in incr_hashes if h not in corpus_chunk_hashes]
+    delta_orphan_hashes = [h for h in incr_hashes
+                          if h not in corpus_chunk_hashes and h not in doc_text_hashes]
     C["delta_orphan_hash_entries"] = len(delta_orphan_hashes)
     C["delta_orphan_vectors"] = len(delta_orphan_hashes)
 

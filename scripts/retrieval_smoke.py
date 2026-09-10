@@ -8,9 +8,12 @@ Run with PRODUCTION Python 3.12 (torch+CUDA+sentence_transformers).
 Writes state/semantic_retrieval_proof.json with retrieval_type DENSE+RERANKER.
 """
 from __future__ import annotations
-import json, hashlib, sys
+import json, hashlib, sys, os
 from pathlib import Path
 import numpy as np
+
+os.environ.setdefault("HF_HUB_OFFLINE", "1")
+os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
@@ -60,8 +63,11 @@ def main():
 
     h2 = build_hash_map()
 
-    free = torch.cuda.mem_get_info()[0] / 1e9
-    device = "cuda" if free > 1.0 else "cpu"
+    # Retrieval smoke runs on CPU for robustness under GPU contention (the
+    # production gate verifies CUDA/BGE-M3 capability separately). CPU dense
+    # retrieval over ~251k vectors is fast and keeps GPU free for inference
+    # services. Falls back is handled by always using CPU here.
+    device = "cpu"
     model = SentenceTransformer(BGE, device=device)
     reranker = CrossEncoder(RERANKER, device="cpu")
 

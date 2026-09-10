@@ -332,7 +332,8 @@ class CrossProcessLock:
         self._acquired = False
 
     def __enter__(self):
-        self.acquire()
+        if not self.acquire():
+            raise TimeoutError(f"lock not acquired within {self.timeout_s}s: {self.lock_path}")
         return self
 
     def __exit__(self, *args):
@@ -414,11 +415,17 @@ class ConcurrentJSONLStore:
         self.path = path
         self.lock = CrossProcessLock(
             (lock_dir or path.parent) / f"{path.stem}.lock")
+        # In-process thread lock: file locks serialize across processes but
+        # race within a single process (stale-PID checks cannot distinguish
+        # same-process threads). A threading.Lock guarantees in-process
+        # mutual exclusion without timeout-induced unlocked proceeds.
+        self._thread_lock = threading.Lock()
 
     def append(self, record: dict) -> bool:
-        """Append a record with cross-process lock."""
-        with self.lock:
-            return AtomicFileWriter.append_jsonl(self.path, record)
+        """Append a record with in-process then cross-process lock."""
+        with self._thread_lock:
+            with self.lock:
+                return AtomicFileWriter.append_jsonl(self.path, record)
 
     def read_all(self) -> list[dict]:
         """Read all records, skipping corrupted lines."""

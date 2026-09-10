@@ -1,0 +1,334 @@
+{
+  "schema": "ia_milk.biblioteca.framework.v1",
+  "titulo": "Framework Conceptual Multimodal — Atlas Vivo MILK",
+  "gerado_em": "2026-09-10T14:30:00Z",
+  "identidade_canonica": {
+    "idealizador": "Eduardo Maurício Vieira Cabral e Araújo (Eduardo Mauer)",
+    "orcid_idealizador": "0009-0007-6892-6570",
+    "coautor": "Nuno Filipe Fernandes Vieira Cabral e Araújo (Nuno A)",
+    "orcid_coautor": "0009-0009-1781-4020"
+  },
+  "documentos_fonte": [
+    {
+      "id": "doc_palavra_ritual",
+      "titulo": "A Palavra Ritual",
+      "formato": "docx",
+      "classificacao": "ESPECIFICAÇÃO TÉCNICA + MANIFESTAÇÃO AUTÓNOMA",
+      "descricao": "Formulação autoral do que a tecnologia deve preservar: deformação sem perda de rastreabilidade, movimento sem perda de acessibilidade, ritual sem captura de dados, interacção sem vigilância. Determina que no GitHub não pode virar depósito morto, tem de virar motor. Tratado como especificação conceptual de um motor curatorial.",
+      "necessidade_publica": "acesso cultural; literacia criativa/digital; expressão e participação",
+      "potencializacao": "torná-la uma obra digital pública generativa e acessível, na qual palavra, corpo, som e território se transformam sem vigilância. Para DGARTES: criação digital real, não plataforma.",
+      "citacoes": [
+        "No GitHub, isto não pode virar depósito morto. Tem de virar motor.",
+        "deformação sem perda de rastreabilidade, movimento sem perda de acessibilidade, ritual sem captura de dados, interacção sem vigilância"
+      ]
+    },
+    {
+      "id": "doc_deriva_sentido",
+      "titulo": "A Deriva do Sentido: Cartografia Psicogeográfica",
+      "formato": "docx",
+      "classificacao": "MANIFESTAÇÃO AUTÓNOMA + ESPECIFICAÇÃO TÉCNICA",
+      "descricao": "Intervenção urbana imersiva de dois dias, com psicogeografia, cultural probes, fotografia, azulejaria, IIIF, Web Annotation, cartografia afectiva, criação colectiva e exposição posterior.",
+      "necessidade_publica": "regeneração urbana; participação; relação habitante-território; acesso à criação contemporânea",
+      "potencializacao": "convertê-la num piloto replicável de intervenção urbana imersiva, produzindo percurso, criação física, exposição, memória e devolução local.",
+      "tecnologias": ["psicogeografia", "cultural probes", "fotografia", "azulejaria", "IIIF", "Web Annotation", "cartografia afectiva"]
+    },
+    {
+      "id": "doc_sussurro",
+      "titulo": "SUSSURRO_INTERFACE — Motor Curatorial Podcast O Sussurro",
+      "formato": "pdf",
+      "classificacao": "ESPECIFICAÇÃO TÉCNICA + MANIFESTAÇÃO AUTÓNOMA",
+      "descricao": "Motor curatorial sonoro territorial, com episódios de cerca de cinco minutos, leitura das margens e silêncios, literatura como matriz interpretativa, Thick Data, Data Feminism, OARS, acessibilidade e escuta territorial.",
+      "necessidade_publica": "envelhecimento, isolamento territorial, transmissão intergeracional, acesso cultural em baixa densidade",
+      "potencializacao": "fazer uma rede de escutas territoriais, especialmente nas freguesias que desaparecem dos grandes circuitos culturais. Encontro, oralidade, literatura, paisagem sonora e memória.",
+      "metodologias": ["Thick Data", "Data Feminism", "OARS", "escuta territorial"],
+      "citacoes": ["nada clínico: encontro, oralidade, literatura, paisagem sonora e memória"]
+    },
+    {
+      "id": "doc_toponomastica_qr",
+      "titulo": "Arquitectura Toponomástica da Memória Viva (QR Ritual)",
+      "formato": "implícito nos documentos",
+      "classificacao": "ESPECIFICAÇÃO TÉCNICA + INTEGRAÇÃO SISTÉMICA",
+      "descricao": "Formaliza o QR não como simples acesso, mas como ritual territorial de recolha, ligando memória sensorial, topónimo, oralidade, consentimento e interoperabilidade com CAOP, Arquivo.pt, Wikidata, Zenodo, W3C Web Annotation.",
+      "necessidade_publica": "participação comunitária no património; memória imaterial; cidadania digital; interoperabilidade territorial",
+      "potencializacao": "transformar cada QR numa estação de memória viva, capaz de gerar contribuição consentida, validação humana e devolução à freguesia.",
+      "interoperabilidade": ["CAOP", "Arquivo.pt", "Wikidata", "Zenodo", "W3C Web Annotation"]
+    },
+    {
+      "id": "doc_dois_joguinhos",
+      "titulo": "Dois Joguinhos — Arquitectura Funcional Reorganizada",
+      "formato": "implícito nos documentos",
+      "classificacao": "ESPECIFICAÇÃO TÉCNICA + INTEGRAÇÃO SISTÉMICA",
+      "descricao": "Dois eixos lúdicos principais — Percurso/Diário de Viagem e Meu Bairro/Propostas Territoriais — enquanto Fucô, Dado Sem Lado, Galeria Diletante, Casa que Não Existe e PERCEPTIO atravessam esses jogos como dispositivos, motores e camadas curatoriais.",
+      "necessidade_publica": "participação cidadã; leitura das necessidades locais; coesão territorial",
+      "potencializacao": "Caminhar revela o território vivido; Meu Bairro transforma percepção em possibilidade territorial. A retaguarda produz evidência territorial estruturada.",
+      "eixos": ["Percurso/Diário de Viagem", "Meu Bairro/Propostas Territoriais"],
+      "dispositivos_transversais": ["Fucô", "Dado Sem Lado", "Galeria Diletante", "Casa que Não Existe", "PERCEPTIO"]
+    },
+    {
+      "id": "doc_sesc_estudo",
+      "titulo": "SESC: Estrutura, Funcionamento, Metodologia",
+      "formato": "pdf",
+      "classificacao": "ESTUDO + ESPECIFICAÇÃO TÉCNICA",
+      "descricao": "Estudo do SESC brasileiro. Princípio: arquitectura como infraestrutura de sociabilidade. Descanso + Divertimento + Desenvolvimento (Dumazedier). Transformar arquitectura em infraestrutura de encontro. Referência para a Escola Manuel da Maia / Campo do Possível.",
+      "necessidade_publica": "educação + juventude + envelhecimento activo + cultura + lazer + participação + património",
+      "potencializacao": "Escola Manuel da Maia como escola aberta que se prolonga como infraestrutura cultural e comunitária de Campo de Ourique após o horário lectivo.",
+      "autores_referenciados": ["Dumazedier", "Lina Bo Bardi", "Paulo Mendes da Rocha", "Freire", "Vygotsky"],
+      "principios": ["Descanso + Divertimento + Desenvolvimento", "arquitectura como infraestrutura de sociabilidade", "estar junto também é uma infraestrutura"]
+    },
+    {
+      "id": "doc_cubo_rosa_saude",
+      "titulo": "LOTE044 — Atlas Inovação Saúde Dossiê Final",
+      "formato": "pdf",
+      "classificacao": "ESTUDO + ESPECIFICAÇÃO TÉCNICA",
+      "descricao": "Arquitectura inteira de Atlas + saúde pública + VIH/IST + Feminism Data + Batimetria/Bimetria + hapticidade + financiamento Portugal 2030/EMPIS/Alentejo/Lisboa. Contém afirmações fortes que precisam de revisão científica, ética e jurídica.",
+      "necessidade_publica": "saúde pública; inclusão; inovação territorial",
+      "potencializacao": "recuperar, separar invenção autoral de adição de IA, verificar cientificamente, actualizar standards, retirar promessas perigosas, aumentar potência artística sem achatar.",
+      "aviso": "afirmações fortes — preditivo, rastrear, inferir estados mentais — precisam de revisão científica, ética e jurídica antes de proposta institucional"
+    },
+    {
+      "id": "doc_revisao_bibliografica_ambient",
+      "titulo": "Revisão Bibliográfica Ambient Intelligence, Saúde, Smart Toilets, Cubo Rosa",
+      "formato": "docx",
+      "classificacao": "ESTUDO + ESPECIFICAÇÃO TÉCNICA",
+      "descricao": "Revisão de Ambient Intelligence, monitorização contínua, smart toilets, sensores, privacy-by-design, edge/cloud. Desenvolvimento do Cubo Rosa como pod pessoal, cidade inteligente interoperável, Solid, FHIR/OpenEHR, identidade, OAuth/OIDC. Formulação da cidade com elegância e dente, dado-obra, material feito da poluição, sussurro, adereços, festivais.",
+      "necessidade_publica": "saúde + cidade inteligente + curadoria cultural + interoperabilidade",
+      "potencializacao": "recuperar arquitectura Cubo Rosa + cidade + saúde + pod + interoperabilidade + curadoria. Separar o que é invenção autoral do que a IA acrescentou.",
+      "conceitos_chave": ["Cubo Rosa como pod pessoal", "cidade inteligente interoperável", "Solid", "FHIR/OpenEHR", "OAuth/OIDC", "cidade com elegância e dente", "dado-obra", "material feito da poluição"]
+    },
+    {
+      "id": "doc_meu_bairro_erasmus",
+      "titulo": "Meu Bairro (proposta não submetida, potentially Erasmus)",
+      "formato": "pdf",
+      "classificacao": "ESTUDO + VARIANTE",
+      "descricao": "Proposta que não chegou a ser submetida. Deve ser conservada e potencializada em conjunto com o estudo do SESC e informações sobre intenções administrativas e colectivas.",
+      "necessidade_publica": "participação territorial; cooperação internacional",
+      "potencializacao": "entregar homeopaticamente até dominarmos o mundo."
+    },
+    {
+      "id": "doc_conexoes_projeto",
+      "titulo": "LOTE058 — Conexões Projeto",
+      "formato": "implícito",
+      "classificacao": "ESTUDO",
+      "descricao": "Documento de conexões entre projectos e linhas de acção. A ser lido em conjunto com estudo SESC e Campo do Possível."
+    },
+    {
+      "id": "doc_atlas_sala_artista",
+      "titulo": "LOTE082 — Atlas Sala Artista",
+      "formato": "implícito",
+      "classificacao": "ESTUDO",
+      "descricao": "Documento sobre a sala do artista no contexto do Atlas. A ser potencializado."
+    },
+    {
+      "id": "doc_lotes_mislabelled",
+      "titulo": "LOTES 023/039/024 — Mislabeling detectado",
+      "formato": "pdf (3 ficheiros)",
+      "classificacao": "PROVA MATERIAL DE CONTAMINAÇÃO",
+      "descricao": "Três ficheiros nomeados como artigo_curadoria_cidades_inteligentes contêm o mesmo artigo académico de Leonor Scliar-Cabral, A desmistificação do método global, sobre alfabetização e neurociência da leitura. Prova material de contaminação/mislabeling dos LOTEs. Confirma a regra: nome não substitui leitura de conteúdo.",
+      "licao": "Mistral não pode confiar em título, pasta ou LOTE. Tem de abrir o conteúdo real de cada ficheiro.",
+      "conteudo_real": "Leonor Scliar-Cabral — A desmistificação do método global (alfabetização, neurociência da leitura, métodos fónicos)"
+    }
+  ],
+  "framework_conceptual": {
+    "descricao": "Mapa de conceitos, filosofias, ciências e suas relações tipadas, extraído da folha manuscrita e da análise conceptual.",
+    "nos": {
+      "husserl": {"tipo": "filosofo", "campo": "fenomenologia", "conceitos": ["intencionalidade", "noema", "redução fenomenológica"]},
+      "schaeffer": {"tipo": "teorico_musical", "campo": "música concreta", "conceitos": ["objecto sonoro", "escuta reduzida"], "relacao_com": "A escuta reduzida de Schaeffer relaciona-se com a redução fenomenológica de Husserl"},
+      "lyotard": {"tipo": "filosofo", "campo": "pós-modernidade", "conceitos": ["fim das grandes narrativas", "diferença"]},
+      "wagner": {"tipo": "compositor", "campo": "ópera", "conceitos": ["Gesamtkunstwerk", "obra total"]},
+      "jung": {"tipo": "psicologo", "campo": "psicologia analítica", "conceitos": ["sincronicidade", "inconsciente colectivo", "arquétipos"], "aviso": "sincronicidade não é lei física; permanece na psicologia analítica"},
+      "heisenberg": {"tipo": "fisico", "campo": "mecânica quântica", "conceitos": ["princípio da incerteza"], "formula": "Δx·Δp ≥ ħ/2", "constante_planck": "6.62607015 × 10⁻³⁴ J·s (definida exactamente)"},
+      "hilbert": {"tipo": "matematico", "campo": "matemática", "conceitos": ["Hotel de Hilbert", "infinidade actual contável"]},
+      "graham": {"tipo": "matematico", "campo": "matemática combinatória", "conceitos": ["Número de Graham"], "aviso": "imensuravelmente grande ≠ infinito; o Número de Graham é finito"},
+      "lacan": {"tipo": "psicanalista", "campo": "psicanálise", "conceitos": ["real", "simbólico", "imaginário"]},
+      "noema": {"tipo": "conceito", "campo": "fenomenologia", "descricao": "estrutura/correlato pelo qual algo aparece à consciência"},
+      "dopamina": {"tipo": "conceito_neuro", "campo": "neurociência", "descricao": "além da caricatura químico do prazer: aprendizagem por erro de previsão, novidade, selecção de acção"},
+      "epifania": {"tipo": "conceito", "campo": "psicologia cognitiva", "descricao": "súbita produção de interpretação não óbvia/não dominante para um estímulo ou situação"},
+      "rede_micelial": {"tipo": "conceito_bio", "campo": "biologia", "descricao": "estruturas ramificadas e remodeláveis, sem centro, que crescem, perdem partes, refazem caminhos", "aviso": "evitar simplificação pop de floresta consciente; controvérsias antropomórficas"},
+      "planck": {"tipo": "fisico", "campo": "física quântica", "conceitos": ["constante de Planck"]},
+      "raziel": {"tipo": "referencia_cultural", "campo": "tradição", "descricao": "referência mística/cabalística"}
+    },
+    "arestas_tipadas": [
+      {"origem": "husserl", "tipo": "influência_documentada", "destino": "schaeffer", "evidencia": "Schaeffer relaciona-se com a redução fenomenológica husserliana"},
+      {"origem": "noema", "tipo": "cadeia_conceptual", "destino": "dopamina", "evidencia": "como algo aparece → como a expectativa é construída"},
+      {"origem": "dopamina", "tipo": "cadeia_conceptual", "destino": "epifania", "evidencia": "como a expectativa falha → como uma interpretação nova emerge"},
+      {"origem": "epifania", "tipo": "retroreferência", "destino": "husserl", "evidencia": "fecho do ciclo fenomenológico"},
+      {"origem": "wagner", "tipo": "tensão_produtiva", "destino": "lyotard", "evidencia": "Gesamtkunstwerk (obra total) vs fim das grandes narrativas; construir experiência total que se recusa a produzir interpretação total"},
+      {"origem": "jung", "tipo": "eixo_investigação", "destino": "nexo_causal", "evidencia": "causa → correlação → coincidência → significado atribuído → padrão percebido → erro de padrão → acaso → experiência"},
+      {"origem": "hilbert", "tipo": "distinção_preservada", "destino": "graham", "evidencia": "imensuravelmente grande ≠ infinito; Hilbert = infinito contável, Graham = finito gigantesco"},
+      {"origem": "heisenberg", "tipo": "transposição_artística", "destino": "experiencia_milk", "evidencia": "quanto mais precisamente uma dimensão é determinada, menos outra permanece disponível. Não física, regra artística inspirada na forma matemática."}
+    ]
+  },
+  "framework_etico": {
+    "principios": ["não maleficência", "autonomia humana", "human-in-the-loop", "consentimento informado"],
+    "declaracao": "posso deslocar a tua percepção; não posso retirar a tua autonomia",
+    "paralelos": {
+      "unesco": "dignidade, do no harm, determinação/supervisão humana",
+      "oms": "autonomia humana associada a controlo humano efectivo e consentimento informado"
+    },
+    "integracao": "a trava ética já está dentro da dramaturgia, não como rodapé"
+  },
+  "estrategia_financiamento": {
+    "principio": "Não apontar a ferida. Fazer aparecer uma possibilidade tão bem encaixada que a necessidade deixa de organizar a conversa.",
+    "modelo_duas_faces": {
+      "experiencia_milk": "aquilo que a pessoa encontra",
+      "funcao_publica_demonstravel": "aquilo que conseguimos provar que a experiência produziu"
+    },
+    "sequencia_entrada": "prioridade declarada → capacidade existente → pequena extensão MILK → benefício perceptível → piloto reversível → evidência → expansão",
+    "fontes_financiamento": [
+      {"fonte": "DGARTES 2027-2030", "area": "Cruzamento Disciplinar, Circo, Artes de Rua e Artes Digitais", "valor": "€8.94M", "prazo": "2026-10-06", "definicao_arte_digital": "criação em que sistemas e tecnologias digitais fazem parte da materialidade e experiência estética, incluindo instalações interactivas, arte generativa, IA, data art, RA/mista"},
+      {"fonte": "Horizon Europe Cluster 2", "area": "IA responsável nos sectores culturais e criativos", "prazo": "2026-09-23", "encaixe": "arquitectura invisível, leitura territorial, validação humana, interoperabilidade, agentes humano-IA"},
+      {"fonte": "Norte — Inclusão pela Cultura", "area": "Arte, Saúde e Bem-Estar", "prazo": "2026-09-30"},
+      {"fonte": "Norte — Rotas do Norte", "area": "inventário, itinerários, mediação, património", "prazo": "2026-09-30"},
+      {"fonte": "PESSOAS 2030", "area": "baixa densidade, aprendizagem cultural, envelhecimento activo", "exemplo": "Oleiros €440k/4 anos"},
+      {"fonte": "Convenção de Faro (Conselho da Europa)", "area": "comunidades patrimoniais, participação civil, múltiplas narrativas, inclusão"},
+      {"fonte": "Common European Data Space for Cultural Heritage 2025-2030", "area": "interoperabilidade, controlo institucional, IA, 3D/XR, multilinguismo"},
+      {"fonte": "Plano de Acção Digital 2026-2027", "area": "regime de interoperabilidade, uma só vez"}
+    ],
+    "necessidades_publicas_mapeadas": [
+      "envelhecimento e despovoamento de territórios de baixa densidade",
+      "coesão territorial",
+      "inclusão social",
+      "acesso cultural",
+      "participação cívica digital",
+      "desigualdade no acesso ao digital"
+    ],
+    "politicas_verificadas": ["PLANAPP", "Portugal 2030", "Estratégia Digital Nacional"]
+  },
+  "parceiros_potenciais": {
+    "infraestrutura_urbana": ["FIWARE/OASC", "Ubiwhere", "plataformas municipais", "digital twins", "edge/IoT"],
+    "dados_soberanos": ["Solid/pods", "European Data Spaces", "Simpl", "identidade/consentimento"],
+    "cultura": ["Europeana/ECHOES", "património digital", "museus", "bibliotecas", "universidades", "redes culturais"],
+    "ia_europeia": ["Mistral", "OpenEuroLLM/EuroLLM", "AI Factories", "EDIHs", "HPC"],
+    "experiencia_fisica": ["materiais", "spatial computing", "áudio direccional", "projecção", "XR", "instalações interactivas", "fabricação avançada", "arquitectura", "mobiliário urbano"]
+  },
+  "projeto_campo_possivel": {
+    "nome": "CAMPO DO POSSÍVEL — infraestrutura de encontro instalada numa escola",
+    "escola": "Escola Básica e Secundária Manuel da Maia, Campo de Ourique, Lisboa",
+    "rua": "Rua Sampaio Bruno / Rua Freitas Gazul",
+    "area_m2": 9764,
+    "alunos": 863,
+    "turmas": 41,
+    "professores": 76,
+    "programa_camara": "Escola de Futuro — requalificação/modernização (concurso concepção terminou Dez 2025, 10 propostas)",
+    "principio": "ESCOLA DURANTE A ESCOLA. CIDADE DEPOIS DA ESCOLA.",
+    "ciclo": "ESCOLA → ENCONTRO → EXPERIÊNCIA → VESTÍGIO → ATLAS → LEITURA DO TERRITÓRIO → NOVA EXPERIÊNCIA → NOVA INFRAESTRUTURA",
+    "frase_chave": "E se a missão que a escola já declara não terminasse no portão?",
+    "referencia_arquitectonica": "SESC (sem reproduzir modelo jurídico brasileiro; roubar princípio arquitectónico e social)",
+    "eixos_sesc": ["Descanso", "Divertimento", "Desenvolvimento (Dumazedier)"],
+    "autores_referenciados": ["Dumazedier", "Lina Bo Bardi", "Paulo Mendes da Rocha", "Freire", "Vygotsky"],
+    "dispositivos_atlas_aplicaveis": ["Palavra Ritual", "O Sussurro", "Dado Sem Lado", "Galeria Diletante", "Livro Cubo", "PERCEPTIO", "COSMICOXES"],
+    "modelo_expansao": "uma porta, uma sala, um pátio, uma noite por semana → ganha outro espaço → depois outro → fim-de-semana → férias → o bairro pergunta por que fecha"
+  },
+  "metodologia_classificacao": {
+    "principio": "nome igual ≠ duplicado; conteúdo parecido ≠ descartável; formulação posterior ≠ revogação automática da anterior",
+    "classes": ["ORIGINAL", "ESTUDO", "ENSAIO", "VARIANTE", "REELABORAÇÃO", "DERIVAÇÃO", "ESPECIFICAÇÃO TÉCNICA", "MANIFESTAÇÃO AUTÓNOMA", "INTEGRAÇÃO SISTÉMICA"],
+    "regra_duplicacao": "Só considerar dois ficheiros duplicados técnicos quando houver evidência forte (mesmo conteúdo byte a byte / hash idêntico), e mesmo assim não apagar o original.",
+    "leitura_profunda": "Para cada ficheiro procurar simultaneamente: criação original → experiência possível → estágio/genealogia → necessidade territorial/pública → evidência necessária → manifestação financiável → programa potencial → pegada → riscos → relações com outros dispositivos."
+  },
+  "motor_relacional_tipos_aresta": [
+    "influência_documentada",
+    "afinidade_estrutural",
+    "incompatibilidade_importante",
+    "coisas_que_parecem_semelhantes_mas_não_são",
+    "hipótese_a_investigar",
+    "colisão_capaz_de_gerar_dispositivo_novo",
+    "conexão_que_falhou_e_portanto_também_informa",
+    "coisa_que_emerge_sem_antecedente_evidente"
+  ],
+  "desmontagens_testar": [
+    "se retirarmos Jung, o sistema continua?",
+    "se retirarmos causalidade?",
+    "se trocar infinito por enorme-finito?",
+    "se o som perder a sua fonte?",
+    "se o objecto perder o seu nome?",
+    "se a experiência perder a explicação?",
+    "se o utilizador se recusar a participar?"
+  ],
+  "pegadas": {
+    "principio": "não métricas de vaidade; pegadas interessantes",
+    "tipos": [
+      "território alcançado",
+      "diversidade geracional",
+      "continuidade da participação",
+      "património não anteriormente documentado",
+      "retorno à comunidade",
+      "acessibilidade",
+      "cooperação institucional",
+      "propostas territoriais surgidas",
+      "experiências realizadas",
+      "criação artística resultante",
+      "decisões que nasceram da escuta"
+    ],
+    "ciclo_piloto": "sessão pública real + parceria Junta/associação/escola + metodologia datada + pequeno corpus validado + devolução pública à comunidade"
+  },
+  "camada_publica": {
+    "principio": "a camada pública brinca; a camada invisível trabalha e documenta",
+    "regra_navegacao": "Perder o tempo sem perder o lugar",
+    "ponto_de_ranhura": "várias épocas, uma voz, uma fotografia, um som, uma coisa banal, uma ausência, uma lenda, um erro, uma promessa que não aconteceu — coisas diferentes que continuam presas ao mesmo lugar",
+    "exemplos_resonancia": [
+      "Portugal Visto pelas Papeleiras",
+      "Bancos Onde Alguém Esperou Demais",
+      "Fontes Sem Água e Águas Sem Fonte",
+      "Todas as Coisas Que Ficaram Tortas"
+    ],
+    "endereço_real": "atlas.associacaomilk.pt",
+    "regra_frontend": "não explica, não pergunta — encanta",
+    "componentes_não_são": {
+      "globo": "não é menu",
+      "milk": "não é pin",
+      "bilhete": "não é modal",
+      "fuco": "não é botão",
+      "galeria": "não é grid",
+      "dado": "não é minigame",
+      "livro_cubo": "não é carrossel",
+      "silencio": "não é estado de loading",
+      "ausencia": "também pode ser conteúdo"
+    },
+    "dramaturgia": "preto → selo → COSMICOXES → palavras cósmicas → segundo gesto → dissolução → globo → MILKs territoriais → bilhete → descoberta → dispositivo curatorial → retorno"
+  },
+  "branding": {
+    "linha1": "FLYINGPINK",
+    "linha2": "ELEPHANTS",
+    "design": "reproduzir design da marca MILK para estas duas linhas",
+    "indicio": "Hamalachmilk",
+    "creditos": "The Unseen Creators (anotação de rodapé, bem menor, em Montserrat)"
+  },
+  "bibliografia_referenciada": {
+    "autores_citados": [
+      {"nome": "Leonor Scliar-Cabral", "obra": "A desmistificação do método global", "tema": "alfabetização, neurociência da leitura, métodos fónicos"},
+      {"nome": "José Saramago", "obra": "Memorial do Convento", "tema": "ficção histórica, vozes silenciadas, poder, ironia"},
+      {"nome": "Edgar Allan Poe", "referencia": "Rilke, Celan, Lorca, Woolf, Clarice, Pasolini, Norbert Elias, Argan", "tema": "competências interpretativas para a IA MILK"},
+      {"nome": "Dumazedier", "obra": "Sociologia do Lazer", "tema": "Descanso + Divertimento + Desenvolvimento"},
+      {"nome": "Husserl", "tema": "fenomenologia, intencionalidade, noema"},
+      {"nome": "Pierre Schaeffer", "tema": "objecto sonoro, escuta reduzida, relação com Husserl"},
+      {"nome": "Lyotard", "tema": "fim das grandes narrativas, diferença"},
+      {"nome": "Wagner", "tema": "Gesamtkunstwerk, obra total — tensão com Lyotard"},
+      {"nome": "Jung", "tema": "sincronicidade, psicologia analítica"},
+      {"nome": "Heisenberg", "tema": "princípio da incerteza, transposição artística"},
+      {"nome": "Hilbert", "tema": "Hotel de Hilbert, infinidade contável"},
+      {"nome": "Graham", "tema": "Número de Graham, finito gigantesco"},
+      {"nome": "Lacan", "tema": "real, simbólico, imaginário"}
+    ],
+    "politicas_verificadas": [
+      "PLANAPP — envelhecimento, saída de jovens, assimetrias territoriais",
+      "Portugal 2030 — coesão social e territorial",
+      "Estratégia Digital Nacional — participação digital inclusiva",
+      "Common European Data Space for Cultural Heritage 2025-2030",
+      "Plano de Acção Digital 2026-2027 — interoperabilidade, uma só vez",
+      "Convenção de Faro — comunidades patrimoniais, participação civil",
+      "UNESCO IA — dignidade, do no harm, supervisão humana",
+      "OMS — autonomia humana, consentimento informado"
+    ]
+  },
+  "regras_operacionais": [
+    "nome igual ≠ duplicado; conteúdo parecido ≠ descartável; formulação posterior ≠ revogação automática da anterior",
+    "nunca vender a complexidade total antes de haver desejo pela próxima camada",
+    "não apontar a ferida; fazer aparecer uma possibilidade tão bem encaixada que a ferida deixa de organizar a conversa",
+    "primeiro: uma experiência cultural territorial interoperável; depois descobrem que existe o Atlas; depois a inteligência territorial; depois o Cubo; depois o pod; depois a IA MILK",
+    "posso deslocar a tua percepção; não posso retirar a tua autonomia",
+    "o que percebemos, não necessariamente entendemos; e aquilo que não entendemos continua sendo aquilo que vivemos",
+    "não vamos transformar as experiências em explicações burocráticas para agradar ao Estado",
+    "a pessoa vive, toca, escuta, anda, joga, encontra, estranha",
+    "Mistral não pode confiar em título, pasta ou LOTE — tem de abrir o conteúdo real de cada ficheiro"
+  ]
+}

@@ -1,0 +1,285 @@
+{
+  "schema": "ia_milk.maxcap_proof.v1",
+  "seed": 42,
+  "capability_mesh": {
+    "total_capabilities": 36,
+    "by_status": {
+      "OPERATIONAL": 34,
+      "AVAILABLE_NOT_WIRED": 2
+    }
+  },
+  "compliance": {
+    "assessment_id": "4f8c8fe27615499e8e8ad4420495ea7d",
+    "trace_id": "",
+    "jurisdiction": "EU/PT",
+    "profiles": [
+      {
+        "profile": "eu_ai_act",
+        "instrument": "EU AI Act 2024/1689",
+        "official_source": "EUR-Lex 32024R1689",
+        "version": "2024-08-13",
+        "effective_date": "2026-08-02 (phased)",
+        "applicability": "CONFORMS_TECHNICALLY",
+        "reason": "",
+        "requirements": [
+          "risk_classification",
+          "transparency",
+          "human_oversight",
+          "logging",
+          "data_governance",
+          "documentation",
+          "robustness_cybersecurity"
+        ]
+      },
+      {
+        "profile": "rgpd",
+        "instrument": "RGPD 2016/679",
+        "official_source": "EUR-Lex 32016R0679",
+        "version": "2016-04-27",
+        "effective_date": "2018-05-25",
+        "applicability": "ASSESSMENT_REQUIRED",
+        "reason": "applies to any data processing (proportionate assessment)",
+        "requirements": [
+          "lawful_basis",
+          "data_minimization",
+          "purpose_limitation",
+          "accuracy",
+          "storage_limitation",
+          "integrity_confidentiality",
+          "accountability",
+          "dsar"
+        ]
+      },
+      {
+        "profile": "interoperable_europe_act",
+        "instrument": "Interoperable Europe Act 2024/903",
+        "official_source": "EUR-Lex 32024L0903",
+        "version": "2024-06-13",
+        "effective_date": "2025 (phased)",
+        "applicability": "ASSESSMENT_REQUIRED",
+        "reason": "",
+        "requirements": [
+          "interoperability_assessment",
+          "eu_portal",
+          "innovation_communities"
+        ]
+      },
+      {
+        "profile": "eif",
+        "instrument": "European Interoperability Framework",
+        "official_source": "ISA² Programme",
+        "version": "EIF 2.0",
+        "effective_date": "2017-10",
+        "applicability": "ASSESSMENT_REQUIRED",
+        "reason": "",
+        "requirements": [
+          "legal_interop",
+          "organisational_interop",
+          "semantic_interop",
+          "technical_interop"
+        ]
+      },
+      {
+        "profile": "arpgu",
+        "instrument": "ARPGU (Administrative Modernization)",
+        "official_source": "Resolução do Conselho de Ministros",
+        "version": "vigent (review_2026_status=unconfirmed)",
+        "effective_date": "varies",
+        "applicability": "ASSESSMENT_REQUIRED",
+        "reason": "",
+        "requirements": [
+          "digital_services",
+          "interoperability",
+          "citizen_centric",
+          "data_protection"
+        ]
+      },
+      {
+        "profile": "iap_rnid",
+        "instrument": "iAP/RNID (Plataforma de Interoperabilidade)",
+        "official_source": "AMA/SPMS",
+        "version": "current",
+        "effective_date": "ongoing",
+        "applicability": "NOT_APPLICABLE",
+        "reason": "MILK is private entity; iAP voluntary",
+        "requirements": [
+          "authentication",
+          "attribute_exchange",
+          "service_authorization",
+          "legal_basis"
+        ]
+      },
+      {
+        "profile": "fiware_ngsi_ld",
+        "instrument": "ETSI NGSI-LD (FIWARE)",
+        "official_source": "ETSI GS CIM 009",
+        "version": "1.x",
+        "effective_date": "technical_standard",
+        "applicability": "ASSESSMENT_REQUIRED",
+        "reason": "",
+        "requirements": [
+          "context_broker_optional",
+          "entity_model",
+          "api_compliance"
+        ]
+      },
+      {
+        "profile": "inspire",
+        "instrument": "INSPIRE Directive 2007/2/EC",
+        "official_source": "EUR-Lex 32007L0002",
+        "version": "2007-03-14",
+        "effective_date": "varies (phased to 2021)",
+        "applicability": "NOT_APPLICABLE",
+        "reason": "no spatial data in this task",
+        "requirements": [
+          "metadata",
+          "view_services",
+          "discovery_services",
+          "data_sharing"
+        ]
+      },
+      {
+        "profile": "wcag_2_2",
+        "instrument": "WCAG 2.2 AA",
+        "official_source": "W3C Recommendation",
+        "version": "2.2",
+        "effective_date": "2023-10",
+        "applicability": "ASSESSMENT_REQUIRED",
+        "reason": "",
+        "requirements": [
+          "perceivable",
+          "operable",
+          "understandable",
+          "robust"
+        ]
+      }
+    ],
+    "overall_state": "HUMAN_REVIEW_REQUIRED",
+    "evidence_present": [
+      "eu_ai_act:risk_classification:not_high_risk_for_cultural_heritage",
+      "eu_ai_act:human_oversight:present",
+      "eu_ai_act:logging:present",
+      "rgpd:lawful_basis:consent_or_legitimate_interest",
+      "rgpd:data_minimization:cultural_text_not_personal"
+    ],
+    "evidence_missing": [],
+    "human_review": true,
+    "decision_effect": "proceed_with_review",
+    "timestamp": "2026-09-10T05:29:56.415362+00:00",
+    "schema_version": "compliance.v1"
+  },
+  "execution_graph": {
+    "graph_id": "99dfb9759bdb40f9be444c5746dd25ca",
+    "mode": "SINGLE",
+    "capabilities": [
+      {
+        "id": "retrieval:corpus",
+        "type": "retrieval",
+        "online": true,
+        "sovereignty": 1.0,
+        "privacy": 1.0,
+        "latency_ms": 100,
+        "quality": 0.8,
+        "vendor": "local",
+        "strategies": [
+          "A_TFIDF_BGE_RRF",
+          "D_HIERARCHICAL"
+        ],
+        "canonical_status": "CANDIDATE_CANONICAL",
+        "score": 0.965,
+        "base_score": 0.965,
+        "adjusted_score": 0.7762,
+        "adaptive_explanation": {
+          "base_score": 0.965,
+          "adaptive_sample": 0.3358,
+          "adjustment_weight": 0.3,
+          "base_weight": 0.7,
+          "mode": "exploit",
+          "stats": {
+            "alpha": 1.03,
+            "beta": 1.8,
+            "selections": 1,
+            "total_reward": 0.3
+          },
+          "adjusted_score": 0.7762
+        }
+      }
+    ],
+    "description": "Single capability: retrieval:corpus",
+    "created_at": "2026-09-10T05:29:56.415526+00:00"
+  },
+  "evidence_reconciliation": {
+    "sources": [
+      "retrieval:corpus",
+      "adapter:localfs"
+    ],
+    "items": [
+      {
+        "source": "retrieval:corpus",
+        "content": "Folklore data from local corpus about Portuguese traditions",
+        "content_hash": "h1"
+      },
+      {
+        "source": "adapter:localfs",
+        "content": "Filesystem evidence from local Atlas directory",
+        "content_hash": "h2"
+      }
+    ],
+    "conflicts": [],
+    "deduped_count": 1,
+    "independent_sources": 2,
+    "quality_score": 0.6667,
+    "timestamp": "2026-09-10T05:29:56.415618+00:00"
+  },
+  "task_execution": {
+    "status": "done",
+    "trace_id": "f53896bb5518485ebca5f8d579657e5c",
+    "evidence_count": 2
+  },
+  "learning": {
+    "total_events": 43,
+    "policy_version": 8
+  },
+  "contextual_policy": {
+    "capability_id": "retrieval:corpus",
+    "context_band": "task_family=retrieval|risk_class=normal|modality=any|evidence_level=any",
+    "contextual_selections": 3,
+    "contextual_avg_reward": 0.7,
+    "base_selections": 5,
+    "base_avg_reward": 0.54,
+    "alpha": 3.55,
+    "beta": 1.0,
+    "expected_value": 0.7802,
+    "policy_version": 11
+  },
+  "semantic": {
+    "entity_id": "urn:milk:cultural_asset:folclore_001",
+    "ngsi_ld_type": "https://smartdatamodels.org/dataModel.CulturalAsset"
+  },
+  "sovereign_core": {
+    "core_components": [
+      "task_intake",
+      "local_retrieval",
+      "local_reasoning",
+      "evidence_fabric",
+      "operational_memory",
+      "adaptive_policy",
+      "compliance_offline",
+      "action_gate"
+    ],
+    "all_present": true,
+    "external_dependencies_required_for_core": [],
+    "sovereignty_verified": true,
+    "fallback_mode": "all_external_marked_offline → core still operates"
+  },
+  "explain_selection": {
+    "capability_id": "retrieval:corpus",
+    "selections": 5,
+    "total_reward": 2.7,
+    "avg_reward": 0.54,
+    "alpha": 4.87,
+    "beta": 2.6,
+    "expected_value": 0.6519,
+    "policy_version": 11
+  }
+}

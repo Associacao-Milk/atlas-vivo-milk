@@ -238,5 +238,37 @@
     "rollback": "revert task:5911750f7b55472e8013d2d939d31d21 to before_hash=227ad9e3cc6819cd",
     "human_gate": false,
     "status": "executed"
+  },
+  {
+    "action_id": "ACT-0016",
+    "actor": "cognitive_control_plane",
+    "action": "stage_derived",
+    "tier": "WRITE_REVERSIBLE",
+    "source": "7b480b73bd9041b1b33f22aba41a3c84",
+    "target": "task:7b480b73bd9041b1b33f22aba41a3c84",
+    "timestamp": "2026-09-10T05:29:35.730751+00:00",
+    "evidence": "",
+    "before_hash": "039f47b9ce8b20bd1cd5a93eff58be5dbe2bf7a631dbabbe3e42417a437d7870",
+    "after_hash": "",
+    "reversible": true,
+    "rollback": "revert task:7b480b73bd9041b1b33f22aba41a3c84 to before_hash=039f47b9ce8b20bd",
+    "human_gate": false,
+    "status": "executed"
+  },
+  {
+    "action_id": "ACT-0017",
+    "actor": "cognitive_control_plane",
+    "action": "stage_derived",
+    "tier": "WRITE_REVERSIBLE",
+    "source": "905b554e0d524fac8e9a480dabee300e",
+    "target": "task:905b554e0d524fac8e9a480dabee300e",
+    "timestamp": "2026-09-10T05:30:24.399206+00:00",
+    "evidence": "",
+    "before_hash": "2603204fe0015aab2cffb5131749bbaca4f60779b022ecdfaf057026fd4c0f6c",
+    "after_hash": "",
+    "reversible": true,
+    "rollback": "revert task:905b554e0d524fac8e9a480dabee300e to before_hash=2603204fe0015aab",
+    "human_gate": false,
+    "status": "executed"
   }
 ]

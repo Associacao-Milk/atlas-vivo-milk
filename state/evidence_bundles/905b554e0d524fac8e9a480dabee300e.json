@@ -1,0 +1,130 @@
+{
+  "schema": "ia_milk.evidence_bundle.v1",
+  "task_id": "905b554e0d524fac8e9a480dabee300e",
+  "trace_id": "f53896bb5518485ebca5f8d579657e5c",
+  "created_at": "2026-09-10T05:29:56.416487+00:00",
+  "hash_chain": "ee2576ec660204f84a853791fb261555e43860afe8b4d4a8ee4f96dfa3defb68",
+  "items": [
+    {
+      "source": "retrieval:corpus",
+      "source_uri": "local:corpus",
+      "content": "Retrieved for: What folklore materials exist in the Atlas corpus about Portuguese traditions?",
+      "content_hash": "3bac3d7d71951b9fa6be332669f790f994e1ee17dc9b762fa531c7f2dab3ff87",
+      "retrieval_method": "candidate_canonical",
+      "reranking": "bge-reranker-v2-m3",
+      "transform": "",
+      "retrieved_at": "2026-09-10T05:29:56.416509+00:00",
+      "metadata": {
+        "strategy": "A_TFIDF_BGE_RRF"
+      }
+    },
+    {
+      "source": "localfs",
+      "source_uri": "{'id': '__init__.py', 'type': 'file', 'size': 371}",
+      "content": "# ATLAS VIVO - Integration APIs\r\n# ============================\r\n# \r\n# This package contains all integration APIs for ATLAS VIVO automation system\r\n# \r\n# APIs included:\r\n# - Zenodo API Client\r\n# - ORCID API Client  \r\n# - GitHub API Client\r\n# - Codeberg API Client\r\n# - Funding Compliance API\r\n# - Platform Sync API\r\n# - Legal Compliance API\r\n# - Unified Integration API\r\n",
+      "content_hash": "06e359f5ce60ebfbeae9686487e3503d4aca5e2fe7a412648cfc91c606068278",
+      "retrieval_method": "adapter_read",
+      "reranking": "",
+      "transform": "",
+      "retrieved_at": "2026-09-10T05:29:56.612424+00:00",
+      "metadata": {}
+    }
+  ],
+  "inferences": [
+    {
+      "inference_id": "b037a08160c549bba6b84c11c744b7b4",
+      "model": "gpt-oss-20b",
+      "model_version": "local",
+      "output": "<|channel|>analysis<|message|>The user asks: \"What folklore materials exist in the Atlas corpus about Portuguese traditions?\" They likely want a list of folklore materials in Atlas corpus concerning Portuguese traditions. The evidence shows an API package but no data. We need to synthesize a brief answer. We can mention typical types: folk songs, tales, proverbs, rituals, festivals, dances, crafts, etc. Mention that Atlas corpus contains folk narratives, songs, oral histories, proverbs, traditions, etc. Provide examples: \"Folk tales of the Azores\", \"Traditional music of Madeira\", \"Portuguese folk songs on the Portuguese diaspora\", \"Festivals like Festa de São João\", \"Traditional crafts like Galo de Barcelos\". Also note that the Atlas corpus includes digital collections like \"Atlas of Portuguese Cultural Heritage\". Provide a short overview. The answer should be concise. Let's produce.<|end|>**Folklore materials in the Atlas corpus that focus on Portuguese traditions**\n\n| Category |",
+      "output_hash": "e5a1970f5e4f84818714b087b98593943233a4cd09a7c92762fcb330ce7ac3b3",
+      "timestamp": "2026-09-10T05:30:24.399060+00:00",
+      "method": "gpt_oss_api"
+    }
+  ],
+  "decisions": [
+    {
+      "decision_id": "a0ae10e9c5fd415d91e9b1358b654c0e",
+      "decision": "evidence_based_answer",
+      "rationale": "Based on 2 evidence items and 1 inferences",
+      "timestamp": "2026-09-10T05:30:24.399086+00:00"
+    }
+  ],
+  "gate_decisions": [
+    {
+      "action_id": "ACT-0017",
+      "actor": "cognitive_control_plane",
+      "action": "stage_derived",
+      "tier": "WRITE_REVERSIBLE",
+      "source": "905b554e0d524fac8e9a480dabee300e",
+      "target": "task:905b554e0d524fac8e9a480dabee300e",
+      "timestamp": "2026-09-10T05:30:24.399206+00:00",
+      "evidence": "",
+      "before_hash": "2603204fe0015aab2cffb5131749bbaca4f60779b022ecdfaf057026fd4c0f6c",
+      "after_hash": "",
+      "reversible": true,
+      "rollback": "revert task:905b554e0d524fac8e9a480dabee300e to before_hash=2603204fe0015aab",
+      "human_gate": false,
+      "status": "executed"
+    }
+  ],
+  "actions": [
+    {
+      "action_id": "f92e554c310a4956a78938045d184947",
+      "action": "stage_derived",
+      "timestamp": "2026-09-10T05:30:24.401817+00:00",
+      "receipt_id": "ACT-0017",
+      "target": "task:905b554e0d524fac8e9a480dabee300e"
+    }
+  ],
+  "outcomes": [
+    {
+      "outcome_id": "ac43ef937478457ca30c484f75013dd9",
+      "outcome": "task_complete",
+      "timestamp": "2026-09-10T05:30:24.401922+00:00",
+      "task_id": "905b554e0d524fac8e9a480dabee300e",
+      "success": false,
+      "quality": "medium",
+      "evidence_count": 2,
+      "inference_count": 1,
+      "decision_count": 1,
+      "gate_approved": 1,
+      "gate_proposed": 0,
+      "hash_chain": "8272cda414d9fb328eb113b6251061b73c2e7f57999672801371d115b92b3a65",
+      "evaluated_at": "2026-09-10T05:30:24.401901+00:00"
+    }
+  ],
+  "prov_o_export": {
+    "@context": {
+      "prov": "http://www.w3.org/ns/prov#"
+    },
+    "entities": [
+      {
+        "@id": "evidence:retrieval:corpus:3bac3d7d7195",
+        "@type": "prov:Entity",
+        "prov:value": "Retrieved for: What folklore materials exist in the Atlas corpus about Portuguese traditions?",
+        "prov:wasGeneratedBy": "retrieval:corpus"
+      },
+      {
+        "@id": "evidence:localfs:06e359f5ce60",
+        "@type": "prov:Entity",
+        "prov:value": "# ATLAS VIVO - Integration APIs\r\n# ============================\r\n# \r\n# This package contains all integration APIs for ATLAS VIVO automation system\r\n# \r\n# APIs included:\r\n# - Zenodo API Client\r\n# - ORC",
+        "prov:wasGeneratedBy": "localfs"
+      }
+    ],
+    "activities": [
+      {
+        "@id": "inference:b037a08160c5",
+        "@type": "prov:Activity",
+        "prov:used": "gpt-oss-20b",
+        "prov:startedAtTime": "2026-09-10T05:30:24.399060+00:00"
+      }
+    ],
+    "agents": [
+      {
+        "@id": "milk:sovereign_core",
+        "@type": "prov:Agent",
+        "prov:actedOnBehalfOf": "milk:sovereign_core"
+      }
+    ]
+  }
+}

@@ -15,6 +15,7 @@ NGSI_LD_TYPES = {
     "Source": "milk:Source",
     "Chunk": "milk:Chunk",
     "Answer": "milk:Answer",
+    "Annotation": "oa:Annotation",
 }
 
 

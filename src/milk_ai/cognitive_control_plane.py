@@ -401,8 +401,22 @@ class EvidenceBundle:
         out.parent.mkdir(parents=True, exist_ok=True)
         d = self.to_dict()
         d["prov_o_export"] = self.to_prov_o()
+        d["w3c_annotation"] = self.to_w3c_annotation()
         out.write_text(json.dumps(d, ensure_ascii=False, indent=2), encoding="utf-8")
         return out
+
+    def to_w3c_annotation(self, target_chunk: dict[str, Any] | None = None,
+                           motivation: str = "commenting") -> dict[str, Any]:
+        """Export to W3C Web Annotation Data Model (REC 2017-02-23).
+
+        Reuses the AnnotationRelationalEngine to project this EvidenceBundle
+        as a W3C-conformant Annotation. The EvidenceBundle IS structurally a
+        W3C Annotation: items=bodies, task=target, retrieval_method=motivation.
+        """
+        from .annotation import AnnotationRelationalEngine
+        engine = AnnotationRelationalEngine()
+        anno = engine.from_evidence_bundle(self.to_dict(), target_chunk, motivation)
+        return anno.to_w3c()
 
 
 # ---------------------------------------------------------------------------

@@ -15,9 +15,11 @@ from __future__ import annotations
 
 from typing import Any
 
-ONTOLOGY_VERSION = "1.0.0"
+ONTOLOGY_VERSION = "1.1.0"
 MILK_NS = "https://associacaomilk.pt/ontology/milk#"
 MILK_IRI = "https://associacaomilk.pt/ontology/milk"
+OA_NS = "http://www.w3.org/ns/oa#"
+ANNO_CONTEXT = "http://www.w3.org/ns/anno.jsonld"
 
 # term -> (rdf:type, range, sh:datatype, required)
 TERMS: dict[str, dict[str, Any]] = {
@@ -36,13 +38,47 @@ TERMS: dict[str, dict[str, Any]] = {
     "humanValidated":  {"rdf": "milk:humanValidated",   "type": "owl:DatatypeProperty", "range": "xsd:boolean", "min": 1, "max": 1},
     "aiRiskLevel":     {"rdf": "milk:aiRiskLevel",     "type": "owl:DatatypeProperty", "range": "xsd:string",  "min": 0, "max": 1},
     "citations":       {"rdf": "milk:hasCitation",     "type": "owl:ObjectProperty",   "range": "milk:Chunk",  "min": 0, "max": -1},
+    # --- W3C Web Annotation Data Model (REC 2017-02-23) ---
+    # These terms are the semantic bridge between MILK Evidence/Chunk
+    # structures and the W3C Web Annotation vocabulary. They reuse the oa:
+    # namespace and the standard anno.jsonld context. No new ontology is
+    # created — the Annotation class is a projection of EvidenceBundle.
+    "body":            {"rdf": "oa:hasBody",            "type": "owl:ObjectProperty",   "range": "xsd:string",  "min": 0, "max": -1},
+    "target":          {"rdf": "oa:hasTarget",          "type": "owl:ObjectProperty",   "range": "xsd:string",  "min": 1, "max": -1},
+    "motivation":      {"rdf": "oa:motivatedBy",       "type": "owl:ObjectProperty",   "range": "xsd:string",  "min": 0, "max": -1},
+    "purpose":         {"rdf": "oa:hasPurpose",        "type": "owl:ObjectProperty",   "range": "xsd:string",  "min": 0, "max": -1},
+    "selector":        {"rdf": "oa:hasSelector",       "type": "owl:ObjectProperty",   "range": "xsd:string",  "min": 0, "max": -1},
+    "source":          {"rdf": "oa:hasSource",         "type": "owl:ObjectProperty",   "range": "xsd:string",  "min": 1, "max": 1},
+    "creator":         {"rdf": "dcterms:creator",      "type": "owl:ObjectProperty",   "range": "xsd:string",  "min": 0, "max": 1},
+    "created":         {"rdf": "dcterms:created",       "type": "owl:DatatypeProperty", "range": "xsd:dateTime","min": 0, "max": 1},
+    "generator":       {"rdf": "prov:wasGeneratedBy",  "type": "owl:ObjectProperty",   "range": "xsd:string",  "min": 0, "max": 1},
+    "generated":       {"rdf": "prov:generatedAtTime", "type": "owl:DatatypeProperty", "range": "xsd:dateTime","min": 0, "max": 1},
+    "canonical":       {"rdf": "oa:canonical",          "type": "owl:ObjectProperty",   "range": "xsd:string",  "min": 0, "max": 1},
+    "via":             {"rdf": "oa:via",                "type": "owl:ObjectProperty",   "range": "xsd:string",  "min": 0, "max": -1},
 }
 
 CLASSES = {
-    "Source":  "milk:Source",
-    "Chunk":   "milk:Chunk",
-    "Answer":  "milk:Answer",
+    "Source":     "milk:Source",
+    "Chunk":      "milk:Chunk",
+    "Answer":      "milk:Answer",
+    "Annotation":  "oa:Annotation",
+    "SpecificResource": "oa:SpecificResource",
+    "TextualBody": "oa:TextualBody",
 }
+
+# W3C Web Annotation Selector classes (§4.2) — reused, not redefined.
+SELECTOR_CLASSES = (
+    "FragmentSelector", "CssSelector", "XPathSelector",
+    "TextQuoteSelector", "TextPositionSelector", "DataPositionSelector",
+    "SvgSelector", "RangeSelector",
+)
+
+# W3C Web Annotation Motivation instances (§3.3.5) — reused, not redefined.
+MOTIVATIONS = (
+    "assessing", "bookmarking", "classifying", "commenting",
+    "describing", "editing", "highlighting", "identifying",
+    "linking", "moderating", "questioning", "replying", "tagging",
+)
 
 
 def jsonld_context() -> dict[str, Any]:
@@ -51,6 +87,10 @@ def jsonld_context() -> dict[str, Any]:
         "owl": "http://www.w3.org/2002/07/owl#",
         "xsd": "http://www.w3.org/2001/XMLSchema#",
         "sh":  "http://www.w3.org/ns/shacl#",
+        "oa":  OA_NS,
+        "anno": ANNO_CONTEXT,
+        "dcterms": "http://purl.org/dc/terms/",
+        "prov": "http://www.w3.org/ns/prov#",
     }
     for term, meta in TERMS.items():
         ctx[term] = {"@id": meta["rdf"], "@type": meta["range"]}
@@ -62,13 +102,17 @@ def jsonld_context() -> dict[str, Any]:
 def turtle() -> str:
     lines = [
         f"@prefix milk: <{MILK_NS}>.",
+        f"@prefix oa: <{OA_NS}>.",
         "@prefix owl: <http://www.w3.org/2002/07/owl#>.",
         "@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.",
         "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.",
+        "@prefix dcterms: <http://purl.org/dc/terms/>.",
+        "@prefix prov: <http://www.w3.org/ns/prov#.",
         "",
         f"<{MILK_IRI}> a owl:Ontology ;",
         f"    rdfs:label \"MILK Ontology\" ;",
-        f"    owl:versionInfo \"{ONTOLOGY_VERSION}\" .",
+        f"    owl:versionInfo \"{ONTOLOGY_VERSION}\" ;",
+        f"    owl:imports <{OA_NS}> .",
         "",
     ]
     for cls, iri in CLASSES.items():
@@ -83,7 +127,10 @@ def shacl_shapes() -> dict[str, Any]:
     prefixes = {
         "sh": "http://www.w3.org/ns/shacl#",
         "milk": MILK_NS,
+        "oa": OA_NS,
         "xsd": "http://www.w3.org/2001/XMLSchema#",
+        "dcterms": "http://purl.org/dc/terms/",
+        "prov": "http://www.w3.org/ns/prov#",
     }
     shapes: list[dict[str, Any]] = []
     for cls, iri in CLASSES.items():

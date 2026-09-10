@@ -1,9 +1,9 @@
 {
   "schema": "ia_milk.execution_state.v1",
-  "updated_at": "2026-09-10T00:41:41.869806+00:00",
+  "updated_at": "2026-09-10T01:31:13.390502+00:00",
   "canonical_root": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO",
   "git_head": "pending local commit",
-  "current_phase": "RETRIEVAL_BENCHMARK_V2_DONE",
+  "current_phase": "RETRIEVAL_VALIDATION_FINAL_DONE",
   "phases_completed": [
     "INTEGRATION_A_B",
     "SNAPSHOT_PROTECTION",
@@ -19,7 +19,8 @@
     "FABRIC_V2_CL_EXPERIMENT",
     "CHUNK_INDEX_250K",
     "RETRIEVAL_BENCHMARK",
-    "RETRIEVAL_BENCHMARK_V2"
+    "RETRIEVAL_BENCHMARK_V2",
+    "RETRIEVAL_VALIDATION_FINAL"
   ],
   "current_task": "PIPELINE_OPERATIONAL",
   "corpus_documents": 10538,
@@ -380,35 +381,66 @@
     "bug_fix": "rrf_fusion returns (index:int, score:float) tuples; original code unpacked as (score, index) causing TypeError. Fixed with explicit int casts and assertions."
   },
   "canonical_retrieval": {
-    "strategy": "A_TFIDF_BGE_RRF",
-    "metrics": {
-      "ndcg@10": 0.2376,
-      "recall@5": 0.0078,
-      "recall@10": 0.0128,
-      "mrr": 0.7255,
-      "citation_precision": 0.5231,
-      "latency_p50_ms": 5310.2,
-      "latency_p95_ms": 8364.8,
-      "vram_gb": 2.28
+    "status": "CANDIDATE_CANONICAL (not irrevocable)",
+    "strategy_A": "A_TFIDF_BGE_RRF",
+    "strategy_D": "D_HIERARCHICAL",
+    "decision": "NO_SIGNIFICANT_DIFFERENCE",
+    "canonical_status": "BOTH_RETAINED — select by query type",
+    "A_metrics": {
+      "ndcg@10": 0.2245,
+      "recall@5": 0.0002,
+      "recall@10": 0.0003,
+      "mrr": 0.6768,
+      "citation_precision": 0.5904,
+      "latency_p50_ms": 1510.7,
+      "latency_p95_ms": 2200.8
     },
-    "benchmark": "52 stratified queries (lexical, semantic, territorial, temporal, multi_doc, contradictory, ambiguous, no_evidence)",
-    "qrels_size": 23757,
+    "D_metrics": {
+      "ndcg@10": 0.2321,
+      "recall@5": 0.0001,
+      "recall@10": 0.0003,
+      "mrr": 0.6827,
+      "citation_precision": 0.5865,
+      "latency_p50_ms": 2102.0,
+      "latency_p95_ms": 2582.2
+    },
+    "nDCG_diff": 0.007599999999999996,
+    "wilcoxon_p": 0.9914,
+    "bootstrap_ci": {
+      "mean_diff": -0.0075,
+      "ci_lower": -0.0262,
+      "ci_upper": 0.0067,
+      "confidence": 0.95
+    },
+    "milk_selection": {
+      "score_A": 0.4396,
+      "score_D": 0.4386,
+      "weights": {
+        "ndcg@10": 0.35,
+        "citation_precision": 0.25,
+        "mrr": 0.2,
+        "recall@10": 0.1,
+        "latency": 0.1
+      }
+    },
+    "category_winners": {
+      "ambiguous": "D",
+      "contradictory": "A",
+      "lexical": "A",
+      "multi_doc": "A",
+      "no_evidence": "tie",
+      "semantic": "D",
+      "temporal": "A",
+      "territorial": "D"
+    },
+    "qrels_status": {
+      "pseudo": "PSEUDO_QRELS (from EIXOS_P, NOT human)",
+      "pseudo_size": 1236808,
+      "gold": "GOLD_QRELS (pooled from A/B/C/D, for human validation)",
+      "gold_size": 591
+    },
+    "full_corpus": true,
     "caches_reused": true,
-    "rrf_contract_verified": true,
-    "reproducibility_verified": true,
-    "smoke_result": {
-      "ndcg@10": 0.5542,
-      "recall@5": 0.0177,
-      "recall@10": 0.0305,
-      "mrr": 0.95,
-      "citation_precision": 0.81
-    },
-    "strategies_compared": [
-      "A_TFIDF_BGE_RRF",
-      "B_BGE_SPARSE_DENSE_RRF",
-      "C_BGE_MULTI_VECTOR",
-      "D_HIERARCHICAL"
-    ],
-    "previous_smoke_winner": "CHUNK (10 queries, superseded by 52-query benchmark)"
+    "previous_benchmark": "082b696 (DEVELOPMENT, superseded by this validation)"
   }
 }

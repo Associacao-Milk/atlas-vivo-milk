@@ -1,6 +1,6 @@
 {
   "schema": "ia_milk.capability_matrix.v1",
-  "updated_at": "2026-09-10T00:41:41.869806+00:00",
+  "updated_at": "2026-09-10T01:31:13.390502+00:00",
   "capabilities": {
     "neural_classifier": {
       "status": "TESTED_PROMOTED_TORCH",
@@ -185,13 +185,21 @@
       "notes": "WINNER=CHUNK nDCG@10=0.8291 MRR=1.0 citP=0.8 lat=83.7ms; bug fixed (rrf tuple unpacking)"
     },
     "canonical_retrieval": {
-      "status": "PROMOTED",
-      "strategy": "A_TFIDF_BGE_RRF",
-      "notes": "52-query benchmark winner. nDCG@10=0.2376 MRR=0.7255 citP=0.5231"
+      "status": "CANDIDATE_CANONICAL",
+      "strategies": [
+        "A_TFIDF_BGE_RRF",
+        "D_HIERARCHICAL"
+      ],
+      "decision": "NO_SIGNIFICANT_DIFFERENCE — both retained, select by query type",
+      "notes": "Wilcoxon p=0.9914, CI includes zero. Category winners: {'ambiguous': 'D', 'contradictory': 'A', 'lexical': 'A', 'multi_doc': 'A', 'no_evidence': 'tie', 'semantic': 'D', 'temporal': 'A', 'territorial': 'D'}"
     },
     "retrieval_benchmark_v2": {
       "status": "TESTED",
       "notes": "52 queries, 4 strategies, graded qrels, nDCG/Recall/MRR/citP/latency p50/p95, RRF contract verified"
+    },
+    "gold_qrels": {
+      "status": "CREATED",
+      "notes": "591 pooled items for human validation, 52 queries, pseudo_qrels separated"
     }
   }
 }

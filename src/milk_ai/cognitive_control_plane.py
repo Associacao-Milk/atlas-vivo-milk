@@ -126,9 +126,10 @@ class CapabilityRouter:
     evidence_available (0-1), latency_ms (inverted).
     """
 
-    def __init__(self, registry_path: Path | None = None):
+    def __init__(self, registry_path: Path | None = None, adaptive_engine=None):
         self.registry_path = registry_path or _ROOT / "state" / "MILK_RESOURCE_REGISTRY.json"
         self._registry = self._load_registry()
+        self._adaptive_engine = adaptive_engine  # AdaptiveLearningEngine or None
 
     def _load_registry(self) -> dict:
         if self.registry_path.exists():
@@ -218,23 +219,31 @@ class CapabilityRouter:
                  quality * 0.15 + evidence * 0.10 + latency_score * 0.10)
         return round(score, 4)
 
-    def select(self, capability_needed: str, top_k: int = 3) -> list[dict]:
-        """Select top-k capabilities for a needed capability, with fallback."""
+    def select(self, capability_needed: str, top_k: int = 3, task_risk: str = "normal") -> list[dict]:
+        """Select top-k capabilities for a needed capability, with fallback.
+
+        When an adaptive engine is attached, base scores are adjusted by the
+        learned policy (Thompson Sampling) before ranking.
+        """
         caps = self.discover_capabilities()
         scored = []
         for cap in caps:
             s = self.score(cap, capability_needed)
             if s > 0:
-                scored.append({**cap, "score": s})
-        scored.sort(key=lambda c: c["score"], reverse=True)
+                scored.append({**cap, "score": s, "base_score": s})
+        # Apply adaptive adjustment if engine is available
+        if self._adaptive_engine and scored:
+            scored = self._adaptive_engine.adjust_candidates(scored, capability_needed, task_risk)
+        else:
+            scored.sort(key=lambda c: c.get("adjusted_score", c.get("score", 0)), reverse=True)
         return scored[:top_k]
 
-    def route(self, steps: list[dict]) -> list[dict]:
+    def route(self, steps: list[dict], task_risk: str = "normal") -> list[dict]:
         """Route each step to its best capability with fallback."""
         routed = []
         for step in steps:
             needed = step.get("capability_needed", "")
-            selections = self.select(needed, top_k=3)
+            selections = self.select(needed, top_k=3, task_risk=task_risk)
             primary = selections[0] if selections else None
             fallback = selections[1] if len(selections) > 1 else None
             routed.append({
@@ -843,9 +852,17 @@ class BoundedOperatingLoop:
 class CognitiveControlPlane:
     """The main orchestrator. GPT-OSS is a worker, never the orchestrator."""
 
-    def __init__(self, op_mem_dir: Path | None = None):
+    def __init__(self, op_mem_dir: Path | None = None, adaptive_engine=None):
         self.planner = Planner()
-        self.router = CapabilityRouter()
+        # Adaptive learning engine (create if not provided)
+        if adaptive_engine is None:
+            try:
+                from .adaptive_engine import AdaptiveLearningEngine
+                adaptive_engine = AdaptiveLearningEngine()
+            except Exception:
+                adaptive_engine = None
+        self.adaptive_engine = adaptive_engine
+        self.router = CapabilityRouter(adaptive_engine=adaptive_engine)
         self.worker = ReasoningWorker()
         self.op_mem = OperationalMemory(op_mem_dir)
         self.evaluator = OutcomeEvaluator()
@@ -967,6 +984,45 @@ class CognitiveControlPlane:
         # Save evidence bundle
         bundle_path = bundle.save()
 
+        # Record learning event for adaptive policy
+        learning_event = None
+        if self.adaptive_engine:
+            # Collect evidence metrics from the execution
+            evidence_metrics = {
+                "evidence_count": len(bundle.items),
+                "inference_count": len(bundle.inferences),
+                "latency_ms": 500,  # estimated
+                "sovereignty": 1.0,  # all local
+                "reversible": True,
+                "confidence": 0.7,
+                "failures": 0 if outcome.get("success") else 1,
+                "evidence_gap": len(bundle.items) == 0,
+                "resource_usage": 0.5,
+            }
+            # Collect scores_before from routed steps
+            scores_before = {}
+            selected_capabilities = set()
+            for step in routed_steps:
+                cap = step.get("primary_capability")
+                if cap and isinstance(cap, dict):
+                    cap_id = cap.get("id", "unknown")
+                    scores_before[cap_id] = cap.get("base_score", cap.get("score", 0))
+                    selected_capabilities.add(cap_id)
+
+            # Record outcome for each selected capability
+            for cap_id in selected_capabilities:
+                learning_event = self.adaptive_engine.record_outcome(
+                    task_id=task.task_id,
+                    trace_id=task.trace_id,
+                    selected_capability=cap_id,
+                    candidates=scores_before,
+                    scores_before=scores_before,
+                    outcome=outcome,
+                    evidence_metrics=evidence_metrics,
+                    context={"query": query, "intent": intent},
+                    bundle_hash=bundle.hash_chain(),
+                )
+
         # Record in operational memory
         self.op_mem.append("episode", {
             "task_id": task.task_id,
@@ -978,6 +1034,7 @@ class CognitiveControlPlane:
             "bundle_path": str(bundle_path),
             "hash_chain": bundle.hash_chain(),
             "outcome": outcome,
+            "learning_event": learning_event["event_id"] if learning_event else None,
         })
 
         task.status = "done"
@@ -1032,3 +1089,15 @@ class CognitiveControlPlane:
     def health(self) -> dict:
         """Return self-observability health snapshot."""
         return self.observability.collect()
+
+    def explain_selection(self, cap_id: str) -> dict:
+        """Explain why a capability was chosen, including adaptive policy info."""
+        if self.adaptive_engine:
+            return self.adaptive_engine.explain_selection(cap_id)
+        return {"error": "no adaptive engine available", "capability_id": cap_id}
+
+    def adaptive_observability(self) -> dict:
+        """Return adaptive learning engine observability."""
+        if self.adaptive_engine:
+            return self.adaptive_engine.observability()
+        return {"error": "no adaptive engine available"}

@@ -1,0 +1,130 @@
+{
+  "schema": "ia_milk.evidence_bundle.v1",
+  "task_id": "085f040b7714454ab1ad00343d0db31c",
+  "trace_id": "afb4e2b9a9f043999a369c8432bc82bc",
+  "created_at": "2026-09-10T04:50:26.993124+00:00",
+  "hash_chain": "995262e14ae2428c69db7d97b34539499989873b18c25a986de859abd3b2908e",
+  "items": [
+    {
+      "source": "retrieval:corpus",
+      "source_uri": "local:corpus",
+      "content": "Retrieved for: Test query for adaptive learning",
+      "content_hash": "98fb29be23a416e48a4eabfcc2ba51af118dedd42507b2dfa92f20dd81e8ce64",
+      "retrieval_method": "candidate_canonical",
+      "reranking": "bge-reranker-v2-m3",
+      "transform": "",
+      "retrieved_at": "2026-09-10T04:50:26.993139+00:00",
+      "metadata": {
+        "strategy": "A_TFIDF_BGE_RRF"
+      }
+    },
+    {
+      "source": "localfs",
+      "source_uri": "{'id': '__init__.py', 'type': 'file', 'size': 371}",
+      "content": "# ATLAS VIVO - Integration APIs\r\n# ============================\r\n# \r\n# This package contains all integration APIs for ATLAS VIVO automation system\r\n# \r\n# APIs included:\r\n# - Zenodo API Client\r\n# - ORCID API Client  \r\n# - GitHub API Client\r\n# - Codeberg API Client\r\n# - Funding Compliance API\r\n# - Platform Sync API\r\n# - Legal Compliance API\r\n# - Unified Integration API\r\n",
+      "content_hash": "06e359f5ce60ebfbeae9686487e3503d4aca5e2fe7a412648cfc91c606068278",
+      "retrieval_method": "adapter_read",
+      "reranking": "",
+      "transform": "",
+      "retrieved_at": "2026-09-10T04:50:27.154365+00:00",
+      "metadata": {}
+    }
+  ],
+  "inferences": [
+    {
+      "inference_id": "7bf65ca71ec049dca538619206db6ae1",
+      "model": "gpt-oss-20b",
+      "model_version": "local",
+      "output": "<|channel|>analysis<|message|>The user says \"Query: Test query for adaptive learning\" and gives evidence: a snippet about ATLAS VIVO integration APIs. They want a brief answer. Likely they want to know what the snippet is. So answer: The snippet describes ATLAS VIVO integration APIs. Provide summary.<|end|>**Answer**\n\nThe snippet is a short description of the *ATLAS VIVO* integration package. It lists the available API clients—Zenodo, ORCID, GitHub, Codeberg, Funding Compliance, Platform Sync, Legal Compliance, and Unified Integration—used for automating and synchronizing data within the ATLAS VIVO system.",
+      "output_hash": "61007297a1dbb9c2dd10deb3f14d12746a76319bacd6c4d1ea64d0e1bc364f5a",
+      "timestamp": "2026-09-10T04:50:49.513868+00:00",
+      "method": "gpt_oss_api"
+    }
+  ],
+  "decisions": [
+    {
+      "decision_id": "7f5fa076fad44635858d883d9399e3ae",
+      "decision": "evidence_based_answer",
+      "rationale": "Based on 2 evidence items and 1 inferences",
+      "timestamp": "2026-09-10T04:50:49.513895+00:00"
+    }
+  ],
+  "gate_decisions": [
+    {
+      "action_id": "ACT-0009",
+      "actor": "cognitive_control_plane",
+      "action": "stage_derived",
+      "tier": "WRITE_REVERSIBLE",
+      "source": "085f040b7714454ab1ad00343d0db31c",
+      "target": "task:085f040b7714454ab1ad00343d0db31c",
+      "timestamp": "2026-09-10T04:50:49.514012+00:00",
+      "evidence": "",
+      "before_hash": "88ef24a038a5993f3d1af1ba195123a99d7d15c53fab18172ab104654597625b",
+      "after_hash": "",
+      "reversible": true,
+      "rollback": "revert task:085f040b7714454ab1ad00343d0db31c to before_hash=88ef24a038a5993f",
+      "human_gate": false,
+      "status": "executed"
+    }
+  ],
+  "actions": [
+    {
+      "action_id": "83be03196fbc4f01b2f812f79fd7ad3a",
+      "action": "stage_derived",
+      "timestamp": "2026-09-10T04:50:49.516301+00:00",
+      "receipt_id": "ACT-0009",
+      "target": "task:085f040b7714454ab1ad00343d0db31c"
+    }
+  ],
+  "outcomes": [
+    {
+      "outcome_id": "18f0fded15ac40d392c6f4c68df6ac3f",
+      "outcome": "task_complete",
+      "timestamp": "2026-09-10T04:50:49.516400+00:00",
+      "task_id": "085f040b7714454ab1ad00343d0db31c",
+      "success": false,
+      "quality": "medium",
+      "evidence_count": 2,
+      "inference_count": 1,
+      "decision_count": 1,
+      "gate_approved": 1,
+      "gate_proposed": 0,
+      "hash_chain": "f375d3a226276ec6d6b5684f89d2bba67fa1644f1fe5946b0f62cdc62ebeef5d",
+      "evaluated_at": "2026-09-10T04:50:49.516376+00:00"
+    }
+  ],
+  "prov_o_export": {
+    "@context": {
+      "prov": "http://www.w3.org/ns/prov#"
+    },
+    "entities": [
+      {
+        "@id": "evidence:retrieval:corpus:98fb29be23a4",
+        "@type": "prov:Entity",
+        "prov:value": "Retrieved for: Test query for adaptive learning",
+        "prov:wasGeneratedBy": "retrieval:corpus"
+      },
+      {
+        "@id": "evidence:localfs:06e359f5ce60",
+        "@type": "prov:Entity",
+        "prov:value": "# ATLAS VIVO - Integration APIs\r\n# ============================\r\n# \r\n# This package contains all integration APIs for ATLAS VIVO automation system\r\n# \r\n# APIs included:\r\n# - Zenodo API Client\r\n# - ORC",
+        "prov:wasGeneratedBy": "localfs"
+      }
+    ],
+    "activities": [
+      {
+        "@id": "inference:7bf65ca71ec0",
+        "@type": "prov:Activity",
+        "prov:used": "gpt-oss-20b",
+        "prov:startedAtTime": "2026-09-10T04:50:49.513868+00:00"
+      }
+    ],
+    "agents": [
+      {
+        "@id": "milk:sovereign_core",
+        "@type": "prov:Agent",
+        "prov:actedOnBehalfOf": "milk:sovereign_core"
+      }
+    ]
+  }
+}

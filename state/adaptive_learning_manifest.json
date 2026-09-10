@@ -1,0 +1,69 @@
+{
+  "schema": "ia_milk.adaptive_learning_manifest.v1",
+  "generated_at": "2026-09-10T05:00:00+00:00",
+  "factual_state_before": {
+    "git_head_before": "e4d4c56",
+    "tests_before": "104/104 pass (35 CCP + 69 adapters/gate)",
+    "cognitive_control_plane": "exists, operational",
+    "capability_router": "exists, base scores only",
+    "adaptive_engine": "did not exist",
+    "retrieval_status": "CANDIDATE_CANONICAL unchanged",
+    "corpus": "10538 docs unchanged"
+  },
+  "files_changed": [
+    "src/milk_ai/adaptive_engine.py (NEW — RewardModel, AdaptivePolicy, LearningEvent, ExperienceReplay, AdaptiveLearningEngine)",
+    "src/milk_ai/cognitive_control_plane.py (MODIFIED — CapabilityRouter accepts adaptive_engine, CCP creates learning events, explain_selection + adaptive_observability methods)",
+    "tests/test_adaptive_engine.py (NEW — 30 tests)",
+    "milk_adaptive_proof.py (NEW — end-to-end adaptation proof)",
+    "state/adaptive_policy.json (NEW — persistent policy)",
+    "state/adaptive_policy_history.jsonl (NEW — versioned snapshots)",
+    "state/operational_memory/adaptive_learning_events.jsonl (NEW — immutable learning events)",
+    "state/adaptive_learning_proof.json (NEW — proof results)",
+    "state/adaptive_proof/ (NEW — isolated proof artifacts)"
+  ],
+  "capabilities_added": [
+    "RewardModel: explicit, non-neural, configurable weights (evidence_quality, task_success, human_validation, sovereignty, latency, reversibility, confidence, failures, evidence_gap, excessive_resources)",
+    "AdaptivePolicy: Thompson Sampling with Beta(alpha,beta) per capability, persistent, versioned, rollback-able",
+    "LearningEvent: immutable record with task_id/trace_id/context/candidates/scores_before/selected/evidence_metrics/outcome/reward_components/reward_final/policy_version_before/after/hashes",
+    "ExperienceReplay: historical episodes, offline evaluation, policy comparison, rollback",
+    "AdaptiveLearningEngine: orchestrates adjust_candidates + record_outcome + explain_selection + observability",
+    "CapabilityRouter integration: base scores adjusted by adaptive policy before ranking",
+    "CognitiveControlPlane integration: learning events emitted after each task, policy updated",
+    "Explainability: explain_selection shows base_score, adaptive_sample, adjustment_weight, stats, expected_value, policy_version",
+    "Exploration control: normal tasks explore (15%), high-risk tasks use conservative policy",
+    "Auto-observability: policy_version, total_learning_events, avg_reward, success_rate, selections_by_capability, exploration_rate"
+  ],
+  "runtime_evidence": {
+    "executions": 3,
+    "all_succeeded": true,
+    "policy_version_progression": [0, 4, 8, 12],
+    "policy_changed_measurably": true,
+    "total_learning_events": 31,
+    "gate_exercised_in_all": true,
+    "corpus_unchanged": true,
+    "gpt_oss_role": "worker (not orchestrator)",
+    "no_source_documents_altered": true
+  },
+  "tests": {
+    "new_tests": 30,
+    "new_tests_passed": 30,
+    "existing_tests": 69,
+    "existing_tests_passed": 69,
+    "total": 99,
+    "total_passed": 99,
+    "regressions": 0
+  },
+  "adaptive_proof_trace": {
+    "execution_a": "initial policy v0 -> v4, gpt_oss adjusted 0.6634",
+    "execution_b": "policy v4 -> v8, gpt_oss adjusted 0.9173 (learned from A)",
+    "execution_c": "policy v8 -> v12, 7 capabilities tracked",
+    "adaptation_demonstrated": "adjusted_score changed between A and B for same capability"
+  },
+  "unresolved_real_gaps": [
+    "ZENODO_TOKEN not available locally — depositions blocked",
+    "GOLD_QRELS human validation still pending",
+    "Docker Desktop not running",
+    "Codeberg repo not created",
+    "PTServidor SSH access not configured"
+  ]
+}

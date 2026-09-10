@@ -1,0 +1,27 @@
+{
+  "schema": "ia_milk.metric_reconciliation.v1",
+  "timestamp": "2026-09-10T03:10:16.295100+00:00",
+  "corpus": {
+    "doc_count": 10538,
+    "filesystem_bytes": 840498242,
+    "filesystem_mb": 840.5,
+    "json_file_bytes": 817177426,
+    "json_file_mb": 817.2,
+    "extracted_text_bytes": 592673433,
+    "extracted_text_mb": 592.7
+  },
+  "repo_non_corpus": {
+    "filesystem_bytes": 1243861489,
+    "filesystem_mb": 1243.9
+  },
+  "explanation": {
+    "filesystem_mb": "840.5 MB = total size of all JSON files on disk (including JSON structure, metadata, chunk objects, base64, etc.)",
+    "extracted_text_mb": "592.7 MB = total bytes of extracted text content (document.text + chunk.text fields, UTF-8 encoded)",
+    "ratio": 1.42,
+    "note": "268 MB (historical 'extracted text') vs 779.3 MB (filesystem JSON) discrepancy explained: filesystem includes JSON structure, metadata fields, chunk metadata, provenance info, and encoding overhead. Extracted text is the pure content bytes.",
+    "canonical_definition": "filesystem_bytes = du -sh corpus/documents; extracted_text_bytes = sum(len(text.encode('utf-8')) for all documents and chunks)"
+  },
+  "quarantine": {
+    "count": 48
+  }
+}

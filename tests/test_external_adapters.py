@@ -95,11 +95,11 @@ class TestAdapterContract:
                        "propose_action"):
             assert hasattr(adapter_cls, method), f"{adapter_cls.__name__} missing {method}"
 
-    def test_get_all_adapters_returns_six(self):
+    def test_get_all_adapters_returns_at_least_six(self):
         adapters = get_all_adapters()
-        assert len(adapters) == 6
+        assert len(adapters) >= 6
         expected_names = {"nextcloud", "codeberg", "github", "zenodo", "orcid", "ptservidor"}
-        assert set(adapters.keys()) == expected_names
+        assert expected_names.issubset(set(adapters.keys()))
 
     def test_propose_action_does_not_execute(self):
         adapter = NextcloudAdapter(sync_dir=Path("/nonexistent"))

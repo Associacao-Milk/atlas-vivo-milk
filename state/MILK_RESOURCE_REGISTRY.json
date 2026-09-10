@@ -1,0 +1,364 @@
+{
+  "schema": "ia_milk.resource_registry.v1",
+  "generated_at": "2026-09-10T03:06:27.449245+00:00",
+  "canonical_root": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO",
+  "drives": [
+    {
+      "drive": "C:",
+      "path": "C:\\",
+      "total_gb": 255.0
+    },
+    {
+      "drive": "E:",
+      "path": "E:\\",
+      "total_gb": 500.1
+    },
+    {
+      "drive": "G:",
+      "path": "G:\\",
+      "total_gb": 500.1
+    }
+  ],
+  "ports": {
+    "listening_ports_count": 19,
+    "interesting_ports": [
+      8009,
+      8766,
+      11434
+    ],
+    "all_listening": [
+      2375,
+      5040,
+      7680,
+      8009,
+      8766,
+      11434,
+      16992,
+      47823,
+      47824,
+      49664,
+      49665,
+      49666,
+      49667,
+      49668,
+      49679,
+      52544,
+      53283,
+      58049,
+      65367
+    ]
+  },
+  "processes": [
+    {
+      "name": "wslservice.exe",
+      "pid": "3640",
+      "match": "wsl"
+    },
+    {
+      "name": "Docker",
+      "pid": "Desktop.exe",
+      "match": "docker"
+    },
+    {
+      "name": "com.docker.backend.exe",
+      "pid": "7288",
+      "match": "docker"
+    },
+    {
+      "name": "com.docker.backend.exe",
+      "pid": "1284",
+      "match": "docker"
+    },
+    {
+      "name": "com.docker.build.exe",
+      "pid": "14500",
+      "match": "docker"
+    },
+    {
+      "name": "docker-agent.exe",
+      "pid": "17256",
+      "match": "docker"
+    },
+    {
+      "name": "ollama",
+      "pid": "app.exe",
+      "match": "llama"
+    },
+    {
+      "name": "ollama.exe",
+      "pid": "19444",
+      "match": "llama"
+    },
+    {
+      "name": "llama.exe",
+      "pid": "21944",
+      "match": "llama"
+    },
+    {
+      "name": "python.exe",
+      "pid": "5744",
+      "match": "python"
+    },
+    {
+      "name": "Code.exe",
+      "pid": "20848",
+      "match": "code"
+    },
+    {
+      "name": "Code.exe",
+      "pid": "20744",
+      "match": "code"
+    },
+    {
+      "name": "Code.exe",
+      "pid": "19292",
+      "match": "code"
+    },
+    {
+      "name": "Code.exe",
+      "pid": "10356",
+      "match": "code"
+    },
+    {
+      "name": "Code.exe",
+      "pid": "100",
+      "match": "code"
+    },
+    {
+      "name": "Code.exe",
+      "pid": "4828",
+      "match": "code"
+    },
+    {
+      "name": "Code.exe",
+      "pid": "10848",
+      "match": "code"
+    },
+    {
+      "name": "Code.exe",
+      "pid": "12148",
+      "match": "code"
+    },
+    {
+      "name": "Code.exe",
+      "pid": "21360",
+      "match": "code"
+    },
+    {
+      "name": "Code.exe",
+      "pid": "8352",
+      "match": "code"
+    },
+    {
+      "name": "Code.exe",
+      "pid": "15176",
+      "match": "code"
+    },
+    {
+      "name": "Code.exe",
+      "pid": "364",
+      "match": "code"
+    },
+    {
+      "name": "Code.exe",
+      "pid": "9548",
+      "match": "code"
+    },
+    {
+      "name": "Code.exe",
+      "pid": "19012",
+      "match": "code"
+    },
+    {
+      "name": "Code.exe",
+      "pid": "7436",
+      "match": "code"
+    },
+    {
+      "name": "Code.exe",
+      "pid": "4052",
+      "match": "code"
+    },
+    {
+      "name": "Code.exe",
+      "pid": "21964",
+      "match": "code"
+    },
+    {
+      "name": "Code.exe",
+      "pid": "11400",
+      "match": "code"
+    },
+    {
+      "name": "Code.exe",
+      "pid": "19500",
+      "match": "code"
+    },
+    {
+      "name": "python.exe",
+      "pid": "11344",
+      "match": "python"
+    }
+  ],
+  "env_credentials": [],
+  "credman": {
+    "available": true,
+    "targets": [
+      "MicrosoftAccount:target=SSO_POP_Device",
+      "MicrosoftAccount:target=SSO_POP_User:user=piuprojetoitinerante@gmail.com",
+      "MicrosoftAccount:target=SSO_POP_User:user=somostodospossiveis@gmail.com",
+      "LegacyGeneric:target=com.docker.desktop:docker-desktop:docker/auth/metadata/hub/default",
+      "LegacyGeneric:target=https://index.docker.io/v1/access-token",
+      "LegacyGeneric:target=git:https://github.com",
+      "LegacyGeneric:target=gh:github.com:milkivc",
+      "LegacyGeneric:target=https://index.docker.io/v1/refresh-token",
+      "LegacyGeneric:target=com.docker.desktop:docker-desktop:docker/auth/hub/eduardocabralaraujo:chunk:0",
+      "LegacyGeneric:target=MicrosoftAccount:user=piuprojetoitinerante@gmail.com",
+      "LegacyGeneric:target=com.docker.desktop:docker-desktop:docker/auth/hub/eduardocabralaraujo:chunk:1",
+      "LegacyGeneric:target=com.docker.desktop:docker-desktop:docker/auth/metadata/hub/eduardocabralaraujo",
+      "LegacyGeneric:target=gh:github.com:",
+      "LegacyGeneric:target=https://dhi.io",
+      "WindowsLive:target=virtualapp/didlogical",
+      "LegacyGeneric:target=com.docker.desktop:docker-desktop:docker/auth/hub/eduardocabralaraujo",
+      "LegacyGeneric:target=Olk/PushNotificationsKey",
+      "LegacyGeneric:target=Microsoft_OneDrive_Cookies_v2_Business1_https://associacaomilk-my.sharepoint.com/",
+      "LegacyGeneric:target=Microsoft_OneDrive_Cookies_v2_Business1_https://onedrive.cloud.microsoft/",
+      "LegacyGeneric:target=https://index.docker.io/v1/",
+      "LegacyGeneric:target=MicrosoftAccount:user=somostodospossiveis@gmail.com",
+      "LegacyGeneric:target=Nextcloud_admin_app-password:https://nuvem.associacaomilk.pt/:0",
+      "LegacyGeneric:target=Nextcloud_admin:https://nuvem.associacaomilk.pt/:0",
+      "LegacyGeneric:target=Nextcloud_admin_app-password:https://nuvem.associacaomilk.pt/:1",
+      "LegacyGeneric:target=Nextcloud_admin:https://nuvem.associacaomilk.pt/:1",
+      "LegacyGeneric:target=ai.mistral.vibe"
+    ],
+    "count": 26
+  },
+  "cloud_sync": {
+    "nextcloud": {
+      "path": "C:\\Users\\Utilizador\\Nextcloud",
+      "online": true,
+      "items": 11,
+      "top_folders": [
+        "apiS",
+        "Associação MILK",
+        "Atlas Vivo MILK",
+        "ATLAS_MILK_MISTRAGA",
+        "auditor_fantasma",
+        "COCKPIT_MILK",
+        "CURADORIA_100",
+        "html",
+        "Nextcloud Docs",
+        "Nova pasta",
+        "Photos"
+      ]
+    },
+    "onedrive": {
+      "path": "C:\\Users\\Utilizador\\OneDrive - Associacao MILK",
+      "online": true,
+      "env_var": "OneDrive"
+    }
+  },
+  "docker": {
+    "available": false,
+    "containers": [],
+    "volumes": [],
+    "networks": [
+      {
+        "name": "bridge",
+        "driver": "bridge"
+      },
+      {
+        "name": "host",
+        "driver": "host"
+      },
+      {
+        "name": "none",
+        "driver": "null"
+      }
+    ],
+    "compose": []
+  },
+  "wsl": {
+    "available": true,
+    "distributions": [
+      {
+        "name": "\u0000*\u0000",
+        "state": "\u0000U\u0000b\u0000u\u0000n\u0000t\u0000u\u0000-\u00002\u00004\u0000.\u00000\u00004\u0000",
+        "version": "\u0000"
+      },
+      {
+        "name": "\u0000",
+        "state": "\u0000",
+        "version": "\u0000d\u0000o\u0000c\u0000k\u0000e\u0000r\u0000-\u0000d\u0000e\u0000s\u0000k\u0000t\u0000o\u0000p\u0000"
+      }
+    ]
+  },
+  "local_ai": {
+    "gpt_oss": {
+      "endpoint": "127.0.0.1:8009",
+      "online": true,
+      "model": "gpt-oss-20b-MXFP4",
+      "role": "reasoning_worker"
+    },
+    "milk_fabric": {
+      "endpoint": "127.0.0.1:8766",
+      "online": true,
+      "role": "orchestrator",
+      "pid": 5744
+    },
+    "ollama": {
+      "endpoint": "127.0.0.1:11434",
+      "online": true,
+      "models": [
+        "llama3.2:3b",
+        "mistral:latest"
+      ]
+    },
+    "bge_models": {
+      "cached": [
+        "models--BAAI--bge-m3",
+        "models--BAAI--bge-reranker-v2-m3"
+      ],
+      "cache_path": "C:\\Users\\Utilizador\\.cache\\huggingface\\hub"
+    },
+    "gpu": {
+      "name": "NVIDIA GeForce RTX 3080",
+      "vram_total_mb": "10240 MiB",
+      "vram_used_mb": "7696 MiB"
+    }
+  },
+  "mcp": {
+    "vibe_dir": "C:\\Users\\Utilizador\\.vibe",
+    "vibe_files": [
+      "cache.toml",
+      "config.toml",
+      "experiment_eval_cache.json",
+      "trusted_folders.toml",
+      "vibehistory",
+      "whoami_cache.json"
+    ],
+    "config_files_found": []
+  },
+  "summary": {
+    "total_drives": 3,
+    "cloud_sync_sources": [
+      "nextcloud",
+      "onedrive"
+    ],
+    "docker_available": false,
+    "docker_containers": 0,
+    "wsl_available": true,
+    "local_ai_services": [
+      "gpt_oss",
+      "milk_fabric",
+      "ollama"
+    ],
+    "env_cred_names": 0,
+    "credman_targets": 26,
+    "interesting_ports": [
+      8009,
+      8766,
+      11434
+    ]
+  }
+}

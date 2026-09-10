@@ -5,16 +5,20 @@ a unified gap graph. Each gap has severity, dependency, proposed action,
 reversibility, and human_gate status.
 
 Gap classifications:
-  MISSING        — resource expected but absent
-  STALE          — resource exists but outdated
-  DIVERGENT      — resource exists in multiple sources with conflicting content
-  UNVERIFIED     — resource present but provenance not confirmed
-  UNPUBLISHED    — resource ready locally but not on external platform
-  UNDEPLOYED     — resource exists locally but not deployed to production
-  METADATA_GAP   — resource exists but metadata incomplete
-  PROVENANCE_GAP — resource exists but provenance chain broken
-  INTEROP_GAP    — systems should interoperate but don't
-  AUTH_BLOCKED   — operation possible but blocked by missing credentials
+  MISSING          — resource expected but absent
+  STALE            — resource exists but outdated
+  DIVERGENT        — resource exists in multiple sources with conflicting content
+  UNVERIFIED       — resource present but provenance not confirmed
+  UNINGESTED       — resource exists in source but not ingested into corpus
+  UNPUBLISHED      — resource ready locally but not on external platform
+  UNDEPLOYED       — resource exists locally but not deployed to production
+  METADATA_GAP     — resource exists but metadata incomplete
+  PROVENANCE_GAP   — resource exists but provenance chain broken
+  IDENTITY_CONFLICT — identity mismatch (e.g. ORCID name divergence)
+  INTEROP_GAP      — systems should interoperate but don't
+  AUTH_BLOCKED     — operation possible but blocked by missing credentials
+  RUNTIME_GAP      — service expected running but not
+  SECURITY_GAP     — security issue detected
 """
 from __future__ import annotations
 
@@ -29,8 +33,10 @@ from .external_adapters import get_all_adapters, ExternalSystemAdapter
 SEVERITY_ORDER = {"critical": 0, "high": 1, "medium": 2, "low": 3, "info": 4}
 
 GAP_TYPES = [
-    "MISSING", "STALE", "DIVERGENT", "UNVERIFIED", "UNPUBLISHED",
-    "UNDEPLOYED", "METADATA_GAP", "PROVENANCE_GAP", "INTEROP_GAP", "AUTH_BLOCKED",
+    "MISSING", "STALE", "DIVERGENT", "UNVERIFIED", "UNINGESTED",
+    "UNPUBLISHED", "UNDEPLOYED", "METADATA_GAP", "PROVENANCE_GAP",
+    "IDENTITY_CONFLICT", "INTEROP_GAP", "AUTH_BLOCKED",
+    "RUNTIME_GAP", "SECURITY_GAP",
 ]
 
 
@@ -219,6 +225,56 @@ class GapEngine:
                      proposed_action="Scan corpus for author fields, cross-reference with known ORCIDs",
                      human_gate=False)
 
+        # IDENTITY_CONFLICT: ORCID resolves to different name than .zenodo.json
+        self.add_gap(domain="authorship", source="orcid",
+                     evidence="ORCID 0009-0009-1781-4020 resolves to 'Nuno Filipe Fernandes Vieira Cabral e Araujo' but .zenodo.json lists 'Eduardo Mauricio Vieira Cabral e Araujo' — IDENTITY_CONFLICT requires human resolution",
+                     severity="high", gap_type="IDENTITY_CONFLICT",
+                     proposed_action="Human must verify correct ORCID and correct .zenodo.json or ORCID profile",
+                     human_gate=True)
+
+    def analyze_onedrive(self, audit: dict) -> None:
+        """OneDrive Business audit."""
+        discover = audit.get("discover", {})
+        if not discover.get("found"):
+            return
+        otype = discover.get("type", "unknown")
+        if otype == "business":
+            self.add_gap(domain="storage", source="onedrive",
+                         evidence=f"OneDrive Business sync active ({discover.get('sync_dir','')}) — check for Atlas materials not in corpus",
+                         severity="medium", gap_type="UNINGESTED",
+                         proposed_action="Scan OneDrive for Atlas-related documents and compare with corpus",
+                         human_gate=True)
+
+    def analyze_docker(self, audit: dict) -> None:
+        """Docker runtime audit."""
+        discover = audit.get("discover", {})
+        if not discover.get("available"):
+            self.add_gap(domain="runtime", source="docker",
+                         evidence="Docker not running — atlas_infra docker-compose services unavailable",
+                         severity="medium", gap_type="RUNTIME_GAP",
+                         proposed_action="Start Docker Desktop or run docker-compose from atlas_infra",
+                         human_gate=True)
+
+    def analyze_box(self, audit: dict) -> None:
+        """Box storage audit."""
+        discover = audit.get("discover", {})
+        if not discover.get("found"):
+            self.add_gap(domain="storage", source="box",
+                         evidence="Box not installed — no Box Drive or sync folder found",
+                         severity="low", gap_type="MISSING",
+                         proposed_action="Install Box Drive if Box integration needed",
+                         human_gate=True)
+
+    def analyze_base44(self, audit: dict) -> None:
+        """Base44 audit."""
+        discover = audit.get("discover", {})
+        if not discover.get("cli_found"):
+            self.add_gap(domain="tooling", source="base44",
+                         evidence="Base44/Cosmic Touch CLI not found — TOOL external, not blocking",
+                         severity="info", gap_type="MISSING",
+                         proposed_action="Install Base44 CLI if Cosmic Touch integration needed",
+                         human_gate=False)
+
     def analyze_ptservidor(self, audit: dict) -> None:
         """PT server deployment audit."""
         discover = audit.get("discover", {})
@@ -305,6 +361,10 @@ class GapEngine:
         self.analyze_zenodo(audit_report.get("zenodo", {}))
         self.analyze_orcid(audit_report.get("orcid", {}))
         self.analyze_ptservidor(audit_report.get("ptservidor", {}))
+        self.analyze_onedrive(audit_report.get("onedrive", {}))
+        self.analyze_docker(audit_report.get("docker", {}))
+        self.analyze_box(audit_report.get("box", {}))
+        self.analyze_base44(audit_report.get("base44", {}))
         self.analyze_corpus_internal()
 
         # Sort by severity

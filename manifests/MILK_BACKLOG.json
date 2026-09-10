@@ -282,6 +282,50 @@
         "citation_precision": 0.8,
         "avg_latency_ms": 83.7
       }
+    },
+    {
+      "task_id": "G1",
+      "priority": "A",
+      "title": "Resolve ORCID IDENTITY_CONFLICT: Eduardo vs Nuno",
+      "dependency": null,
+      "status": "PENDING",
+      "risk": "low",
+      "expected_gain": "correct authorship attribution",
+      "estimated_cost": "human verification",
+      "evidence": "ORCID 0009-0009-1781-4020 resolves to Nuno Filipe Fernandes Vieira Cabral e Araujo but .zenodo.json lists Eduardo Mauricio Vieira Cabral e Araujo"
+    },
+    {
+      "task_id": "G2",
+      "priority": "B",
+      "title": "Configure ZENODO_TOKEN locally for deposition operations",
+      "dependency": null,
+      "status": "PENDING",
+      "risk": "low",
+      "expected_gain": "Zenodo draft creation and DOI minting",
+      "estimated_cost": "create token at zenodo.org, set env var",
+      "evidence": "Token only in GitHub Secrets, not available locally"
+    },
+    {
+      "task_id": "G3",
+      "priority": "B",
+      "title": "Start Docker Desktop for atlas_infra services",
+      "dependency": null,
+      "status": "PENDING",
+      "risk": "low",
+      "expected_gain": "docker-compose services (postgres, nginx, etc.)",
+      "estimated_cost": "manual start",
+      "evidence": "Docker not running, RUNTIME_GAP detected"
+    },
+    {
+      "task_id": "G4",
+      "priority": "A",
+      "title": "Human validation of GOLD_QRELS (591 items)",
+      "dependency": null,
+      "status": "PENDING",
+      "risk": "low",
+      "expected_gain": "promote CANONICAL_RETRIEVAL from CANDIDATE",
+      "estimated_cost": "expert grading",
+      "evidence": "GOLD_QRELS created, human validation PENDING"
     }
   ]
 }

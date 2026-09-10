@@ -1,0 +1,329 @@
+{
+  "schema": "ia_milk.operating_fabric_proof.v2",
+  "timestamp": "2026-09-10T03:10:27.135534+00:00",
+  "external_evidence_query": {
+    "query": "What is the provenance of Atlas Vivo MILK across all available sources?",
+    "evidence_sources": 5,
+    "provenance_chain": [
+      {
+        "step": 1,
+        "source": "localfs",
+        "source_id": "manifests/",
+        "hash": "d35ff3e919792dfa",
+        "retrieved_at": "2026-09-10T03:10:27.273252+00:00",
+        "summary": "Local MILK manifests directory"
+      },
+      {
+        "step": 2,
+        "source": "nextcloud",
+        "source_id": "Atlas Vivo MILK",
+        "hash": "3d1732fac366c132",
+        "retrieved_at": "2026-09-10T03:10:27.278587+00:00",
+        "summary": "Nextcloud Atlas folder: 50 items"
+      },
+      {
+        "step": 3,
+        "source": "onedrive",
+        "source_id": "C:\\Users\\Utilizador\\OneDrive - Associacao MILK",
+        "hash": "directory_listing",
+        "retrieved_at": "2026-09-10T03:10:27.279718+00:00",
+        "summary": "OneDrive (personal): 4 top folders"
+      },
+      {
+        "step": 4,
+        "source": "github",
+        "source_id": "milkivc/atlas-vivo-milk",
+        "hash": "api_response",
+        "retrieved_at": "2026-09-10T03:10:28.662214+00:00",
+        "summary": "GitHub: 30 branches, 1 releases"
+      },
+      {
+        "step": 5,
+        "source": "orcid",
+        "source_id": "0009-0009-1781-4020",
+        "hash": "e65f927ff55bc868",
+        "retrieved_at": "2026-09-10T03:10:29.124421+00:00",
+        "summary": "ORCID: Nuno Filipe Fernandes Vieira Cabral e Araujo, works=0"
+      }
+    ],
+    "end_to_end_provenance": true
+  },
+  "real_reads": {
+    "localfs": {
+      "status": "ok",
+      "count": 67
+    },
+    "cloudsync": {
+      "status": "ok",
+      "sources": {
+        "onedrive": "C:\\Users\\Utilizador\\OneDrive - Associacao MILK",
+        "nextcloud": "C:\\Users\\Utilizador\\Nextcloud"
+      }
+    },
+    "nextcloud": {
+      "status": "ok",
+      "hash": "3d1732fac366c132"
+    },
+    "onedrive": {
+      "status": "ok",
+      "count": 32
+    },
+    "github": {
+      "status": "ok",
+      "branches": 30,
+      "releases": 1
+    },
+    "codeberg": {
+      "status": "skipped",
+      "reason": "not authenticable"
+    },
+    "zenodo": {
+      "status": "ok",
+      "local_zenodo_json": true,
+      "remote_records": 0
+    },
+    "orcid": {
+      "status": "ok",
+      "name": "Nuno Filipe Fernandes Vieira Cabral e Araujo"
+    },
+    "docker": {
+      "status": "ok"
+    },
+    "git": {
+      "status": "ok",
+      "branches": 2,
+      "remotes": 2,
+      "head": "9e2d2b9f7e7c"
+    },
+    "box": {
+      "status": "skipped",
+      "reason": "not authenticable"
+    },
+    "base44": {
+      "status": "skipped",
+      "reason": "not authenticable"
+    },
+    "ptservidor": {
+      "status": "ok",
+      "http_status": 200
+    }
+  },
+  "zenodo_operation": {
+    "authenticated": false,
+    "operation": "public_read_only",
+    "records_found": 0,
+    "local_zenodo_json": true,
+    "note": "ZENODO_TOKEN not found locally — only in GitHub Secrets. Public reads available.",
+    "auth_blocker": "ZENODO_TOKEN required for depositions. Configure at https://zenodo.org/account/settings/applications"
+  },
+  "atlas_analysis": {
+    "gap": {
+      "gap_id": "GAP-0012",
+      "domain": "publication",
+      "source": "zenodo",
+      "gap_type": "UNPUBLISHED",
+      "evidence": "No Zenodo records found for community 'milkivc'",
+      "severity": "high",
+      "dependency": null,
+      "proposed_action": "Create first Zenodo deposition from .zenodo.json when ready",
+      "reversibility": "reversible",
+      "human_gate": true,
+      "status": "open",
+      "created_at": "2026-09-10T03:11:42.353573+00:00"
+    },
+    "action_receipt": {
+      "action_id": "ACT-0001",
+      "actor": "milk_atlas_proof",
+      "action": "create_zenodo_draft",
+      "tier": "WRITE_REVERSIBLE",
+      "source": "gap_engine",
+      "target": "zenodo",
+      "timestamp": "2026-09-10T03:11:42.358630+00:00",
+      "evidence": "Gap GAP-0012: No Zenodo records found for community 'milkivc'",
+      "before_hash": "GAP-0012",
+      "after_hash": "",
+      "reversible": true,
+      "rollback": "revert zenodo to before_hash=GAP-0012",
+      "human_gate": false,
+      "status": "approved"
+    },
+    "public_action_receipt": {
+      "action_id": "ACT-0002",
+      "actor": "milk_atlas_proof",
+      "action": "publish_zenodo",
+      "tier": "PUBLIC_OR_IRREVERSIBLE",
+      "source": "gap_engine",
+      "target": "zenodo",
+      "timestamp": "2026-09-10T03:11:42.359381+00:00",
+      "evidence": "Gap GAP-0012",
+      "before_hash": "",
+      "after_hash": "",
+      "reversible": false,
+      "rollback": "",
+      "human_gate": true,
+      "status": "proposed"
+    },
+    "gate_summary": {
+      "total_actions": 2,
+      "by_tier": {
+        "READ_AUTO": 0,
+        "WRITE_REVERSIBLE": 1,
+        "PUBLIC_OR_IRREVERSIBLE": 1
+      },
+      "by_status": {
+        "proposed": 1,
+        "approved": 1,
+        "executed": 0,
+        "rejected": 0,
+        "failed": 0
+      },
+      "pending_human_gate": [
+        {
+          "action_id": "ACT-0002",
+          "actor": "milk_atlas_proof",
+          "action": "publish_zenodo",
+          "tier": "PUBLIC_OR_IRREVERSIBLE",
+          "source": "gap_engine",
+          "target": "zenodo",
+          "timestamp": "2026-09-10T03:11:42.359381+00:00",
+          "evidence": "Gap GAP-0012",
+          "before_hash": "",
+          "after_hash": "",
+          "reversible": false,
+          "rollback": "",
+          "human_gate": true,
+          "status": "proposed"
+        }
+      ]
+    }
+  },
+  "health": {
+    "services": {
+      "fabric:8766": {
+        "status": "healthy",
+        "code": 200
+      },
+      "gpt_oss:8009": {
+        "status": "healthy",
+        "code": 200
+      }
+    },
+    "adapters": {
+      "localfs": {
+        "healthy": true,
+        "name": "localfs"
+      },
+      "cloudsync": {
+        "healthy": true,
+        "name": "cloudsync",
+        "sources": [
+          "onedrive",
+          "nextcloud"
+        ]
+      },
+      "nextcloud": {
+        "healthy": true,
+        "name": "nextcloud"
+      },
+      "onedrive": {
+        "healthy": true,
+        "name": "onedrive"
+      },
+      "github": {
+        "healthy": true,
+        "name": "github",
+        "status_code": 200
+      },
+      "codeberg": {
+        "healthy": true,
+        "name": "codeberg",
+        "status_code": 404
+      },
+      "zenodo": {
+        "healthy": false,
+        "name": "zenodo",
+        "status_code": 0
+      },
+      "orcid": {
+        "healthy": true,
+        "name": "orcid"
+      },
+      "docker": {
+        "healthy": true,
+        "name": "docker"
+      },
+      "git": {
+        "healthy": true,
+        "name": "git"
+      },
+      "box": {
+        "healthy": false,
+        "name": "box"
+      },
+      "base44": {
+        "healthy": false,
+        "name": "base44"
+      },
+      "ptservidor": {
+        "healthy": true,
+        "name": "ptservidor",
+        "domain": "atlas.associacaomilk.pt",
+        "http_status": 200
+      }
+    }
+  },
+  "gap_graph": {
+    "total_gaps": 25,
+    "by_severity": {
+      "critical": 0,
+      "high": 4,
+      "medium": 13,
+      "low": 6,
+      "info": 2
+    },
+    "by_type": {
+      "MISSING": 3,
+      "DIVERGENT": 4,
+      "UNVERIFIED": 7,
+      "UNPUBLISHED": 2,
+      "METADATA_GAP": 1,
+      "PROVENANCE_GAP": 1,
+      "IDENTITY_CONFLICT": 1,
+      "INTEROP_GAP": 2,
+      "AUTH_BLOCKED": 4
+    }
+  },
+  "action_gate": {
+    "total_actions": 2,
+    "by_tier": {
+      "READ_AUTO": 0,
+      "WRITE_REVERSIBLE": 1,
+      "PUBLIC_OR_IRREVERSIBLE": 1
+    },
+    "by_status": {
+      "proposed": 1,
+      "approved": 1,
+      "executed": 0,
+      "rejected": 0,
+      "failed": 0
+    },
+    "pending_human_gate": [
+      {
+        "action_id": "ACT-0002",
+        "actor": "milk_atlas_proof",
+        "action": "publish_zenodo",
+        "tier": "PUBLIC_OR_IRREVERSIBLE",
+        "source": "gap_engine",
+        "target": "zenodo",
+        "timestamp": "2026-09-10T03:11:42.359381+00:00",
+        "evidence": "Gap GAP-0012",
+        "before_hash": "",
+        "after_hash": "",
+        "reversible": false,
+        "rollback": "",
+        "human_gate": true,
+        "status": "proposed"
+      }
+    ]
+  }
+}

@@ -1,6 +1,6 @@
 {
   "schema": "ia_milk.capability_matrix.v1",
-  "updated_at": "2026-09-10T03:00:00+00:00",
+  "updated_at": "2026-09-10T03:13:04.419524+00:00",
   "capabilities": {
     "neural_classifier": {
       "status": "TESTED_PROMOTED_TORCH",
@@ -204,17 +204,37 @@
     "atlas_external_adapters": {
       "status": "TESTED",
       "file": "src/milk_ai/external_adapters.py",
-      "notes": "6 adapters: Nextcloud, Codeberg, GitHub, Zenodo, ORCID, PTServidor. READ/AUDIT phase. 41 tests pass."
+      "notes": "13 adapters: LocalFS, CloudSync, Nextcloud, OneDrive, GitHub, Codeberg, Zenodo, ORCID, Docker, Git, Box, Base44, PTServidor. READ/AUDIT + search(). 69 tests pass."
     },
     "atlas_gap_engine": {
       "status": "TESTED",
       "file": "src/milk_ai/gap_engine.py",
-      "notes": "22 gaps across 10 types: MISSING, STALE, DIVERGENT, UNVERIFIED, UNPUBLISHED, UNDEPLOYED, METADATA_GAP, PROVENANCE_GAP, INTEROP_GAP, AUTH_BLOCKED"
+      "notes": "14 gap types: MISSING, STALE, DIVERGENT, UNVERIFIED, UNINGESTED, UNPUBLISHED, UNDEPLOYED, METADATA_GAP, PROVENANCE_GAP, IDENTITY_CONFLICT, INTEROP_GAP, AUTH_BLOCKED, RUNTIME_GAP, SECURITY_GAP"
     },
     "atlas_operational_proof": {
       "status": "TESTED",
       "file": "milk_atlas_proof.py",
       "notes": "6 real reads executed, 4-source provenance chain, end-to-end provenance confirmed"
+    },
+    "sovereign_action_gate": {
+      "status": "TESTED",
+      "file": "src/milk_ai/action_gate.py",
+      "notes": "3 tiers: READ_AUTO, WRITE_REVERSIBLE, PUBLIC_OR_IRREVERSIBLE. Receipts with before/after hash, rollback, human_gate."
+    },
+    "resource_discovery": {
+      "status": "TESTED",
+      "file": "scripts/discover_resources.py",
+      "notes": "Drives, ports, processes, env creds, credman, cloud sync, docker, WSL, local AI, MCP. Compact JSON registry."
+    },
+    "code_audit": {
+      "status": "TESTED",
+      "file": "scripts/code_audit.py",
+      "notes": "91 files scanned, 44 with findings: 76 broad exceptions, 25 process exec, 107 network code, 1 hardcoded path, 1 potential secret (rclone credential handler, redacted)"
+    },
+    "metric_reconciliation": {
+      "status": "TESTED",
+      "file": "scripts/reconcile_metrics.py",
+      "notes": "Filesystem 840.5 MB vs extracted text 592.7 MB (1.42x ratio). JSON overhead explains 268 MB historical vs 779.3 MB filesystem discrepancy."
     }
   }
 }

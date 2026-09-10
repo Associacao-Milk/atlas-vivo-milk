@@ -1,0 +1,34 @@
+[
+  {
+    "action_id": "ACT-0001",
+    "actor": "milk_atlas_proof",
+    "action": "create_zenodo_draft",
+    "tier": "WRITE_REVERSIBLE",
+    "source": "gap_engine",
+    "target": "zenodo",
+    "timestamp": "2026-09-10T03:11:42.358630+00:00",
+    "evidence": "Gap GAP-0012: No Zenodo records found for community 'milkivc'",
+    "before_hash": "GAP-0012",
+    "after_hash": "",
+    "reversible": true,
+    "rollback": "revert zenodo to before_hash=GAP-0012",
+    "human_gate": false,
+    "status": "approved"
+  },
+  {
+    "action_id": "ACT-0002",
+    "actor": "milk_atlas_proof",
+    "action": "publish_zenodo",
+    "tier": "PUBLIC_OR_IRREVERSIBLE",
+    "source": "gap_engine",
+    "target": "zenodo",
+    "timestamp": "2026-09-10T03:11:42.359381+00:00",
+    "evidence": "Gap GAP-0012",
+    "before_hash": "",
+    "after_hash": "",
+    "reversible": false,
+    "rollback": "",
+    "human_gate": true,
+    "status": "proposed"
+  }
+]

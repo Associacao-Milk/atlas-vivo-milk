@@ -1,9 +1,9 @@
 {
   "schema": "ia_milk.execution_state.v1",
-  "updated_at": "2026-09-10T01:31:13.390502+00:00",
+  "updated_at": "2026-09-10T03:13:04.419524+00:00",
   "canonical_root": "C:\\Users\\Utilizador\\MILK_AI_STATE_CANONICO",
   "git_head": "pending local commit",
-  "current_phase": "ATLAS_OPERATIONAL_READ_AUDIT",
+  "current_phase": "SOVEREIGN_ATLAS_OPERATING_FABRIC",
   "phases_completed": [
     "INTEGRATION_A_B",
     "SNAPSHOT_PROTECTION",
@@ -21,7 +21,8 @@
     "RETRIEVAL_BENCHMARK",
     "RETRIEVAL_BENCHMARK_V2",
     "RETRIEVAL_VALIDATION_FINAL",
-    "ATLAS_OPERATIONAL_READ_AUDIT"
+    "ATLAS_OPERATIONAL_READ_AUDIT",
+    "SOVEREIGN_ATLAS_OPERATING_FABRIC"
   ],
   "current_task": "HUMAN_VALIDATION_GOLD_QRELS",
   "corpus_documents": 10538,
@@ -88,6 +89,18 @@
       "id": "ORCID_NAME_DIVERGENCE",
       "severity": "medium",
       "description": "ORCID 0009-0009-1781-4020 resolves to Nuno Filipe Fernandes Vieira Cabral e Araujo but .zenodo.json lists Eduardo Mauricio Vieira Cabral e Araujo — verify correct ORCID",
+      "status": "OPEN"
+    },
+    {
+      "id": "DOCKER_NOT_RUNNING",
+      "severity": "low",
+      "description": "Docker Desktop not running — atlas_infra docker-compose services unavailable",
+      "status": "OPEN"
+    },
+    {
+      "id": "ZENODO_TOKEN_LOCAL",
+      "severity": "medium",
+      "description": "ZENODO_TOKEN only in GitHub Secrets, not available locally. Public reads work; depositions blocked.",
       "status": "OPEN"
     }
   ],

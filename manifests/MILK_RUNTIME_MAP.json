@@ -189,6 +189,30 @@
       "path": "state/corpus_snapshot.json",
       "type": "metadata",
       "description": "Verified canonical corpus state: 10538 docs, 250887 chunks, cache hashes"
+    },
+    "resource_registry": {
+      "path": "state/MILK_RESOURCE_REGISTRY.json",
+      "type": "metadata",
+      "description": "Deterministic resource discovery: drives, ports, processes, cloud sync, docker, WSL, local AI, MCP, credentials"
+    },
+    "action_gate": {
+      "path": "src/milk_ai/action_gate.py",
+      "type": "code",
+      "description": "Sovereign Action Gate: READ_AUTO, WRITE_REVERSIBLE, PUBLIC_OR_IRREVERSIBLE with receipts"
+    },
+    "ollama_service": {
+      "path": "127.0.0.1:11434",
+      "type": "service",
+      "description": "Ollama local LLM: llama3.2:3b, mistral:latest",
+      "owner": "MILK Sovereign Core (logical)",
+      "role": "local_llm_worker"
+    },
+    "nextcloud_webdav": {
+      "path": "https://nuvem.associacaomilk.pt/remote.php/dav",
+      "type": "service",
+      "description": "Nextcloud WebDAV endpoint with admin credentials in CredManager",
+      "owner": "MILK Sovereign Core (logical)",
+      "auth": "CredManager: Nextcloud_admin_app-password"
     }
   },
   "resolution_rules": {
@@ -204,6 +228,7 @@
     "CONTINUOUS_LEARNING_ACTIVATED": false,
     "DAEMON_RUNNING": false,
     "TRAINING_IN_PROGRESS": false,
-    "ATLAS_READ_AUDIT_DONE": true
+    "ATLAS_READ_AUDIT_DONE": true,
+    "SOVEREIGN_ATLAS_FABRIC": true
   }
 }

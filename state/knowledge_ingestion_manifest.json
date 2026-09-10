@@ -1,5 +1,7 @@
 {
-  "baseline_commit": "7f93c9a",
+  "baseline_commit": "210df3e",
+  "final_commit": "pending",
+  "run_id": "surgical-fix-1",
   "sources_checked": [
     "nextcloud:Atlas Vivo MILK",
     "nextcloud:CURADORIA_100",
@@ -12,20 +14,39 @@
   "review_required": 8,
   "quarantined": 3,
   "duplicates": 0,
+  "invalid": 0,
+  "unsupported": 0,
+  "failed": 0,
+  "skipped": 1,
+  "skipped_reason": "file_size_0B (Documento de texto.md)",
   "documents_before": 10538,
   "documents_added": 38,
   "documents_after": 10576,
   "chunks_added": 132,
-  "indexes_updated": "checkpoint updated, new docs in corpus",
-  "retrieval_proof": "new docs have chunks, retrievable by hash",
+  "embeddings_added": "NOT_COMPUTED — deferred (requires BGE-M3 + torch GPU invocation)",
+  "embedding_model": "BAAI/bge-m3 (cached, deferred)",
+  "vectors_added": "NOT_COMPUTED — deferred",
+  "index_name": "corpus/documents (filesystem index)",
+  "index_version_before": "10538 docs",
+  "index_version_after": "10576 docs",
+  "retrieval_proof": "3/3 semantic retrieval queries matched (lightweight text matching; BGE-M3 embedding deferred)",
   "provenance_verified": true,
-  "corpus_existing_docs_modified": 0,
+  "test_events_detected": 7,
+  "test_events_in_canonical_log": 0,
+  "corpus_existing_docs_modified_scope": "0/10 sampled baseline docs modified; NOT_FULLY_PROVABLE_RETROACTIVELY (sample baseline created)",
+  "unaccounted_items": 0,
   "remaining_blocks": [
+    "BGE-M3 embedding computation deferred (GPU required)",
+    "GOLD_QRELS pending",
+    "Fabric lifecycle no safe reload",
     "ZENODO_TOKEN",
-    "GOLD_QRELS",
     "Docker",
     "Codeberg",
-    "PTServidor SSH",
-    "Fabric lifecycle"
-  ]
+    "PTServidor SSH"
+  ],
+  "trust_boundary": {
+    "all_accepted_trust_state": "trusted_internal",
+    "all_accepted_public_eligible": false,
+    "all_accepted_human_validated": false
+  }
 }

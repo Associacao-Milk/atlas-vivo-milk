@@ -61,7 +61,7 @@ class StagedItem:
         self.mime_type = ""
         self.language = "pt"
         self.licence = "UNKNOWN"
-        self.rights_status = "UNKNOWN"
+        self.rights_status = "unknown"
         self.privacy_class = "UNKNOWN"
         self.dedup_status = "NEW"
         self.content_quality = 0.0
@@ -71,6 +71,17 @@ class StagedItem:
         self.claims: list[str] = []
         self.pipeline_decision = "PENDING"  # ACCEPT, REVIEW, QUARANTINE, REJECT
         self.provenance: list[dict] = []
+        # Trust / publication boundary
+        self.trust_state = "untrusted"
+        self.human_validated = False
+        self.public_eligible = False
+        self.epistemic_state = "uncorroborated"
+        # Encoding
+        self.encoding_ok = True
+        self.encoding_issues: list[str] = []
+        self.normalized_text = ""
+        # Disposition
+        self.disposition_reason = ""
 
     def to_dict(self) -> dict:
         return {k: v for k, v in self.__dict__.items() if k != "content"}
@@ -99,6 +110,13 @@ class StagedItem:
             "pipeline_decision": self.pipeline_decision,
             "pipeline_version": "ingest-v1",
             "provenance": self.provenance,
+            "trust_state": self.trust_state,
+            "human_validated": self.human_validated,
+            "public_eligible": self.public_eligible,
+            "epistemic_state": self.epistemic_state,
+            "rights_status": self.rights_status,
+            "encoding_ok": self.encoding_ok,
+            "encoding_issues": self.encoding_issues,
         }
 
 
@@ -200,7 +218,36 @@ class KnowledgeIngestionPipeline:
 
         return staged
 
-    # ---- VALIDATE: MIME type, size, safety ----
+    # ---- VALIDATE: MIME type, size, safety, encoding ----
+
+    def check_encoding(self, item: StagedItem):
+        """Detect UTF-8/mojibake issues in content."""
+        try:
+            text = item.content.decode("utf-8", errors="replace")
+        except:
+            text = ""
+
+        mojibake_patterns = ["Ã", "â€", "ï¿½", "Ã©", "Ã³", "Ã¡", "Ã§"]
+        issues = []
+        for pat in mojibake_patterns:
+            if pat in text:
+                issues.append(f"mojibake_pattern:{pat}")
+
+        if issues:
+            item.encoding_ok = False
+            item.encoding_issues = issues
+            item.disposition_reason = "encoding_issues"
+            # Don't reject — produce normalized_text if safe
+            try:
+                # Try latin-1 to utf-8 fix
+                fixed = item.content.decode("latin-1").encode("utf-8").decode("utf-8", errors="replace")
+                if fixed and not any(p in fixed for p in mojibake_patterns):
+                    item.normalized_text = fixed[:10000]
+            except:
+                pass
+        else:
+            item.encoding_ok = True
+            item.normalized_text = text[:10000]
 
     def validate(self, item: StagedItem) -> bool:
         """Validate MIME type and content safety."""
@@ -383,6 +430,13 @@ class KnowledgeIngestionPipeline:
 
         item.pipeline_decision = "ACCEPT"
 
+        # Trust / publication boundary
+        item.trust_state = "trusted_internal"
+        item.human_validated = False  # not yet human-validated
+        item.public_eligible = False  # licence UNKNOWN = not public
+        item.epistemic_state = "uncorroborated"
+        item.rights_status = "internal_preservation_only"
+
         # Generate chunks (simple: text split into 500-char chunks)
         text = item.content.decode("utf-8", errors="replace")
         chunks = []
@@ -440,8 +494,11 @@ class KnowledgeIngestionPipeline:
         results = {
             "pipeline_version": self.PIPELINE_VERSION,
             "timestamp": _now(),
+            "discovered": len(delta_items),
             "documents_before": len(list(self.corpus.glob("*.json"))),
             "staged": 0,
+            "skipped": 0,
+            "skipped_items": [],
             "validated": 0,
             "classified": 0,
             "deduped_new": 0,
@@ -451,6 +508,7 @@ class KnowledgeIngestionPipeline:
             "review_required": 0,
             "quarantined": 0,
             "rejected": 0,
+            "encoding_issues": 0,
             "chunks_added": 0,
             "documents_after": 0,
             "items": [],
@@ -459,11 +517,31 @@ class KnowledgeIngestionPipeline:
         # STAGE
         staged = self.stage_items(delta_items)
         results["staged"] = len(staged)
+        results["skipped"] = len(delta_items) - len(staged)
+
+        # Track skipped items for accounting
+        staged_hashes = set()
+        for s in staged:
+            staged_hashes.add(s.content_hash)
+        for d in delta_items:
+            ch = d.get("content_hash", "")
+            if ch not in staged_hashes:
+                results["skipped_items"].append({
+                    "source": d.get("source", ""),
+                    "source_id": d.get("source_id", ""),
+                    "reason": "not_staged",
+                })
 
         for item in staged:
+            # ENCODING CHECK
+            self.check_encoding(item)
+            if not item.encoding_ok:
+                results["encoding_issues"] += 1
+
             # VALIDATE
             if not self.validate(item):
                 results["quarantined"] += 1
+                item.disposition_reason = "validation_failed"
                 results["items"].append(item.to_dict())
                 continue
             results["validated"] += 1
@@ -477,6 +555,7 @@ class KnowledgeIngestionPipeline:
             if item.dedup_status == "EXACT_DUPLICATE":
                 results["deduped_duplicates"] += 1
                 results["rejected"] += 1
+                item.disposition_reason = "exact_duplicate"
                 results["items"].append(item.to_dict())
                 continue
             results["deduped_new"] += 1
@@ -496,12 +575,20 @@ class KnowledgeIngestionPipeline:
                     pass
             elif item.pipeline_decision == "REVIEW":
                 results["review_required"] += 1
+                item.disposition_reason = "review_required"
             elif item.pipeline_decision == "QUARANTINE":
                 results["quarantined"] += 1
+                item.disposition_reason = "quarantined"
 
             results["items"].append(item.to_dict())
 
         results["documents_after"] = len(list(self.corpus.glob("*.json")))
+
+        # Verify disposition invariant
+        accounted = (results["accepted"] + results["review_required"] +
+                     results["quarantined"] + results["rejected"] + results["skipped"])
+        results["unaccounted_items"] = results["discovered"] - accounted
+
         self._save_checkpoint()
 
         return results

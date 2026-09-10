@@ -547,9 +547,10 @@ class OrcidAdapter(ExternalSystemAdapter):
     API = "https://pub.orcid.org/v3.0"
 
     def __init__(self, known_orcids: dict | None = None):
-        # Known ORCIDs in the MILK ecosystem
+        # Known ORCIDs in the MILK ecosystem — canonical author from provenance
+        from .provenance import CANONICAL_AUTHOR
         self.known_orcids = known_orcids or {
-            "eduardo_mauricio": "0009-0007-6892-6570",
+            "eduardo_mauricio": CANONICAL_AUTHOR.get("orcid", "0009-0007-6892-6570"),
             "nuno_filipe": "0009-0009-1781-4020",
         }
 

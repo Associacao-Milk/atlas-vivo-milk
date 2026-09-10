@@ -5,12 +5,24 @@ from datetime import datetime, timezone
 
 ROOT = Path(r"C:\Users\Utilizador\MILK_AI_STATE_CANONICO")
 CACHE = ROOT / "state" / "chunk_index"
+SRC = ROOT / "src"
 started_at = datetime.now(timezone.utc).isoformat()
 git_head = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True, cwd=str(ROOT)).stdout.strip()
 git_tree = subprocess.run(["git", "rev-parse", "HEAD^{tree}"], capture_output=True, text=True, cwd=str(ROOT)).stdout.strip()
 active_requests = 0
 shutting_down = False
 server = None
+
+# Canonical authorship identity — single source of truth
+sys.path.insert(0, str(SRC))
+try:
+    from milk_ai.provenance import CANONICAL_AUTHOR
+except Exception:
+    CANONICAL_AUTHOR = {
+        "idealized_by": "Eduardo Maurício Vieira Cabral e Araújo",
+        "artistic_name": "Eduardo Mauer",
+        "orcid": "0009-0007-6892-6570",
+    }
 
 BGE = "BAAI/bge-m3"
 RERANKER = "BAAI/bge-reranker-v2-m3"
@@ -86,6 +98,8 @@ class ShadowHandler(BaseHTTPRequestHandler):
                     "pid": os.getpid(),
                     "draining": shutting_down,
                     "active_requests": active_requests,
+                    "canonical_author": CANONICAL_AUTHOR.get("idealized_by", ""),
+                    "canonical_orcid": CANONICAL_AUTHOR.get("orcid", ""),
                 })
             elif self.path == "/health/retrieval":
                 ok = _index_readable and not shutting_down
@@ -125,6 +139,8 @@ class ShadowHandler(BaseHTTPRequestHandler):
                     "action_gate": True,
                     "compliance_kernel": True,
                     "adaptive_policy": True,
+                    "canonical_author": CANONICAL_AUTHOR.get("idealized_by", ""),
+                    "canonical_orcid": CANONICAL_AUTHOR.get("orcid", ""),
                 })
             elif self.path == "/shutdown":
                 self._json(200, {"shutting_down": True})

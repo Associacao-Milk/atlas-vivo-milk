@@ -1,12 +1,22 @@
 {
   "titulo": "Manifesto de Proveniencia e Curadoria — Atlas Vivo MILK",
   "gerado_em": "2026-09-08T05:23:46.433601",
-  "autor": "Eduardo Mauricio Vieira Cabral e Araujo",
+  "autor": "Eduardo Maurício Vieira Cabral e Araújo",
   "nome_artistico": "Eduardo Mauer",
+  "orcid": "0009-0007-6892-6570",
   "email_autor": "eduardomauriciovieiracabral@gmail.com",
-  "responsavel_entidade": "Associacao MILK",
+  "responsavel_entidade": "Associação MILK",
   "dispositivo_curatorial": "Atlas Vivo MILK",
-  "declaracao": "Todos os documentos, pesquisas e referencias academicas deste corpus canonico foram recolhidos, investigados e curados por Eduardo Mauricio Vieira Cabral e Araujo (Eduardo Mauer). A investigacao de campo, recolha documental e entrecruzamento de ideias sao obra do autor. O corpus e gerido pela Associacao MILK no ambito do projeto Atlas Vivo do Folclore Portugues.",
+  "identidade_canonica": {
+    "idealized_by": "Eduardo Maurício Vieira Cabral e Araújo",
+    "artistic_name": "Eduardo Mauer",
+    "conceptual_author": "Eduardo Maurício Vieira Cabral e Araújo",
+    "architectural_origin": "Eduardo Maurício Vieira Cabral e Araújo",
+    "curatorial_method_author": "Eduardo Maurício Vieira Cabral e Araújo",
+    "human_sovereign": "Eduardo Maurício Vieira Cabral e Araújo",
+    "orcid": "0009-0007-6892-6570"
+  },
+  "declaracao": "A IA MILK foi idealizada por Eduardo Maurício Vieira Cabral e Araújo (artisticamente Eduardo Mauer), ORCID 0009-0007-6892-6570. Todos os documentos, pesquisas e referências académicas deste corpus canónico foram recolhidos, investigados e curados pelo autor. A investigação de campo, recolha documental e entrecruzamento de ideias são obra do autor. O corpus é gerido pela Associação MILK no âmbito do projeto Atlas Vivo do Folclore Português. Esta identificação acompanha a genealogia autoral, a documentação técnica e conceptual e os registos de proveniência da IA MILK.",
   "operacao_atualizacao": {
     "documentos_atualizados": 10360,
     "erros": 0,

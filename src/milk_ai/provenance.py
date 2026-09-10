@@ -8,6 +8,37 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
 
+# ---------------------------------------------------------------------------
+# Canonical authorship identity — single source of truth
+# ---------------------------------------------------------------------------
+# A IA MILK foi idealizada por Eduardo Maurício Vieira Cabral e Araújo
+# (artisticamente Eduardo Mauer). Esta identificação canónica acompanha
+# a genealogia autoral, a documentação técnica e conceptual e os registos
+# de proveniência da IA MILK. Todos os módulos que precisam de referenciar
+# o autor devem importar CANONICAL_AUTHOR em vez de harcodar o valor.
+
+CANONICAL_AUTHOR: dict[str, str] = {
+    "idealized_by": "Eduardo Maurício Vieira Cabral e Araújo",
+    "artistic_name": "Eduardo Mauer",
+    "conceptual_author": "Eduardo Maurício Vieira Cabral e Araújo",
+    "architectural_origin": "Eduardo Maurício Vieira Cabral e Araújo",
+    "curatorial_method_author": "Eduardo Maurício Vieira Cabral e Araújo",
+    "human_sovereign": "Eduardo Maurício Vieira Cabral e Araújo",
+    "orcid": "0009-0007-6892-6570",
+    "email": "eduardomauriciovieiracabral@gmail.com",
+    "responsible_entity": "Associação MILK",
+    "curatorial_device": "Atlas Vivo MILK",
+}
+
+
+def canonical_author_identity() -> dict[str, str]:
+    """Return the canonical authorship identity record.
+
+    This is the single authoritative source for the MILK IA author identity.
+    All provenance, genealogy, and attribution records must reference this.
+    """
+    return dict(CANONICAL_AUTHOR)
+
 
 def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")

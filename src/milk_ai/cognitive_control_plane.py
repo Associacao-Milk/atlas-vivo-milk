@@ -388,6 +388,17 @@ class EvidenceBundle:
             "@type": "prov:Agent",
             "prov:actedOnBehalfOf": "milk:sovereign_core",
         })
+        try:
+            from .provenance import CANONICAL_AUTHOR
+            agents.append({
+                "@id": f"orcid:{CANONICAL_AUTHOR.get('orcid', '')}",
+                "@type": "prov:Person",
+                "prov:label": CANONICAL_AUTHOR.get("idealized_by", ""),
+                "rdfs:label": CANONICAL_AUTHOR.get("artistic_name", ""),
+                "prov:role": "human_sovereign",
+            })
+        except Exception:
+            pass
 
         return {
             "@context": {"prov": "http://www.w3.org/ns/prov#"},

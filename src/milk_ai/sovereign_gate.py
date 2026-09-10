@@ -24,6 +24,7 @@ from .provider_adapter import (
 from .compliance import assess_all, PROFILE_REGISTRY
 from .ontology import jsonld_context, shacl_shapes, turtle, ONTOLOGY_VERSION
 from .export_ngsi import export_source_ngsi, export_source_cnmd
+from .provenance import CANONICAL_AUTHOR
 
 
 class NetworkDisabledError(RuntimeError):
@@ -120,7 +121,10 @@ def run_gate(core_query_fn: Any | None = None, loaded_modules: set[str] | None =
         shacl_shapes_ok=onto_ok,
         details={"offline_query": offline_details,
                  "compliance_profiles": list(PROFILE_REGISTRY.keys()),
-                 "ngsi_sample_id": ngsi.get("id")},
+                 "ngsi_sample_id": ngsi.get("id"),
+                 "canonical_author": CANONICAL_AUTHOR.get("idealized_by", ""),
+                 "canonical_orcid": CANONICAL_AUTHOR.get("orcid", ""),
+                 "human_sovereign": CANONICAL_AUTHOR.get("human_sovereign", "")},
     )
 
 

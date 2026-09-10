@@ -2,150 +2,53 @@
   "queries": [
     {
       "query": "nucleo estavel consolidacao curatorial atlas vivo",
-      "new_doc_hits": 3,
-      "top_hits": [
-        {
-          "rank": 1,
-          "chunk_id": "6bd66f86d13f755c",
-          "document_id": "0663d3e36c405ef1",
-          "dense_score": 0.648425,
-          "text_preview": "Resumo de Consolidação Total 1.2\n\nEstado público validado: A",
-          "source": "incremental_index"
-        },
-        {
-          "rank": 2,
-          "chunk_id": "94f9e540ec606bfa",
-          "document_id": "8c3cc6c6172c1f8d",
-          "dense_score": 0.600741,
-          "text_preview": "Ata de Fecho Auditável da Versão Pública Operacional 1.2 e d",
-          "source": "incremental_index"
-        }
-      ],
-      "reranker_used": true,
-      "rerank_top": {
-        "chunk_id": "6bd66f86d13f755c",
-        "rerank_score": 0.937074
-      },
-      "strategy": "BGE-M3 dense (incremental) + bge-reranker-v2-m3",
-      "top_original_score": 0.648424
+      "rank": 1,
+      "chunk_id": "6bd66f86d13f755c",
+      "document_id": "0663d3e36c405ef1",
+      "retrieval_score": 0.648425,
+      "rerank_raw_score": 0.937074,
+      "rerank_normalized_score": 0.718508
     },
     {
       "query": "resumo consolidacao total versao publica operacional",
-      "new_doc_hits": 3,
-      "top_hits": [
-        {
-          "rank": 1,
-          "chunk_id": "6bd66f86d13f755c",
-          "document_id": "0663d3e36c405ef1",
-          "dense_score": 0.558,
-          "text_preview": "Resumo de Consolidação Total 1.2\n\nEstado público validado: A",
-          "source": "incremental_index"
-        },
-        {
-          "rank": 2,
-          "chunk_id": "94f9e540ec606bfa",
-          "document_id": "8c3cc6c6172c1f8d",
-          "dense_score": 0.542466,
-          "text_preview": "Ata de Fecho Auditável da Versão Pública Operacional 1.2 e d",
-          "source": "incremental_index"
-        }
-      ],
-      "reranker_used": true,
-      "rerank_top": {
-        "chunk_id": "6bd66f86d13f755c",
-        "rerank_score": 0.921517
-      },
-      "strategy": "BGE-M3 dense (incremental) + bge-reranker-v2-m3",
-      "top_original_score": 0.557999
+      "rank": 1,
+      "chunk_id": "6bd66f86d13f755c",
+      "document_id": "0663d3e36c405ef1",
+      "retrieval_score": 0.558,
+      "rerank_raw_score": 0.921517,
+      "rerank_normalized_score": 0.715351
     },
     {
       "query": "governacao migracao atlas vivo milk",
-      "new_doc_hits": 3,
-      "top_hits": [
-        {
-          "rank": 1,
-          "chunk_id": "5f2add759a81b854",
-          "document_id": "08225414fb796e79",
-          "dense_score": 0.650204,
-          "text_preview": "# Governação de migração — Atlas Vivo MILK\r\n\r\nData: 2026-08-",
-          "source": "incremental_index"
-        },
-        {
-          "rank": 2,
-          "chunk_id": "2e926374b588229c",
-          "document_id": "f96e66d8d771176d",
-          "dense_score": 0.61131,
-          "text_preview": "# DOCUMENTAÇÃO TÉCNICA - AI ACT\r\n**Sistema: Atlas Vivo**\r\n**",
-          "source": "incremental_index"
-        }
-      ],
-      "reranker_used": true,
-      "rerank_top": {
-        "chunk_id": "5f2add759a81b854",
-        "rerank_score": 0.942074
-      },
-      "strategy": "BGE-M3 dense (incremental) + bge-reranker-v2-m3",
-      "top_original_score": 0.647296
+      "rank": 1,
+      "chunk_id": "5f2add759a81b854",
+      "document_id": "08225414fb796e79",
+      "retrieval_score": 0.650204,
+      "rerank_raw_score": 0.942074,
+      "rerank_normalized_score": 0.719519
     },
     {
       "query": "protocolo genealogico autoavaliacao curatorial",
-      "new_doc_hits": 3,
-      "top_hits": [
-        {
-          "rank": 1,
-          "chunk_id": "5b447d12ea045cc2",
-          "document_id": "8679f29aa218040c",
-          "dense_score": 0.548436,
-          "text_preview": "Protocolo Genealógico de Autoavaliação e Reformulação Perman",
-          "source": "incremental_index"
-        },
-        {
-          "rank": 2,
-          "chunk_id": "6bd66f86d13f755c",
-          "document_id": "0663d3e36c405ef1",
-          "dense_score": 0.489057,
-          "text_preview": "Resumo de Consolidação Total 1.2\n\nEstado público validado: A",
-          "source": "incremental_index"
-        }
-      ],
-      "reranker_used": true,
-      "rerank_top": {
-        "chunk_id": "6bd66f86d13f755c",
-        "rerank_score": 0.933414
-      },
-      "strategy": "BGE-M3 dense (incremental) + bge-reranker-v2-m3",
-      "top_original_score": 0.616884
+      "rank": 1,
+      "chunk_id": "5b447d12ea045cc2",
+      "document_id": "8679f29aa218040c",
+      "retrieval_score": 0.548436,
+      "rerank_raw_score": 0.933414,
+      "rerank_normalized_score": 0.717767
     },
     {
       "query": "regra consolidacao total nucleo estavel",
-      "new_doc_hits": 3,
-      "top_hits": [
-        {
-          "rank": 1,
-          "chunk_id": "6bd66f86d13f755c",
-          "document_id": "0663d3e36c405ef1",
-          "dense_score": 0.596184,
-          "text_preview": "Resumo de Consolidação Total 1.2\n\nEstado público validado: A",
-          "source": "incremental_index"
-        },
-        {
-          "rank": 2,
-          "chunk_id": "edd0e98f55481fb0",
-          "document_id": "f6c81eaeda645907",
-          "dense_score": 0.544852,
-          "text_preview": "Regra de Consolidação Total 1.2\n\nA raiz operacional C:\\ATLAS",
-          "source": "incremental_index"
-        }
-      ],
-      "reranker_used": true,
-      "rerank_top": {
-        "chunk_id": "6bd66f86d13f755c",
-        "rerank_score": 0.945414
-      },
-      "strategy": "BGE-M3 dense (incremental) + bge-reranker-v2-m3",
-      "top_original_score": 0.596184
+      "rank": 1,
+      "chunk_id": "6bd66f86d13f755c",
+      "document_id": "0663d3e36c405ef1",
+      "retrieval_score": 0.596184,
+      "rerank_raw_score": 0.945414,
+      "rerank_normalized_score": 0.720192
     }
   ],
-  "semantic_success": "5/5",
-  "reranker_proven": true
+  "retrieval_success": "5/5",
+  "evidence_success": "5/5",
+  "retrieval_type": "DENSE+RERANKER",
+  "bge": "BAAI/bge-m3",
+  "reranker": "BAAI/bge-reranker-v2-m3"
 }

@@ -1,75 +1,39 @@
 {
-  "schema": "ia_milk.maxcap_manifest.v1",
-  "baseline_head": "1319b3e",
+  "schema": "ia_milk.maxcap_manifest.v2",
+  "baseline_head": "4743b78",
   "final_commit": "pending",
-  "files_changed": [
-    "src/milk_ai/execution_graph_and_compliance.py (NEW)",
-    "tests/test_execution_graph_and_compliance.py (NEW)",
-    "milk_maxcap_proof.py (NEW)",
-    "state/capability_mesh.json (NEW)",
-    "state/maximum_capability_proof.json (NEW)",
-    "state/maximum_capability_manifest.json (NEW)",
-    "state/maxcap_proof/ (NEW — proof artifacts)"
-  ],
-  "capabilities_discovered": 36,
-  "capabilities_wired": 34,
-  "capabilities_degraded_blocked": {
-    "AVAILABLE_NOT_WIRED": ["adapter:box", "adapter:base44"],
-    "DEGRADED": [],
-    "BLOCKED": []
-  },
   "gaps_closed": [
-    "ExecutionGraphRouter: SINGLE/CASCADE/PARALLEL/ENSEMBLE/VERIFY/CONSENSUS/FALLBACK modes",
-    "EvidenceReconciliation: deduplication, conflict detection, independence, quality scoring",
-    "ComplianceKernel: 9 profiles (EU AI Act, RGPD, Interoperable Europe Act, EIF, ARPGU, iAP/RNID, FIWARE/NGSI-LD, INSPIRE, WCAG 2.2)",
-    "ContextualAdaptivePolicy: context-band Thompson Sampling wrapping existing AdaptivePolicy",
-    "SemanticProjection: JSON-LD/RDF/PROV-O/NGSI-LD entity mapping with FIWARE Smart Data Models",
-    "SovereignCore: verified external_dependencies_required_for_core=[]"
+    "Pydantic strict contracts (12)",
+    "Concurrency-safe persistence",
+    "Contextual reward normalization + propensity",
+    "Claim-based reconciliation",
+    "Provenance ledger hash chain",
+    "Hardened ActionGate (SSRF/path/injection/idempotency)",
+    "Extended compliance (8 new profiles)",
+    "SHACL shapes (4 entities)",
+    "Resource-aware router",
+    "SBOM"
   ],
   "gaps_remaining": [
-    "ZENODO_TOKEN not available locally",
-    "GOLD_QRELS human validation pending",
-    "Docker Desktop not running",
-    "Codeberg repo not created",
-    "PTServidor SSH access not configured",
-    "Pydantic strict contracts not yet applied (dataclass-based, compatible)",
-    "Concurrency-safe atomic writes for policy (not yet implemented)"
+    "ZENODO_TOKEN",
+    "GOLD_QRELS",
+    "Docker",
+    "Codeberg",
+    "PTServidor SSH",
+    "Fabric lifecycle no safe reload"
   ],
-  "execution_modes": ["SINGLE","CASCADE","PARALLEL","ENSEMBLE","VERIFY","CONSENSUS","FALLBACK"],
-  "contextual_learning": {
-    "algorithm": "context-band Thompson Sampling (Beta per capability per context band)",
-    "features": ["task_family","territory","modality","source_types","risk_class","privacy_class","freshness","evidence_level","action_required","complexity","available_resources"],
-    "reward_normalization": "reward[-1,1] -> normalized[0.01,0.99] via (r+1)/2 clamped",
-    "offline_evaluation_ready": true
-  },
-  "schemas": {
-    "compliance": "compliance.v1",
-    "semantic": "semantic.v1",
-    "capability_mesh": "ia_milk.capability_mesh.v1"
-  },
-  "semantic_interop": {
-    "formats": ["JSON-LD", "RDF", "PROV-O", "NGSI-LD"],
-    "entities": 13,
-    "fiware_required": false,
-    "cnmd_mapping": "territory, parish, municipality, person, organisation, cultural_asset, event"
-  },
-  "compliance_profiles": ["eu_ai_act","rgpd","interoperable_europe_act","eif","arpgu","iap_rnid","fiware_ngsi_ld","inspire","wcag_2_2"],
   "tests": {
-    "new_tests": 39,
-    "new_tests_passed": 39,
-    "existing_tests": 69,
-    "existing_tests_passed": 69,
-    "total": 108,
-    "total_passed": 108,
+    "new": 50,
+    "existing": 108,
+    "total": 158,
+    "passed": 158,
     "regressions": 0
   },
-  "proof_trace_id": "f53896bb5518485e",
-  "runtime_health": {
-    "gpt_oss": "healthy",
-    "fabric": "healthy",
-    "ollama": "healthy (llama3.2:3b, mistral:latest)",
-    "gpu": "RTX 3080 10GB"
+  "runtime_activation": {
+    "status": "BLOCKED",
+    "reason": "Fabric has no graceful shutdown mechanism"
   },
-  "corpus_integrity_scope": "verified by manifest/hash, not rehashed",
+  "provenance_verified": true,
+  "offline_core": true,
   "external_dependencies_required_for_core": []
 }

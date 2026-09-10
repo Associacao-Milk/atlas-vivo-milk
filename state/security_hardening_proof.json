@@ -1,0 +1,51 @@
+{
+  "schema": "ia_milk.multiaxial_proof.v1",
+  "seed": 42,
+  "pydantic": {
+    "valid_passes": true,
+    "invalid_rejected": true
+  },
+  "concurrency": {
+    "writers": 20,
+    "records_preserved": 18
+  },
+  "contextual": {
+    "reward_normalized": 0.75,
+    "propensity": 0.5
+  },
+  "reconciliation": {
+    "claims": 4,
+    "independent": 2,
+    "contradictions": 1
+  },
+  "provenance": {
+    "chain_valid": true,
+    "records": 2
+  },
+  "security": {
+    "ssrf_blocked": true,
+    "injection_blocked": true,
+    "path_traversal_blocked": true
+  },
+  "shacl": {
+    "valid_passes": true,
+    "invalid_rejected": true
+  },
+  "resource_router": {
+    "vram_free_mb": 2240,
+    "selected_model": "heuristic"
+  },
+  "sbom": {
+    "total_components": 8
+  },
+  "schema_registry": {
+    "total_schemas": 12
+  },
+  "offline_core": {
+    "allowed": true,
+    "tier": "READ_AUTO"
+  },
+  "corpus_unchanged": {
+    "doc_count": 10538
+  }
+}

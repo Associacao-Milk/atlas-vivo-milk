@@ -677,6 +677,168 @@
           "quadro de justificação"
         ],
         "aplicacao_milk": "justificação para equipamentos culturais de proximidade"
+      },
+      "freire": {
+        "tipo": "pedagogo",
+        "campo": "educação crítica",
+        "conceitos": [
+          "pedagogia da autonomia",
+          "educação bancária vs libertadora",
+          "interroga"
+        ],
+        "obra": "Pedagogia da Autonomia (1996)",
+        "aplicacao_milk": "Freire interroga — a contribuição não é depositada, é problematizada"
+      },
+      "plínio_marcos": {
+        "tipo": "dramaturgo",
+        "campo": "teatro brasileiro",
+        "conceitos": [
+          "drama social",
+          "marginalidade urbana",
+          " Navalha na Carne"
+        ],
+        "aplicacao_milk": "a voz da margem que o Atlas quer ouvir"
+      },
+      "poesia_concreta": {
+        "tipo": "movimento",
+        "campo": "poesia visual",
+        "conceitos": [
+          "o objecto como suporte",
+          "palavra-objeto",
+          "espacialidade do texto"
+        ],
+        "aplicacao_milk": "a embalagem conta — o suporte material é parte do poema"
+      },
+      "geracao_mimeografo": {
+        "tipo": "movimento",
+        "campo": "literatura brasileira",
+        "conceitos": [
+          "circuito alternativo",
+          "mimeógrafo como ferramenta",
+          "clandestinidade criativa"
+        ],
+        "aplicacao_milk": "Atlas como circuito alternativo de difusão cultural"
+      },
+      "songline": {
+        "tipo": "referencia_ancestral",
+        "campo": "cartografia aborígene",
+        "conceitos": [
+          "caminhos do canto",
+          "território como melodia",
+          "navegação ancestral"
+        ],
+        "aplicacao_milk": "Songline guia — o território é cantado, não apenas mapeado"
+      },
+      "grio": {
+        "tipo": "referencia_ancestral",
+        "campo": "tradição oral africana",
+        "conceitos": [
+          "guardião da memória",
+          "transmissão oral",
+          "linhagem do saber"
+        ],
+        "aplicacao_milk": "Griô vocaliza — a memória é vocalizada, não arquivada"
+      },
+      "quipu": {
+        "tipo": "referencia_ancestral",
+        "campo": "sistema inca",
+        "conceitos": [
+          "nós como escritura",
+          "registro sem escrita",
+          "contar amarrando"
+        ],
+        "aplicacao_milk": "Quipu mede — a medida é física, não digital"
+      },
+      "ogham": {
+        "tipo": "referencia_ancestral",
+        "campo": "escrita celta",
+        "conceitos": [
+          "linhas como letras",
+          "cifra na pedra",
+          "escrita ancestral"
+        ],
+        "aplicacao_milk": "Ogham cifra — a inscrição é material, na pedra"
+      },
+      "cosmic_flow_motor": {
+        "tipo": "motor_sistemico",
+        "campo": "sistema MILK",
+        "conceitos": [
+          "remistura a cada 30 dias",
+          "referenciais operados não citados",
+          "fragmentação em 5 partes",
+          "reinvenção permanente"
+        ],
+        "aplicacao_milk": "motor central do FALArte — tudo que entra passa pelo Cosmic Flow"
+      },
+      "pedagogia_autonomia": {
+        "tipo": "metodologia",
+        "campo": "educação",
+        "conceitos": [
+          "autonomia do aprendente",
+          "ensinar não é transferir conhecimento",
+          "a curiosidade como motor"
+        ],
+        "aplicacao_milk": "cada freguesia tem uma dinâmica diferente — a pessoa não recebe, participa"
+      },
+      "ludoterapia": {
+        "tipo": "metodologia",
+        "campo": "psicologia",
+        "conceitos": [
+          "jogo como cura",
+          "expressão livre",
+          "brincar como linguagem"
+        ],
+        "aplicacao_milk": "as 10 mecânicas são lúdicas — o jogo é a forma de participação"
+      },
+      "teatro_fórum": {
+        "tipo": "metodologia",
+        "campo": "teatro",
+        "conceitos": [
+          "espect-ator",
+          "intervenção do público",
+          "ensaiar a revolução"
+        ],
+        "aplicacao_milk": "a interface é interactiva — só funciona com o toque humano"
+      },
+      "museu_da_lingua_portuguesa": {
+        "tipo": "referencia_museologica",
+        "campo": "museologia",
+        "conceitos": [
+          "museu interativo da língua",
+          "imaterialidade do património",
+          "experiência imersiva"
+        ],
+        "aplicacao_milk": "referência para museus que querem licenciar as dinâmicas FALArte"
+      },
+      "museu_do_futebol_sp": {
+        "tipo": "referencia_museologica",
+        "campo": "museologia",
+        "conceitos": [
+          "museu emocional",
+          "narrativa do visitante",
+          "interactividade total"
+        ],
+        "aplicacao_milk": "referência de museu dinâmico e interactivo"
+      },
+      "contraculturas": {
+        "tipo": "movimento",
+        "campo": "cultura",
+        "conceitos": [
+          "resistência cultural",
+          "margem criativa",
+          "subversão estética"
+        ],
+        "aplicacao_milk": "Atlas como espaço de contracultura — não normalizar, não hierarquizar"
+      },
+      "brincadeiras_ancestrais": {
+        "tipo": "patrimonio",
+        "campo": "folclore",
+        "conceitos": [
+          "jogos tradicionais",
+          "transmissão intergeracional",
+          "brincar como resistência"
+        ],
+        "aplicacao_milk": "as mecânicas curatoriais recuperam brincadeiras ancestrais como forma de participação"
       }
     },
     "arestas_tipadas": [
@@ -901,6 +1063,96 @@
         "tipo": "afinidade_estrutural",
         "destino": "governanca_interpretativa",
         "evidencia": "sistema de moderação e validação antes da publicação"
+      },
+      {
+        "origem": "freire",
+        "tipo": "influência_documentada",
+        "destino": "boal",
+        "evidencia": "ambos trabalham a autonomia do sujeito — Freire na educação, Boal no teatro"
+      },
+      {
+        "origem": "freire",
+        "tipo": "eixo_investigação",
+        "destino": "pedagogia_autonomia",
+        "evidencia": "a contribuição não é depositada, é problematizada"
+      },
+      {
+        "origem": "cosmic_flow_motor",
+        "tipo": "manifesta_se_como",
+        "destino": "camada:publica",
+        "evidencia": "tudo que entra no Atlas passa pelo Cosmic Flow"
+      },
+      {
+        "origem": "cosmic_flow_motor",
+        "tipo": "afinidade_estrutural",
+        "destino": "deleuze_guattari",
+        "evidencia": "remistura como devir; referenciais operados, não citados"
+      },
+      {
+        "origem": "songline",
+        "tipo": "afinidade_estrutural",
+        "destino": "schafer",
+        "evidencia": "ambos mapeiam o território como som/canto"
+      },
+      {
+        "origem": "grio",
+        "tipo": "afinidade_estrutural",
+        "destino": "doc_sussurro",
+        "evidencia": "tradição oral vocalizada — o podcast como griot contemporâneo"
+      },
+      {
+        "origem": "poesia_concreta",
+        "tipo": "afinidade_estrutural",
+        "destino": "baudelaire",
+        "evidencia": "ambos trabalham a materialidade da palavra — Baudelaire na rua, Poesia Concreta no objecto"
+      },
+      {
+        "origem": "geracao_mimeografo",
+        "tipo": "afinidade_estrutural",
+        "destino": "contraculturas",
+        "evidencia": "circuito alternativo de difusão como resistência cultural"
+      },
+      {
+        "origem": "ludoterapia",
+        "tipo": "afinidade_estrutural",
+        "destino": "teatro_fórum",
+        "evidencia": "ambos usam o jogo/teatro como forma de expressão livre"
+      },
+      {
+        "origem": "museu_da_lingua_portuguesa",
+        "tipo": "afinidade_estrutural",
+        "destino": "museu_do_futebol_sp",
+        "evidencia": "ambos são museus dinâmicos interactivos — referência para licenciamento"
+      },
+      {
+        "origem": "plínio_marcos",
+        "tipo": "afinidade_estrutural",
+        "destino": "foucault",
+        "evidencia": "ambos trabalham a margem — Plínio Marcos no palco, Foucault na teoria"
+      },
+      {
+        "origem": "brincadeiras_ancestrais",
+        "tipo": "afinidade_estrutural",
+        "destino": "ludoterapia",
+        "evidencia": "jogos tradicionais como forma de expressão e cura"
+      },
+      {
+        "origem": "cosmic_flow_motor",
+        "tipo": "dispositivo_aplicável_em",
+        "destino": "projeto:campo_possivel",
+        "evidencia": "Cosmic Flow aplicado na escola aberta — dinâmicas a cada 30 dias"
+      },
+      {
+        "origem": "ogham",
+        "tipo": "afinidade_estrutural",
+        "destino": "doc_toponomastica_qr",
+        "evidencia": "inscrição material no território — QR como Ogham contemporâneo"
+      },
+      {
+        "origem": "quipu",
+        "tipo": "afinidade_estrutural",
+        "destino": "evidence_fabric",
+        "evidencia": "registro sem escrita — Quipu como proto-EvidenceBundle"
       }
     ]
   },
@@ -1336,6 +1588,66 @@
         "obra": "Carta Administrativa Oficial de Portugal",
         "ano": 2024,
         "tema": "fonte geográfica de referência para limites administrativos"
+      },
+      {
+        "nome": "Freire, Paulo",
+        "obra": "Pedagogia da Autonomia",
+        "ano": 1996,
+        "tema": "educação libertadora, autonomia do aprendente, ensinar não é transferir"
+      },
+      {
+        "nome": "Plínio Marcos",
+        "obra": "Navalha na Carne",
+        "ano": 1967,
+        "tema": "drama social, marginalidade urbana, teatro da margins"
+      },
+      {
+        "nome": "Poesia Concreta (Noigandres)",
+        "obra": "Manifesto da Poesia Concreta",
+        "ano": 1958,
+        "tema": "palavra-objeto, espacialidade do texto, objecto como suporte"
+      },
+      {
+        "nome": "Geração Mimeógrafo",
+        "obra": "Literatura Marginal (anos 70-80)",
+        "ano": 1975,
+        "tema": "circuito alternativo, mimeógrafo como ferramenta, clandestinidade criativa"
+      },
+      {
+        "nome": "Museu da Língua Portuguesa",
+        "obra": "Arquitectura museológica interactiva",
+        "ano": 2006,
+        "tema": "museu interativo da língua, imaterialidade do património"
+      },
+      {
+        "nome": "Museu do Futebol (SP)",
+        "obra": "Museu emocional e interativo",
+        "ano": 2008,
+        "tema": "narrativa do visitante, interactividade total"
+      },
+      {
+        "nome": "Songlines (aborígenes australianos)",
+        "obra": "Caminhos do canto",
+        "ano": -40000,
+        "tema": "território como melodia, navegação ancestral"
+      },
+      {
+        "nome": "Griots (África Ocidental)",
+        "obra": "Tradição oral e linhagem do saber",
+        "ano": -1000,
+        "tema": "guardião da memória, transmissão oral"
+      },
+      {
+        "nome": "Quipu (Inca)",
+        "obra": "Sistema de nós",
+        "ano": -1400,
+        "tema": "nós como escritura, registro sem escrita"
+      },
+      {
+        "nome": "Ogham (Celta)",
+        "obra": "Escrita em pedra",
+        "ano": -400,
+        "tema": "linhas como letras, cifra na pedra"
       }
     ],
     "politicas_verificadas": [
@@ -2118,5 +2430,179 @@
     "uso_comum_ordinario": "fruição pública do domínio público, preservada e rastreável juridicamente",
     "uso_privativo_potencial": "ocupação que exige título, autoridade competente identificada e prazo",
     "principio": "O Atlas não pode prometer uma intervenção física sem identificar o regime de uso do espaço em questão"
+  },
+  "falarte": {
+    "nome": "FALArte — Núcleo de Pesquisa · Atlas Vivo do Território",
+    "missao": "Arquivo vivo do território. Cada contribuição passa pelo Cosmic Flow — motor de remistura que, a cada 30 dias, embaralha os referenciais teóricos activos e gera uma dinâmica nova para cada freguesia.",
+    "email": "somostodospossiveis@gmail.com",
+    "orcid_responsavel": "0009-0007-6892-6570",
+    "principio": "Os referenciais não são citados — são operados: Freire interroga, Deleuze desterritorializa, a Songline guia, o Griô vocaliza, o Quipu mede, o Ogham cifra.",
+    "fragmentacao": "Cada imagem/texto/som que entra é fragmentado em 5 partes e devolvido à curadoria como peças soltas — que dobram, voam, colam, viram aviões, espelham, ecoam.",
+    "estetica": "Como um casaco Chanel: simples, impecável, inteligente, inovado que se torna clássico porque não morre, porque se torna necessário."
+  },
+  "cosmic_flow": {
+    "nome": "Cosmic Flow — Motor de Remistura Curatorial",
+    "ciclo_dias": 30,
+    "mecanica": "A cada 30 dias, embaralha os referenciais teóricos activos e gera uma dinâmica nova para cada freguesia. Os referenciais não são citados — são operados.",
+    "fragmentacao_5_partes": "Cada contribuição (imagem, texto, som) é fragmentada em 5 partes e devolvida à curadoria como peças soltas.",
+    "operacoes_curatoriais": [
+      "dobrar",
+      "voar (aviões de papel)",
+      "colar",
+      "espelhar",
+      "ecoar",
+      "misturar",
+      "virar",
+      "entrecruzar"
+    ],
+    "reinvencao": "As dinâmicas se reinventam e inventam, com engenharia de se misturarem a cada 30 dias formando sempre dinâmicas novas. Tudo que entra no Atlas primeiro passa pelo Cosmic Flow.",
+    "referenciais_operados": {
+      "freire": "interroga (pedagogia da autonomia)",
+      "deleuze": "desterritorializa (rizoma, devir)",
+      "songline": "guia (cartografia ancestral dos aborígenes australianos)",
+      "grio": "vocaliza (tradição oral africana, guardião da memória)",
+      "quipu": "mede (sistema de nós inca — registro sem escrita)",
+      "ogham": "cifra (escrita ancestral celta em linhas)"
+    }
+  },
+  "mecanicas_curatoriais_falarte": [
+    {
+      "id": "01_lugar_escondido",
+      "nome": "O Lugar Escondido",
+      "subtitulo": "Topografia do segredo",
+      "instrucao": "Escolhe um ponto exacto — um lugar que só tu conheces. Tira uma foto ou faz um desenho. Não precisas explicar nada. O lugar fala por si.",
+      "modalidade": "image+territory",
+      "tipo_contribuicao": "foto_ou_desenho",
+      "referencial_teorico": "cartografia_nao_representacional — o lugar secreto como acto de revelação pessoal do território"
+    },
+    {
+      "id": "02_30_dias",
+      "nome": "30 Dias, o Mesmo Lugar",
+      "subtitulo": "Tempo como matéria",
+      "instrucao": "Escolhe um lugar com sentido para ti. Fotografia-o durante 30 dias, ao mesmo sítio, se possível à mesma hora. Quando o Atlas receber o teu ciclo completo, viras poeta do teu território.",
+      "modalidade": "image+territory+body",
+      "tipo_contribuicao": "foto_diaria",
+      "referencial_teorico": "schafer — soundwalk temporal; Deleuze — devir como repetição diferencial"
+    },
+    {
+      "id": "03_antigo_e_novo",
+      "nome": "O Mais Antigo e o Mais Novo",
+      "subtitulo": "Arqueologia doméstica",
+      "instrucao": "Procura em casa o objecto mais antigo que tens e o mais novo. Fotografa-os lado a lado, num só enquadramento. Não precisam de ser importantes — a porta da cozinha é arqueologia.",
+      "modalidade": "image+text",
+      "tipo_contribuicao": "foto_unico",
+      "referencial_teorico": "wabi_sabi — beleza do imperfeito e do desigual; Foucault — arqueologia dos saberes domésticos"
+    },
+    {
+      "id": "04_embalagem_conta",
+      "nome": "A Embalagem Conta",
+      "subtitulo": "Poesia do quotidiano",
+      "instrucao": "Pega numa embalagem — caixa, lata, papel de rebuçado, pote, frasco. Escreve uma história nela ou a partir dela. Fotografa o resultado. A embalagem é o palco, tu és o dramaturgo.",
+      "modalidade": "image+text",
+      "tipo_contribuicao": "foto_texto",
+      "referencial_teorico": "poesia_concreta — o objecto como suporte; Geração Mimeógrafo — circuito alternativo de difusão"
+    },
+    {
+      "id": "05_som_aqui",
+      "nome": "O Som Que Só Existe Aqui",
+      "subtitulo": "Fonografia do lugar",
+      "instrucao": "Qual é o som que só se ouve na tua zona? O comboio das 6h, o sino rachado, a corrente do moinho, a vizinha que canta. Grava ou descreve. Faz o Atlas ouvir o que os mapas não têm.",
+      "modalidade": "sound+text+territory",
+      "tipo_contribuicao": "audio_ou_descricao",
+      "referencial_teorico": "schafer — soundscape, soundwalk; Schaeffer — objecto sonoro, escuta reduzida"
+    },
+    {
+      "id": "06_o_que_resiste",
+      "nome": "O Que Ainda Resiste",
+      "subtitulo": "Etnografia da persistência",
+      "instrucao": "Um sapateiro, um amolador de facas, um vendedor de algodão doce, uma mercearia seca. O que ainda existe na tua zona que devia ter desaparecido mas teimosamente continua? Fotografa. Regista. Diz o nome.",
+      "modalidade": "image+text+territory",
+      "tipo_contribuicao": "foto_texto",
+      "referencial_teorico": "Bourdieu — habitus, práticas que persistem; Foucault — microfísica do poder quotidiano"
+    },
+    {
+      "id": "07_palavras_desapareceram",
+      "nome": "Palavras Que Desapareceram",
+      "subtitulo": "Arquivo da língua viva",
+      "instrucao": "Quais as palavras que já não se ouvem dizer na tua zona? Gírias, alcunhas de lugares, modos de dizer — o que ficou no passado da boca. Escreve-as. Diz o que significavam.",
+      "modalidade": "text+sound",
+      "tipo_contribuicao": "texto",
+      "referencial_teorico": "Bakhtin — dialogismo, pluralidade de vozes; Lacan — o real que se perde na linguagem"
+    },
+    {
+      "id": "08_nao_foi_apagado",
+      "nome": "O Que Ainda Não Foi Apagado",
+      "subtitulo": "Arqueologia do visível",
+      "instrucao": "Uma azulejo partido mas ainda lá. Uma data gravada numa pedra. Um logótipo de outrora. Fotografa o que a história não conseguiu apagar ainda.",
+      "modalidade": "image+territory",
+      "tipo_contribuicao": "foto",
+      "referencial_teorico": "Foucault — arqueologia do saber; wabi_sabi — beleza do que resiste ao tempo"
+    },
+    {
+      "id": "09_so_na_memoria",
+      "nome": "Só Existe na Tua Memória",
+      "subtitulo": "Cartografia do invisível",
+      "instrucao": "Desenha algo que só existe dentro de ti. Não precisa de ser bonito — precisa de ser verdadeiro. O Atlas aceita papéis de caderno, guardanapos, fotografias de buracos no chão.",
+      "modalidade": "image+text+body",
+      "tipo_contribuicao": "desenho_ou_imagem_interior",
+      "referencial_teorico": "Husserl — intencionalidade, noema; Deleuze — dobra, interior/exterior"
+    },
+    {
+      "id": "10_remetente_ausente",
+      "nome": "Remetente Ausente",
+      "subtitulo": "Postal para o cosmos",
+      "instrucao": "Escreve a carta que nunca foi entregue. Para quem já não está. Para quem nunca vai ler. Para o tempo. Nós enviamos para o espaço. Vira partículas que um dia alcançam o remetente ausente.",
+      "modalidade": "text+sound",
+      "tipo_contribuicao": "texto_carta",
+      "referencial_teorico": "Camus — o absurdo, o mito de Sísifo; Baudelaire — spleen, melancolia; Rilke — cartas a um jovem poeta",
+      "especial": "Carta pode ser submetida sem qualquer dado associado — anonimato total. Direito de remoção permanente. Tratada com integridade emocional absoluta.",
+      "confirmacao": "A carta foi lançada. Está a viajar. Partículas em movimento. Um dia alcançam o remetente ausente."
+    }
+  ],
+  "rgpd_formulario_falarte": {
+    "idade_minima": 13,
+    "lei_referencia": "Lei n.º 58/2019 (RGPD), Art. 16 — consentimento de menores",
+    "rgpd_regulamento": "Reg. UE 2016/679",
+    "campos_obrigatorios": [
+      "confirmação de idade >= 13 anos",
+      "consentimento para processamento curatorial",
+      "consciência do direito de remoção a qualquer momento"
+    ],
+    "opcoes_autoria": [
+      "nome real",
+      "nome inventado (alcunha)",
+      "anónimo total"
+    ],
+    "opcoes_publicacao": [
+      "publicação integral",
+      "trechos apenas",
+      "não publicar — só arquivo"
+    ],
+    "direito_remocao": "somostodospossiveis@gmail.com — remoção a qualquer momento, sem justificação",
+    "proibicao": "Não incluir rostos identificáveis nas imagens. Não incluir vozes identificáveis sem consentimento.",
+    "blindagem_legal": "Tudo que tem que ficar nesse formulário para que a pessoa escolha: se quer anonimato, seu nome, ou inventar um. Se aceita ser publicado integralmente ou trechos. Se quer que retire a qualquer momento. Texto de informação das leis portuguesas e UE."
+  },
+  "falarte_codigo": {
+    "tipo": "HTML/CSS/JS autónomo",
+    "ficheiro_destino": "deploy/atlas-public/falarte.html",
+    "descricao": "Interface completa das 10 mecânicas curatoriais com Cosmic Flow de fundo, formulário RGPD blindado, navegação por mecânicas, confirmações personalizadas, grelha de 30 dias, carta sem registo para Remetente Ausente",
+    "css_variables": {
+      "bg": "#0a0a0a",
+      "accent": "#e8c547",
+      "accent2": "#c45c2a",
+      "font_body": "IBM Plex Mono",
+      "font_display": "Playfair Display"
+    },
+    "componentes": [
+      "Cosmic Flow canvas (60 partículas, movimento contínuo, fundo)",
+      "Seletor de 10 mecânicas (navegação por botões)",
+      "Upload zona (imagem/áudio com capture=environment)",
+      "Grelha 30 dias (click para registar/desregistar)",
+      "Carta sem registo (Remetente Ausente — anonimato total)",
+      "Bloco legal RGPD (consentimento, idade, publicação, remoção)",
+      "Opções de autoria (nome/alcunha/anónimo)",
+      "Opções de publicação (integral/trechos/não publicar)",
+      "Confirmações personalizadas por mecânica"
+    ]
   }
 }

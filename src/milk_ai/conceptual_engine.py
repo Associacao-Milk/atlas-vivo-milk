@@ -309,6 +309,33 @@ class MultimodalRelationalEngine:
                 self._add_edge(cond, "manifesta_se_como", "camada:publica",
                                modality="territory")
 
+        # --- Núcleo FALArte: 10 mecânicas curatoriais ---
+        for mec in fw.get("mecanicas_curatoriais_falarte", []):
+            mid = f"mec:{mec['id']}"
+            self._add_node(mid, "mecanica_curatorial",
+                           nome=mec["nome"], subtitulo=mec.get("subtitulo", ""),
+                           instrucao=mec.get("instrucao", ""),
+                           modalidade=mec.get("modalidade", "text"))
+            self._add_edge(mid, "manifesta_se_como", "camada:publica",
+                           modality=mec.get("modalidade", "text").split("+")[0])
+            # ligar ao referencial teórico
+            ref = mec.get("referencial_teorico", "")
+            for ref_id in self._nodes:
+                if ref_id in ref:
+                    self._add_edge(mid, "referencia_bibliograficamente", ref_id)
+
+        # --- Cosmic Flow motor ---
+        cf = fw.get("cosmic_flow", {})
+        if cf:
+            self._add_node("motor:cosmic_flow", "motor_sistemico",
+                           nome="Cosmic Flow", ciclo_dias=cf.get("ciclo_dias", 30))
+            self._add_edge("motor:cosmic_flow", "manifesta_se_como", "camada:publica")
+            # referenciais operados
+            for ref_key, ref_action in cf.get("referenciais_operados", {}).items():
+                if ref_key in self._nodes:
+                    self._add_edge("motor:cosmic_flow", "afinidade_estrutural", ref_key,
+                                   evidence=ref_action)
+
     # --- Queries relacionais ---
 
     def nodes_by_type(self, node_type: str) -> list[dict[str, Any]]:

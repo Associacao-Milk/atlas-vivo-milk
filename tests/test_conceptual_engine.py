@@ -313,3 +313,58 @@ class TestDossieTerritorial:
         engine = MultimodalRelationalEngine()
         assert engine.node_count >= 80
         assert engine.edge_count >= 70
+
+
+class TestFALArte:
+    def test_falarte_present(self):
+        fw = load_framework()
+        assert "falarte" in fw
+        assert "Cosmic Flow" in fw.get("cosmic_flow", {}).get("nome", "")
+
+    def test_ten_mecanicas_curatoriais(self):
+        engine = MultimodalRelationalEngine()
+        mecs = engine.nodes_by_type("mecanica_curatorial")
+        assert len(mecs) >= 10
+
+    def test_cosmic_flow_motor(self):
+        engine = MultimodalRelationalEngine()
+        motors = [n for n in engine.nodes_by_type("motor_sistemico") if "cosmic" in n.get("nome","").lower()]
+        assert len(motors) >= 1
+
+    def test_rgpd_formulario(self):
+        fw = load_framework()
+        assert "rgpd_formulario_falarte" in fw
+        assert fw["rgpd_formulario_falarte"]["idade_minima"] == 13
+        assert "Lei n.º 58/2019" in fw["rgpd_formulario_falarte"]["lei_referencia"]
+
+    def test_freire_node(self):
+        engine = MultimodalRelationalEngine()
+        nb = engine.neighbors("freire")
+        assert len(nb) >= 2  # connects to boal and pedagogia_autonomia
+
+    def test_remetente_ausente(self):
+        fw = load_framework()
+        mecs = fw["mecanicas_curatoriais_falarte"]
+        ra = [m for m in mecs if "remetente" in m["id"].lower()]
+        assert len(ra) == 1
+        assert "carta" in ra[0]["especial"].lower()
+
+    def test_referenciais_operados(self):
+        fw = load_framework()
+        refs = fw["cosmic_flow"]["referenciais_operados"]
+        assert "freire" in refs
+        assert "deleuze" in refs
+        assert "songline" in refs
+        assert "grio" in refs
+        assert "quipu" in refs
+        assert "ogham" in refs
+
+    def test_museu_references(self):
+        engine = MultimodalRelationalEngine()
+        museus = engine.nodes_by_type("referencia_museologica")
+        assert len(museus) >= 2
+
+    def test_falarte_codigo(self):
+        fw = load_framework()
+        assert "falarte_codigo" in fw
+        assert fw["falarte_codigo"]["ficheiro_destino"] == "deploy/atlas-public/falarte.html"

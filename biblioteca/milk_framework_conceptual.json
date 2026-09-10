@@ -475,6 +475,208 @@
           "proximidade visual"
         ],
         "aplicacao_milk": "visualização tridimensional de dados culturais; proximidade semântica vira distância visual"
+      },
+      "cartografia_nao_representacional": {
+        "tipo": "metodo",
+        "campo": "cartografia",
+        "conceitos": [
+          "rastreio",
+          "toque",
+          "pouso",
+          "reconhecimento atento"
+        ],
+        "aplicacao_milk": "o cartógrafo constrói procedimentos no decurso da habitação do território; nenhuma leitura é definitiva"
+      },
+      "densidade_relacional": {
+        "tipo": "indicador",
+        "campo": "análise territorial",
+        "conceitos": [
+          "índice composto",
+          "entidades culturais",
+          "associações vivas",
+          "não equivalente a densidade demográfica"
+        ],
+        "formula": "IR = (Ec · Pa · Av) / (D · r)",
+        "aplicacao_milk": "territórios com índice baixo são prioritários para intervenção; índice alto para articulação em rede. Usar cor como pista, não como sentença."
+      },
+      "dominio_publico": {
+        "tipo": "juridico",
+        "campo": "direito administrativo",
+        "conceitos": [
+          "uso comum ordinário",
+          "uso privativo potencial",
+          "fruição pública",
+          "reversibilidade"
+        ],
+        "aplicacao_milk": "toda proposta mapeia autoridade competente e grau de reversibilidade"
+      },
+      "silencio_territorial": {
+        "tipo": "condicao_territorial",
+        "campo": "leitura territorial",
+        "conceitos": [
+          "ausência de dados",
+          "campo de criação em potência",
+          "não é fracasso"
+        ],
+        "aplicacao_milk": "silêncio é lido como pergunta, não como diagnóstico de défice"
+      },
+      "tensao_territorial": {
+        "tipo": "condicao_territorial",
+        "campo": "leitura territorial",
+        "conceitos": [
+          "sobreposição de usos",
+          "disputa de apropriação",
+          "exclusões documentadas"
+        ],
+        "aplicacao_milk": "tensão é lida como convite à mediação e proposta"
+      },
+      "saturacao_territorial": {
+        "tipo": "condicao_territorial",
+        "campo": "leitura territorial",
+        "conceitos": [
+          "excesso de equipamentos concentrados",
+          "deserto noutras zonas"
+        ],
+        "aplicacao_milk": "saturação é lida como campo de redistribuição e rede"
+      },
+      "vazio_ativo": {
+        "tipo": "condicao_territorial",
+        "campo": "leitura territorial",
+        "conceitos": [
+          "ausência de equipamento com presença de comunidade"
+        ],
+        "aplicacao_milk": "vazio activo gera proposta de equipamento de ancoragem"
+      },
+      "vazio_cadastral": {
+        "tipo": "condicao_territorial",
+        "campo": "leitura territorial",
+        "conceitos": [
+          "ausência de dados como dado",
+          "propulsivo"
+        ],
+        "aplicacao_milk": "ausência de dados é em si um dado relevante e propulsivo"
+      },
+      "escala_freguesia": {
+        "tipo": "escala",
+        "campo": "análise territorial",
+        "conceitos": [
+          "3092 freguesias",
+          "unidade mais próxima da experiência vivida",
+          "entidade jurídica com orçamento próprio"
+        ],
+        "aplicacao_milk": "prioridade metodológica dada à freguesia"
+      },
+      "microterritorio": {
+        "tipo": "escala",
+        "campo": "análise territorial",
+        "conceitos": [
+          "núcleo habitado",
+          "lugar e aldeia",
+          "borda e interstício",
+          "vazio cadastral"
+        ],
+        "aplicacao_milk": "sub-escalas operativas dentro da freguesia"
+      },
+      "espectro_globalizacao_patrimonial": {
+        "tipo": "critica",
+        "campo": "patrimonialização",
+        "conceitos": [
+          "hierarquias de visibilidade",
+          "invisibilização de periferias",
+          "UNESCO PCI 2003",
+          "UNESCO Diversidade 2005"
+        ],
+        "aplicacao_milk": "Atlas privilegia o não ainda documentado — vestígio situado, festa fora do MatrizPCI"
+      },
+      "principio_convite": {
+        "tipo": "etico_metodologico",
+        "campo": "leitura territorial",
+        "conceitos": [
+          "do silêncio à tensão",
+          "toda condição gera resposta de possibilidade",
+          "convite não sentença"
+        ],
+        "aplicacao_milk": "toda proposta publicada é formulada como convite ou pergunta, nunca como diagnóstico definitivo"
+      },
+      "fonte_verificavel": {
+        "tipo": "epistemologico",
+        "campo": "auditoria",
+        "conceitos": [
+          "documentação oficial existente",
+          "CAOP 2024",
+          "INE",
+          "SNIG"
+        ],
+        "aplicacao_milk": "o que já existe em documentação oficial"
+      },
+      "sinal_territorial": {
+        "tipo": "epistemologico",
+        "campo": "leitura inferida",
+        "conceitos": [
+          "leitura inferida do território",
+          "ainda não documentado",
+          "hipótese"
+        ],
+        "aplicacao_milk": "o que a leitura sugere mas não está documentado; mantido como hipótese até validação"
+      },
+      "terrastories": {
+        "tipo": "plataforma_referencia",
+        "campo": "mapeamento comunitário",
+        "conceitos": [
+          "offline-first",
+          "soberania comunitária",
+          "filtros taxonomia local"
+        ],
+        "aplicacao_milk": "arquitectura offline-first; dados restritos invisíveis no mapa público"
+      },
+      "arcgis_storymaps": {
+        "tipo": "plataforma_referencia",
+        "campo": "narrativa geolocalizada",
+        "conceitos": [
+          "bloco deslizar comparação",
+          "dashboards inteligência territorial",
+          "frames mobile-first"
+        ],
+        "aplicacao_milk": "comparação passado/presente, narrativas curtas geolocalizadas"
+      },
+      "humap": {
+        "tipo": "plataforma_referencia",
+        "campo": "mapa curado",
+        "conceitos": [
+          "moderação e validação",
+          "metadados estruturados",
+          "jornadas e linhas do tempo"
+        ],
+        "aplicacao_milk": "curadoria antes da publicação, jornadas que ligam pontos numa cronologia"
+      },
+      "mapme": {
+        "tipo": "plataforma_referencia",
+        "campo": "mapa personalizado",
+        "conceitos": [
+          "ícones estilizados",
+          "QR codes para roteiros",
+          "interface própria"
+        ],
+        "aplicacao_milk": "QR codes para roteiros físico-digitais impressos e colados no território"
+      },
+      "historypin": {
+        "tipo": "plataforma_referencia",
+        "campo": "memória fotográfica",
+        "conceitos": [
+          "sobreposição Street View",
+          "fotografias históricas",
+          "colecções comunitárias"
+        ],
+        "aplicacao_milk": "sobreposição temporal de memória fotográfica e oral"
+      },
+      "agenda_2030_ods11": {
+        "tipo": "politico",
+        "campo": "ONU",
+        "conceitos": [
+          "cidades e comunidades sustentáveis",
+          "quadro de justificação"
+        ],
+        "aplicacao_milk": "justificação para equipamentos culturais de proximidade"
       }
     },
     "arestas_tipadas": [
@@ -609,6 +811,96 @@
         "tipo": "dispositivo_aplicável_em",
         "destino": "doc_sussurro",
         "evidencia": "paisagem sonora como motor do podcast territorial"
+      },
+      {
+        "origem": "deleuze_guattari",
+        "tipo": "influência_documentada",
+        "destino": "cartografia_nao_representacional",
+        "evidencia": "território como plano de forças; mapa como instrumento aberto e redesenhável"
+      },
+      {
+        "origem": "foucault",
+        "tipo": "influência_documentada",
+        "destino": "silencio_territorial",
+        "evidencia": "dispositivo como rede de linhas de visibilidade; o invisível como campo de intervenção"
+      },
+      {
+        "origem": "cartografia_nao_representacional",
+        "tipo": "manifesta_se_como",
+        "destino": "schafer",
+        "evidencia": "rastreio, toque, pouso e reconhecimento atento são protocolo de leitura territorial e sonora"
+      },
+      {
+        "origem": "principio_convite",
+        "tipo": "afinidade_estrutural",
+        "destino": "silencio_territorial",
+        "evidencia": "não existe silêncio que não seja uma pergunta"
+      },
+      {
+        "origem": "principio_convite",
+        "tipo": "afinidade_estrutural",
+        "destino": "tensao_territorial",
+        "evidencia": "não existe tensão que não seja um convite"
+      },
+      {
+        "origem": "wabi_sabi",
+        "tipo": "afinidade_estrutural",
+        "destino": "vazio_cadastral",
+        "evidencia": "ausência de dados como beleza imperfeita; lacuna como ativo"
+      },
+      {
+        "origem": "gap_engine",
+        "tipo": "afinidade_estrutural",
+        "destino": "vazio_cadastral",
+        "evidencia": "Gap Engine identifica ausências; vazio cadastral é ausência de dados como dado propulsivo"
+      },
+      {
+        "origem": "espectro_globalizacao_patrimonial",
+        "tipo": "tensão_produtiva",
+        "destino": "fonte_verificavel",
+        "evidencia": "fonte verificável favorece o já documentado; Atlas privilegia o sinal territorial não documentado"
+      },
+      {
+        "origem": "densidade_relacional",
+        "tipo": "eixo_investigação",
+        "destino": "escala_freguesia",
+        "evidencia": "densidade relacional medida ao nível da freguesia; 3092 unidades de análise"
+      },
+      {
+        "origem": "agenda_2030_ods11",
+        "tipo": "necessidade_pública_atende",
+        "destino": "densidade_relacional",
+        "evidencia": "ODS 11 justifica equipamentos culturais de proximidade em territórios de baixa densidade"
+      },
+      {
+        "origem": "boal",
+        "tipo": "dispositivo_aplicável_em",
+        "destino": "microterritorio",
+        "evidencia": "espect-atores operam ao nível do microterritório — lugar, aldeia, borda"
+      },
+      {
+        "origem": "mapme",
+        "tipo": "dispositivo_aplicável_em",
+        "destino": "doc_toponomastica_qr",
+        "evidencia": "QR codes para roteiros físico-digitais é mecânica Mapme aplicada ao Atlas"
+      },
+      {
+        "origem": "terrastories",
+        "tipo": "afinidade_estrutural",
+        "destino": "doc_sussurro",
+        "evidencia": "offline-first e soberania comunitária aplicados à escuta territorial"
+      },
+      {
+        "origem": "historypin",
+        "tipo": "afinidade_estrutural",
+        "destino": "doc_deriva_sentido",
+        "evidencia": "sobreposição temporal de memória fotográfica e oral na deriva psicogeográfica"
+      },
+      {
+        "origem": "humap",
+        "tipo": "afinidade_estrutural",
+        "destino": "governanca_interpretativa",
+        "evidencia": "sistema de moderação e validação antes da publicação"
       }
     ]
   },
@@ -1008,6 +1300,42 @@
         "nome": "ISO 9001/27001/22301/25010/19115",
         "obra": "Normas ISO",
         "tema": "qualidade, segurança, continuidade, qualidade de software, metadados geográficos"
+      },
+      {
+        "nome": "Barros, Kastrup, Passos et al.",
+        "obra": "Pistas do Método da Cartografia",
+        "ano": 2015,
+        "tema": "protocolo do cartógrafo: rastreio, toque, pouso, reconhecimento atento"
+      },
+      {
+        "nome": "UNESCO PCI 2003",
+        "obra": "Convenção para a Salvaguarda do PCI",
+        "ano": 2003,
+        "tema": "quadro normativo PCI a nível de comunidade"
+      },
+      {
+        "nome": "UNESCO Diversidade 2005",
+        "obra": "Convenção sobre Diversidade Cultural",
+        "ano": 2005,
+        "tema": "protecção e promoção da diversidade cultural"
+      },
+      {
+        "nome": "ONU Agenda 2030 ODS 11",
+        "obra": "Cidades e Comunidades Sustentáveis",
+        "ano": 2015,
+        "tema": "quadro de justificação para equipamentos culturais de proximidade"
+      },
+      {
+        "nome": "Lei 11-A/2013",
+        "obra": "Reorganização Administrativa",
+        "ano": 2013,
+        "tema": "3092 freguesias como unidade de análise"
+      },
+      {
+        "nome": "DGT CAOP 2024",
+        "obra": "Carta Administrativa Oficial de Portugal",
+        "ano": 2024,
+        "tema": "fonte geográfica de referência para limites administrativos"
       }
     ],
     "politicas_verificadas": [
@@ -1351,5 +1679,444 @@
       "nome": "Cutover e Rollback",
       "descricao": "Redireccionar tráfego 8766→8767. Se falhar, reverter. Documentar processo."
     }
-  ]
+  ],
+  "dossie_territorial": {
+    "titulo": "Dossiê I — Camada Territorial: Motores de Leitura e Infraestrutura Física Possível",
+    "versao": "1.0",
+    "data": "2026-05-08",
+    "entidade": "Associação MILK — NIPC 518706451",
+    "preambulo": "Primeiro de três dossiês fundacionais. Cada opera sobre uma camada de leitura distinta — Territorial, Documental e Humana. A camada territorial decide onde algo acontece, o que existe, o que está ausente e o que o silêncio ou a tensão desse lugar pode gerar como possibilidade de intervenção."
+  },
+  "motores_territoriais": [
+    {
+      "id": "motor_01_situacao_territorial",
+      "nome": "Situação Territorial",
+      "campo_sistema": "situacao_territorial",
+      "camada": "interna + publicável (com revisão)",
+      "definicao": "Leitura da condição presente de um ponto ou área do território a partir de fontes auditáveis",
+      "fontes_primarias": [
+        "Geo API PT",
+        "DGT CAOP 2024",
+        "INE Censos 2021",
+        "SNIG",
+        "IHRU",
+        "PDM vigente"
+      ],
+      "detecta": [
+        "vocação actual",
+        "tipologia de ocupação dominante",
+        "regime de uso do solo",
+        "operações de reabilitação"
+      ],
+      "regra_publica": "Mostrar convite, não sentença. A situação é ponto de partida, nunca classificação definitiva.",
+      "gera_propostas": [
+        {
+          "situacao": "terreno expectante em zona urbana",
+          "possibilidade": "intervenção temporária reversível",
+          "infraestrutura": "espaço de criação efémero, feira de produtores, jardim comunitário, mural de arte pública"
+        },
+        {
+          "situacao": "edifício público devoluto",
+          "possibilidade": "reactivação patrimonial",
+          "infraestrutura": "centro interpretativo, residência artística, arquivo de memória oral, coworking cultural"
+        },
+        {
+          "situacao": "zona agrícola com abandono progressivo",
+          "possibilidade": "patrimonialização do trabalho",
+          "infraestrutura": "museu vivo de práticas agrícolas, roteiro etnográfico, escola de ofícios"
+        },
+        {
+          "situacao": "frente ribeirinha sem acesso público",
+          "possibilidade": "fruição pública bloqueada",
+          "infraestrutura": "acesso, plataforma flutuante, arte site-specific"
+        },
+        {
+          "situacao": "periferia urbana sem equipamentos 2km",
+          "possibilidade": "deserto cultural identificado",
+          "infraestrutura": "equipamento móvel, casa de cultura de proximidade, parceria escola local"
+        },
+        {
+          "situacao": "aldeia em despovoamento acelerado",
+          "possibilidade": "território em risco de amnésia",
+          "infraestrutura": "residências, arquivo oral urgente, sinalética patrimonial"
+        }
+      ]
+    },
+    {
+      "id": "motor_02_densidade_relacional",
+      "nome": "Densidade Relacional",
+      "campo_sistema": "densidade_relacional",
+      "camada": "interna + publicável (com gradiente visual)",
+      "definicao": "Medida composta da intensidade de relações culturais, associativas e simbólicas documentadas, independentemente da dimensão demográfica",
+      "fontes_primarias": [
+        "IPSS/CASES",
+        "entidades culturais NIF activo AT",
+        "candidaturas DGArtes 5 anos",
+        "Agenda Cultural municípios API",
+        "actas juntas transparência",
+        "MatrizPCI DGPC"
+      ],
+      "formula": "IR = (Ec · Pa · Av) / (D · r)",
+      "variaveis": {
+        "Ec": "entidades culturais activas",
+        "Pa": "pontuação de actividade 36 meses",
+        "Av": "associações vivas com publicação",
+        "D": "população residente",
+        "r": "raio de cobertura efectiva km"
+      },
+      "regra_publica": "Usar cor como pista, não como sentença. Mostrar gradientes, não rankings. Cor explicada e reversível.",
+      "gera_propostas": [
+        {
+          "densidade": "alta + equipamento escasso",
+          "diagnostico": "comunidade activa sem espaço",
+          "proposta": "equipamento fixo de ancoragem (casa, pavilhão, galeria)"
+        },
+        {
+          "densidade": "alta + equipamento abundante",
+          "diagnostico": "ecossistema vibrante",
+          "proposta": "programa de rede, internacionalização, residências, festival"
+        },
+        {
+          "densidade": "baixa + equipamento presente",
+          "diagnostico": "espaço subutilizado",
+          "proposta": "programa de activação, mediação cultural, escola de públicos"
+        },
+        {
+          "densidade": "baixa + sem equipamento",
+          "diagnostico": "deserto cultural activo",
+          "proposta": "intervenção de urgência: equipa móvel, biblioteca itinerante, espaço mínimo"
+        },
+        {
+          "densidade": "dados ausentes",
+          "diagnostico": "território invisível",
+          "proposta": "missão de campo prioritária: levantamento presencial urgente"
+        }
+      ]
+    },
+    {
+      "id": "motor_03_fonte_geografica",
+      "nome": "Fonte Geográfica (motor de suporte)",
+      "campo_sistema": "fonte_geografica",
+      "camada": "interna obrigatória",
+      "definicao": "Validação da fonte georreferenciada que sustenta qualquer ponto. Nenhuma coordenada entra na camada pública sem fonte e versão.",
+      "fontes_validadas": [
+        "Geo API PT (GeoJSON)",
+        "DGT CAOP 2024 (shapefile)",
+        "OSM (pontos de interesse)",
+        "Google Maps API (geocodificação)",
+        "INE (coordenadas lugares)"
+      ],
+      "regra_nao_invencao": "Qualquer ponto sem fonte verificável é marcado como hipótese e mantido na camada interna até validação. Regra de auditoria: Fonte e versão presentes?"
+    }
+  ],
+  "tipologias_infraestrutura": [
+    {
+      "id": "tipo_1_ancoragem_cultural",
+      "nome": "Equipamento Fixo de Ancoragem Cultural",
+      "descricao": "Edifício ou espaço permanente dedicado à produção, apresentação ou arquivo cultural",
+      "quando_proposta": "Alta densidade relacional sem espaço; tradição forte sem lugar de memória; comunidade artística sem condições",
+      "exemplos": [
+        "Galeria Diletante (Lisboa)",
+        "Casas do Povo reconvertidas",
+        "matadouros municipais reactivados",
+        "igrejas desafectadas com residência"
+      ],
+      "regime_juridico": "Concessão de uso de bem do domínio público; protocolo câmara-associação; IHRU reabilitação",
+      "financiamento": [
+        "PDR2030/PRODER",
+        "PRR reabilitação urbana e cultura",
+        "Fundos Municipais de Cultura",
+        "Creative Europe Places of Culture",
+        "Erasmus+ KA210"
+      ],
+      "modalidade": "territory"
+    },
+    {
+      "id": "tipo_2_efemera_reversivel",
+      "nome": "Infraestrutura Efémera Reversível",
+      "descricao": "Intervenção temporária que não exige obra permanente. Estruturas montáveis/desmontáveis, programação sazonal",
+      "quando_proposta": "Territórios em transição; impossibilidade de uso permanente; testar programa antes de investimento fixo; zonas de alta tensão",
+      "exemplos": [
+        "pavilhão de madeira festival",
+        "mercado produtores em terreno baldio",
+        "instalação sonora em ruína",
+        "mural de arte urbana comissionado pela junta"
+      ],
+      "regime_juridico": "Licença de ocupação do espaço público (art.57º CCP); comodato de curta duração; autorização de junta",
+      "modalidade": "body+territory"
+    },
+    {
+      "id": "tipo_3_mobilidade_cultural",
+      "nome": "Infraestrutura de Mobilidade Cultural",
+      "descricao": "Equipamentos e programas que se deslocam para o território em vez de o território se deslocar para o equipamento",
+      "quando_proposta": "Baixa densidade relacional em território disperso; ausência de transportes; comunidade idosa; território de difícil acesso",
+      "exemplos": [
+        "bibliobus com arquivo oral",
+        "teatro itinerante em camioneta",
+        "oficina de arte em contentor",
+        "cine-clube móvel com projecção"
+      ],
+      "referencia_arquitectonica": "cultural infrastructure on wheels (ArcGIS StoryMaps, Terrastories offline-first)",
+      "modalidade": "territory+sound+body"
+    },
+    {
+      "id": "tipo_4_arquivo_vivo",
+      "nome": "Arquivo Vivo e Centro de Memória",
+      "descricao": "Espaço físico dedicado à recolha, preservação e mediação de memória oral, visual e material",
+      "quando_proposta": "Comunidade em despovoamento; mestres de tradição sem documentação; colecções privadas em risco; PCI no MatrizPCI sem espaço de interpretação",
+      "referencias_tecnicas": [
+        "MatrizPCI (DGPC)",
+        "Historypin",
+        "Terrastories",
+        "Programa Memória para Todos"
+      ],
+      "protocolo_captura": "vestígio situado exige consentimento e estado editorial documentados antes de qualquer publicação",
+      "modalidade": "text+sound+image+territory"
+    },
+    {
+      "id": "tipo_5_residencia_artistica",
+      "nome": "Espaço de Criação e Residência Artística",
+      "descricao": "Território configurado para acolher processos de criação artística em contexto de imersão",
+      "quando_proposta": "Artistas locais sem condições; aldeia com espaço e comunidade receptiva; identidade cultural forte activável através de criação contemporânea",
+      "modelo_milk": "artista em residência é cartógrafo que habita o território e produz conhecimento sobre ele",
+      "financiamento": [
+        "DGArtes apoio residências",
+        "Creative Europe cooperação internacional",
+        "Câmaras com programas residência",
+        "Gulbenkian criação",
+        "EEA Grants cultura luso-nórdica"
+      ],
+      "modalidade": "body+text+territory"
+    },
+    {
+      "id": "tipo_6_sinaletica_acesso",
+      "nome": "Sinalética e Infraestrutura de Acesso ao Território",
+      "descricao": "Sistema físico de marcadores, painéis, QR codes e sinalizações que tornam o território legível",
+      "quando_proposta": "Património sem sinalização; circuitos de turismo cultural informais; rotas de arte urbana ou PCI sem suporte físico",
+      "mecanica_mapme": "QR codes impressos e colados nas paredes e praças. Ao ler o código, o Atlas abre naquela coordenada, reproduzindo a lenda, o registo ou o convite cultural.",
+      "modalidade": "image+code+territory"
+    }
+  ],
+  "fluxo_leitura_proposta": [
+    {
+      "passo": 1,
+      "nome": "Detecção",
+      "descricao": "motor rastreia campo de dados georreferenciados"
+    },
+    {
+      "passo": 2,
+      "nome": "Classificação",
+      "descricao": "classifica em: silêncio, tensão, vazio activo, saturação"
+    },
+    {
+      "passo": 3,
+      "nome": "Geração de hipótese",
+      "descricao": "sistema gera hipótese de resposta de infraestrutura (das 6 tipologias)"
+    },
+    {
+      "passo": 4,
+      "nome": "Marcação de verificação",
+      "descricao": "grau 0-3, estado: especulativa / em validação / validada / aprovada"
+    },
+    {
+      "passo": 5,
+      "nome": "Revisão humana",
+      "descricao": "nada publica automaticamente; revisão editorial equipa MILK"
+    },
+    {
+      "passo": 6,
+      "nome": "Publicação como convite",
+      "descricao": "sempre formulada como convite ou pergunta, nunca como diagnóstico definitivo"
+    }
+  ],
+  "taxonomia_escalas": [
+    {
+      "escala": "freguesia",
+      "descricao": "3092 freguesias (Lei 11-A/2013); unidade mais próxima da experiência vivida; entidade jurídica com orçamento"
+    },
+    {
+      "escala": "núcleo habitado principal",
+      "descricao": "zona de maior densidade e presença de equipamentos formais"
+    },
+    {
+      "escala": "lugar e aldeia",
+      "descricao": "unidades menores, frequentemente sem registo no MatrizPCI ou atlas patrimoniais"
+    },
+    {
+      "escala": "borda e interstício",
+      "descricao": "espaços de fricção entre usos — periferia urbana, margem de via, terreno expectante, edifício devoluto"
+    },
+    {
+      "escala": "vazio cadastral",
+      "descricao": "ausência de dados — que é em si um dado relevante e propulsivo"
+    }
+  ],
+  "fontes_dados_abertas_portugal": [
+    {
+      "fonte": "dados.gov.pt",
+      "descricao": "portal oficial de dados abertos (CSV, JSON, GeoJSON)"
+    },
+    {
+      "fonte": "Lisboa Aberta",
+      "descricao": "200+ bases GeoJSON sobre actividades, negócios e lazer"
+    },
+    {
+      "fonte": "Central de Dados",
+      "descricao": "compilação de bases de dados públicas estruturadas"
+    },
+    {
+      "fonte": "MatrizNet e MatrizPCI",
+      "descricao": "sistema centralizado do Estado para bens tangíveis e PCI"
+    },
+    {
+      "fonte": "Atlas do Património DGPC",
+      "descricao": "mapa nacional de património classificado (ArcGIS)"
+    },
+    {
+      "fonte": "UNESCO PCI Database",
+      "descricao": "base de dados global sobre PCI (JSON, CSV)"
+    },
+    {
+      "fonte": "Programa Memória para Todos",
+      "descricao": "maior infraestrutura de ciência cidadã para património histórico em Portugal"
+    }
+  ],
+  "plataformas_referencia_territorial": [
+    {
+      "plataforma": "Terrastories",
+      "mecanicas": [
+        "offline-first",
+        "soberania comunitária (dados restritos invisíveis)",
+        "filtros taxonomia local"
+      ],
+      "aplicacao_atlas": "funciona em aldeias sem rede; dados restritos invisíveis no mapa público"
+    },
+    {
+      "plataforma": "ArcGIS StoryMaps",
+      "mecanicas": [
+        "bloco deslizar comparação passado/presente",
+        "dashboards inteligência territorial",
+        "frames mobile-first"
+      ],
+      "aplicacao_atlas": "narrativas curtas geolocalizadas, comparação temporal"
+    },
+    {
+      "plataforma": "Humap",
+      "mecanicas": [
+        "moderação e validação",
+        "metadados estruturados",
+        "jornadas e linhas do tempo"
+      ],
+      "aplicacao_atlas": "curadoria antes da publicação, cronologias evolutivas"
+    },
+    {
+      "plataforma": "Mapme",
+      "mecanicas": [
+        "ícones e marcadores estilizados",
+        "QR codes para roteiros",
+        "interface própria"
+      ],
+      "aplicacao_atlas": "QR codes para roteiros físico-digitais impressos e colados no território"
+    },
+    {
+      "plataforma": "Historypin",
+      "mecanicas": [
+        "sobreposição Street View + fotos históricas",
+        "colecções comunitárias temáticas",
+        "micro-comunidades editores locais"
+      ],
+      "aplicacao_atlas": "sobreposição temporal de memória fotográfica e oral"
+    }
+  ],
+  "camada_territorial_campos": [
+    {
+      "campo": "situacao_territorial",
+      "tipo": "texto livre + tag",
+      "funcao": "situação actual do ponto",
+      "regra": "publicável após revisão humana"
+    },
+    {
+      "campo": "densidade_relacional",
+      "tipo": "classe (A/B/C/D) + cor",
+      "funcao": "indicador composto de actividade relacional",
+      "regra": "cor como pista, classe como orientação interna"
+    },
+    {
+      "campo": "fonte_geografica",
+      "tipo": "URL + versão",
+      "funcao": "origem da coordenada",
+      "regra": "obrigatório antes de publicar"
+    },
+    {
+      "campo": "uso_comum_ordinario",
+      "tipo": "boolean + nota",
+      "funcao": "flag de domínio público",
+      "regra": "guarda compatibilidade e reversibilidade"
+    },
+    {
+      "campo": "uso_privativo_potencial",
+      "tipo": "texto + autoridade",
+      "funcao": "flag de ocupação que exige título",
+      "regra": "guarda autoridade competente e prazo"
+    },
+    {
+      "campo": "teste_nao_regressao",
+      "tipo": "boolean",
+      "funcao": "verificação de integridade",
+      "regra": "auditoria técnica recorrente"
+    }
+  ],
+  "referencias_territoriais": [
+    {
+      "autor": "Deleuze & Guattari",
+      "obra": "Mil Platôs (1980)",
+      "contributo": "território como campo de forças; cartografia rizomática; mapa aberto"
+    },
+    {
+      "autor": "Barros, Kastrup, Passos et al.",
+      "obra": "Pistas do Método da Cartografia (2015)",
+      "contributo": "protocolo: rastreio, toque, pouso, reconhecimento atento"
+    },
+    {
+      "autor": "Foucault",
+      "obra": "Microfísica do Poder (1979)",
+      "contributo": "dispositivo como rede de linhas; o invisível como campo de intervenção"
+    },
+    {
+      "autor": "UNESCO",
+      "obra": "Convenção de 2003 sobre PCI",
+      "contributo": "quadro normativo para identificação, documentação e salvaguarda do PCI"
+    },
+    {
+      "autor": "UNESCO",
+      "obra": "Convenção de 2005 sobre Diversidade Cultural",
+      "contributo": "princípios de protecção e promoção da diversidade"
+    },
+    {
+      "autor": "ONU",
+      "obra": "Agenda 2030 / ODS 11",
+      "contributo": "cidades e comunidades sustentáveis — quadro de justificação"
+    },
+    {
+      "autor": "Portugal",
+      "obra": "Lei n.º 11-A/2013",
+      "contributo": "3092 freguesias como unidade de análise territorial"
+    },
+    {
+      "autor": "DGT",
+      "obra": "CAOP 2024",
+      "contributo": "fonte geográfica de referência para limites administrativos"
+    }
+  ],
+  "auditoria_territorial": [
+    "todos os pontos públicos têm coordenadas com fonte e versão documentadas?",
+    "todas as classes de densidade relacional têm a cor explicada e são reversíveis?",
+    "existe revisão humana documentada para cada proposta publicada?",
+    "as hipóteses estão marcadas como especulativas onde não há validação de campo?"
+  ],
+  "regimes_uso_territorio": {
+    "uso_comum_ordinario": "fruição pública do domínio público, preservada e rastreável juridicamente",
+    "uso_privativo_potencial": "ocupação que exige título, autoridade competente identificada e prazo",
+    "principio": "O Atlas não pode prometer uma intervenção física sem identificar o regime de uso do espaço em questão"
+  }
 }

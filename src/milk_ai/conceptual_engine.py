@@ -260,6 +260,55 @@ class MultimodalRelationalEngine:
             self._add_node(f"gest:{key}", "modulo_estrategico",
                            nome=val.get("nome", key), funcao=val.get("funcao", ""))
 
+        # --- Motores territoriais (Dossiê I) ---
+        for motor in fw.get("motores_territoriais", []):
+            mid = f"motor:{motor['id']}"
+            self._add_node(mid, "motor_territorial",
+                           nome=motor["nome"], definicao=motor.get("definicao", ""),
+                           campo_sistema=motor.get("campo_sistema", ""))
+            # motor → fontes de dados
+            for fonte in motor.get("fontes_primarias", motor.get("fontes_validadas", [])):
+                fid = f"dados:{fonte[:30]}"
+                self._add_node(fid, "fonte_dados", nome=fonte)
+                self._add_edge(mid, "necessidade_pública_atende", fid)
+
+        # --- Tipologias de infraestrutura física ---
+        for tipo in fw.get("tipologias_infraestrutura", []):
+            tid = f"infra:{tipo['id']}"
+            self._add_node(tid, "tipologia_infraestrutura",
+                           nome=tipo["nome"], descricao=tipo.get("descricao", ""),
+                           modalidade=tipo.get("modalidade", "territory"))
+            # tipologia → modalidades
+            for mod in tipo.get("modalidade", "").split("+"):
+                self._add_edge(tid, "manifesta_se_como", f"mod:{mod}",
+                               modality=mod)
+            # tipologia → fontes de financiamento
+            for fin in tipo.get("financiamento", []):
+                finid = f"financ:{fin[:30]}"
+                self._add_node(finid, "fonte_financiamento", fonte=fin)
+                self._add_edge(finid, "financia", tid)
+
+        # --- Plataformas de referência territorial ---
+        for plat in fw.get("plataformas_referencia_territorial", []):
+            pid = f"plat:{plat['plataforma']}"
+            self._add_node(pid, "plataforma_referencia",
+                           nome=plat["plataforma"],
+                           mecanicas=plat.get("mecanicas", []),
+                           aplicacao=plat.get("aplicacao_atlas", ""))
+
+        # --- Fontes de dados abertas Portugal ---
+        for fonte in fw.get("fontes_dados_abertas_portugal", []):
+            fid = f"dados:{fonte['fonte'][:30]}"
+            self._add_node(fid, "fonte_dados",
+                           nome=fonte["fonte"], descricao=fonte.get("descricao", ""))
+
+        # --- Condições territoriais como nós ---
+        for cond in ["silencio_territorial", "tensao_territorial",
+                     "saturacao_territorial", "vazio_ativo", "vazio_cadastral"]:
+            if cond in self._nodes:
+                self._add_edge(cond, "manifesta_se_como", "camada:publica",
+                               modality="territory")
+
     # --- Queries relacionais ---
 
     def nodes_by_type(self, node_type: str) -> list[dict[str, Any]]:

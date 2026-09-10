@@ -239,3 +239,77 @@ class TestExtendedFramework:
         assert "ndif" in fw["gestao_estrategica"]
         assert "lcafc" in fw["gestao_estrategica"]
         assert "dcan" in fw["gestao_estrategica"]
+
+
+class TestDossieTerritorial:
+    def test_dossie_territorial_present(self):
+        fw = load_framework()
+        assert "dossie_territorial" in fw
+        assert "Territorial" in fw["dossie_territorial"]["titulo"]
+
+    def test_three_motores_territoriais(self):
+        engine = MultimodalRelationalEngine()
+        motores = engine.nodes_by_type("motor_territorial")
+        assert len(motores) >= 3
+        nomes = {m["nome"] for m in motores}
+        assert "Situação Territorial" in nomes
+        assert "Densidade Relacional" in nomes
+
+    def test_six_tipologias_infraestrutura(self):
+        engine = MultimodalRelationalEngine()
+        tipos = engine.nodes_by_type("tipologia_infraestrutura")
+        assert len(tipos) >= 6
+
+    def test_plataformas_referencia(self):
+        engine = MultimodalRelationalEngine()
+        plats = engine.nodes_by_type("plataforma_referencia")
+        assert len(plats) >= 5
+        ids = {p.get("nome", p.get("id", "")) for p in plats}
+        assert any("Terrastories" in i for i in ids)
+        assert any("Mapme" in i for i in ids)
+        assert any("Historypin" in i for i in ids)
+
+    def test_fontes_dados_abertas(self):
+        engine = MultimodalRelationalEngine()
+        fontes = engine.nodes_by_type("fonte_dados")
+        assert len(fontes) >= 7
+
+    def test_cartografia_node(self):
+        engine = MultimodalRelationalEngine()
+        nb = engine.neighbors("cartografia_nao_representacional")
+        assert len(nb) >= 1
+
+    def test_principio_convite(self):
+        engine = MultimodalRelationalEngine()
+        nb = engine.neighbors("principio_convite")
+        assert len(nb) >= 2  # connects to silencio + tensao
+
+    def test_densidade_relacional_node(self):
+        engine = MultimodalRelationalEngine()
+        nb = engine.neighbors("densidade_relacional")
+        assert len(nb) >= 1
+
+    def test_framework_has_fluxo_leitura_proposta(self):
+        fw = load_framework()
+        assert "fluxo_leitura_proposta" in fw
+        assert len(fw["fluxo_leitura_proposta"]) == 6
+
+    def test_framework_has_taxonomia_escalas(self):
+        fw = load_framework()
+        assert "taxonomia_escalas" in fw
+        assert len(fw["taxonomia_escalas"]) >= 5
+
+    def test_framework_has_regimes_uso(self):
+        fw = load_framework()
+        assert "regimes_uso_territorio" in fw
+        assert "uso_comum_ordinario" in fw["regimes_uso_territorio"]
+
+    def test_framework_has_auditoria_territorial(self):
+        fw = load_framework()
+        assert "auditoria_territorial" in fw
+        assert len(fw["auditoria_territorial"]) >= 4
+
+    def test_extended_graph_much_larger(self):
+        engine = MultimodalRelationalEngine()
+        assert engine.node_count >= 80
+        assert engine.edge_count >= 70

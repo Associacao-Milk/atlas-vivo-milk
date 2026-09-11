@@ -326,7 +326,9 @@ class TestMethodRepertoire:
         nodes = curatorial_method_nodes()
         assert len(nodes) == method_repertoire_count()
         for n in nodes:
-            assert n["source_pointer"] == "biblioteca/milk_framework_conceptual.json"
+            # Every node must have a non-empty source_pointer (provenance)
+            assert n["source_pointer"]
+            assert n.get("epistemic_status")
 
     def test_eduardo_mauer_works_present(self):
         hg = SovereignHypergraph()

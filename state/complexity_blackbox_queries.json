@@ -1,0 +1,373 @@
+{
+  "schema": "ia_milk.complexity_blackbox.v1",
+  "validation_runtime_revision": "90b2d5f",
+  "summary": {
+    "total_queries": 12,
+    "with_research_context": 10,
+    "with_research_gap": 2,
+    "total_references": 85,
+    "total_multimodal_links": 21,
+    "polyphonic_queries": 5,
+    "multi_source_queries": 10,
+    "total_contradictions": 1,
+    "synthetic_proofs_pass": true,
+    "synthetic_proofs": {
+      "forrester_delay": true,
+      "reinforcing_loop": true,
+      "lorenz_sensitivity": true,
+      "second_order_observer": true,
+      "emergence_synthetic": true
+    }
+  },
+  "queries": [
+    {
+      "label": "A",
+      "query": "Uma praca esta em silencio. Ao longe ha uma festa. Alguem ri sozinho enquanto outra pessoa permanece parada a olhar uma janela fechada.",
+      "has_research_context": true,
+      "references_count": 8,
+      "graph_paths_count": 0,
+      "method_nodes": [
+        "method:chaos_complexity"
+      ],
+      "multimodal_links": [
+        "work:palavra_ritual-INSPIRED_BY->method:poesia_concreta",
+        "work:palavra_ritual-INSPIRED_BY->method:beckett",
+        "work:palavra_ritual-RELATED_TO->listening:semantic"
+      ],
+      "source_ids": [
+        "addendum:final_relational_addendum",
+        "biblioteca/milk_framework_conceptual.json"
+      ],
+      "research_gap": false,
+      "trace_id": "ec4990f579071448",
+      "selected": [
+        "zine:verdade_outra_tribo",
+        "temporal:surprise",
+        "method:chaos_complexity",
+        "device:memoria_oral",
+        "work:remetente_ausente",
+        "work:reizinho_sainha",
+        "work:palavra_ritual",
+        "work:ode_ao_possivel"
+      ],
+      "contradictions": 0
+    },
+    {
+      "label": "B",
+      "query": "Uma coisa que fiz hoje so vai produzir resposta daqui a tres meses, mas essa resposta vai mudar aquilo que vou fazer amanha.",
+      "has_research_context": true,
+      "references_count": 8,
+      "graph_paths_count": 0,
+      "method_nodes": [
+        "method:habermas"
+      ],
+      "multimodal_links": [
+        "device:escuta_sonora-RELATED_TO->milk:escuta_identitaria",
+        "work:palavra_ritual-INSPIRED_BY->method:poesia_concreta",
+        "work:palavra_ritual-INSPIRED_BY->method:beckett",
+        "work:palavra_ritual-RELATED_TO->listening:semantic"
+      ],
+      "source_ids": [
+        "addendum:final_relational_addendum",
+        "biblioteca/milk_framework_conceptual.json",
+        "source:schaeffer:traite_des_objets_musicaux"
+      ],
+      "research_gap": false,
+      "trace_id": "e1b423276614d924",
+      "selected": [
+        "sound:sound_object",
+        "method:habermas",
+        "device:escuta_sonora",
+        "zine:verdade_outra_tribo",
+        "zine:identity_revisable",
+        "work:remetente_ausente",
+        "work:reizinho_sainha",
+        "work:palavra_ritual"
+      ],
+      "contradictions": 0
+    },
+    {
+      "label": "C",
+      "query": "Quando o mapa mostrou aquele lugar abandonado, as pessoas comecaram a ir ate la. Depois deixou de estar abandonado.",
+      "has_research_context": true,
+      "references_count": 8,
+      "graph_paths_count": 1,
+      "method_nodes": [
+        "method:freire"
+      ],
+      "multimodal_links": [
+        "method:freire-APPLIED_IN->work:falarte"
+      ],
+      "source_ids": [
+        "addendum:final_relational_addendum",
+        "biblioteca/milk_framework_conceptual.json",
+        "source:schaeffer:traite_des_objets_musicaux",
+        "source:scliar_cabral:2013:letras_de_hoje"
+      ],
+      "research_gap": false,
+      "trace_id": "15b61b8e04adf73a",
+      "selected": [
+        "zine:verdade_outra_tribo",
+        "zine:identity_revisable",
+        "work:ode_ao_possivel",
+        "sound:ouir",
+        "reading:scliar_2013",
+        "method:freire",
+        "work:reizinho_sainha",
+        "work:dado_100lado"
+      ],
+      "contradictions": 0
+    },
+    {
+      "label": "D",
+      "query": "Quanto mais tentavam resolver o problema, maior ele ficava.",
+      "has_research_context": true,
+      "references_count": 10,
+      "graph_paths_count": 1,
+      "method_nodes": [],
+      "multimodal_links": [],
+      "source_ids": [
+        "addendum:final_relational_addendum",
+        "biblioteca/milk_framework_conceptual.json",
+        "source:husserl:phenomenology_of_internal_time_consciousness"
+      ],
+      "research_gap": false,
+      "trace_id": "06d56aa78c3a1f67",
+      "selected": [
+        "zine:verdade_outra_tribo",
+        "zine:identity_revisable",
+        "work:reizinho_sainha",
+        "work:ode_ao_possivel",
+        "work:nos",
+        "work:fuco",
+        "work:dado_100lado",
+        "work:cosmic_flow",
+        "temporal:temporal_object",
+        "temporal:surprise"
+      ],
+      "contradictions": 0
+    },
+    {
+      "label": "E",
+      "query": "Dois lugares comecaram quase iguais. Dez anos depois tornaram-se completamente diferentes.",
+      "has_research_context": false,
+      "references_count": 0,
+      "graph_paths_count": 0,
+      "method_nodes": [],
+      "multimodal_links": [],
+      "source_ids": [],
+      "research_gap": true,
+      "trace_id": "270a1910fd308552",
+      "selected": [],
+      "contradictions": 0
+    },
+    {
+      "label": "F",
+      "query": "Ha uma multidao aos gritos e, mesmo assim, para mim o lugar esta em silencio.",
+      "has_research_context": true,
+      "references_count": 9,
+      "graph_paths_count": 0,
+      "method_nodes": [
+        "method:chaos_complexity"
+      ],
+      "multimodal_links": [],
+      "source_ids": [
+        "addendum:final_relational_addendum",
+        "biblioteca/milk_framework_conceptual.json",
+        "source:schaeffer:traite_des_objets_musicaux",
+        "source:husserl:phenomenology_of_internal_time_consciousness"
+      ],
+      "research_gap": false,
+      "trace_id": "1523584eb11e4547",
+      "selected": [
+        "zine:verdade_outra_tribo",
+        "method:chaos_complexity",
+        "work:reizinho_sainha",
+        "temporal:temporal_object",
+        "temporal:surprise",
+        "sound:sound_object",
+        "sound:ouir",
+        "sound:ecouter",
+        "sound:comprendre"
+      ],
+      "contradictions": 0
+    },
+    {
+      "label": "G",
+      "query": "Uma festa desapareceu durante vinte anos. Quando voltou, ja nao era a mesma, mas todos diziam que era.",
+      "has_research_context": true,
+      "references_count": 9,
+      "graph_paths_count": 0,
+      "method_nodes": [
+        "method:habermas",
+        "method:geracao_mimeografo"
+      ],
+      "multimodal_links": [
+        "work:palavra_ritual-INSPIRED_BY->method:poesia_concreta",
+        "work:palavra_ritual-INSPIRED_BY->method:beckett",
+        "work:palavra_ritual-RELATED_TO->listening:semantic"
+      ],
+      "source_ids": [
+        "addendum:final_relational_addendum",
+        "biblioteca/milk_framework_conceptual.json"
+      ],
+      "research_gap": false,
+      "trace_id": "bde19def682cb278",
+      "selected": [
+        "method:habermas",
+        "method:geracao_mimeografo",
+        "zine:verdade_outra_tribo",
+        "zine:identity_revisable",
+        "work:remetente_ausente",
+        "work:reizinho_sainha",
+        "work:palavra_ritual",
+        "work:ode_ao_possivel",
+        "work:galeria_diletante"
+      ],
+      "contradictions": 0
+    },
+    {
+      "label": "H",
+      "query": "Uma palavra que so uma senhora usa acabou por mudar a maneira como uma freguesia fala de um lugar.",
+      "has_research_context": true,
+      "references_count": 9,
+      "graph_paths_count": 1,
+      "method_nodes": [],
+      "multimodal_links": [
+        "work:palavra_ritual-INSPIRED_BY->method:poesia_concreta",
+        "work:palavra_ritual-INSPIRED_BY->method:beckett",
+        "work:palavra_ritual-RELATED_TO->listening:semantic",
+        "work:falarte-APPLIED_IN->method:boal",
+        "work:falarte-APPLIED_IN->method:freire"
+      ],
+      "source_ids": [
+        "addendum:final_relational_addendum",
+        "biblioteca/milk_framework_conceptual.json",
+        "source:schaeffer:traite_des_objets_musicaux",
+        "source:husserl:phenomenology_of_internal_time_consciousness"
+      ],
+      "research_gap": false,
+      "trace_id": "03aaf2ea17b4f9a9",
+      "selected": [
+        "zine:verdade_outra_tribo",
+        "zine:identity_revisable",
+        "work:palavra_ritual",
+        "work:ode_ao_possivel",
+        "work:falarte",
+        "temporal:temporal_object",
+        "temporal:surprise",
+        "sound:sound_object",
+        "seed:um_abraco"
+      ],
+      "contradictions": 0
+    },
+    {
+      "label": "I",
+      "query": "Uma intervencao feita para aumentar participacao produziu menos participacao seis meses depois.",
+      "has_research_context": false,
+      "references_count": 0,
+      "graph_paths_count": 0,
+      "method_nodes": [],
+      "multimodal_links": [],
+      "source_ids": [],
+      "research_gap": true,
+      "trace_id": "50d147cf15f2595e",
+      "selected": [],
+      "contradictions": 0
+    },
+    {
+      "label": "J",
+      "query": "Um gesto quase imperceptivel mudou toda a dinamica do encontro.",
+      "has_research_context": true,
+      "references_count": 7,
+      "graph_paths_count": 0,
+      "method_nodes": [
+        "method:adorno"
+      ],
+      "multimodal_links": [],
+      "source_ids": [
+        "addendum:final_relational_addendum",
+        "biblioteca/milk_framework_conceptual.json",
+        "source:scliar_cabral:2013:letras_de_hoje"
+      ],
+      "research_gap": false,
+      "trace_id": "7d72e5fc23857c38",
+      "selected": [
+        "work:dado_100lado",
+        "seed:um_abraco",
+        "reading:top_down",
+        "reading:scliar_2013",
+        "neuro:dopaminergic_response",
+        "milk:dopafania",
+        "method:adorno"
+      ],
+      "contradictions": 1
+    },
+    {
+      "label": "K",
+      "query": "Algo parece desordem de perto, mas forma um padrao quando visto durante muito tempo.",
+      "has_research_context": true,
+      "references_count": 9,
+      "graph_paths_count": 1,
+      "method_nodes": [
+        "method:habermas",
+        "method:deleuze"
+      ],
+      "multimodal_links": [
+        "milk:escuta_identitaria-RELATED_TO->listening:causal",
+        "milk:escuta_identitaria-RELATED_TO->method:schafer",
+        "milk:escuta_identitaria-RELATED_TO->device:escuta_sonora",
+        "milk:escuta_identitaria-RELATED_TO->method:toponymy"
+      ],
+      "source_ids": [
+        "addendum:final_relational_addendum",
+        "biblioteca/milk_framework_conceptual.json",
+        "source:scliar_cabral:2013:letras_de_hoje"
+      ],
+      "research_gap": false,
+      "trace_id": "7029b9dd8893e1c8",
+      "selected": [
+        "zine:verdade_outra_tribo",
+        "zine:identity_revisable",
+        "work:ode_ao_possivel",
+        "seed:um_abraco",
+        "reading:scliar_2013",
+        "milk:escuta_identitaria",
+        "method:habermas",
+        "method:deleuze",
+        "device:corpo_performatico"
+      ],
+      "contradictions": 0
+    },
+    {
+      "label": "L",
+      "query": "O observador comecou a perceber que aquilo que chamava de problema so existia daquela maneira porque ele o estava a observar daquele lugar.",
+      "has_research_context": true,
+      "references_count": 8,
+      "graph_paths_count": 1,
+      "method_nodes": [],
+      "multimodal_links": [
+        "device:escuta_sonora-RELATED_TO->milk:escuta_identitaria"
+      ],
+      "source_ids": [
+        "addendum:final_relational_addendum",
+        "biblioteca/milk_framework_conceptual.json",
+        "source:schaeffer:traite_des_objets_musicaux",
+        "source:scliar_cabral:2013:letras_de_hoje"
+      ],
+      "research_gap": false,
+      "trace_id": "1fae1f6840bc6d48",
+      "selected": [
+        "zine:verdade_outra_tribo",
+        "zine:identity_revisable",
+        "work:ode_ao_possivel",
+        "sound:sound_object",
+        "reading:scliar_2013",
+        "device:escuta_sonora",
+        "work:reizinho_sainha",
+        "work:dado_100lado"
+      ],
+      "contradictions": 0
+    }
+  ]
+}

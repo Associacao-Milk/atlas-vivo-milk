@@ -2,7 +2,7 @@
 """Build state/milk_production_readiness.json from measured facts.
 
 Gathers live measurements: embedding consistency verifier output, the
-retrieval proof, the four shadow health endpoints, corpus count, BGE/CUDA,
+retrieval proof, the four validation health endpoints, corpus count, BGE/CUDA,
 canonical test-event contamination, and git tree id. Stores source_tree_id
 (the git tree object id), NOT a self-referential commit hash.
 """
@@ -11,8 +11,10 @@ import json, subprocess, sys, os, urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+from milk_ai.runtime_nomenclature import read_validation_revision  # compat reader
 PY312 = r"C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\python.exe"
-SHADOW = "http://127.0.0.1:8767"
+VALIDATION = "http://127.0.0.1:8767"
 OUT = ROOT / "state" / "milk_production_readiness.json"
 
 
@@ -22,7 +24,7 @@ def git(*args):
 
 def http_get(path, timeout=5):
     try:
-        with urllib.request.urlopen(f"{SHADOW}{path}", timeout=timeout) as r:
+        with urllib.request.urlopen(f"{VALIDATION}{path}", timeout=timeout) as r:
             return r.status, json.loads(r.read())
     except Exception as e:
         return None, {"error": str(e)}
@@ -87,10 +89,10 @@ print(f'BGE_OK dim={e.shape[1]} device={dev} cuda={torch.cuda.is_available()} gp
         health[key] = {"http": code,
                        "status": body.get("status") if isinstance(body, dict) else None}
 
-    shadow_rev = ""
+    validation_rev = ""
     code, body = http_get("/health")
     if isinstance(body, dict):
-        shadow_rev = body.get("runtime_revision", "")
+        validation_rev = read_validation_revision(body, "") or body.get("runtime_revision", "")
 
     # Corpus + canonical test contamination (measured)
     doc_count = len(list((ROOT / "corpus" / "documents").glob("*.json")))
@@ -110,11 +112,11 @@ print(f'BGE_OK dim={e.shape[1]} device={dev} cuda={torch.cuda.is_available()} gp
     corpus_ok = doc_count == 10576
     tests_ok_cond = tests_ok
     test_events_ok = test_events == 0
-    shadow_match = shadow_rev == head
+    validation_head_match = validation_rev == head
 
     all_pass = (idx_pass and orig_orphan and delta_orphan and retrieval_5 and evidence_5
                 and health_ok and corpus_ok and tests_ok_cond and test_events_ok
-                and shadow_match and bool(bge.get("cuda")))
+                and validation_head_match and bool(bge.get("cuda")))
 
     readiness = {
         "schema": "ia_milk.production_readiness.v2",
@@ -152,13 +154,13 @@ print(f'BGE_OK dim={e.shape[1]} device={dev} cuda={torch.cuda.is_available()} gp
         "evidence_success": proof.get("evidence_success"),
         "reranker": proof.get("reranker"),
         "health_endpoints": health,
-        "shadow_revision": shadow_rev,
-        "shadow_match": shadow_match,
+        "validation_runtime_revision": validation_rev,
+        "validation_runtime_head_match": validation_head_match,
         "corpus_docs": doc_count,
         "canonical_test_events": test_events,
         "production_gate": "PASS" if all_pass else "FAIL",
         "core_production_ready": bool(all_pass),
-        "handover_required": not all_pass,
+        "promotion_required": not all_pass,
         "fabric_8766": "legacy (PID 5744, pre-closeout, do-not-touch)",
     }
     OUT.write_text(json.dumps(readiness, ensure_ascii=False, indent=2), encoding="utf-8")

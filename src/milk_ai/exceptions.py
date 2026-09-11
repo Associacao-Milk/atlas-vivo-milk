@@ -17,7 +17,7 @@ class SecurityException(Exception):
 
 
 class SovereigntyPanicController:
-    """Monitor de integridade em tempo real anexado ao shadow server.
+    """Monitor de integridade em tempo real anexado ao validation runtime.
 
     Quando detecta adulteração de autoria, aciona:
     1. Log de auditoria imutável (CRITICAL)

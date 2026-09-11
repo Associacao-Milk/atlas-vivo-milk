@@ -10,8 +10,8 @@ Checks:
   3. original + delta orphan hashes/vectors == 0
   4. BGE-M3 / Torch / CUDA / GPU measured live
   5. retrieval 5/5, evidence 5/5, retrieval_type DENSE+RERANKER
-  6. four shadow health endpoints PASS (real HTTP GETs)
-  7. shadow runtime_revision == current HEAD
+  6. four validation health endpoints PASS (real HTTP GETs)
+  7. validation runtime_revision == current HEAD
   8. corpus document count == 10576
   9. canonical ingestion log has 0 test events
 """
@@ -20,8 +20,10 @@ import json, subprocess, sys, os, urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+from milk_ai.runtime_nomenclature import read_validation_revision  # compat reader
 PY312 = r"C:\Users\Utilizador\AppData\Local\Programs\Python\Python312\python.exe"
-SHADOW = "http://127.0.0.1:8767"
+VALIDATION = "http://127.0.0.1:8767"
 FAILURES = []
 
 
@@ -43,7 +45,7 @@ def run_json(args, timeout=120):
 
 def http_get(path, timeout=5):
     try:
-        req = urllib.request.Request(f"{SHADOW}{path}")
+        req = urllib.request.Request(f"{VALIDATION}{path}")
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             return resp.status, json.loads(resp.read())
     except Exception as e:
@@ -128,8 +130,8 @@ print(f'BGE_OK dim={e.shape[1]} device={dev} cuda={torch.cuda.is_available()} gp
         import time as _t; _t.sleep(2)
     check("bge_m3_cuda", "BGE_OK" in (r.stdout or ""), out)
 
-    # 7. Four shadow health endpoints (real GETs)
-    print("\n[7] Shadow health")
+    # 7. Four validation health endpoints (real GETs)
+    print("\n[7] Validation health")
     head = subprocess.run(["git", "rev-parse", "--short", "HEAD"],
                           capture_output=True, text=True, cwd=str(ROOT)).stdout.strip()
     for path, label in [("/health", "health"),
@@ -138,13 +140,13 @@ print(f'BGE_OK dim={e.shape[1]} device={dev} cuda={torch.cuda.is_available()} gp
                         ("/health/fabric", "health_fabric")]:
         code, body = http_get(path)
         ok = code == 200 and isinstance(body, dict) and body.get("status") in ("healthy",)
-        check(f"shadow_{label}", ok, f"http={code} status={body.get('status') if isinstance(body,dict) else body}")
+        check(f"validation_{label}", ok, f"http={code} status={body.get('status') if isinstance(body,dict) else body}")
 
-    # 8. Shadow revision == HEAD
-    print("\n[8] Shadow revision")
+    # 8. Validation revision == HEAD
+    print("\n[8] Validation revision")
     code, body = http_get("/health")
-    shadow_rev = body.get("runtime_revision", "") if isinstance(body, dict) else ""
-    check("shadow_revision", shadow_rev == head, f"shadow={shadow_rev} head={head}")
+    validation_rev = read_validation_revision(body, "") or (body.get("runtime_revision", "") if isinstance(body, dict) else "")
+    check("validation_runtime_revision", validation_rev == head, f"validation={validation_rev} head={head}")
 
     # Summary
     print("\n" + "=" * 60)

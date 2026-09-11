@@ -879,14 +879,23 @@ class CognitiveControlPlane:
 
     def __init__(self, op_mem_dir: Path | None = None, adaptive_engine=None):
         self.planner = Planner()
-        # Adaptive learning engine (create if not provided)
+        # Adaptive learning engine (create if not provided). When an isolated
+        # op_mem_dir is given (tests/simulation), the policy MUST be isolated
+        # under that dir too — never the canonical production policy file.
         if adaptive_engine is None:
             try:
                 from .adaptive_engine import AdaptiveLearningEngine
-                adaptive_engine = AdaptiveLearningEngine()
+                if op_mem_dir is not None:
+                    adaptive_engine = AdaptiveLearningEngine(
+                        policy_path=Path(op_mem_dir) / "policy.json")
+                else:
+                    adaptive_engine = AdaptiveLearningEngine()
             except Exception:
                 adaptive_engine = None
         self.adaptive_engine = adaptive_engine
+        # Isolated op_mem_dir => non-production environment (test/simulation).
+        # The canonical production policy is only ever mutated in production.
+        self.environment = "test" if op_mem_dir is not None else "production"
         self.router = CapabilityRouter(adaptive_engine=adaptive_engine)
         self.worker = ReasoningWorker()
         self.op_mem = OperationalMemory(op_mem_dir)
@@ -1046,6 +1055,7 @@ class CognitiveControlPlane:
                     evidence_metrics=evidence_metrics,
                     context={"query": query, "intent": intent},
                     bundle_hash=bundle.hash_chain(),
+                    environment=self.environment,
                 )
 
         # Record in operational memory

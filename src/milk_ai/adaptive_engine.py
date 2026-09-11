@@ -309,8 +309,39 @@ def create_learning_event(*, task_id: str, trace_id: str, context: dict,
                           outcome: dict, reward_components: dict, reward_final: float,
                           human_feedback: str | None = None,
                           policy_version_before: int, policy_version_after: int,
-                          bundle_hash: str = "") -> dict:
-    """Create an immutable LearningEvent."""
+                          bundle_hash: str = "",
+                          environment: str = "production",
+                          purpose: str = "routing_adaptation",
+                          worker: str = "",
+                          source_ids: list | None = None,
+                          evidence_ids: list | None = None,
+                          graph_paths: list | None = None,
+                          human_validated: bool = False,
+                          trust_state: str = "unverified",
+                          rights_scope: str = "internal",
+                          policy_mutated: bool = True) -> dict:
+    """Create an immutable LearningEvent with full learning provenance.
+
+    Every event declares its environment, purpose, worker, trust_state and
+    rights_scope (learning provenance firewall, section 8). ``policy_mutated``
+    records whether the canonical policy was actually changed — non-production
+    environments record the event but must NOT mutate policy.
+    """
+    from .runtime_nomenclature import normalize_environment
+    env = normalize_environment(environment)
+    provenance = {
+        "environment": env,
+        "purpose": purpose,
+        "worker": worker,
+        "human_feedback": human_feedback,
+        "human_validated": human_validated,
+        "trust_state": trust_state,
+        "rights_scope": rights_scope,
+        "source_ids": source_ids or [],
+        "evidence_ids": evidence_ids or [],
+        "graph_paths": graph_paths or [],
+        "policy_mutated": policy_mutated,
+    }
     return {
         "event_id": _uuid(),
         "task_id": task_id,
@@ -328,11 +359,13 @@ def create_learning_event(*, task_id: str, trace_id: str, context: dict,
         "policy_version_before": policy_version_before,
         "policy_version_after": policy_version_after,
         "bundle_hash": bundle_hash,
+        "provenance": provenance,
         "event_hash": _sha256(json.dumps({
             "task_id": task_id, "trace_id": trace_id,
             "selected_capability": selected_capability,
             "reward_final": reward_final,
             "policy_version_after": policy_version_after,
+            "environment": env,
         }, sort_keys=True)),
     }
 
@@ -460,8 +493,21 @@ class AdaptiveLearningEngine:
                        scores_before: dict, outcome: dict,
                        evidence_metrics: dict, context: dict,
                        human_feedback: str | None = None,
-                       bundle_hash: str = "") -> dict:
-        """Record outcome, compute reward, update policy, create LearningEvent."""
+                       bundle_hash: str = "",
+                       environment: str = "production",
+                       worker: str = "",
+                       source_ids: list | None = None,
+                       evidence_ids: list | None = None,
+                       graph_paths: list | None = None) -> dict:
+        """Record outcome, compute reward, update policy, create LearningEvent.
+
+        The canonical AdaptivePolicy is mutated ONLY when the event environment
+        is permitted (production or human-approved curatorial_experiment).
+        validation / test / simulation events are still recorded but do NOT
+        alter production learning (learning provenance firewall, section 8).
+        """
+        from .runtime_nomenclature import environment_can_mutate_policy
+
         policy_version_before = self.policy.version
 
         # Compute reward
@@ -494,8 +540,10 @@ class AdaptiveLearningEngine:
             resource_usage=resource_usage,
         )
 
-        # Update policy
-        self.policy.update(selected_capability, reward, task_success)
+        # Update policy ONLY if environment is permitted (learning firewall).
+        policy_mutated = environment_can_mutate_policy(environment)
+        if policy_mutated:
+            self.policy.update(selected_capability, reward, task_success)
         policy_version_after = self.policy.version
 
         # Create learning event
@@ -508,6 +556,9 @@ class AdaptiveLearningEngine:
             policy_version_before=policy_version_before,
             policy_version_after=policy_version_after,
             bundle_hash=bundle_hash,
+            environment=environment, worker=worker,
+            source_ids=source_ids, evidence_ids=evidence_ids,
+            graph_paths=graph_paths, policy_mutated=policy_mutated,
         )
         save_learning_event(event)
 

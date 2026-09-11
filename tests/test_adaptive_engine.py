@@ -302,18 +302,21 @@ class TestExperienceReplay:
 
 class TestCCPIntegration:
     def test_ccp_creates_learning_events(self, tmp_path):
-        """CognitiveControlPlane should create learning events when adaptive engine is attached."""
+        """CognitiveControlPlane should create learning events when adaptive engine is attached.
+
+        In an isolated op_mem_dir the environment is 'test', so the learning
+        provenance firewall MUST keep the canonical policy unmutated while still
+        recording the learning event.
+        """
         from milk_ai.cognitive_control_plane import CognitiveControlPlane
         engine = AdaptiveLearningEngine(policy_path=tmp_path / "policy.json")
         ccp = CognitiveControlPlane(op_mem_dir=tmp_path / "op_mem", adaptive_engine=engine)
+        assert ccp.environment == "test"
         result = ccp.execute_task("Test query for adaptive learning")
         assert result["status"] == "done"
-        # Check learning events were created
-        events = load_learning_events(
-            tmp_path / "operational_memory" / "adaptive_learning_events.jsonl"
-        )
-        # The events path may be the default, check the engine's path
-        assert engine.policy.version > 0  # policy was updated
+        # Learning events were created (recorded) but the policy was NOT mutated
+        # because the environment is non-production (learning firewall).
+        assert engine.policy.version == 0
 
     def test_ccp_explain_selection(self, tmp_path):
         from milk_ai.cognitive_control_plane import CognitiveControlPlane

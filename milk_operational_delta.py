@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """MILK Operational Delta — BGE-M3 incremental embeddings, semantic retrieval proof,
-shadow Fabric lifecycle, execution graph proof, completion proof.
+validation Fabric lifecycle, execution graph proof, completion proof.
 
 Uses Python 3.12 (CUDA/torch) for BGE-M3, Python 3.14 for test/proof logic.
 """
@@ -224,9 +224,9 @@ def run_retrieval():
             results[k] = v
     return results
 
-# ── Step 3: Shadow Fabric lifecycle ──
+# ── Step 3: Validation Fabric lifecycle ──
 
-SHADOW_SERVER = '''
+VALIDATION_SERVER = '''
 import json, time, threading, sys, os
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -238,21 +238,23 @@ git_head = os.popen("cd /d " + str(ROOT) + " && git rev-parse --short HEAD").rea
 active_requests = 0
 shutting_down = False
 
-class ShadowHandler(BaseHTTPRequestHandler):
+class ValidationHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         global active_requests
         active_requests += 1
         try:
             if self.path == "/health":
                 self._json({"status": "healthy", "started_at": started_at,
-                           "git_revision": git_head, "active_requests": active_requests,
+                           "runtime_revision": git_head, "validation_runtime_revision": git_head,
+                           "active_requests": active_requests,
                            "shutting_down": shutting_down})
             elif self.path == "/ready":
-                self._json({"ready": True, "revision": git_head})
+                self._json({"ready": True, "revision": git_head, "validation_runtime_revision": git_head})
             elif self.path == "/api/fabric/status":
-                self._json({"schema": "ia_milk.shadow.v1", "host": "MILK-shadow",
+                self._json({"schema": "ia_milk.validation.v1", "host": "MILK-validation",
                            "pid": os.getpid(), "started_at": started_at,
-                           "revision": git_head, "active_requests": active_requests,
+                           "revision": git_head, "validation_runtime_revision": git_head,
+                           "active_requests": active_requests,
                            "lifecycle": {"graceful_shutdown": True, "draining": shutting_down}})
             elif self.path == "/api/capabilities":
                 self._json({"adapters": 13, "retrieval": "CANDIDATE_CANONICAL",
@@ -284,61 +286,61 @@ def trigger_shutdown():
 
 if __name__ == "__main__":
     port = int(sys.argv[1]) if len(sys.argv) > 1 else 8767
-    server = ThreadingHTTPServer(("127.0.0.1", port), ShadowHandler)
-    print(f"SHADOW_START port={port} pid={os.getpid()} revision={git_head}")
+    server = ThreadingHTTPServer(("127.0.0.1", port), ValidationHandler)
+    print(f"VALIDATION_RUNTIME_START port={port} pid={os.getpid()} revision={git_head}")
     server.serve_forever()
-    print("SHADOW_STOPPED")
+    print("VALIDATION_RUNTIME_STOPPED")
 '''
 
-def start_shadow():
-    print("\\n=== SHADOW FABRIC ===")
-    shadow_port = 8767
-    # Write shadow server to temp file
-    shadow_path = ROOT / "state" / "milk_shadow_server.py"
-    shadow_path.write_text(SHADOW_SERVER, encoding="utf-8")
-    
+def start_validation():
+    print("\\n=== VALIDATION FABRIC ===")
+    validation_port = 8767
+    # Write validation server to state file
+    validation_path = ROOT / "state" / "milk_validation_server.py"
+    validation_path.write_text(VALIDATION_SERVER, encoding="utf-8")
+
     proc = subprocess.Popen(
-        [PY312, str(shadow_path), str(shadow_port)],
+        [PY312, str(validation_path), str(validation_port)],
         stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
     )
     time.sleep(2)
-    
+
     # Check health
     import urllib.request
     try:
-        req = urllib.request.Request(f"http://127.0.0.1:{shadow_port}/health")
+        req = urllib.request.Request(f"http://127.0.0.1:{validation_port}/health")
         with urllib.request.urlopen(req, timeout=5) as resp:
             health = json.loads(resp.read())
             print(f"  Health: {health}")
     except Exception as e:
         print(f"  Health FAILED: {e}")
         return {}
-    
+
     try:
-        req = urllib.request.Request(f"http://127.0.0.1:{shadow_port}/api/fabric/status")
+        req = urllib.request.Request(f"http://127.0.0.1:{validation_port}/api/fabric/status")
         with urllib.request.urlopen(req, timeout=5) as resp:
             status = json.loads(resp.read())
             print(f"  Status: revision={status.get('revision')}, lifecycle={status.get('lifecycle')}")
     except: pass
-    
+
     try:
-        req = urllib.request.Request(f"http://127.0.0.1:{shadow_port}/api/capabilities")
+        req = urllib.request.Request(f"http://127.0.0.1:{validation_port}/api/capabilities")
         with urllib.request.urlopen(req, timeout=5) as resp:
             caps = json.loads(resp.read())
             print(f"  Capabilities: {caps}")
     except: pass
-    
+
     # Test graceful shutdown
     try:
-        req = urllib.request.Request(f"http://127.0.0.1:{shadow_port}/shutdown")
+        req = urllib.request.Request(f"http://127.0.0.1:{validation_port}/shutdown")
         with urllib.request.urlopen(req, timeout=5) as resp:
             shutdown_resp = json.loads(resp.read())
             print(f"  Shutdown: {shutdown_resp}")
     except: pass
     time.sleep(2)
-    
-    return {"port": shadow_port, "pid": proc.pid, "health": health, 
-            "revision": health.get("git_revision", "?")}
+
+    return {"port": validation_port, "pid": proc.pid, "health": health,
+            "revision": health.get("runtime_revision", health.get("git_revision", "?"))}
 
 # ── Step 4: Execution graph proof ──
 
@@ -385,7 +387,7 @@ def run_execution_graphs():
 
 def main():
     print("=" * 70)
-    print("MILK OPERATIONAL DELTA — BGE-M3 + RETRIEVAL + SHADOW + COMPLETION")
+    print("MILK OPERATIONAL DELTA — BGE-M3 + RETRIEVAL + VALIDATION + COMPLETION")
     print("=" * 70)
     
     all_results = {}
@@ -398,9 +400,9 @@ def main():
     ret_results = run_retrieval()
     all_results.update(ret_results)
     
-    # 3. Shadow fabric
-    shadow_results = start_shadow()
-    all_results["shadow"] = shadow_results
+    # 3. Validation fabric
+    validation_results = start_validation()
+    all_results["validation"] = validation_results
     
     # 4. Execution graphs
     eg_results = run_execution_graphs()
@@ -443,15 +445,15 @@ def main():
         "canonical_test_events": 0,
         "corpus_docs": corpus_count,
         "execution_modes_proven": {m["mode"]: m["proven"] for m in eg_results},
-        "shadow_port": shadow_results.get("port", 8767),
-        "shadow_pid": shadow_results.get("pid", "?"),
-        "shadow_runtime_revision": shadow_results.get("revision", "?"),
-        "shadow_health": shadow_results.get("health", {}).get("status", "unknown"),
+        "validation_runtime_port": validation_results.get("port", 8767),
+        "validation_runtime_pid": validation_results.get("pid", "?"),
+        "validation_runtime_revision": validation_results.get("revision", "?"),
+        "validation_runtime_health": validation_results.get("health", {}).get("status", "unknown"),
         "fabric_8766_revision": fabric_rev,
-        "handover_required": True,
+        "promotion_required": True,
         "offline_core": True,
         "remaining_blocks": [
-            "Handover: legacy Fabric PID 5744 has no graceful shutdown — manual termination needed",
+            "Promotion: legacy Fabric PID 5744 has no graceful shutdown — manual termination needed",
             "GOLD_QRELS human validation pending",
             "ZENODO_TOKEN not available locally",
             "Docker not running",
@@ -466,7 +468,7 @@ def main():
     print(f"  {proof_path}")
     print(f"  chunks_embedded={proof['chunks_embedded']} vectors_after={proof['vectors_after']}")
     print(f"  semantic_success={proof['semantic_success']} reranker={proof['reranker_used']}")
-    print(f"  shadow_health={proof['shadow_health']} handover_required={proof['handover_required']}")
+    print(f"  validation_runtime_health={proof['validation_runtime_health']} promotion_required={proof['promotion_required']}")
     print(f"  corpus_docs={proof['corpus_docs']}")
 
 if __name__ == "__main__":

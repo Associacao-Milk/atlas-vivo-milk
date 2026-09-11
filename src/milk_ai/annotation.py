@@ -15,7 +15,7 @@ them. The core insight is structural equivalence:
 
 The relational engine relates annotations to every other MILK entity
 (chunks, sources, evidence, provenance, NGSI-LD) through a single canonical
-semantic model. No new ontology, no shadow schema, no parallel structures.
+semantic model. No new ontology, no parallel schema, no duplicate structures.
 
 References:
     W3C Web Annotation Data Model — https://www.w3.org/TR/2017/REC-annotation-model-20170223/

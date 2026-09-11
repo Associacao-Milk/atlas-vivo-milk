@@ -1883,7 +1883,7 @@
     },
     {
       "nome": "Metodológica",
-      "funcao": "Abordagem psicossocial: gerencia nocebo, ansiedade informacional, saturação de dados. Impõe validação científica das inferências (versão shadow, GOLD_QRELS)."
+      "funcao": "Abordagem psicossocial: gerencia nocebo, ansiedade informacional, saturação de dados. Impõe validação científica das inferências (versão validação, GOLD_QRELS)."
     },
     {
       "nome": "Técnica (Núcleo)",
@@ -2038,17 +2038,17 @@
     },
     {
       "data": "2026-09-09",
-      "fase": "Certificação Shadow",
-      "tarefa": "Deploy em Shadow (8767)"
+      "fase": "Certificação Validation",
+      "tarefa": "Deploy em Validation (8767)"
     },
     {
       "data": "2026-09-10",
-      "fase": "Certificação Shadow",
+      "fase": "Certificação Validation",
       "tarefa": "Execução do production gate"
     },
     {
       "data": "2026-09-11",
-      "fase": "Certificação Shadow",
+      "fase": "Certificação Validation",
       "tarefa": "Homologação final"
     },
     {
@@ -2137,8 +2137,8 @@
     },
     {
       "passo": 2,
-      "nome": "Ambientação Shadow",
-      "descricao": "Desdobrar código no ambiente shadow (porta 8767) em modo sandbox"
+      "nome": "Ambientação Validation",
+      "descricao": "Desdobrar código no ambiente de validação (porta 8767) em modo sandbox"
     },
     {
       "passo": 3,
@@ -2153,7 +2153,7 @@
     {
       "passo": 5,
       "nome": "Isolamento de Certificação",
-      "descricao": "Logs/resultados de shadow não poluem estado de produção"
+      "descricao": "Logs/resultados da validação não poluem estado de produção"
     },
     {
       "passo": 6,
@@ -2163,7 +2163,7 @@
     {
       "passo": 7,
       "nome": "Conectar API de Busca",
-      "descricao": "Configurar endpoints REST do shadow e testar via front-end em staging"
+      "descricao": "Configurar endpoints REST da validação e testar via front-end em staging"
     },
     {
       "passo": 8,

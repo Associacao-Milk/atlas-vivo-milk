@@ -1,18 +1,27 @@
-"""MILK IA - Validation Runtime server (:8767).
+"""MILK IA - Generic Runtime Server (validation | canonical).
 
-This is the VALIDATION_RUNTIME - where the current revision is tested and
-certified before any promotion to the CANONICAL_RUNTIME (:8766). This server
-emits only the official validation nomenclature.
+One generic MILK runtime entrypoint configured by runtime_role and port.
+Reuses the SAME MILK core for both validation and canonical runtimes — no
+two independent cognitive implementations.
 
-Endpoints:
-    /health             - runtime readiness + validation_runtime_revision
+Usage:
+    python state/milk_runtime_server.py --runtime_role=validation --port=8767
+    python state/milk_runtime_server.py --runtime_role=canonical  --port=8766
+
+The validation server (state/milk_validation_server.py) remains as a
+compatibility wrapper that delegates to this generic server with
+runtime_role=validation.
+
+Endpoints (identical for both roles, role-specific nomenclature in payloads):
+    /health             - runtime readiness + role-specific revision
     /health/retrieval   - BGE-M3 vector index integrity
     /health/reranker    - reranker availability
-    /health/fabric      - fabric lifecycle (validation schema/host)
+    /health/fabric      - fabric lifecycle (role-specific schema/host)
     /health/research    - internal research observability (non-sensitive)
+    /research?q=...     - real research query through ResearchContext Gate
     /shutdown           - graceful drain
 """
-import json, time, threading, sys, os, subprocess, zipfile
+import json, time, threading, sys, os, subprocess, zipfile, argparse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from datetime import datetime, timezone
@@ -21,6 +30,15 @@ ROOT = Path(r"C:\Users\Utilizador\MILK_AI_STATE_CANONICO")
 CACHE = ROOT / "state" / "chunk_index"
 SRC = ROOT / "src"
 STATE = ROOT / "state"
+
+# Parse arguments early to set runtime_role before module-level init.
+_parser = argparse.ArgumentParser()
+_parser.add_argument("--runtime_role", default="validation", choices=["validation", "canonical"])
+_parser.add_argument("--port", type=int, default=8767)
+_args, _remaining = _parser.parse_known_args()
+RUNTIME_ROLE = _args.runtime_role
+PORT = _args.port
+
 started_at = datetime.now(timezone.utc).isoformat()
 git_head = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True, cwd=str(ROOT)).stdout.strip()
 git_tree = subprocess.run(["git", "rev-parse", "HEAD^{tree}"], capture_output=True, text=True, cwd=str(ROOT)).stdout.strip()
@@ -38,18 +56,22 @@ except Exception:
         "orcid": "0009-0007-6892-6570",
     }
 try:
-    from milk_ai.runtime_nomenclature import VALIDATION_SCHEMA, VALIDATION_HOST
+    from milk_ai.runtime_nomenclature import ROLE_SCHEMA, ROLE_HOST
+    RUNTIME_SCHEMA = ROLE_SCHEMA.get(RUNTIME_ROLE, "ia_milk.validation.v1")
+    RUNTIME_HOST = ROLE_HOST.get(RUNTIME_ROLE, "MILK-validation")
 except Exception:
-    VALIDATION_SCHEMA = "ia_milk.validation.v1"
-    VALIDATION_HOST = "MILK-validation"
+    RUNTIME_SCHEMA = "ia_milk.canonical.v1" if RUNTIME_ROLE == "canonical" else "ia_milk.validation.v1"
+    RUNTIME_HOST = "MILK-canonical" if RUNTIME_ROLE == "canonical" else "MILK-validation"
+
+# Role-specific revision field name in health responses.
+REVISION_FIELD = "validation_runtime_revision" if RUNTIME_ROLE == "validation" else "canonical_runtime_revision"
 
 BGE = "BAAI/bge-m3"
 RERANKER = "BAAI/bge-reranker-v2-m3"
 
 
 # ---------------------------------------------------------------------------
-# In-memory research hypergraph — built once at startup (cheap overlay).
-# Loads the source-grounded method repertory + persisted atlas_graph nodes.
+# In-memory research hypergraph (shared core, same for both roles).
 # ---------------------------------------------------------------------------
 _RESEARCH_GATE = None
 _LAST_RESEARCH_STATUS = "idle"
@@ -65,11 +87,9 @@ def _build_research_gate():
         from milk_ai.method_repertoire import load_method_repertory
         hg = SovereignHypergraph()
         load_method_repertory(hg)
-        # Load persisted atlas_graph nodes/edges (if present) as additional refs.
         ag = STATE / "atlas_graph.json"
         if ag.exists():
-            import json as _json
-            g = _json.loads(ag.read_text(encoding="utf-8"))
+            g = json.loads(ag.read_text(encoding="utf-8"))
             for n in g.get("nodes", []):
                 nid = n.get("id")
                 if nid and not hg.get_node(nid):
@@ -106,7 +126,7 @@ def _build_research_gate():
     return _RESEARCH_GATE
 
 
-def _set_last_status(s: str):
+def _set_last_status(s):
     global _LAST_RESEARCH_STATUS
     _LAST_RESEARCH_STATUS = s
 
@@ -155,7 +175,6 @@ _RERANKER_AVAILABLE = _st_available()
 
 
 def _research_observability():
-    """Internal, non-sensitive research metrics (section 13)."""
     metrics = {
         "active_reference_count": 0,
         "method_repertoire_nodes": 0,
@@ -170,9 +189,11 @@ def _research_observability():
         "blocked_nonproduction_policy_updates": 0,
         "legacy_unknown_learning_events": 0,
         "last_relational_query_status": "idle",
-        "validation_runtime_revision": git_head,
-        "canonical_runtime_revision_if_observable": None,
-        "promotion_required": True,
+        "runtime_role": RUNTIME_ROLE,
+        "validation_runtime_revision": git_head if RUNTIME_ROLE == "validation" else None,
+        "canonical_runtime_revision": git_head if RUNTIME_ROLE == "canonical" else None,
+        "canonical_runtime_revision_if_observable": git_head if RUNTIME_ROLE == "canonical" else None,
+        "promotion_required": RUNTIME_ROLE == "validation",
     }
     manifest = STATE / "knowledge_recovery_manifest.json"
     if manifest.exists():
@@ -247,25 +268,27 @@ def trigger_shutdown():
         server.server_close()
 
 
-class ValidationHandler(BaseHTTPRequestHandler):
+class RuntimeHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         global active_requests
         active_requests += 1
         try:
             if self.path == "/health":
-                self._json(200 if not shutting_down else 503, {
+                resp = {
                     "status": "healthy" if not shutting_down else "draining",
                     "readiness": not shutting_down,
+                    "runtime_role": RUNTIME_ROLE,
                     "started_at": started_at,
                     "runtime_revision": git_head,
-                    "validation_runtime_revision": git_head,
+                    REVISION_FIELD: git_head,
                     "source_tree_id": git_tree,
                     "pid": os.getpid(),
                     "draining": shutting_down,
                     "active_requests": active_requests,
                     "canonical_author": CANONICAL_AUTHOR.get("idealized_by", ""),
                     "canonical_orcid": CANONICAL_AUTHOR.get("orcid", ""),
-                })
+                }
+                self._json(200 if not shutting_down else 503, resp)
             elif self.path == "/health/retrieval":
                 ok = _index_readable and not shutting_down
                 self._json(200 if ok else 503, {
@@ -294,12 +317,13 @@ class ValidationHandler(BaseHTTPRequestHandler):
             elif self.path == "/health/fabric":
                 self._json(200 if not shutting_down else 503, {
                     "status": "healthy" if not shutting_down else "draining",
-                    "schema": VALIDATION_SCHEMA,
-                    "host": VALIDATION_HOST,
+                    "schema": RUNTIME_SCHEMA,
+                    "host": RUNTIME_HOST,
+                    "runtime_role": RUNTIME_ROLE,
                     "pid": os.getpid(),
                     "started_at": started_at,
                     "revision": git_head,
-                    "validation_runtime_revision": git_head,
+                    REVISION_FIELD: git_head,
                     "source_tree_id": git_tree,
                     "lifecycle": {"graceful_shutdown": True, "draining": shutting_down},
                     "active_requests": active_requests,
@@ -323,13 +347,14 @@ class ValidationHandler(BaseHTTPRequestHandler):
                                      "status": _LAST_RESEARCH_STATUS})
                 else:
                     bundle = gate.research(task_id=f"rt:{os.getpid()}", query=query,
-                                           worker="validation_runtime",
-                                           runtime_role="validation")
+                                           worker=f"{RUNTIME_ROLE}_runtime",
+                                           runtime_role=RUNTIME_ROLE)
                     tr = gate.traces()[-1].to_dict() if gate.traces() else {}
                     _set_last_status("ok" if bundle.has_research_context else "gap")
                     self._json(200, {
-                        "schema": VALIDATION_SCHEMA,
-                        "validation_runtime_revision": git_head,
+                        "schema": RUNTIME_SCHEMA,
+                        "runtime_role": RUNTIME_ROLE,
+                        REVISION_FIELD: git_head,
                         "bundle": bundle.to_dict(),
                         "trace": tr,
                     })
@@ -357,8 +382,7 @@ class ValidationHandler(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-    port = int(sys.argv[1]) if len(sys.argv) > 1 else 8767
-    server = ThreadingHTTPServer(("127.0.0.1", port), ValidationHandler)
-    print(f"VALIDATION_RUNTIME_START port={port} pid={os.getpid()} revision={git_head} vectors={_vec_rows} dim={_vec_dim}")
+    server = ThreadingHTTPServer(("127.0.0.1", PORT), RuntimeHandler)
+    print(f"MILK_RUNTIME_START role={RUNTIME_ROLE} port={PORT} pid={os.getpid()} revision={git_head} vectors={_vec_rows} dim={_vec_dim}")
     server.serve_forever()
-    print("VALIDATION_RUNTIME_STOPPED")
+    print(f"MILK_RUNTIME_STOPPED role={RUNTIME_ROLE} port={PORT}")

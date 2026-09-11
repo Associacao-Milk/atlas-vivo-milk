@@ -31,6 +31,18 @@ CANONICAL_RUNTIME_PORT = 8766
 # Official schema / host identifiers (new writes only)
 VALIDATION_SCHEMA = "ia_milk.validation.v1"
 VALIDATION_HOST = "MILK-validation"
+CANONICAL_SCHEMA = "ia_milk.canonical.v1"
+CANONICAL_HOST = "MILK-canonical"
+
+# Role -> schema/host mapping
+ROLE_SCHEMA = {
+    "validation": VALIDATION_SCHEMA,
+    "canonical": CANONICAL_SCHEMA,
+}
+ROLE_HOST = {
+    "validation": VALIDATION_HOST,
+    "canonical": CANONICAL_HOST,
+}
 
 # Promotion lifecycle states
 PROMOTION_REQUIRED = "promotion_required"

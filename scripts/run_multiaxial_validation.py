@@ -17,7 +17,7 @@ graph path, contradiction preservation, human-validation-required, ResearchGap,
 reference rejection, cross-modal relation. No mocked proof.
 """
 from __future__ import annotations
-import json, sys, urllib.parse, urllib.request
+import json, sys, urllib.parse, urllib.request, hashlib
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -60,6 +60,7 @@ def main():
     except Exception:
         pass
 
+    run_id = "rc_" + hashlib.sha256(f"{_now()}".encode()).hexdigest()[:12]
     records = []
     for axis, name, q in AXES:
         try:
@@ -76,6 +77,7 @@ def main():
             "axis": axis,
             "name": name,
             "query": q,
+            "run_id": run_id,
             "validation_runtime_revision": resp.get("validation_runtime_revision", head),
             "trace_id": t.get("trace_id", ""),
             "references_considered": t.get("references_considered", []),
@@ -91,6 +93,7 @@ def main():
             "contradictions_preserved": b.get("contradictions", []),
             "research_gap": b.get("research_gap"),
             "has_research_context": b.get("has_research_context", False),
+            "has_research_trace": bool(t.get("trace_id")),
             "detected_domains": t.get("detected_domains", []),
             "result": "ResearchGap" if b.get("research_gap") else ("evidence" if refs else "empty"),
             "runtime_role": t.get("runtime_role", "validation"),
@@ -104,6 +107,11 @@ def main():
                                 any(len(p) >= 2 for p in r.get("graph_paths", []))
                                 for r in records),
         "multi_reference_query": any(len(r.get("references_selected", [])) >= 2 for r in records),
+        "three_reference_constellations": any(
+            len(r.get("references_selected", [])) >= 3 or
+            len(r.get("references_considered", [])) >= 3
+            for r in records),
+        "two_source_documents": any(r.get("source_count", 0) >= 2 for r in records),
         "relational_graph_path": any(len(r.get("graph_paths", [])) >= 1 for r in records),
         "contradiction_preserved": any(len(r.get("contradictions_preserved", [])) >= 1 for r in records),
         "research_gap": any(r.get("research_gap") is not None for r in records),
@@ -114,20 +122,22 @@ def main():
 
     manifest = {
         "schema": "ia_milk.validation_multiaxial.v1",
+        "run_id": run_id,
         "generated_at": _now(),
         "validation_runtime_revision": head,
         "validation_runtime_endpoint": f"{VALIDATION}/research",
         "total_queries": len(records),
-        "queries_with_research_context": sum(1 for r in records if r.get("has_research_context")),
-        "queries_without_research_context": sum(1 for r in records if not r.get("has_research_context")),
+        "substantial_queries": len(records),
+        "substantial_with_research_context": sum(1 for r in records if r.get("has_research_trace")),
+        "substantial_without_research_context": sum(1 for r in records if not r.get("has_research_trace")),
         "research_gaps": sum(1 for r in records if r.get("research_gap")),
         "coverage": coverage,
         "traces": records,
     }
     OUT.write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps({k: manifest[k] for k in
-                      ("validation_runtime_revision", "total_queries",
-                       "queries_with_research_context", "research_gaps", "coverage")},
+                      ("run_id", "validation_runtime_revision", "total_queries",
+                       "substantial_with_research_context", "research_gaps", "coverage")},
                      ensure_ascii=False, indent=2))
     return manifest
 

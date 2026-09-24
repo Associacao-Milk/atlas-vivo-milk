@@ -1,6 +1,0 @@
-0.01.000.554 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
-0.01.009.205 W srv  llama_server: -----------------
-0.01.009.383 W srv  llama_server: CORS is set to allow all origins ('*') and no API key is set
-0.01.009.403 W srv  llama_server: this can be a security risk (cross-origin attacks)
-0.01.009.405 W srv  llama_server: more info: https://github.com/ggml-org/llama.cpp/pull/25655
-0.01.009.406 W srv  llama_server: -----------------

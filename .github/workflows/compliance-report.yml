@@ -1,0 +1,27 @@
+name: compliance-report-mensal
+on:
+  schedule:
+    - cron: "0 6 1 * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  compliance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Gerar COMPLIANCE.md
+        run: |
+          cat > COMPLIANCE.md << 'EOF'
+          # Relatorio de Conformidade (ISO 42001) - automatico
+          Data: $(date -u +%Y-%m-%d)
+          - 4 Contexto / 5 Lideranca / 6 Planeamento / 7 Apoio / 8 Operacao / 9 Avaliacao / 10 Melhoria
+          - Risco AI Act: nao-alto-risco (atlas-docs/LEGAL/AI_ACT_CLASSIFICACAO.md)
+          EOF
+      - name: Commit
+        run: |
+          git config user.name "MILK IA"
+          git config user.email "milk@associacaomilk.pt"
+          git add COMPLIANCE.md
+          git commit -m "compliance: relatorio mensal (auto)" || true
+          git push

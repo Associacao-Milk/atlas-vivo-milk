@@ -22,3 +22,29 @@ MILK_SNAPSHOTS/
 Thumbs.db
 .DS_Store
 desktop.ini
+
+# === BLINDAGEM DO COFRE SUICO (2026-09-24) ===
+# Segredos e tokens - NUNCA saem de casa
+.env
+.env.*
+*.token
+*_tokens.json
+
+# Cofre suico - texto bruto, consentimentos, dados de pessoas (R-G3)
+.browser_privado/
+.neural_privado/
+entradas_privadas*
+browser_entradas_publicas.json
+browser_auditoria.jsonl
+
+# Estado interno, logs e evidencias - nao sao producao
+state/
+*.log
+*.log.*
+auditoria_perfis.jsonl
+saida_publica.json
+
+# Backups de codigo
+*.bak
+*.bak2
+*.bak_*
